@@ -15,7 +15,7 @@ public class Deer : Animal
     bool recentlyRotated;
     bool recentlyChargedUp;
 
-    int faceDirection;
+    public int faceDirection;
     int rotationCooldown;
     int chargeUpCooldown;
 
@@ -36,7 +36,7 @@ public class Deer : Animal
         //whatever axis that it shouldn't be traveling in. I think it's Z in Unity
         lockedAxisValue = this.transform.position.z;
 
-        speed = 1f;
+        speed = 1.5f;
         //this will change to check to see how it's positioned in the editor later
         faceDirection = -1;
 
@@ -51,24 +51,14 @@ public class Deer : Animal
     void Update()
     {
         isGrounded = Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
-        /*if (isGrounded)
-        {
-            rigidbody.useGravity = false;
-        }
-        else
-        {
-            rigidbody.useGravity = true;
-        }*/
+
         MoveRight();
 
         //rotation management
         if (rotationCooldown > 0)
         {
             rotationCooldown--;
-            Vector3 quickRotate = transform.rotation.eulerAngles;
-            quickRotate.y += 3.0f;
-            transform.rotation = new Quaternion(quickRotate.z / 360f, quickRotate.y / 360f,
-                                                                    quickRotate.z / 360f, 0);
+			transform.Rotate(0f,0f, 3f); 
             isCharging = false;
             isInChargeUp = false;
         }
@@ -82,16 +72,18 @@ public class Deer : Animal
     }
 
     //this will be used for rotating when hitting walls mainly
-   /* void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
+		//Debug.Log ("Colliding with " + collision.gameObject.tag);
+
+        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp) && collision.gameObject.tag == "Wall")
         {
-            faceDirection *= -1;
+			//faceDirection *= -1;
             recentlyRotated = true;
             rotationCooldown = 60;
         }
 
-    }*/
+    }
 
     void MoveRight()
     {
@@ -99,6 +91,8 @@ public class Deer : Animal
         Vector3 targetVelocity = new Vector3(speed * faceDirection, 0, 0);
         targetVelocity = transform.TransformDirection(targetVelocity);
         targetVelocity *= speed;
+
+		//Debug.Log ("Target Velocity: " + targetVelocity);
 
         // Apply a force that attempts to reach our target velocity
         Vector3 velocity = rigidbody.velocity;
@@ -108,9 +102,4 @@ public class Deer : Animal
         velocityChange.y = 0;
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
     }
-
-        //controller.SimpleMove(new Vector3(speed * faceDirection, 0, 0));
-        /*transform.position = new Vector3(transform.position.x + (speed * faceDirection),
-                                          transform.position.y,
-                                          lockedAxisValue);*/
 }
