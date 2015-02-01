@@ -32,11 +32,13 @@ public class Deer : Animal
 
         isCharging = false;
         isInChargeUp = false;
+		recentlyRotated = false;
+		recentlyChargedUp = false;
 
         //whatever axis that it shouldn't be traveling in. I think it's Z in Unity
         lockedAxisValue = this.transform.position.z;
 
-        speed = 1.5f;
+        speed = 1.25f;
         //this will change to check to see how it's positioned in the editor later
         faceDirection = -1;
 
@@ -63,8 +65,28 @@ public class Deer : Animal
             isInChargeUp = false;
         }
         else
+		{
             recentlyRotated = false;
+		}
 
+
+		//charging
+		if (isCharging)
+		{
+			//AI that will slow down for warning, then suddenly charge
+			if (isInChargeUp && chargeUpCooldown > 0)
+			{
+				chargeUpCooldown--;
+				speed = 0f;
+			}
+			else
+			{
+				if (isInChargeUp)
+					isInChargeUp = false;
+
+				speed = 2.5f;
+			}
+		}
 
 
         //locking needs to happen last
@@ -76,14 +98,38 @@ public class Deer : Animal
     {
 		//Debug.Log ("Colliding with " + collision.gameObject.tag);
 
-        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp) && collision.gameObject.tag == "Wall")
+        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
         {
-			//faceDirection *= -1;
-            recentlyRotated = true;
-            rotationCooldown = 60;
+			if(collision.gameObject.tag == "Wall")
+			{
+	            recentlyRotated = true;
+				isCharging = false;
+	            rotationCooldown = 60;
+				speed = 1.25f;
+			}
+			if(collision.gameObject.tag == "Player")
+			{
+				if(isCharging){
+				//calling player reaction to damage
+				}
+				recentlyRotated = true;
+				isCharging = false;
+				rotationCooldown = 60;
+				speed = 1.25f;
+			}
         }
 
     }
+
+	void OnTriggerStay(Collider collider)
+	{
+		if (!(isCharging) && !recentlyRotated && collider.tag == "Player") {
+			Debug.Log("found player");
+			isCharging = true;
+			isInChargeUp = true;
+			chargeUpCooldown = 60;
+		}
+	}
 
     void MoveRight()
     {
