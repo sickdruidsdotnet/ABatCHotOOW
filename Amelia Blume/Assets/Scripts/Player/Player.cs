@@ -167,6 +167,11 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canThrowSeed {
+		get {
+			return true;
+		}
+	}
 #endregion
 	
 	

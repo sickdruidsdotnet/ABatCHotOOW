@@ -340,6 +340,21 @@ public class PlayerMotor : BaseBehavior {
 			player.Broadcast("OnJumpDenied");
 		}
 	}
+
+	public void ThrowSeed() {
+		if(player.canThrowSeed) {
+			player.Broadcast("OnThrowSeed");
+			// spawn a seed
+			Vector3 loc = new Vector3(1, 1, 0);
+			loc += transform.position;
+			GameObject newSeed = Instantiate(Resources.Load("VineSeed"), loc, Quaternion.identity) as GameObject;
+			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
+			Debug.Log("called ThrowSeed");
+		}
+		else{
+			player.Broadcast("OnThrowSeedDenied");
+		}
+	}
 	
 	public void RotateTowardCameraDirection() {
 		if (pendingInput.x != 0 || pendingInput.z != 0 || player.controller.isTurning) {
