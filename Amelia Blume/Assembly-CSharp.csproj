@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Animals\Animal.cs" />
+     <Compile Include="Assets\Scripts\Animals\Deer.cs" />
      <Compile Include="Assets\Scripts\Core\BaseBehavior.cs" />
      <Compile Include="Assets\Scripts\Mover\Mover.cs" />
      <Compile Include="Assets\Scripts\Mover\MoverStop.cs" />
@@ -58,8 +60,6 @@
      <Compile Include="Assets\Scripts\Player\PlayerPushHandler.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerPusher.cs" />
      <Compile Include="Assets\Scripts\Scene\PlayerTestSceneLogic.cs" />
-     <Compile Include="Assets\Scripts\Seed\Seed.cs" />
-     <Compile Include="Assets\Scripts\Seed\VineSeed.cs" />
      <None Include="Assets\Meshes\Candy\68973_chocolate_by_tadine\BLENDSWAP_LICENSE.txt" />
      <None Include="Assets\Meshes\Candy\61712_cc_by_electric5auce\BLENDSWAP_LICENSE.txt" />
      <None Include="Assets\Meshes\Candy\59313_lollipop2_by_nathanferguson\BLENDSWAP_LICENSE.txt" />
