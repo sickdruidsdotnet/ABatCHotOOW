@@ -110,10 +110,18 @@ public class PlayerController : BaseBehavior {
 		if (Input.GetButtonDown("Jump")) {
 			Jump();
 		}
+		if (Input.GetButtonDown("ThrowSeed")) {
+			ThrowSeed();
+		}
 	}
 	
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+	}
+
+	protected void ThrowSeed() {
+		player.Broadcast("OnThrowSeedRequest");
+		player.motor.ThrowSeed();
 	}
 }
