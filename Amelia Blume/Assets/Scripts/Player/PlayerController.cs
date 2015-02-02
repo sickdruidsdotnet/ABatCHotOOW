@@ -6,7 +6,9 @@ public class PlayerController : BaseBehavior {
 	
 	
 	public float inputDeadZone = 0.05f;
-	
+
+    public float lockedAxisValue;
+
 	public bool strafeLock = false;
 	public bool strafing = false;
 		
@@ -24,7 +26,10 @@ public class PlayerController : BaseBehavior {
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
-
+    void Start()
+    {
+        lockedAxisValue = this.transform.position.z;
+    }
 	
 	protected void Update() {
 		
@@ -34,7 +39,9 @@ public class PlayerController : BaseBehavior {
 		
 		HandleMovementInput();
 		HandleActionInput();
-		
+
+        //locking needs to happen last
+        transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}
 	
 	protected void FixedUpdate() {
@@ -60,23 +67,23 @@ public class PlayerController : BaseBehavior {
 		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 		strafing = Input.GetMouseButton(1);
 				
-		vertical  = Input.GetAxis("Vertical");
+		vertical  = Input.GetAxis("Horizontal");
 		if (Mathf.Abs(vertical) < inputDeadZone) {
 			vertical = 0f;
 		}
 		
 		isTurning = false;
-		horizontal  = Input.GetAxis("Horizontal");
+		horizontal  = Input.GetAxis("Vertical");
 		if (strafing || strafeLock) {				
 			if (Mathf.Abs(horizontal) < inputDeadZone) {
 				horizontal = 0f;
 			}
 		} else if (Mathf.Abs(horizontal) > inputDeadZone) {
-			isTurning = true;
-			turnDirection = horizontal;
-			player.cameraController.RotateView(horizontal, 0f);	
-			player.motor.RotateTowardCameraDirection();
-			horizontal = 0;
+			//isTurning = true;
+			//turnDirection = horizontal;
+			//player.cameraController.RotateView(horizontal, 0f);	
+			//player.motor.RotateTowardCameraDirection();
+			//horizontal = 0;
 		}
 		
 		isSideStepping = (horizontal != 0 && Mathf.Abs(vertical) < inputDeadZone);

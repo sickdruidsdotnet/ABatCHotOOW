@@ -105,7 +105,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		pendingInput = movementInput;
 		
-		RotateTowardCameraDirection();
+		//RotateTowardCameraDirection();
 		UpdateGround();		
 		ProcessMotion();
 		
