@@ -1,12 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Soil.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Soil/Soil.cs">
     <Files>
-      <File FileName="Assets/Scripts/WaterParticles.cs" Line="15" Column="49" />
-      <File FileName="Assets/Soil.cs" Line="71" Column="2" />
-      <File FileName="../../Scripts/PlayerController.cs" Line="32" Column="19" />
-      <File FileName="Assets/Scripts/Player/PlayerController.cs" Line="128" Column="1" />
-      <File FileName="../../../Documents/Riot!/Assets/Controller.cs" Line="52" Column="22" />
+      <File FileName="Assets/Scripts/Water/WaterParticles.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Soil/Soil.cs" Line="18" Column="13" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
