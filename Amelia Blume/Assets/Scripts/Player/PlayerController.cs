@@ -19,7 +19,10 @@ public class PlayerController : BaseBehavior {
 	public bool slidingFast = false;
 	
 	public bool isSideStepping = false;
-	
+
+    public bool isFacingRight;
+    int faceDirection;
+
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
@@ -28,7 +31,29 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
+        //get the value to lock the player to. Should Iddeally be 0 in the editor
         lockedAxisValue = this.transform.position.z;
+
+        //set the angle to face the proper directions, then assign isFacingRight
+        if (transform.rotation.eulerAngles.y >= 0 && transform.rotation.eulerAngles.y <= 180)
+        {
+            Vector3 _direction = ((new Vector3(this.transform.position.x + 1f, transform.position.y, lockedAxisValue))
+                                    - transform.position).normalized;
+            Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 50f);
+            faceDirection = 1;
+            isFacingRight = true;
+        }
+        else
+        {
+            Vector3 _direction = ((new Vector3(this.transform.position.x - 1f, transform.position.y, lockedAxisValue))
+                                    - transform.position).normalized;
+            Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 50f);
+            isFacingRight = false;
+            faceDirection = -1;
+        }
+
     }
 	
 	protected void Update() {
@@ -67,29 +92,53 @@ public class PlayerController : BaseBehavior {
 		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 		strafing = Input.GetMouseButton(1);
 				
-		vertical  = Input.GetAxis("Horizontal");
-		if (Mathf.Abs(vertical) < inputDeadZone) {
-			vertical = 0f;
+		horizontal  = Input.GetAxis("Horizontal");
+        Debug.Log("Horizontal input is: " + horizontal);
+        if (Mathf.Abs(horizontal) < inputDeadZone)
+        {
+            //now we do some checks and corrections depending on how the player is facing
+            if (horizontal < 0 && isFacingRight) //facing right, pushing left
+            {
+                Vector3 _direction = ((new Vector3(this.transform.position.x - 1, transform.position.y, lockedAxisValue))
+                                    - transform.position).normalized;
+                Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
+                isFacingRight = false;
+                faceDirection = -1;
+            }
+            else if (horizontal > 0 && !isFacingRight) //facing left, pushing right
+            {
+                Vector3 _direction = ((new Vector3(this.transform.position.x + 1, transform.position.y, lockedAxisValue))
+                                    - transform.position).normalized;
+                Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
+                isFacingRight = true;
+                faceDirection = 1;
+            }
+            horizontal = 0f;
 		}
 		
 		isTurning = false;
-		horizontal  = Input.GetAxis("Vertical");
-		if (strafing || strafeLock) {				
-			if (Mathf.Abs(horizontal) < inputDeadZone) {
-				horizontal = 0f;
+        vertical = Input.GetAxis("Vertical");
+		if (strafing || strafeLock) {
+            if (Mathf.Abs(vertical) < inputDeadZone)
+            {
+                vertical = 0f;
 			}
-		} else if (Mathf.Abs(horizontal) > inputDeadZone) {
+        }
+        else if (Mathf.Abs(vertical) > inputDeadZone)
+        {
 			//isTurning = true;
 			//turnDirection = horizontal;
 			//player.cameraController.RotateView(horizontal, 0f);	
 			//player.motor.RotateTowardCameraDirection();
 			//horizontal = 0;
 		}
-		
-		isSideStepping = (horizontal != 0 && Mathf.Abs(vertical) < inputDeadZone);
+
+        isSideStepping = (vertical != 0 && Mathf.Abs(horizontal) < inputDeadZone);
 		
 		lastInput = pendingMovementInput;
-		pendingMovementInput = new Vector3(horizontal, 0, vertical);
+        pendingMovementInput = new Vector3(vertical, 0, faceDirection * horizontal);
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;
