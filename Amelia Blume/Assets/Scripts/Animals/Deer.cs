@@ -14,6 +14,7 @@ public class Deer : Animal
     //again, how we do states will change, but for now I'm doing bools
     public bool isCharging;
     public bool isInChargeUp;
+
     bool recentlyRotated;
     bool recentlyChargedUp;
 
@@ -98,27 +99,17 @@ public class Deer : Animal
     void OnCollisionStay(Collision collision)
     {
 		//Debug.Log ("Colliding with " + collision.gameObject.tag);
-
-        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
-        {
-            if (collision.gameObject.tag == "Wall" || collision.gameObject.name == "Deer")
-			{
-	            recentlyRotated = true;
-				isCharging = false;
-	            rotationCooldown = 60;
-				speed = walkSpeed;
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.name == "Deer")
+		{
+            beginRotate();
+		}
+		if(collision.gameObject.tag == "Player")
+		{
+			if(isCharging){
+			//calling player reaction to damage
 			}
-			if(collision.gameObject.tag == "Player")
-			{
-				if(isCharging){
-				//calling player reaction to damage
-				}
-				recentlyRotated = true;
-				isCharging = false;
-				rotationCooldown = 60;
-				speed = walkSpeed;
-			}
-        }
+            beginRotate();
+		}
 
     }
 
@@ -148,5 +139,16 @@ public class Deer : Animal
         velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
         velocityChange.y = 0;
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+    }
+
+    public void beginRotate()
+    { 
+        if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
+        {
+	            recentlyRotated = true;
+				isCharging = false;
+	            rotationCooldown = 60;
+				speed = walkSpeed;
+		}
     }
 }
