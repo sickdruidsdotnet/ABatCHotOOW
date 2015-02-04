@@ -6,19 +6,15 @@ public class PlayerController : BaseBehavior {
 	
 	
 	public float inputDeadZone = 0.05f;
-
+    
     public float lockedAxisValue;
-
-	public bool strafeLock = false;
-	public bool strafing = false;
 		
 	public bool running = false;
 	public bool alwaysRun = false;
 	
+    //do we want sliding? could be cool...
 	public bool sliding = false;
 	public bool slidingFast = false;
-	
-	public bool isSideStepping = false;
 
     public bool isFacingRight;
     int faceDirection;
@@ -83,17 +79,16 @@ public class PlayerController : BaseBehavior {
 
 	
 	protected void HandleMovementInput() {
-		float vertical = 0f;
+		//float vertical = 0f;
 		float horizontal = 0f;
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
 			
 		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-		strafing = Input.GetMouseButton(1);
 				
 		horizontal  = Input.GetAxis("Horizontal");
-        Debug.Log("Horizontal input is: " + horizontal);
+        //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
             //now we do some checks and corrections depending on how the player is facing
@@ -119,26 +114,12 @@ public class PlayerController : BaseBehavior {
 		}
 		
 		isTurning = false;
-        vertical = Input.GetAxis("Vertical");
-		if (strafing || strafeLock) {
-            if (Mathf.Abs(vertical) < inputDeadZone)
-            {
-                vertical = 0f;
-			}
-        }
-        else if (Mathf.Abs(vertical) > inputDeadZone)
-        {
-			//isTurning = true;
-			//turnDirection = horizontal;
-			//player.cameraController.RotateView(horizontal, 0f);	
-			//player.motor.RotateTowardCameraDirection();
-			//horizontal = 0;
-		}
-
-        isSideStepping = (vertical != 0 && Mathf.Abs(horizontal) < inputDeadZone);
+        //if we ever want to use vertical, it works like horizontal:
+        //vertical = Input.GetAxis("Vertical");
 		
 		lastInput = pendingMovementInput;
-        pendingMovementInput = new Vector3(vertical, 0, faceDirection * horizontal);
+        pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
+        //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;

@@ -139,11 +139,11 @@ public class PlayerMotor : BaseBehavior {
 				acceleration = movement.stoppingPower;
 			}
 			
-			if (player.controller.isSideStepping) {
+			/*if (player.controller.isSideStepping) {
 				if (!movement.sidestepAtFullSpeed) {
 					targetSpeed = movement.sidestepSpeed;
 				}
-			}
+			}*/
 		}
 				
 		movement.speed = Mathf.Lerp(movement.speed, targetSpeed, acceleration * Time.deltaTime);
