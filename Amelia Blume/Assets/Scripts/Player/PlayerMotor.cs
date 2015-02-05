@@ -105,7 +105,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		pendingInput = movementInput;
 		
-		RotateTowardCameraDirection();
+		//RotateTowardCameraDirection();
 		UpdateGround();		
 		ProcessMotion();
 		
@@ -139,11 +139,11 @@ public class PlayerMotor : BaseBehavior {
 				acceleration = movement.stoppingPower;
 			}
 			
-			if (player.controller.isSideStepping) {
+			/*if (player.controller.isSideStepping) {
 				if (!movement.sidestepAtFullSpeed) {
 					targetSpeed = movement.sidestepSpeed;
 				}
-			}
+			}*/
 		}
 				
 		movement.speed = Mathf.Lerp(movement.speed, targetSpeed, acceleration * Time.deltaTime);
@@ -338,6 +338,21 @@ public class PlayerMotor : BaseBehavior {
 			movement.jumpForceRemaining = movement.jumpForce;
 		} else {
 			player.Broadcast("OnJumpDenied");
+		}
+	}
+
+	public void ThrowSeed() {
+		if(player.canThrowSeed) {
+			player.Broadcast("OnThrowSeed");
+			// spawn a seed
+			Vector3 loc = new Vector3(1, 1, 0);
+			loc += transform.position;
+			GameObject newSeed = Instantiate(Resources.Load("VineSeed"), loc, Quaternion.identity) as GameObject;
+			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
+			Debug.Log("called ThrowSeed");
+		}
+		else{
+			player.Broadcast("OnThrowSeedDenied");
 		}
 	}
 	

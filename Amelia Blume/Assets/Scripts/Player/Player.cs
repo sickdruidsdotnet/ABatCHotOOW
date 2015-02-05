@@ -12,7 +12,7 @@ using System.Collections;
 /// the other components, to provide a single point of interaction.
 /// </summary>
 [RequireComponent(typeof(PlayerController))]
-[RequireComponent(typeof(PlayerCameraController))]
+//[RequireComponent(typeof(PlayerCameraController))]
 [RequireComponent(typeof(PlayerMotor))]
 public class Player : BaseBehavior {
 	
@@ -167,6 +167,11 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canThrowSeed {
+		get {
+			return true;
+		}
+	}
 #endregion
 	
 	
