@@ -1,0 +1,118 @@
+fileFormatVersion: 2
+guid: 21008218589d9e846a6c6db574c90a43
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: bulb
+    100002: leaf_000
+    100004: leaf_001
+    100006: leaf_002
+    100008: leaf_003
+    100010: leaf_004
+    100012: taper_curve
+    100014: vine_000
+    100016: vine_001
+    100018: vine_002
+    100020: vine_003
+    100022: //RootNode
+    400000: bulb
+    400002: leaf_000
+    400004: leaf_001
+    400006: leaf_002
+    400008: leaf_003
+    400010: leaf_004
+    400012: taper_curve
+    400014: vine_000
+    400016: vine_001
+    400018: vine_002
+    400020: vine_003
+    400022: //RootNode
+    2300000: bulb
+    2300002: leaf_000
+    2300004: leaf_001
+    2300006: leaf_002
+    2300008: leaf_003
+    2300010: leaf_004
+    2300012: taper_curve
+    2300014: vine_000
+    2300016: vine_001
+    2300018: vine_002
+    2300020: vine_003
+    3300000: bulb
+    3300002: leaf_000
+    3300004: leaf_001
+    3300006: leaf_002
+    3300008: leaf_003
+    3300010: leaf_004
+    3300012: taper_curve
+    3300014: vine_000
+    3300016: vine_001
+    3300018: vine_002
+    3300020: vine_003
+    4300000: taper_curve
+    4300002: bulb
+    4300004: vine_003
+    4300006: vine_002
+    4300008: vine_000
+    4300010: vine_001
+    4300012: leaf_004
+    4300014: leaf_003
+    4300016: leaf_002
+    4300018: leaf_000
+    4300020: leaf_001
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
