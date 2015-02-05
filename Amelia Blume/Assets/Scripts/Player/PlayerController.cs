@@ -93,7 +93,7 @@ public class PlayerController : BaseBehavior {
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
 			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || Input.GetButton("");
+		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 				
 		horizontal  = Input.GetAxis("Horizontal");
         //Debug.Log("Horizontal input is: " + horizontal);

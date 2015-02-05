@@ -3,39 +3,32 @@ using System.Collections;
 
 //This is the base class which is
 //also known as the Parent class.
-public class Seed : MonoBehaviour
+public class Plant : MonoBehaviour
 {
-    public int waterCount;
+    protected int waterCount;
     protected int hydrationGoal;
-    protected bool isPlanted;
-
-    public int testInt;
+    protected float maturity;
     
     // Constructor
-    public Seed()
+    public Plant()
     {
         // the amount of water this seed has collected
         waterCount = 0;
         // waterCount threshold. once reached, sproutPlant() will be called
-        hydrationGoal = 0;
+        hydrationGoal = 100;
         // True if the seed is inside of soil object
-        isPlanted = false;
+        maturity = 0.0f;
 
-        testInt = 69;
-
-        Debug.Log("Seed created");
+        Debug.Log("Plant created");
         Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
 
-    // Destroys this Seed object, and creates new Plant object.
-    public void sproutPlant()
+    // Grows the plant.
+    public void grow()
     {
-        // Create new Plant entity, specificcal the type stored in PlantType.
+        // do something with procedural growth.
 
-        // Destroy this Seed entity. The plant will carry on its legacy.
-        // Goodnight, sweet seed. You served Amelia well.
-        
-        // Object.Destroy(this.gameObject);
+        maturity = (float)(waterCount / hydrationGoal);
     }
 
     public void collectWater()
@@ -46,7 +39,7 @@ public class Seed : MonoBehaviour
         // check to see if we've collected enough water
         if (waterCount >= hydrationGoal)
         {
-            sproutPlant();
+            grow();
         }
     }
 
@@ -60,13 +53,8 @@ public class Seed : MonoBehaviour
         return hydrationGoal;
     }
 
-    public bool checkIfPlanted()
+    public float getMaturity()
     {
-        return isPlanted;
+        return maturity;
     }
-
-	public void SetPlanted(bool status)
-	{
-		isPlanted = status;
-	}
 }
