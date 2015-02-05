@@ -61,6 +61,14 @@ public class PlayerController : BaseBehavior {
 		HandleMovementInput();
 		HandleActionInput();
 
+		if (transform.rotation.eulerAngles.y >= 0 && transform.rotation.eulerAngles.y <= 180) {
+			isFacingRight = true;
+		}
+		else
+		{
+			isFacingRight = false;
+		}
+
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}
@@ -85,32 +93,36 @@ public class PlayerController : BaseBehavior {
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
 			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || Input.GetButton("");
 				
 		horizontal  = Input.GetAxis("Horizontal");
         //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
-            //now we do some checks and corrections depending on how the player is facing
-            if (horizontal < 0 && isFacingRight) //facing right, pushing left
-            {
-                Vector3 _direction = ((new Vector3(this.transform.position.x - 1, transform.position.y, lockedAxisValue))
-                                    - transform.position).normalized;
-                Quaternion _lookRotation = Quaternion.LookRotation(_direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
-                isFacingRight = false;
-                faceDirection = -1;
-            }
-            else if (horizontal > 0 && !isFacingRight) //facing left, pushing right
-            {
-                Vector3 _direction = ((new Vector3(this.transform.position.x + 1, transform.position.y, lockedAxisValue))
-                                    - transform.position).normalized;
-                Quaternion _lookRotation = Quaternion.LookRotation(_direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
-                isFacingRight = true;
-                faceDirection = 1;
-            }
             horizontal = 0f;
+		}
+		else{
+			//now we do some checks and corrections depending on how the player is facing
+			if (horizontal < 0 && isFacingRight) //facing right, pushing left
+			{
+				//Debug.Log("Turning Left");
+				Vector3 _direction = ((new Vector3(this.transform.position.x - 1, transform.position.y, lockedAxisValue))
+				                      - transform.position).normalized;
+				Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+				transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
+				isFacingRight = false;
+				faceDirection = -1;
+			}
+			else if (horizontal > 0 && !isFacingRight) //facing left, pushing right
+			{
+				//Debug.Log("Turning Right");
+				Vector3 _direction = ((new Vector3(this.transform.position.x + 1, transform.position.y, lockedAxisValue))
+				                      - transform.position).normalized;
+				Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+				transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 500f);
+				isFacingRight = true;
+				faceDirection = 1;
+			}
 		}
 		
 		isTurning = false;
