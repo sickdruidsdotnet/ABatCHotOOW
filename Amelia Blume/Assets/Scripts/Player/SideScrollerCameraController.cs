@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class SideScrollerCameraController : MonoBehaviour {
-	
+
 	public float dampTime = 0.2f;
 	private Vector3 velocity = Vector3.zero;
 	public Transform target;
@@ -15,16 +15,11 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	float panSpeed;
 
-	float leftThreshold;
-	float rightThreshold;
-	float upThreshold;
-	float downThreshold;
-
-	float leftThreshLoc;
-	float rightThreshLoc;
-
-	float deltaHorizontalW;
-	float deltaHorizontalV;
+	public float leftThreshold = 0.36f;
+	public float rightThreshold = 0.64f;
+	public float upThreshold = 0.8f;
+	public float downThreshold = 0.1f;
+	
 
 	void Start()
 	{
@@ -33,26 +28,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 		canPanLeft = true;
 		canPanDown = true;
 
-		//set threshholds, change functions to get different results
-		//do not hardcode values to prevent it messing up at different resolutions
-		leftThreshold = (Screen.width / 8f) * 3f;
-		leftThreshLoc = GetComponent<Camera>().ViewportToWorldPoint (new Vector3(leftThreshold, 0f, 0f)).x;
-		rightThreshold = (Screen.width / 8f) * 5f ;
-		rightThreshLoc = GetComponent<Camera>().ViewportToWorldPoint(new Vector3(rightThreshold, 0f, 0f)).x;
-		deltaHorizontalW = Mathf.Abs( leftThreshLoc - transform.position.x);
-		deltaHorizontalV = GetComponent<Camera>().ViewportToWorldPoint(new Vector3(deltaHorizontalW, 0f, 0f)).x;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
 
-		//update threshold locations
-		leftThreshLoc = GetComponent<Camera>().ViewportToWorldPoint (new Vector3(leftThreshold, 0f, 0f)).x;
-		rightThreshLoc = GetComponent<Camera>().ViewportToWorldPoint (new Vector3(rightThreshold, 0f, 0f)).x;
-
-		//player's position in viewport
-		Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
 		if( target.GetComponent<PlayerController>().running || target.GetComponent<PlayerController>().alwaysRun)
 		{
 			panSpeed = target.GetComponent<PlayerMotor>().movement.runSpeed;
@@ -62,27 +43,35 @@ public class SideScrollerCameraController : MonoBehaviour {
 			panSpeed = target.GetComponent<PlayerMotor>().movement.walkSpeed;
 		}
 
+		//get player's position in viewport
+		Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
+		float horizontalPan = point.x;
+		float verticalPan = point.y;
+
 		//to the left
-		if (point.x < 0.36f)
+		if (canPanLeft && point.x < leftThreshold)
 		{
-			Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.64f, point.y, point.z)); //(new Vector3(0.5, 0.5, point.z));
-			Vector3 destination = transform.position + delta;
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, panSpeed);
+			horizontalPan = rightThreshold;
 		}
-		else if (point.x > 0.64f)
+		else if (canPanRight && point.x > rightThreshold) //to the right
 		{
-			Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.36f, point.y, point.z)); //(new Vector3(0.5, 0.5, point.z));
-			Vector3 destination = transform.position + delta;
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, panSpeed);
+			horizontalPan = leftThreshold;
 		}
 
-		/*if (target)
+		//go up?
+		if (canPanUp && point.y > upThreshold)
 		{
-			Vector3 point = camera.WorldToViewportPoint(target.position);
-			Vector3 delta = target.position - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
-			Vector3 destination = transform.position + delta;
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
-		}*/
+			verticalPan = downThreshold;
+		}
+		else if(canPanDown && point.y < downThreshold)
+		{
+			verticalPan = upThreshold;
+		}
+
+		Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(horizontalPan, verticalPan, point.z));
+		Vector3 destination = transform.position + delta;
+		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, panSpeed);
+
 		
 	}
 }
