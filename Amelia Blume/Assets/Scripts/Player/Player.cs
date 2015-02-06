@@ -25,10 +25,13 @@ public class Player : BaseBehavior {
 	 * future calls.
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 
-	public int health = 100;
 =======
 	public int health;
+>>>>>>> master
+=======
+	
 >>>>>>> master
 	protected PlayerController cachedPlayerController;
 	public PlayerController controller {
@@ -184,10 +187,12 @@ public class Player : BaseBehavior {
 #region Internal methods
 	
 	protected void Start() {
+<<<<<<< HEAD
 		Broadcast("OnSpawn");
 		health = 100;
-<<<<<<< HEAD
-		Debug.Log ("Amelia:" + health);
+
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 	}
