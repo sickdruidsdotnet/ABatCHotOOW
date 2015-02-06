@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 /// <summary>
 /// Primary player controller class. Provides a few basic
 /// utility functions for all related components and readonly
@@ -23,7 +24,8 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
-	
+
+	public int health = 100;
 	protected PlayerController cachedPlayerController;
 	public PlayerController controller {
 		get {
@@ -178,7 +180,9 @@ public class Player : BaseBehavior {
 #region Internal methods
 	
 	protected void Start() {
-		Broadcast("OnSpawn");	
+		Broadcast("OnSpawn");
+		health = 100;
+		Debug.Log ("Amelia:" + health);
 	}
 
 #endregion

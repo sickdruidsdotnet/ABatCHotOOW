@@ -1,9 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../../Documents/Riot!/Assets/EnemySpawner.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animals/Deer.cs">
     <Files>
-      <File FileName="../../../Documents/Riot!/Assets/EnemySpawner.cs" Line="1" Column="1" />
-      <File FileName="../../../Documents/Riot!/Assets/AIAttack.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Animals/Deer.cs" Line="62" Column="9" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -26,6 +26,8 @@ public class Deer : Animal
     public float maxVelocityChange;
     float distToGround;
 
+	private Animator anim;
+
     // Use this for initialization
     void Start()
     {
@@ -47,6 +49,9 @@ public class Deer : Animal
         //lock the axis to where it's been placed in the editor
         lockedAxisValue = this.transform.position.z;
 
+		anim = GetComponent<Animator> ();
+		anim.SetBool ("isRunning", false);
+
     }
 
     // Update is called once per frame
@@ -55,7 +60,7 @@ public class Deer : Animal
         isGrounded = Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
 
         MoveRight();
-
+		//MoveR();
         //rotation management
         if (rotationCooldown > 0)
         {
@@ -102,6 +107,7 @@ public class Deer : Animal
         {
 			if(collision.gameObject.tag == "Wall")
 			{
+				Debug.Log ("wall");
 	            recentlyRotated = true;
 				isCharging = false;
 	            rotationCooldown = 60;
@@ -148,4 +154,9 @@ public class Deer : Animal
         velocityChange.y = 0;
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
     }
+
+	void MoveR(){
+		anim.SetBool ("isRunning", true);
+		transform.Translate (-0.1f, 0, 0);
+	}
 }
