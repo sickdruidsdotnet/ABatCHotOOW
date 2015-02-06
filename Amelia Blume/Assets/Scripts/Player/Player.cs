@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 /// <summary>
 /// Primary player controller class. Provides a few basic
 /// utility functions for all related components and readonly
@@ -13,7 +12,7 @@ using System.Collections;
 /// the other components, to provide a single point of interaction.
 /// </summary>
 [RequireComponent(typeof(PlayerController))]
-[RequireComponent(typeof(PlayerCameraController))]
+//[RequireComponent(typeof(PlayerCameraController))]
 [RequireComponent(typeof(PlayerMotor))]
 public class Player : BaseBehavior {
 	
@@ -24,12 +23,7 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
-<<<<<<< HEAD
-	public int health;
-=======
-
-	public int health = 100;
->>>>>>> feature/animated_deer
+	
 	protected PlayerController cachedPlayerController;
 	public PlayerController controller {
 		get {
@@ -184,12 +178,7 @@ public class Player : BaseBehavior {
 #region Internal methods
 	
 	protected void Start() {
-		Broadcast("OnSpawn");
-		health = 100;
-<<<<<<< HEAD
-=======
-		Debug.Log ("Amelia:" + health);
->>>>>>> feature/animated_deer
+		Broadcast("OnSpawn");	
 	}
 
 #endregion
