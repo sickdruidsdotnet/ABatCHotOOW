@@ -24,8 +24,12 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
+<<<<<<< HEAD
 
 	public int health = 100;
+=======
+	public int health;
+>>>>>>> master
 	protected PlayerController cachedPlayerController;
 	public PlayerController controller {
 		get {
@@ -182,7 +186,10 @@ public class Player : BaseBehavior {
 	protected void Start() {
 		Broadcast("OnSpawn");
 		health = 100;
+<<<<<<< HEAD
 		Debug.Log ("Amelia:" + health);
+=======
+>>>>>>> master
 	}
 
 #endregion

@@ -1,8 +1,16 @@
 ﻿<Properties>
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animals/Deer.cs">
     <Files>
       <File FileName="Assets/Scripts/Animals/Deer.cs" Line="62" Column="9" />
+=======
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/Player.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Animals/Deer.cs" Line="155" Column="1" />
+      <File FileName="Assets/Scripts/Player/Player.cs" Line="182" Column="9" />
+>>>>>>> master
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
