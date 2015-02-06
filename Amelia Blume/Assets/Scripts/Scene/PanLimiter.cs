@@ -9,7 +9,7 @@ public class PanLimiter : MonoBehaviour {
 	public bool limitDown;
 
 	GameObject mainCameraObject;
-	//Camera mainCamera;
+	Camera mainCamera;
 	SideScrollerCameraController cameraScript;
 
 	// Use this for initialization
@@ -18,7 +18,7 @@ public class PanLimiter : MonoBehaviour {
 		if (mainCameraObject == null) {
 			Debug.LogError ("No Main Camera in scene");
 		} else {
-			//mainCamera = mainCameraObject.GetComponent<Camera>();
+			mainCamera = mainCameraObject.GetComponent<Camera>();
 			cameraScript = mainCameraObject.GetComponent<SideScrollerCameraController>();
 		}
 	}
