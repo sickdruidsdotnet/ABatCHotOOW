@@ -25,7 +25,7 @@ public class Soil : MonoBehaviour {
 			ChangeHydrationLevel(-1);
 			plantedSeed.collectWater();
 			timer = 0;
-			Debug.Log ("Hydration level" + plantedSeed.getWaterCount());
+			Debug.Log ("Hydration level seed" + plantedSeed.getWaterCount());
 		}
 		timer++;
 		//Debug.Log (GetHydrationLevel ());
@@ -68,7 +68,7 @@ public class Soil : MonoBehaviour {
 			if(!plantedSeed.checkIfPlanted()){
 				plantedSeed.SetPlanted(true);
 				this.isPlanted = true;
-				//Debug.Log ("Planted");
+				Debug.Log ("Planted");
 			}
 		}
 	}
