@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Soil : MonoBehaviour {
 	private int HydrationLevel;
-	private bool isPlanted;
+	public bool isPlanted;
 	private Vector3 SeedLocation;
 	private int SeedWater;
 	private int SeedType;
@@ -25,45 +25,32 @@ public class Soil : MonoBehaviour {
 		{
 			isPlanted = false;
 		}
-
-		if (CheckIsPlanted() && GetHydrationLevel() > 0 && timer > 10) {
-			ChangeHydrationLevel(-1);
-			plantedSeed.collectWater();
-			timer = 0;
-			Debug.Log ("Hydration level" + plantedSeed.getWaterCount());
-		}
-		timer++;
-		//Debug.Log (GetHydrationLevel ());
 	}
 
-	int GetHydrationLevel(){
+	public int GetHydrationLevel(){
 		return HydrationLevel;
 	}
 
-	void SetSeedLocation(Vector3 location){
+	public void SetSeedLocation(Vector3 location){
 		SeedLocation = location;
 	}
 
-	Vector3 GetSeedLocation(){
+	public Vector3 GetSeedLocation(){
 		return SeedLocation;
 	}
 
-	void CreatePlant(){
-		//
-	}
-
-	void ChangeHydrationLevel(int water){
+	public void ChangeHydrationLevel(int water){
 		HydrationLevel += water;
 	}
 
-	bool CheckIsPlanted(){
+	public bool CheckIsPlanted(){
 		return isPlanted;
 	}
 
 	void OnParticleCollision(GameObject other) {
 		if (other.tag == "Water" && GetHydrationLevel() < MaxWater) {
 			ChangeHydrationLevel (1);
-			//Debug.Log("Soil water" + GetHydrationLevel());
+			Debug.Log("Soil water:" + GetHydrationLevel());
 		}
 	}
 
@@ -72,7 +59,7 @@ public class Soil : MonoBehaviour {
 			plantedSeed = other.gameObject.GetComponent<Seed>();
 			other.gameObject.GetComponent<Seed>().setSoil(this.gameObject);
 			if(!plantedSeed.checkIfPlanted()){
-				plantedSeed.SetPlanted(true);
+				plantedSeed.setPlanted(true);
 				this.isPlanted = true;
 				//Debug.Log ("Planted");
 			}
