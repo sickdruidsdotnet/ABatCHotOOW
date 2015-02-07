@@ -5,7 +5,7 @@ using System.Collections;
 //also known as the Parent class.
 public class Seed : MonoBehaviour
 {
-    protected int waterCount;
+    public int waterCount;
     protected int hydrationGoal;
     protected bool isPlanted;
 
@@ -64,4 +64,9 @@ public class Seed : MonoBehaviour
     {
         return isPlanted;
     }
+
+	public void SetPlanted(bool status)
+	{
+		isPlanted = status;
+	}
 }

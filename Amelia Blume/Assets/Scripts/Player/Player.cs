@@ -12,7 +12,7 @@ using System.Collections;
 /// the other components, to provide a single point of interaction.
 /// </summary>
 [RequireComponent(typeof(PlayerController))]
-[RequireComponent(typeof(PlayerCameraController))]
+//[RequireComponent(typeof(PlayerCameraController))]
 [RequireComponent(typeof(PlayerMotor))]
 public class Player : BaseBehavior {
 	
@@ -23,7 +23,7 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
-	
+	public int health;
 	protected PlayerController cachedPlayerController;
 	public PlayerController controller {
 		get {
@@ -178,7 +178,8 @@ public class Player : BaseBehavior {
 #region Internal methods
 	
 	protected void Start() {
-		Broadcast("OnSpawn");	
+		Broadcast("OnSpawn");
+		health = 100;
 	}
 
 #endregion
