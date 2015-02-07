@@ -14,14 +14,14 @@ public class platformTrigger : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("OnTriggerEnter called");
+		//Debug.Log("OnTriggerEnter called");
 		if (other.name == "Player")
 			transform.parent.collider.isTrigger = false;
 	}
 	
 	void OnTriggerExit(Collider other)
 	{
-		Debug.Log("OnTriggerExit called");
+		//Debug.Log("OnTriggerExit called");
 		if (other.name == "Player")
 			transform.parent.collider.isTrigger = true;
 	}

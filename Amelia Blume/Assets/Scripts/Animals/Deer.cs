@@ -106,7 +106,7 @@ public class Deer : Animal
 		if(collision.gameObject.tag == "Player")
 		{
 			if(isCharging){
-			//calling player reaction to damage
+				HitPlayer(collision.gameObject);
 			}
             beginRotate();
 		}
@@ -151,4 +151,22 @@ public class Deer : Animal
 				speed = walkSpeed;
 		}
     }
+
+	public void HitPlayer(GameObject player)
+	{
+		player.GetComponent<Player> ().ReduceHealth (damageValue);
+		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController>().stunTimer = 45;
+
+		int hitDirection;
+
+		if (transform.position.x - player.transform.position.x >= 0)
+			hitDirection = -1;
+		else
+			hitDirection = 1;
+		//prevent the player's force vector from affecting the deer
+		Physics.IgnoreCollision(player.collider, collider);
+		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+
+	}
 }
