@@ -63,9 +63,12 @@ public class Seed : MonoBehaviour
         // Create new Plant entity, specificcal the type stored in PlantType.
 
         // spawn a seed
+
+
         Vector3 loc = new Vector3(0, 0, 0);
         loc += transform.position;
         GameObject newPlant = Instantiate(Resources.Load(plantType), loc, Quaternion.identity) as GameObject;
+        newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject);
         Debug.Log("called sproutPlant()");
 
         // Destroy this Seed entity. The plant will carry on its legacy.
