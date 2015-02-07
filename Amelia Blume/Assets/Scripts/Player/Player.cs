@@ -213,19 +213,19 @@ public class Player : BaseBehavior {
 		ReduceHealth(1);
 	}
 
-	void ReduceHealth(int subtract)
+	public void ReduceHealth(int subtract)
 	{
 		health -= subtract;
 		if (GetHealth() == 0)
 			Kill ();
 	}
 
-	void SetHealth(int newHealth)
+	public void SetHealth(int newHealth)
 	{
 		health = newHealth;
 	}
 
-	int GetHealth()
+	public int GetHealth()
 	{
 		return health;
 	}

@@ -154,7 +154,7 @@ public class Deer : Animal
 
 	public void HitPlayer(GameObject player)
 	{
-		player.GetComponent<Player>().health -= damageValue;
+		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		player.GetComponent<PlayerController>().canControl = false;
 		player.GetComponent<PlayerController>().stunTimer = 45;
 
