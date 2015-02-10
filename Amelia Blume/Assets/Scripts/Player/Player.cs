@@ -210,7 +210,7 @@ public class Player : BaseBehavior {
 
 	void Update()
 	{
-		ReduceHealth(1);
+		//ReduceHealth(1);
 	}
 
 	public void ReduceHealth(int subtract)

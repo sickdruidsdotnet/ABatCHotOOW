@@ -1,12 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*Parent this object to the player, then save it into an
+ * array that will deal with dropping them at the proper times
+ */
+
 public class blossomMover : MonoBehaviour {
 
 	public bool attached;
 	public bool falling;
 	
 	public int count;
+
+	float rotateRate = 300;
+	float rotateX;
+	float rotateY;
+	float rotateZ;
 
 	// this will be what number flower it is
 	public int healthNum = 0;
@@ -16,8 +25,13 @@ public class blossomMover : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		attached = true;
-		falling = false;
+		if(transform.parent != null)
+		{
+			attached = true;
+			falling = false;
+		}
+		else
+			attached = false;
 		count = 0;
 	}
 
@@ -33,12 +47,17 @@ public class blossomMover : MonoBehaviour {
 			transform.position += amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
 			                    	- Mathf.Sin (2 * Mathf.PI * frequency 
 			          	 			* (Time.time - Time.deltaTime))) * new Vector3(-1.0f,0,0);
-			/*transform.rotation += amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
-			                                   - Mathf.Sin (2 * Mathf.PI * frequency 
-			             * (Time.time - Time.deltaTime))) * new Quaternion(0,0,-1.0f, 0);*/
+			if(transform.rotation != (new Quaternion(0f, 0f, 0f, 1.0f)))
+			{
+				transform.rotation = new Quaternion(transform.rotation.x - rotateX,
+				                                    transform.rotation.y - rotateY,
+				                                    transform.rotation.z - rotateZ,
+				                                    1.0f);
+			}
 			transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 		}
 
+		//debug, remove this when we get it properly detaching via health drops
 		if(Input.GetKey("1"))
 		   detach();
 	}
@@ -48,17 +67,25 @@ public class blossomMover : MonoBehaviour {
 	{
 		transform.parent = null;
 		attached = false;
+		if(transform.rotation != new Quaternion(0, 0, 0, 1.0f))
+		{
+			rotateX = transform.rotation.x / rotateRate;
+			rotateY = transform.rotation.y / rotateRate;
+			rotateZ = transform.rotation.z / rotateRate;
+		}
 	}
 
 
-	void OnTriggerEnter()
+	void OnTriggerEnter(Collider other)
 	{
-		count++;
+		if( other.tag != "Player" && !other.isTrigger)
+			count++;
 	}
 	
-	void OnTriggerExit()
+	void OnTriggerExit(Collider other)
 	{
-		count--;
+		if( other.tag != "Player" && !other.isTrigger)
+			count--;
 	}
 
 }
