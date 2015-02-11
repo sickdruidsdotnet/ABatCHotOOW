@@ -8,10 +8,6 @@ public class Plant : MonoBehaviour
     protected int waterCount;
     protected int hydrationGoal;
     protected float maturity;
-    protected int collectionTimer;
-    protected int collectionDelay;
-    protected Vector3 baseScale;
-    protected float scaleFactor;
     
     // Constructor
     public Plant()
