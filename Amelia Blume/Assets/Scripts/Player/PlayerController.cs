@@ -19,6 +19,9 @@ public class PlayerController : BaseBehavior {
     public bool isFacingRight;
     int faceDirection;
 
+	public bool canControl;
+	public int stunTimer;
+
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
@@ -50,14 +53,18 @@ public class PlayerController : BaseBehavior {
             faceDirection = -1;
         }
 
+		canControl = true;
+		stunTimer = 0;
+
     }
 	
 	protected void Update() {
-		
+
 		if (Camera.main == null) {
 			return;		
 		}
-		
+
+		HandleStun ();
 		HandleMovementInput();
 		HandleActionInput();
 
@@ -87,6 +94,7 @@ public class PlayerController : BaseBehavior {
 
 	
 	protected void HandleMovementInput() {
+
 		//float vertical = 0f;
 		float horizontal = 0f;
 		
@@ -132,6 +140,10 @@ public class PlayerController : BaseBehavior {
 		lastInput = pendingMovementInput;
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
+
+		if (!canControl) {
+			pendingMovementInput = Vector3.zero;
+		}
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;
@@ -156,6 +168,10 @@ public class PlayerController : BaseBehavior {
 	}
 	
 	protected void HandleActionInput() {
+
+		if(!canControl)
+			return;
+
 		if (Input.GetButtonDown("Jump")) {
 			Jump();
 		}
@@ -172,5 +188,19 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+	}
+
+	public void HandleStun()
+	{
+		if (!canControl) {
+			if(stunTimer <= 0)
+			{
+				canControl = true;
+			}
+			else
+			{
+				stunTimer--;
+			}
+		}
 	}
 }
