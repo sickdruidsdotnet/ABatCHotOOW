@@ -24,7 +24,9 @@ public class Player : BaseBehavior {
 	 * future calls.
 	 */
 	public int health;
+	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
+	public Camera camera;
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -205,7 +207,41 @@ public class Player : BaseBehavior {
 	public void Broadcast(string eventName, object args) {
 		BroadcastMessage(eventName, args, SendMessageOptions.DontRequireReceiver);	
 	}
+
+	void Update()
+	{
+		//ReduceHealth(1);
+	}
+
+	public void ReduceHealth(int subtract)
+	{
+		health -= subtract;
+		if (GetHealth() == 0)
+			Kill ();
+	}
+
+	public void SetHealth(int newHealth)
+	{
+		health = newHealth;
+	}
+
+	public int GetHealth()
+	{
+		return health;
+	}
+
+
+	void Kill()
+	{
+		spawner = GameObject.Find ("Spawner");
+		this.transform.position = spawner.transform.position;
+		SetHealth (-5);
+		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
+		controller.MoveToPlayer();
+	}
+
 	
+
 #endregion
 	
 }

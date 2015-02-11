@@ -8,6 +8,11 @@ public class Plant : MonoBehaviour
     protected int waterCount;
     protected int hydrationGoal;
     protected float maturity;
+    public Soil soil;
+    private int collectionTimer;
+    private int collectionDelay;
+    private Vector3 baseScale;
+    private float scaleFactor;
     
     // Constructor
     public Plant()
@@ -23,15 +28,38 @@ public class Plant : MonoBehaviour
         collectionTimer = 0;
         collectionDelay = 30;
 
+        
+
         Debug.Log("Plant created");
         Debug.Log("Default hydrationGoal: " + hydrationGoal);
-        Debug.Log("baseScale: " + baseScale);
     }
 
     void Start()
     {
-        // this line can't be in the constructor, for some reason.
+        // this can't be in the constructor or Unity complains
         baseScale = transform.localScale;
+    }
+
+    void Update()
+    {
+
+        if(soil != null)
+        {
+            if(soil.GetHydrationLevel() > 0)
+            {
+                if (collectionTimer > collectionDelay)
+                {
+                    collectWater();
+                    grow();
+                    collectionTimer = 0;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Plant has no soil!");
+        }
+        collectionTimer++;
     }
 
     // Grows the plant.
@@ -39,7 +67,6 @@ public class Plant : MonoBehaviour
     {
         // do something with procedural growth.
 
-        maturity = (float)(waterCount / hydrationGoal);
         maturity = (float)waterCount / (float)hydrationGoal;
         scaleFactor = 2.0f * maturity;
         transform.localScale = new Vector3(baseScale.x + scaleFactor, baseScale.y + scaleFactor, baseScale.z + scaleFactor);
@@ -49,13 +76,10 @@ public class Plant : MonoBehaviour
     {
         // increment waterCount
         waterCount++;
+        soil.ChangeHydrationLevel(-1);
 
-        Debug.Log("Plant collected water. Plant waterCount: " + waterCount + ", Soil Hydration level: " + soil.GetHydrationLevel());
+        Debug.Log("Seed collected water. Seed waterCount: " + waterCount + ", Soil Hydration level: " + soil.GetHydrationLevel());
         // check to see if we've collected enough water
-        if (waterCount >= hydrationGoal)
-        {
-            grow();
-        }
     }
 
     public int getWaterCount()
@@ -71,5 +95,13 @@ public class Plant : MonoBehaviour
     public float getMaturity()
     {
         return maturity;
+    }
+    public void setSoil(GameObject s)
+    {
+        soil = s.gameObject.GetComponent<Soil>();
+    }
+    public Soil getSoil()
+    {
+        return soil;
     }
 }
