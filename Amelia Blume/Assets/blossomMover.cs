@@ -56,10 +56,7 @@ public class blossomMover : MonoBehaviour {
 			}
 			transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 		}
-
-		//debug, remove this when we get it properly detaching via health drops
-		if(Input.GetKey("1"))
-		   detach();
+	
 	}
 
 	//this will unparent it from the player and cause it to start moving

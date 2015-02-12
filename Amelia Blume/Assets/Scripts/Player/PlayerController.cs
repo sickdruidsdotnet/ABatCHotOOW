@@ -25,11 +25,26 @@ public class PlayerController : BaseBehavior {
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
+	public GameObject[] blossoms;
+
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
     void Start()
     {
+
+		blossoms = new GameObject[10];
+		int i = 0;
+		foreach (Transform child in transform) 
+		{
+			blossomMover tempBlossom = child.GetComponent<blossomMover>();
+			if(tempBlossom != null)
+			{
+				blossoms[i] = child.gameObject;
+				i++;
+			}
+		}
+
         //get the value to lock the player to. Should Iddeally be 0 in the editor
         lockedAxisValue = this.transform.position.z;
 
@@ -62,6 +77,12 @@ public class PlayerController : BaseBehavior {
 
 		if (Camera.main == null) {
 			return;		
+		}
+
+		//debug, remove this when we get it properly detaching via health drops
+		if (Input.GetKey ("1")) {
+			for(int i = 0; i < 10; i++)
+				blossoms[i].GetComponent<blossomMover>().detach ();
 		}
 
 		HandleStun ();
