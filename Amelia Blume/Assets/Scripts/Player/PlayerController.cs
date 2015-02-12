@@ -41,6 +41,7 @@ public class PlayerController : BaseBehavior {
 			if(tempBlossom != null)
 			{
 				blossoms[i] = child.gameObject;
+				blossoms[i].name = blossoms[i].name + " " + i;
 				i++;
 			}
 		}
@@ -78,6 +79,9 @@ public class PlayerController : BaseBehavior {
 		if (Camera.main == null) {
 			return;		
 		}
+
+		//check to see if blossoms are up-to-date
+		checkHealth ();
 
 		//debug, remove this when we get it properly detaching via health drops
 		if (Input.GetKey ("1")) {
@@ -223,5 +227,22 @@ public class PlayerController : BaseBehavior {
 				stunTimer--;
 			}
 		}
+	}
+
+	//essentially check if the blossoms need to be detached/added
+	void checkHealth()
+	{
+		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
+		int currTens = currentHealth / 10;
+		
+		if (currTens != 10 && blossoms[currTens+1] != null) {
+			for(int i = 9; i > currTens; i--)
+			{
+				blossoms[i].GetComponent<blossomMover>().detach();
+				blossoms[i].name = blossoms[i].name + " (detached)";
+				blossoms[i] = null;
+			}
+		}
+		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
 	}
 }
