@@ -25,7 +25,9 @@ public class PlayerController : BaseBehavior {
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
+	public GameObject blossomPrefab;	
 	public GameObject[] blossoms;
+	public Transform[] blossomLocations;
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
@@ -34,6 +36,7 @@ public class PlayerController : BaseBehavior {
     {
 
 		blossoms = new GameObject[10];
+		blossomLocations = new Transform[10];
 		int i = 0;
 		foreach (Transform child in transform) 
 		{
@@ -42,6 +45,8 @@ public class PlayerController : BaseBehavior {
 			{
 				blossoms[i] = child.gameObject;
 				blossoms[i].name = blossoms[i].name + " " + i;
+				//nah
+				blossomLocations[i] = blossoms[i].transform;
 				i++;
 			}
 		}
@@ -234,13 +239,31 @@ public class PlayerController : BaseBehavior {
 	{
 		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
 		int currTens = currentHealth / 10;
-		
-		if (currTens != 10 && blossoms[currTens+1] != null) {
+		//checking if lost health
+		if (currTens < 9 && blossoms[currTens+1] != null) {
 			for(int i = 9; i > currTens; i--)
 			{
-				blossoms[i].GetComponent<blossomMover>().detach();
-				blossoms[i].name = blossoms[i].name + " (detached)";
-				blossoms[i] = null;
+				if(blossoms[i] != null){
+					blossoms[i].GetComponent<blossomMover>().detach();
+					blossoms[i].name = blossoms[i].name + " (detached)";
+					blossoms[i] = null;
+				}
+			}
+		}
+
+		//checking if gained health back
+		if (currTens != 10 && blossoms [currTens] == null) {
+			int i;
+			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
+     		{
+				Debug.Log("Missing " + (currTens - i));
+				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
+				blossoms[currTens-i] = newBlossom;
+				blossoms[currTens-i].transform.parent = transform;
+				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
+				blossoms[currTens-i].transform.position = blossomLocations[currTens-i].position;
+				blossoms[currTens-i].transform.localPosition = blossomLocations[currTens-i].localPosition;
+				blossoms[currTens-i].transform.rotation = blossomLocations[currTens-i].rotation;
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens

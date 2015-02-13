@@ -12,10 +12,14 @@ public class blossomMover : MonoBehaviour {
 	
 	public int count;
 
+	public int destroyTimer;
+
 	float rotateRate = 300;
 	float rotateX;
 	float rotateY;
 	float rotateZ;
+
+	public Transform initialTransform;
 
 	// this will be what number flower it is
 	public int healthNum = 0;
@@ -25,6 +29,10 @@ public class blossomMover : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		destroyTimer = 900;
+		initialTransform = transform;
+		//initialTransform.position = transform.localPosition;
+
 		if(transform.parent != null)
 		{
 			attached = true;
@@ -43,20 +51,35 @@ public class blossomMover : MonoBehaviour {
 		else
 				falling = true;
 
-		if (!attached && falling) {
-			transform.position += amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
-			                    	- Mathf.Sin (2 * Mathf.PI * frequency 
-			          	 			* (Time.time - Time.deltaTime))) * new Vector3(-1.0f,0,0);
-			if(transform.rotation != (new Quaternion(0f, 0f, 0f, 1.0f)))
-			{
-				transform.rotation = new Quaternion(transform.rotation.x - rotateX,
-				                                    transform.rotation.y - rotateY,
-				                                    transform.rotation.z - rotateZ,
-				                                    1.0f);
+		if (!attached) {
+			destroyTimer--;
+			if(falling){
+				transform.position += amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
+				                    	- Mathf.Sin (2 * Mathf.PI * frequency 
+				          	 			* (Time.time - Time.deltaTime))) * new Vector3(-1.0f,0,0);
+				if(transform.rotation != (new Quaternion(0f, 0f, 0f, 1.0f)))
+				{
+					transform.rotation = new Quaternion(transform.rotation.x - rotateX,
+					                                    transform.rotation.y - rotateY,
+					                                    transform.rotation.z - rotateZ,
+					                                    1.0f);
+				}
+				transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 			}
-			transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 		}
-	
+		if (destroyTimer <= 0)
+			Destroy (this.gameObject);
+
+		//handling transparency fade-out, not functional yet
+		if (destroyTimer <= 180) {
+			//change this to handle multiple materials.
+			this.gameObject.renderer.materials[0].color =
+				new Color(gameObject.renderer.material.color.r, 
+				          gameObject.renderer.material.color.b,
+				          gameObject.renderer.material.color.g,
+				          ((float)destroyTimer/180f));
+			Debug.Log("Alpha is: " + ((float)destroyTimer/180f));
+		}
 	}
 
 	//this will unparent it from the player and cause it to start moving
@@ -71,7 +94,6 @@ public class blossomMover : MonoBehaviour {
 			rotateZ = transform.rotation.z / rotateRate;
 		}
 	}
-
 
 	void OnTriggerEnter(Collider other)
 	{
