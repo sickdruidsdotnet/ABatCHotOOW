@@ -4,6 +4,8 @@ using System.Collections;
 public class Deer : Animal
 {
 
+	Player player;
+
     //how much damage this will do to the player
     public int damageValue;
 
@@ -14,6 +16,9 @@ public class Deer : Animal
     //again, how we do states will change, but for now I'm doing bools
     public bool isCharging;
     public bool isInChargeUp;
+
+	public float deerYSight = 3;
+	public float deerXSight = 5;
 
     bool recentlyRotated;
     bool recentlyChargedUp;
@@ -31,6 +36,17 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
+
+		//get the player to easily work with
+		GameObject playerObject = GameObject.FindWithTag ("Player");
+		if (playerObject == null) {
+			Debug.LogError("Deer Error: cannot locate player");
+			//If you're seeing this error, you may have tagged the player incorrectly
+		}
+		else{
+			player = playerObject.GetComponent <Player>();
+		}
+
 
         isCharging = false;
         isInChargeUp = false;
@@ -53,9 +69,24 @@ public class Deer : Animal
     // Update is called once per frame
     void Update()
     {
+		//keep faceDirection Up to Date
+		if (transform.rotation.eulerAngles.y >= 0 && transform.rotation.eulerAngles.y <= 180)
+		{
+			faceDirection = 1;
+		}
+		else {
+			faceDirection = -1;
+		}
+
+
+		//function to check if the player is in sight
+		checkSeen ();
 
         if (!isRestrained)
         {
+			//update face direction
+
+
             MoveRight();
 
             //rotation management
@@ -106,27 +137,53 @@ public class Deer : Animal
 		if(collision.gameObject.tag == "Player")
 		{
 			if(isCharging){
-			//calling player reaction to damage
+				HitPlayer(collision.gameObject);
 			}
             beginRotate();
 		}
 
     }
 
-	void OnTriggerStay(Collider collider)
+	void checkSeen()
 	{
-		if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated && collider.tag == "Player") {
-			//Debug.Log("found player");
-			isCharging = true;
-			isInChargeUp = true;
-			chargeUpCooldown = 60;
+
+		float yDistance = Mathf.Abs(transform.position.y - player.transform.position.y);
+		float xDistance = Mathf.Abs(transform.position.x - player.transform.position.x);
+		
+		
+		// Check to see if player is in the seeing range
+		if (yDistance <= deerYSight && xDistance <= deerXSight)
+		{
+			//check the deer should be charging
+			if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated) {
+
+				//check if deer is facing the right way to see the player
+				if (transform.position.x - player.transform.position.x < 0 && faceDirection == -1)
+				{
+					//Debug.Log("found player to the right");
+					isCharging = true;
+					isInChargeUp = true;
+					chargeUpCooldown = 60;
+					return;
+				}
+				else if (transform.position.x - player.transform.position.x > 0 && faceDirection == 1)
+				{
+					//Debug.Log("found player to the left");
+					isCharging = true;
+					isInChargeUp = true;
+					chargeUpCooldown = 60;
+					return;
+				}
+			}
 		}
+		else
+			return;
 	}
 
     void MoveRight()
     {
         // Calculate how fast we should be moving
-        Vector3 targetVelocity = new Vector3(speed * faceDirection, 0, 0);
+        Vector3 targetVelocity = new Vector3(speed * -1f , 0, 0);
         targetVelocity = transform.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
@@ -151,4 +208,22 @@ public class Deer : Animal
 				speed = walkSpeed;
 		}
     }
+
+	public void HitPlayer(GameObject player)
+	{
+		player.GetComponent<Player> ().ReduceHealth (damageValue);
+		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController>().stunTimer = 45;
+
+		int hitDirection;
+
+		if (transform.position.x - player.transform.position.x >= 0)
+			hitDirection = -1;
+		else
+			hitDirection = 1;
+		//prevent the player's force vector from affecting the deer
+		Physics.IgnoreCollision(player.collider, collider);
+		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+
+	}
 }

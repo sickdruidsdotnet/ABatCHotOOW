@@ -212,26 +212,30 @@ public class Player : BaseBehavior {
 
 	void Update()
 	{
+
 		ReduceHealth(1);
 		if (canGrow && this.transform.localScale.x < 1) {
 			this.transform.localScale = new Vector3(this.transform.localScale.x+.1f,this.
 			                                        transform.localScale.y+.1f,this.transform.localScale.z+.1f);
 		}
+
+
+
 	}
 
-	void ReduceHealth(int subtract)
+	public void ReduceHealth(int subtract)
 	{
 		health -= subtract;
 		if (GetHealth() == 0)
 			Kill ();
 	}
 
-	void SetHealth(int newHealth)
+	public void SetHealth(int newHealth)
 	{
 		health = newHealth;
 	}
 
-	int GetHealth()
+	public int GetHealth()
 	{
 		return health;
 	}
