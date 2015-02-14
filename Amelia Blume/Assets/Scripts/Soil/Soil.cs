@@ -10,6 +10,7 @@ public class Soil : MonoBehaviour {
 	private int MaxWater;
 	private Seed plantedSeed;
 	private int timer;
+	public float alpha = 1;
 	// Use this for initialization
 	void Start () {
 		HydrationLevel = 0;
@@ -20,7 +21,6 @@ public class Soil : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		if (plantedSeed == null)
 		{
 			isPlanted = false;

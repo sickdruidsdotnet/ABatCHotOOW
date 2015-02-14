@@ -93,7 +93,7 @@ public class Deer : Animal
             if (rotationCooldown > 0)
             {
                 rotationCooldown--;
-                transform.Rotate(0f, 0f, 3f);
+                transform.Rotate(0f, 3f, 0f);
                 isCharging = false;
                 isInChargeUp = false;
             }
@@ -195,7 +195,8 @@ public class Deer : Animal
         velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
         velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
         velocityChange.y = 0;
-        rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+        //rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		transform.Translate (-0.1f, 0, 0);
     }
 
     public void beginRotate()
