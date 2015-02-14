@@ -27,7 +27,8 @@ public class PlayerController : BaseBehavior {
 
 	public GameObject blossomPrefab;	
 	public GameObject[] blossoms;
-	public Transform[] blossomLocations;
+	public Vector3[] blossomPositions;
+	public Quaternion[] blossomRotations;
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
@@ -36,7 +37,8 @@ public class PlayerController : BaseBehavior {
     {
 
 		blossoms = new GameObject[10];
-		blossomLocations = new Transform[10];
+		blossomPositions = new Vector3[10];
+		blossomRotations = new Quaternion[10];
 		int i = 0;
 		foreach (Transform child in transform) 
 		{
@@ -45,8 +47,8 @@ public class PlayerController : BaseBehavior {
 			{
 				blossoms[i] = child.gameObject;
 				blossoms[i].name = blossoms[i].name + " " + i;
-				//nah
-				blossomLocations[i] = blossoms[i].transform;
+				blossomPositions[i] = blossoms[i].transform.localPosition;
+				blossomRotations[i] = blossoms[i].transform.localRotation;
 				i++;
 			}
 		}
@@ -261,9 +263,9 @@ public class PlayerController : BaseBehavior {
 				blossoms[currTens-i] = newBlossom;
 				blossoms[currTens-i].transform.parent = transform;
 				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
-				blossoms[currTens-i].transform.position = blossomLocations[currTens-i].position;
-				blossoms[currTens-i].transform.localPosition = blossomLocations[currTens-i].localPosition;
-				blossoms[currTens-i].transform.rotation = blossomLocations[currTens-i].rotation;
+				blossoms[currTens-i].transform.localPosition = blossomPositions[currTens-i];
+				//rotation varies depending on which direction the player, but not locally...?
+				blossoms[currTens-1].transform.localRotation = blossomRotations[currTens-i];
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens

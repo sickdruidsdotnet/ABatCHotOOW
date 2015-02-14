@@ -73,12 +73,13 @@ public class blossomMover : MonoBehaviour {
 		//handling transparency fade-out, not functional yet
 		if (destroyTimer <= 180) {
 			//change this to handle multiple materials.
-			this.gameObject.renderer.materials[0].color =
-				new Color(gameObject.renderer.material.color.r, 
+			Color newColor = new Color(gameObject.renderer.material.color.r, 
 				          gameObject.renderer.material.color.b,
 				          gameObject.renderer.material.color.g,
 				          ((float)destroyTimer/180f));
-			Debug.Log("Alpha is: " + ((float)destroyTimer/180f));
+			this.gameObject.renderer.material.SetColor("_Color", newColor);
+
+			Debug.Log("Alpha is: " + this.gameObject.renderer.material.color.a);
 		}
 	}
 
