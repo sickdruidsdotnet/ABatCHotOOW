@@ -75,9 +75,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 		
 	}
 
-	public void MoveToPlayer()
+	public void MoveToPlayer(float xCoord )
 	{
-		GameObject amelia = GameObject.Find ("Player");
-		transform.position = new Vector3(amelia.transform.position.x, transform.position.y, transform.position.z);
+		//GameObject amelia = GameObject.Find ("Player");
+		transform.position = new Vector3(xCoord, transform.position.y, transform.position.z);
 	}
 }
