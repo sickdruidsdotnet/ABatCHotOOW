@@ -220,9 +220,10 @@ public class Player : BaseBehavior {
 
 		//ReduceHealth(1);
 		if (canGrow && this.transform.localScale.x < 1) {
-			this.transform.localScale = new Vector3(this.transform.localScale.x+.1f,this.
-			                                        transform.localScale.y+.1f,this.transform.localScale.z+.1f);
-		}
+			this.transform.localScale = new Vector3 (this.transform.localScale.x + .1f, this.
+			                                        transform.localScale.y + .1f, this.transform.localScale.z + .1f);
+		} else
+			SetCanGrow (false);
 
 	}
 
@@ -260,12 +261,12 @@ public class Player : BaseBehavior {
 		fruit = (GameObject)Resources.Load ("RespawnFruit");
 		fruit.transform.position = fruitPosition;
 		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y, 0);
-		SetHealth (-5);
+		//SetHealth (100);
 
 		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
 		controller.MoveToPlayer(spawner.transform.position.x);
 		Instantiate (fruit);
-		this.transform.localScale = new Vector3 (0, 0, 0);
+		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}
 
 

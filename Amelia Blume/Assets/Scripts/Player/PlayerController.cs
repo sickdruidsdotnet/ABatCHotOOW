@@ -88,7 +88,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//check to see if blossoms are up-to-date
-		checkHealth ();
+		//checkHealth ();
 
 		//debug, remove this when we get it properly detaching via health drops
 		if (Input.GetKey ("1")) {

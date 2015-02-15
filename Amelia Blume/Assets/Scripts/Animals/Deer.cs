@@ -5,6 +5,7 @@ public class Deer : Animal
 {
 
 	Player player;
+	Animator anim;
 
     //how much damage this will do to the player
     public int damageValue;
@@ -32,6 +33,8 @@ public class Deer : Animal
 
     public float speed;
     public float maxVelocityChange;
+
+	public bool isFacingRight = false;
 
     // Use this for initialization
     void Start()
@@ -63,6 +66,7 @@ public class Deer : Animal
 
         //lock the axis to where it's been placed in the editor
         lockedAxisValue = this.transform.position.z;
+		anim = this.GetComponent<Animator>();
 
     }
 
@@ -88,8 +92,10 @@ public class Deer : Animal
 
 
             MoveRight();
+			//CheckRotation();
 
             //rotation management
+
             if (rotationCooldown > 0)
             {
                 rotationCooldown--;
@@ -101,6 +107,7 @@ public class Deer : Animal
             {
                 recentlyRotated = false;
             }
+            
 
 
             //charging
@@ -133,6 +140,7 @@ public class Deer : Animal
         if (collision.gameObject.tag == "Wall" || collision.gameObject.name == "Deer")
 		{
             beginRotate();
+			isFacingRight = !isFacingRight;
 		}
 		if(collision.gameObject.tag == "Player")
 		{
@@ -182,21 +190,10 @@ public class Deer : Animal
 
     void MoveRight()
     {
-        // Calculate how fast we should be moving
-        Vector3 targetVelocity = new Vector3(speed * -1f , 0, 0);
-        targetVelocity = transform.TransformDirection(targetVelocity);
-        targetVelocity *= speed;
-
-		//Debug.Log ("Target Velocity: " + targetVelocity);
-
-        // Apply a force that attempts to reach our target velocity
-        Vector3 velocity = rigidbody.velocity;
-        Vector3 velocityChange = (targetVelocity - velocity);
-        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-        velocityChange.y = 0;
-        //rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
-		transform.Translate (-0.1f, 0, 0);
+		speed = -0.05f;
+		transform.Translate (-0.05f, 0, 0);
+		//animation["Walking"].enabled = true;
+		anim.SetBool ("isRunning", true);
     }
 
     public void beginRotate()
@@ -226,5 +223,12 @@ public class Deer : Animal
 		Physics.IgnoreCollision(player.collider, collider);
 		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 
+	}
+
+	void CheckRotation(){
+		if ((!isFacingRight && this.transform.rotation.y != 0) || (isFacingRight && this.transform.rotation.y != 180) ) {
+			//if(this.transform.rotation.y > 0)
+			this.transform.Rotate(0,1f,0);
+		}
 	}
 }
