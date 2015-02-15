@@ -178,6 +178,9 @@ public class PlayerController : BaseBehavior {
 		if (Input.GetButtonDown("ThrowSeed")) {
 			ThrowSeed();
 		}
+		if (Input.GetButtonDown("Dash")) {
+			Dash();
+		}
 	}
 	
 	protected void Jump() {
@@ -188,6 +191,11 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+	}
+
+	protected void Dash() {
+		player.Broadcast("OnDashRequest");
+		player.motor.Dash();
 	}
 
 	public void HandleStun()

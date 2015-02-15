@@ -355,6 +355,14 @@ public class PlayerMotor : BaseBehavior {
 			player.Broadcast("OnThrowSeedDenied");
 		}
 	}
+
+	public void Dash() {
+		if (player.canDash) {
+			player.Broadcast("OnDash");
+			transform.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(player.GetDirection() * 4, 0f, 0f), 100f);
+		}
+	
+	}
 	
 	public void RotateTowardCameraDirection() {
 		if (pendingInput.x != 0 || pendingInput.z != 0 || player.controller.isTurning) {

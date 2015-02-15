@@ -174,6 +174,12 @@ public class Player : BaseBehavior {
 			return true;
 		}
 	}
+
+	public bool canDash {
+		get {
+			return true;
+		}
+	}
 #endregion
 	
 	
@@ -228,6 +234,17 @@ public class Player : BaseBehavior {
 	public int GetHealth()
 	{
 		return health;
+	}
+
+
+	//returns direction the player is currently facing as an int. 1=right, -1=left
+	//we don't call it derkrection
+	public int GetDirection()
+	{
+		if (cachedPlayerController.isFacingRight)
+			return 1;
+		else
+			return -1;
 	}
 
 
