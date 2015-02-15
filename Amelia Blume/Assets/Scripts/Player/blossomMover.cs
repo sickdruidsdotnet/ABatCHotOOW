@@ -13,17 +13,12 @@ public class blossomMover : MonoBehaviour {
 	bool canSwayLeft;
 	bool canSwayRight;
 	
-	public int count;
-	
 	public int destroyTimer;
 	
 	float rotateRate = 300;
 	float rotateX;
 	float rotateY;
 	float rotateZ;
-	
-	// this will be what number flower it is
-	public int healthNum = 0;
 	
 	public float amplitude;
 	public float frequency;
@@ -42,20 +37,33 @@ public class blossomMover : MonoBehaviour {
 		}
 		else
 			attached = false;
-		count = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (count > 0) {
-			falling = false;
-		} else {
-			//fixing negative count issues which happen in single-frame exits and enters
-			count = 0;
-			falling = true;
+
+		//raycasting instead of colliders, allows for more concise code
+		if (!attached) {
+			//check down
+			if (Physics.Raycast (transform.position, -Vector3.up, 0.02f)) {
+				falling = false;
+			} else {
+				falling = true;
+			}
+			//check right
+			if (Physics.Raycast (transform.position, Vector3.right, 0.02f)) {
+				canSwayRight = false;
+			} else {
+				canSwayRight = true;
+			}
+			//check left
+			if (Physics.Raycast (transform.position, -Vector3.right, 0.02f)) {
+				canSwayLeft = false;
+			} else {
+				canSwayLeft = true;
+			}
 		}
-		
+
 		//handling movement after falling off
 		if (!attached) {
 			//countdown to destruction
@@ -81,10 +89,12 @@ public class blossomMover : MonoBehaviour {
 				transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 			}
 		}
+
+		//object cleanup
 		if (destroyTimer <= 0)
 			Destroy (this.gameObject);
 		
-		//handling transparency fade-out, not functional yet
+		//handling transparency fade-out
 		if (destroyTimer <= 180) {
 			//change this to handle multiple materials.
 			Color newColor = new Color(gameObject.renderer.material.color.r, 
@@ -106,40 +116,6 @@ public class blossomMover : MonoBehaviour {
 			rotateY = transform.rotation.y / rotateRate;
 			rotateZ = transform.rotation.z / rotateRate;
 		}
-	}
-	
-	void OnTriggerEnter(Collider other)
-	{
-		//check if it's a wall that will block horizontal, but not vertical movement
-		if (other.tag == "Wall") {
-			if(other.transform.position.x > transform.position.x)
-			{
-				canSwayRight = false;
-			}
-			else if(other.transform.position.x < transform.position.x)
-			{
-				canSwayLeft = false;
-			}
-		}
-		else if( other.tag != "Player" && other.tag != "Blossom" && !other.isTrigger)
-			count++;
-	}
-	
-	void OnTriggerExit(Collider other)
-	{
-		//check if we need to free horizontal movement
-		if (other.tag == "Wall") {
-			if(other.transform.position.x > transform.position.x)
-			{
-				canSwayRight = true;
-			}
-			else if(other.transform.position.x < transform.position.x)
-			{
-				canSwayLeft = true;
-			}
-		}
-		if( other.tag != "Player" && other.tag != "Blossom" && !other.isTrigger)
-			count--;
 	}
 	
 }

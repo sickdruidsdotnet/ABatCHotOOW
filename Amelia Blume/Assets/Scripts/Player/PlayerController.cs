@@ -258,7 +258,6 @@ public class PlayerController : BaseBehavior {
 			int i;
 			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
      		{
-				Debug.Log("Missing " + (currTens - i));
 				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
 				blossoms[currTens-i] = newBlossom;
 				blossoms[currTens-i].transform.parent = transform;
