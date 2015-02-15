@@ -24,6 +24,7 @@ public class Deer : Animal
     bool recentlyRotated;
     bool recentlyChargedUp;
 
+	[HideInInspector]
     public int faceDirection;
     int rotationCooldown;
     int chargeUpCooldown;
@@ -32,7 +33,6 @@ public class Deer : Animal
     public float lockedAxisValue;
 
     public float speed;
-    public float maxVelocityChange;
 
 	public bool isFacingRight = false;
 
@@ -67,6 +67,7 @@ public class Deer : Animal
         //lock the axis to where it's been placed in the editor
         lockedAxisValue = this.transform.position.z;
 		anim = this.GetComponent<Animator>();
+		speed = walkSpeed;
 
     }
 
@@ -74,12 +75,14 @@ public class Deer : Animal
     void Update()
     {
 		//keep faceDirection Up to Date
-		if (transform.rotation.eulerAngles.y >= 0 && transform.rotation.eulerAngles.y <= 180)
+		if (transform.rotation.eulerAngles.y >= 90 && transform.rotation.eulerAngles.y <= 270)
 		{
 			faceDirection = 1;
+			isFacingRight = true;
 		}
 		else {
 			faceDirection = -1;
+			isFacingRight = false;
 		}
 
 
@@ -88,11 +91,8 @@ public class Deer : Animal
 
         if (!isRestrained)
         {
-			//update face direction
 
-
-            MoveRight();
-			//CheckRotation();
+			MoveRight();
 
             //rotation management
 
@@ -140,7 +140,6 @@ public class Deer : Animal
         if (collision.gameObject.tag == "Wall" || collision.gameObject.name == "Deer")
 		{
             beginRotate();
-			isFacingRight = !isFacingRight;
 		}
 		if(collision.gameObject.tag == "Player")
 		{
@@ -166,20 +165,22 @@ public class Deer : Animal
 			if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated) {
 
 				//check if deer is facing the right way to see the player
-				if (transform.position.x - player.transform.position.x < 0 && faceDirection == -1)
+				if (transform.position.x - player.transform.position.x < 0&& isFacingRight)
 				{
 					//Debug.Log("found player to the right");
 					isCharging = true;
 					isInChargeUp = true;
 					chargeUpCooldown = 60;
+					speed = 0f;
 					return;
 				}
-				else if (transform.position.x - player.transform.position.x > 0 && faceDirection == 1)
+				else if (transform.position.x - player.transform.position.x > 0 && !isFacingRight)
 				{
 					//Debug.Log("found player to the left");
 					isCharging = true;
 					isInChargeUp = true;
 					chargeUpCooldown = 60;
+					speed = 0f;
 					return;
 				}
 			}
@@ -190,8 +191,7 @@ public class Deer : Animal
 
     void MoveRight()
     {
-		speed = -0.05f;
-		transform.Translate (-0.05f, 0, 0);
+		transform.Translate (speed *-1, 0, 0);
 		//animation["Walking"].enabled = true;
 		anim.SetBool ("isRunning", true);
     }
