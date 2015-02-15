@@ -6,33 +6,30 @@ using System.Collections;
  */
 
 public class blossomMover : MonoBehaviour {
-
+	
 	public bool attached;
 	public bool falling;
 	
-	public int count;
-
+	bool canSwayLeft;
+	bool canSwayRight;
+	
 	public int destroyTimer;
-
+	
 	float rotateRate = 300;
 	float rotateX;
 	float rotateY;
 	float rotateZ;
-
-	public Transform initialTransform;
-
-	// this will be what number flower it is
-	public int healthNum = 0;
-
+	
 	public float amplitude;
 	public float frequency;
-
+	
 	// Use this for initialization
 	void Start () {
 		destroyTimer = 900;
-		initialTransform = transform;
-		//initialTransform.position = transform.localPosition;
-
+		
+		canSwayLeft = true;
+		canSwayRight = true;
+		
 		if(transform.parent != null)
 		{
 			attached = true;
@@ -40,23 +37,48 @@ public class blossomMover : MonoBehaviour {
 		}
 		else
 			attached = false;
-		count = 0;
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
 
-		if (count != 0)
-				falling = false;
-		else
-				falling = true;
-
+		//raycasting instead of colliders, allows for more concise code
 		if (!attached) {
+			//check down
+			if (Physics.Raycast (transform.position, -Vector3.up, 0.02f)) {
+				falling = false;
+			} else {
+				falling = true;
+			}
+			//check right
+			if (Physics.Raycast (transform.position, Vector3.right, 0.02f)) {
+				canSwayRight = false;
+			} else {
+				canSwayRight = true;
+			}
+			//check left
+			if (Physics.Raycast (transform.position, -Vector3.right, 0.02f)) {
+				canSwayLeft = false;
+			} else {
+				canSwayLeft = true;
+			}
+		}
+
+		//handling movement after falling off
+		if (!attached) {
+			//countdown to destruction
 			destroyTimer--;
+			//falling movement
 			if(falling){
-				transform.position += amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
-				                    	- Mathf.Sin (2 * Mathf.PI * frequency 
-				          	 			* (Time.time - Time.deltaTime))) * new Vector3(-1.0f,0,0);
+				Vector3 nextPosition = transform.position + amplitude * (Mathf.Sin (2 * Mathf.PI * frequency * Time.time) 
+				                                                         - Mathf.Sin (2 * Mathf.PI * frequency 
+				             * (Time.time - Time.deltaTime))) * new Vector3(-1.0f,0,0);
+				//check if it can sway left/right before it tries
+				if ((nextPosition.x > transform.position.x && canSwayRight) ||
+				    (nextPosition.x < transform.position.x && canSwayLeft))
+				{
+					transform.position = nextPosition;
+				}
 				if(transform.rotation != (new Quaternion(0f, 0f, 0f, 1.0f)))
 				{
 					transform.rotation = new Quaternion(transform.rotation.x - rotateX,
@@ -67,22 +89,22 @@ public class blossomMover : MonoBehaviour {
 				transform.Translate(new Vector3(0, -0.01f, 0), Space.World);
 			}
 		}
+
+		//object cleanup
 		if (destroyTimer <= 0)
 			Destroy (this.gameObject);
-
-		//handling transparency fade-out, not functional yet
+		
+		//handling transparency fade-out
 		if (destroyTimer <= 180) {
 			//change this to handle multiple materials.
 			Color newColor = new Color(gameObject.renderer.material.color.r, 
-				          gameObject.renderer.material.color.b,
-				          gameObject.renderer.material.color.g,
-				          ((float)destroyTimer/180f));
+			                           gameObject.renderer.material.color.b,
+			                           gameObject.renderer.material.color.g,
+			                           ((float)destroyTimer/180f));
 			this.gameObject.renderer.material.SetColor("_Color", newColor);
-
-			Debug.Log("Alpha is: " + this.gameObject.renderer.material.color.a);
 		}
 	}
-
+	
 	//this will unparent it from the player and cause it to start moving
 	public void detach()
 	{
@@ -95,17 +117,5 @@ public class blossomMover : MonoBehaviour {
 			rotateZ = transform.rotation.z / rotateRate;
 		}
 	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		if( other.tag != "Player" && !other.isTrigger)
-			count++;
-	}
 	
-	void OnTriggerExit(Collider other)
-	{
-		if( other.tag != "Player" && !other.isTrigger)
-			count--;
-	}
-
 }

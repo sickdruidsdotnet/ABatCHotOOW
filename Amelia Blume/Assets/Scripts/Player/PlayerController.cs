@@ -258,14 +258,13 @@ public class PlayerController : BaseBehavior {
 			int i;
 			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
      		{
-				Debug.Log("Missing " + (currTens - i));
 				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
 				blossoms[currTens-i] = newBlossom;
 				blossoms[currTens-i].transform.parent = transform;
 				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
 				blossoms[currTens-i].transform.localPosition = blossomPositions[currTens-i];
 				//rotation varies depending on which direction the player, but not locally...?
-				blossoms[currTens-1].transform.localRotation = blossomRotations[currTens-i];
+				blossoms[currTens-i].transform.localRotation = blossomRotations[currTens-i];
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
