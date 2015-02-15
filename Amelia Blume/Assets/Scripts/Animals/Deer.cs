@@ -18,14 +18,15 @@ public class Deer : Animal
     public bool isCharging;
     public bool isInChargeUp;
 
-	public float deerYSight = 3;
 	public float deerXSight = 5;
 
     bool recentlyRotated;
     bool recentlyChargedUp;
 
+	int lockCounter;
+
 	[HideInInspector]
-    public int faceDirection;
+	public int faceDirection;
     int rotationCooldown;
     int chargeUpCooldown;
 
@@ -69,6 +70,7 @@ public class Deer : Animal
 		anim = this.GetComponent<Animator>();
 		speed = walkSpeed;
 
+		lockCounter = -1;
     }
 
     // Update is called once per frame
@@ -129,6 +131,17 @@ public class Deer : Animal
             }
         }
 
+		//prevent the player's force from affecting deer after ramming
+		if (lockCounter >= 0) {
+			lockCounter--;
+			if(lockCounter == 0)
+			{
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+				rigidbody.freezeRotation = true;
+			}
+		}
+
+
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
     }
@@ -153,35 +166,38 @@ public class Deer : Animal
 
 	void checkSeen()
 	{
-
-		float yDistance = Mathf.Abs(transform.position.y - player.transform.position.y);
 		float xDistance = Mathf.Abs(transform.position.x - player.transform.position.x);
-		
-		
+
 		// Check to see if player is in the seeing range
-		if (yDistance <= deerYSight && xDistance <= deerXSight)
+		if (xDistance <= deerXSight)
 		{
+
 			//check the deer should be charging
 			if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated) {
+				Ray vision = new Ray(new Vector3(transform.position.x + (2f * faceDirection),
+				                                 transform.position.y + 1.5f,
+				                                 transform.position.z),
+				                     Vector3.right * faceDirection);
+				RaycastHit visionHit;
+				if (Physics.Raycast (vision, out visionHit, deerXSight)) {
+					//draws the vision ray in editor
+					/*Debug.DrawRay(new Vector3(transform.position.x + (2f * faceDirection),
+					                          transform.position.y + 1f,
+					                          transform.position.z),
+												Vector3.right * faceDirection,
+					              Color.red, 1f);*/
+					if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
+					{
+						//Debug.Log("found player");
+						isCharging = true;
+						isInChargeUp = true;
+						chargeUpCooldown = 60;
+						speed = 0f;
+						return;
+					}
+					/*else
+						Debug.Log("found " + visionHit.transform.name);*/
 
-				//check if deer is facing the right way to see the player
-				if (transform.position.x - player.transform.position.x < 0&& isFacingRight)
-				{
-					//Debug.Log("found player to the right");
-					isCharging = true;
-					isInChargeUp = true;
-					chargeUpCooldown = 60;
-					speed = 0f;
-					return;
-				}
-				else if (transform.position.x - player.transform.position.x > 0 && !isFacingRight)
-				{
-					//Debug.Log("found player to the left");
-					isCharging = true;
-					isInChargeUp = true;
-					chargeUpCooldown = 60;
-					speed = 0f;
-					return;
 				}
 			}
 		}
@@ -219,9 +235,11 @@ public class Deer : Animal
 			hitDirection = -1;
 		else
 			hitDirection = 1;
-		//prevent the player's force vector from affecting the deer
-		Physics.IgnoreCollision(player.collider, collider);
+		lockCounter = 60;
+		rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+		rigidbody.freezeRotation = true;
 		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+		isCharging = false;
 
 	}
 
