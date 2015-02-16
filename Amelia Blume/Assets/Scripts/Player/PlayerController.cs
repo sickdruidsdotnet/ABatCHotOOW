@@ -76,6 +76,12 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
+		if (player.isGrounded && player.dashed)
+			player.dashed = false;
+
+		if (player.ticksSinceDashed <= 100)
+			player.ticksSinceDashed++;
+
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}

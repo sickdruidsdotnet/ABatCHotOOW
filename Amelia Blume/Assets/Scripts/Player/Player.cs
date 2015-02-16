@@ -24,6 +24,8 @@ public class Player : BaseBehavior {
 	 * future calls.
 	 */
 	public int health;
+	public bool dashed = false;
+	public int ticksSinceDashed = 0;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
 	public Camera camera;
@@ -177,7 +179,19 @@ public class Player : BaseBehavior {
 
 	public bool canDash {
 		get {
-			return true;
+			if (!isGrounded && !dashed){
+				dashed = true;
+				return true;
+				}
+			else if(!isGrounded && dashed){
+				return false;
+				}
+			else if(isGrounded && ticksSinceDashed >= 100){
+				ticksSinceDashed = 0;
+				return true;
+				}
+			else
+				return false;
 		}
 	}
 #endregion
