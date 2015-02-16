@@ -25,11 +25,34 @@ public class PlayerController : BaseBehavior {
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
+	public GameObject blossomPrefab;	
+	public GameObject[] blossoms;
+	public Vector3[] blossomPositions;
+	public Quaternion[] blossomRotations;
+
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
     void Start()
     {
+
+		blossoms = new GameObject[10];
+		blossomPositions = new Vector3[10];
+		blossomRotations = new Quaternion[10];
+		int i = 0;
+		foreach (Transform child in transform) 
+		{
+			blossomMover tempBlossom = child.GetComponent<blossomMover>();
+			if(tempBlossom != null)
+			{
+				blossoms[i] = child.gameObject;
+				blossoms[i].name = blossoms[i].name + " " + i;
+				blossomPositions[i] = blossoms[i].transform.localPosition;
+				blossomRotations[i] = blossoms[i].transform.localRotation;
+				i++;
+			}
+		}
+
         //get the value to lock the player to. Should Iddeally be 0 in the editor
         lockedAxisValue = this.transform.position.z;
 
@@ -62,6 +85,15 @@ public class PlayerController : BaseBehavior {
 
 		if (Camera.main == null) {
 			return;		
+		}
+
+		//check to see if blossoms are up-to-date
+		//checkHealth ();
+
+		//debug, remove this when we get it properly detaching via health drops
+		if (Input.GetKey ("1")) {
+			for(int i = 0; i < 10; i++)
+				blossoms[i].GetComponent<blossomMover>().detach ();
 		}
 
 		HandleStun ();
@@ -216,5 +248,39 @@ public class PlayerController : BaseBehavior {
 				stunTimer--;
 			}
 		}
+	}
+
+	//essentially check if the blossoms need to be detached/added
+	void checkHealth()
+	{
+		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
+		int currTens = currentHealth / 10;
+		//checking if lost health
+		if (currTens < 9 && blossoms[currTens+1] != null) {
+			for(int i = 9; i > currTens; i--)
+			{
+				if(blossoms[i] != null){
+					blossoms[i].GetComponent<blossomMover>().detach();
+					blossoms[i].name = blossoms[i].name + " (detached)";
+					blossoms[i] = null;
+				}
+			}
+		}
+
+		//checking if gained health back
+		if (currTens != 10 && blossoms [currTens] == null) {
+			int i;
+			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
+     		{
+				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
+				blossoms[currTens-i] = newBlossom;
+				blossoms[currTens-i].transform.parent = transform;
+				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
+				blossoms[currTens-i].transform.localPosition = blossomPositions[currTens-i];
+				//rotation varies depending on which direction the player, but not locally...?
+				blossoms[currTens-i].transform.localRotation = blossomRotations[currTens-i];
+			}
+		}
+		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
 	}
 }

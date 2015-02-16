@@ -4,6 +4,9 @@ using System.Collections;
 public class Deer : Animal
 {
 
+	Player player;
+	Animator anim;
+
     //how much damage this will do to the player
     public int damageValue;
 
@@ -15,10 +18,15 @@ public class Deer : Animal
     public bool isCharging;
     public bool isInChargeUp;
 
+	public float deerXSight = 5;
+
     bool recentlyRotated;
     bool recentlyChargedUp;
 
-    public int faceDirection;
+	int lockCounter;
+
+	[HideInInspector]
+	public int faceDirection;
     int rotationCooldown;
     int chargeUpCooldown;
 
@@ -26,11 +34,23 @@ public class Deer : Animal
     public float lockedAxisValue;
 
     public float speed;
-    public float maxVelocityChange;
+
+	public bool isFacingRight = false;
 
     // Use this for initialization
     void Start()
     {
+
+		//get the player to easily work with
+		GameObject playerObject = GameObject.FindWithTag ("Player");
+		if (playerObject == null) {
+			Debug.LogError("Deer Error: cannot locate player");
+			//If you're seeing this error, you may have tagged the player incorrectly
+		}
+		else{
+			player = playerObject.GetComponent <Player>();
+		}
+
 
         isCharging = false;
         isInChargeUp = false;
@@ -47,22 +67,41 @@ public class Deer : Animal
 
         //lock the axis to where it's been placed in the editor
         lockedAxisValue = this.transform.position.z;
+		anim = this.GetComponent<Animator>();
+		speed = walkSpeed;
 
+		lockCounter = -1;
     }
 
     // Update is called once per frame
     void Update()
     {
+		//keep faceDirection Up to Date
+		if (transform.rotation.eulerAngles.y >= 90 && transform.rotation.eulerAngles.y <= 270)
+		{
+			faceDirection = 1;
+			isFacingRight = true;
+		}
+		else {
+			faceDirection = -1;
+			isFacingRight = false;
+		}
+
+
+		//function to check if the player is in sight
+		checkSeen ();
 
         if (!isRestrained)
         {
-            MoveRight();
+
+			MoveRight();
 
             //rotation management
+
             if (rotationCooldown > 0)
             {
                 rotationCooldown--;
-                transform.Rotate(0f, 0f, 3f);
+                transform.Rotate(0f, 3f, 0f);
                 isCharging = false;
                 isInChargeUp = false;
             }
@@ -70,6 +109,7 @@ public class Deer : Animal
             {
                 recentlyRotated = false;
             }
+            
 
 
             //charging
@@ -90,6 +130,17 @@ public class Deer : Animal
                 }
             }
         }
+
+		//prevent the player's force from affecting deer after ramming
+		if (lockCounter >= 0) {
+			lockCounter--;
+			if(lockCounter == 0)
+			{
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+				rigidbody.freezeRotation = true;
+			}
+		}
+
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -113,32 +164,52 @@ public class Deer : Animal
 
     }
 
-	void OnTriggerStay(Collider collider)
+	void checkSeen()
 	{
-		if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated && collider.tag == "Player") {
-			//Debug.Log("found player");
-			isCharging = true;
-			isInChargeUp = true;
-			chargeUpCooldown = 60;
+		float xDistance = Mathf.Abs(transform.position.x - player.transform.position.x);
+
+		// Check to see if player is in the seeing range
+		if (xDistance <= deerXSight)
+		{
+
+			//check the deer should be charging
+			if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated) {
+				Ray vision = new Ray(new Vector3(transform.position.x + (2f * faceDirection),
+				                                 transform.position.y + 1.5f,
+				                                 transform.position.z),
+				                     Vector3.right * faceDirection);
+				RaycastHit visionHit;
+				if (Physics.Raycast (vision, out visionHit, deerXSight)) {
+					//draws the vision ray in editor
+					/*Debug.DrawRay(new Vector3(transform.position.x + (2f * faceDirection),
+					                          transform.position.y + 1f,
+					                          transform.position.z),
+												Vector3.right * faceDirection,
+					              Color.red, 1f);*/
+					if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
+					{
+						//Debug.Log("found player");
+						isCharging = true;
+						isInChargeUp = true;
+						chargeUpCooldown = 60;
+						speed = 0f;
+						return;
+					}
+					/*else
+						Debug.Log("found " + visionHit.transform.name);*/
+
+				}
+			}
 		}
+		else
+			return;
 	}
 
     void MoveRight()
     {
-        // Calculate how fast we should be moving
-        Vector3 targetVelocity = new Vector3(speed * faceDirection, 0, 0);
-        targetVelocity = transform.TransformDirection(targetVelocity);
-        targetVelocity *= speed;
-
-		//Debug.Log ("Target Velocity: " + targetVelocity);
-
-        // Apply a force that attempts to reach our target velocity
-        Vector3 velocity = rigidbody.velocity;
-        Vector3 velocityChange = (targetVelocity - velocity);
-        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-        velocityChange.y = 0;
-        rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		transform.Translate (speed *-1, 0, 0);
+		//animation["Walking"].enabled = true;
+		anim.SetBool ("isRunning", true);
     }
 
     public void beginRotate()
@@ -164,9 +235,18 @@ public class Deer : Animal
 			hitDirection = -1;
 		else
 			hitDirection = 1;
-		//prevent the player's force vector from affecting the deer
-		Physics.IgnoreCollision(player.collider, collider);
+		lockCounter = 60;
+		rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+		rigidbody.freezeRotation = true;
 		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+		isCharging = false;
 
+	}
+
+	void CheckRotation(){
+		if ((!isFacingRight && this.transform.rotation.y != 0) || (isFacingRight && this.transform.rotation.y != 180) ) {
+			//if(this.transform.rotation.y > 0)
+			this.transform.Rotate(0,1f,0);
+		}
 	}
 }

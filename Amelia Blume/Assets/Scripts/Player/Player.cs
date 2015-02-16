@@ -29,6 +29,8 @@ public class Player : BaseBehavior {
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
 	public Camera camera;
+	private GameObject fruit;
+	private bool canGrow = false;
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -230,7 +232,19 @@ public class Player : BaseBehavior {
 
 	void Update()
 	{
-		ReduceHealth(1);
+
+
+		//ReduceHealth(1);
+
+
+
+		//ReduceHealth(1);
+		if (canGrow && this.transform.localScale.x < 1) {
+			this.transform.localScale = new Vector3 (this.transform.localScale.x + .1f, this.
+			                                        transform.localScale.y + .1f, this.transform.localScale.z + .1f);
+		} else
+			SetCanGrow (false);
+
 	}
 
 	public void ReduceHealth(int subtract)
@@ -250,6 +264,15 @@ public class Player : BaseBehavior {
 		return health;
 	}
 
+	public bool CheckCanGrow()
+	{
+		return canGrow;
+	}
+
+	public void SetCanGrow(bool value){
+		canGrow = value;
+	}
+
 
 	//returns direction the player is currently facing as an int. 1=right, -1=left
 	//we don't call it derkrection
@@ -265,11 +288,19 @@ public class Player : BaseBehavior {
 	void Kill()
 	{
 		spawner = GameObject.Find ("Spawner");
-		this.transform.position = spawner.transform.position;
-		SetHealth (-5);
+		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4, 0);
+		fruit = (GameObject)Resources.Load ("RespawnFruit");
+		fruit.transform.position = fruitPosition;
+		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y, 0);
+		//SetHealth (100);
+
 		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
-		controller.MoveToPlayer();
+		controller.MoveToPlayer(spawner.transform.position.x);
+		Instantiate (fruit);
+		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}
+
+
 
 	
 
