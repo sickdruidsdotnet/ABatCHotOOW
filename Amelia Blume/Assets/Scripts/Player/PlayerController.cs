@@ -108,6 +108,12 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
+		if (player.isGrounded && player.dashed)
+			player.dashed = false;
+
+		if (player.ticksSinceDashed <= 100)
+			player.ticksSinceDashed++;
+
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}
@@ -210,6 +216,9 @@ public class PlayerController : BaseBehavior {
 		if (Input.GetButtonDown("ThrowSeed")) {
 			ThrowSeed();
 		}
+		if (Input.GetButtonDown("Dash")) {
+			Dash();
+		}
 	}
 	
 	protected void Jump() {
@@ -220,6 +229,11 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+	}
+
+	protected void Dash() {
+		player.Broadcast("OnDashRequest");
+		player.motor.Dash();
 	}
 
 	public void HandleStun()

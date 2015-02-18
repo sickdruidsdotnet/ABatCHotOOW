@@ -24,6 +24,8 @@ public class Player : BaseBehavior {
 	 * future calls.
 	 */
 	public int health;
+	public bool dashed = false;
+	public int ticksSinceDashed = 0;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
 	public Camera camera;
@@ -176,6 +178,24 @@ public class Player : BaseBehavior {
 			return true;
 		}
 	}
+
+	public bool canDash {
+		get {
+			if (!isGrounded && !dashed){
+				dashed = true;
+				return true;
+				}
+			else if(!isGrounded && dashed){
+				return false;
+				}
+			else if(isGrounded && ticksSinceDashed >= 100){
+				ticksSinceDashed = 0;
+				return true;
+				}
+			else
+				return false;
+		}
+	}
 #endregion
 	
 	
@@ -251,6 +271,17 @@ public class Player : BaseBehavior {
 
 	public void SetCanGrow(bool value){
 		canGrow = value;
+	}
+
+
+	//returns direction the player is currently facing as an int. 1=right, -1=left
+	//we don't call it derkrection
+	public int GetDirection()
+	{
+		if (cachedPlayerController.isFacingRight)
+			return 1;
+		else
+			return -1;
 	}
 
 
