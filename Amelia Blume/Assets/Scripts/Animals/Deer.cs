@@ -11,7 +11,7 @@ public class Deer : Animal
     public int damageValue;
 
     //make some variables editable in the editor for debugging
-    public float chargeSpeed = .1f;
+    public float chargeSpeed = 0.1f;
     public float walkSpeed = 0.05f;
 
     //again, how we do states will change, but for now I'm doing bools
@@ -151,12 +151,12 @@ public class Deer : Animal
 	void checkRotate()
 	{
 		Ray nearVision = new Ray(new Vector3(transform.position.x + (1.3f * faceDirection),
-		                                 transform.position.y + 1.5f,
+		                                 transform.position.y + 1f,
 		                                 transform.position.z),
 		                     Vector3.right * faceDirection);
 		RaycastHit[] visionHits;
 		Debug.DrawRay(new Vector3(transform.position.x + (1.3f * faceDirection),
-		                          transform.position.y + 1.5f,
+		                          transform.position.y + 1f,
 		                          transform.position.z),
 		              Vector3.right * faceDirection,
 					              Color.red, 0);
@@ -174,6 +174,7 @@ public class Deer : Animal
 		
 		}
 	}
+
 
 	//checks if the player is in the deer's sight using raycasting
 	void checkSeen()
