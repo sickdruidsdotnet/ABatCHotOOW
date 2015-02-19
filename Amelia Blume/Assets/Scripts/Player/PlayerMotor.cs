@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerMotor : BaseBehavior {
@@ -22,6 +22,7 @@ public class PlayerMotor : BaseBehavior {
 		public float airControlRatio = 0.3f;
 		
 		public float sidestepSpeed = 3f;
+		// I think this part is irrelevant, since we constrain the Z axis.
 		public float sidestepWhileMovingRatio = 0.7f;
 		public bool sidestepAtFullSpeed = false;
 		
@@ -29,6 +30,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		public float jumpForce = 15f;
 		public float acceleration = 10f;
+		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
 				
 		public float fallSpeed = 0f;
@@ -100,6 +102,8 @@ public class PlayerMotor : BaseBehavior {
 		groundTestMask = ~(1 << LayerMask.NameToLayer("Player"));
 	}
 		
+	// this is the only function that actually moves the player. All other functions prepare
+	// information that will be processed here, before applying the work vector.
 	public void UpdateMotor(Vector3 movementInput) {
 		environment.wasGrounded = environment.grounded;
 		
@@ -134,7 +138,7 @@ public class PlayerMotor : BaseBehavior {
 			} else if (pendingInput.x != 0 || pendingInput.z != 0) {
 				targetSpeed = movement.walkSpeed;
 				acceleration = movement.acceleration;
-			} else if (player.isGrounded) {
+			} else {
 				targetSpeed = 0;
 				acceleration = movement.stoppingPower;
 			}
@@ -177,7 +181,6 @@ public class PlayerMotor : BaseBehavior {
 		workVector = ApplyGroundMovement(workVector);
 		
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
-		
 	}
 	
 	protected Vector3 ApplyJumpPower(Vector3 workVector) {
