@@ -8,10 +8,10 @@ public class TestMesh : MonoBehaviour
 
 	[System.Serializable]
 	public class MeshSettings {
-		public int resolution = 8;
-		public int numSegments = 3;
-		public int radius = 10;
-		public int segmentHeight = 25;
+		public int resolution = 16;
+		public int numSegments = 8;
+		public int radius = 1;
+		public int segmentHeight = 1;
 	}
 
 	public MeshSettings meshSettings = new MeshSettings();
@@ -72,6 +72,8 @@ public class TestMesh : MonoBehaviour
 	private void drawMesh()
 	{
 		mesh.Clear();
+		vertices.Clear();
+		triangles.Clear();
 		
 		float ringRadians = 2 * Mathf.PI / meshSettings.resolution;
 
@@ -81,7 +83,7 @@ public class TestMesh : MonoBehaviour
 		{
 			for (int ringVert = 0; ringVert < meshSettings.resolution; ringVert++)
 			{
-				float angle = ringVert * ringRadians;
+				float angle = ringVert * ringRadians * -1;
 				float v_x = meshSettings.radius * Mathf.Cos(angle);
 				float v_z = meshSettings.radius * Mathf.Sin(angle);
 				float v_y = ringNum * meshSettings.segmentHeight;
@@ -101,19 +103,26 @@ public class TestMesh : MonoBehaviour
 				// NOTE: normal will point outwards according to right-hand rule.
 				// So, add the vertices counter-clockwise in order for normal to face outwards
 
+				int bottomLeft = segNum * meshSettings.resolution + faceNum;
+				int bottomRight = segNum * meshSettings.resolution + (faceNum + 1) % meshSettings.resolution;
+				int topLeft = bottomLeft + meshSettings.resolution;
+				int topRight = bottomRight + meshSettings.resolution;
+
 				// add first triangle's vertices
-				triangles.Add(faceNum); // bottom-left
-				triangles.Add(faceNum + (meshSettings.resolution + 1)); // top-right
-				triangles.Add(faceNum + meshSettings.resolution); // top-left
+				triangles.Add(bottomLeft); // bottom-left
+				triangles.Add(topRight); // top-right
+				triangles.Add(topLeft); // top-left
 
 				// add second tringle's vertices
-				triangles.Add(faceNum); // bottom-right
-				triangles.Add(faceNum + 1); // bottom-left
-				triangles.Add(faceNum + (meshSettings.resolution + 1)); // top-right
+				triangles.Add(bottomLeft); // bottom-left
+				triangles.Add(bottomRight); // bottom-right
+				triangles.Add(topRight); // top-right
 
 			}
 		}
 
 		mesh.triangles = triangles.ToArray();
+
+		//triangles.ForEach(item => Debug.Log(item));
 	}
 }
