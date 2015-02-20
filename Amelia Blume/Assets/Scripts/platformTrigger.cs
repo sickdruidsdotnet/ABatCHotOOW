@@ -2,27 +2,23 @@
 using System.Collections;
 
 public class platformTrigger : MonoBehaviour {
-
+	Transform platParent;
 	// Use this for initialization
 	void Start () {
-		transform.parent.collider.isTrigger = true;
+		platParent = transform.parent;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	}
 	
-	void OnTriggerEnter(Collider other)
+	void OnTriggerStay(Collider other)
 	{
-		//Debug.Log("OnTriggerEnter called");
-		if (other.name == "Player")
-			transform.parent.collider.isTrigger = false;
+		Physics.IgnoreCollision (other, platParent.collider, true);
 	}
 	
 	void OnTriggerExit(Collider other)
 	{
-		//Debug.Log("OnTriggerExit called");
-		if (other.name == "Player")
-			transform.parent.collider.isTrigger = true;
+		Physics.IgnoreCollision (other, platParent.collider, false);
 	}
 }
