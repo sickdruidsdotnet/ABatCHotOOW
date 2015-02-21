@@ -98,8 +98,8 @@ public class blossomMover : MonoBehaviour {
 		if (destroyTimer <= 180) {
 			//change this to handle multiple materials.
 			Color newColor = new Color(gameObject.renderer.material.color.r, 
-			                           gameObject.renderer.material.color.b,
 			                           gameObject.renderer.material.color.g,
+			                           gameObject.renderer.material.color.b,
 			                           ((float)destroyTimer/180f));
 			this.gameObject.renderer.material.SetColor("_Color", newColor);
 		}
