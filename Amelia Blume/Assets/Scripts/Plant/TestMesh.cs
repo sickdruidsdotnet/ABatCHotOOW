@@ -42,10 +42,7 @@ public class TestMesh : MonoBehaviour
 	public TestMesh()
 	{
 		// constructor
-		Debug.Log("This is the constructor");
-
-		Vector3 testVec = new Vector3(1.0f,1.0f,0.0f).normalized;
-		Debug.Log(testVec);
+		
 	}
 
 	void Start()
@@ -88,7 +85,7 @@ public class TestMesh : MonoBehaviour
 		mesh.name = "TestMesh";
 
 		generateRandomizedMeshElements();
-		drawMesh(meshSettings.resolution, meshSettings.numSegments, ringRadii, meshSettings.segmentHeight);
+		createMeshVertices(meshSettings.resolution, meshSettings.numSegments, ringRadii, meshSettings.segmentHeight);
 	}
 
 	void Update()
@@ -101,7 +98,7 @@ public class TestMesh : MonoBehaviour
 		// update the mesh
 		if(meshRenderer.enabled)
 		{
-			drawMesh(meshSettings.resolution, meshSettings.numSegments, ringRadii, meshSettings.segmentHeight);
+			//createMeshVertices(meshSettings.resolution, meshSettings.numSegments, ringRadii, meshSettings.segmentHeight);
 		}
 	}
 
@@ -144,7 +141,7 @@ public class TestMesh : MonoBehaviour
 	}
 
 	// fills mesh.vertices and mesh.triangles with the appropriate values based on meshSettings
-	private void drawMesh(int res, int segCount, float[] rads, float segHeight)
+	private void createMeshVertices(int res, int segCount, float[] rads, float segHeight)
 	{
 		mesh.Clear();
 		vertices.Clear();
