@@ -59,6 +59,8 @@ public class Soil : MonoBehaviour {
 
 	public void ChangeHydrationLevel(int water){
 		HydrationLevel += water;
+		if (HydrationLevel < 0)
+			HydrationLevel = 0;
 	}
 
 	public bool CheckIsPlanted(){
@@ -74,6 +76,8 @@ public class Soil : MonoBehaviour {
 	public void ChangeWaterCount(int index, int changeAmount)
 	{
 		water [index] += changeAmount;
+		if (water [index] < 0)
+			water [index] = 0;
 	}
 
 	public int getWaterLength()
@@ -83,8 +87,8 @@ public class Soil : MonoBehaviour {
 
 	void OnParticleCollision(GameObject other) {
 		if (other.tag == "Water" && GetHydrationLevel() < MaxWater) {
-			ChangeHydrationLevel (1);
-			Debug.Log("Soil water:" + GetHydrationLevel());
+			ChangeHydrationLevel (3);
+			//Debug.Log("Soil water:" + GetHydrationLevel());
 			//Debug.Log ("Position = " + other.transform.position.x);
 			int index;
 			if(other.transform.rotation.y > 0)
@@ -93,9 +97,9 @@ public class Soil : MonoBehaviour {
 				index = (int)((other.transform.position.x-2f - start)/slotSize);
 			if(index >= water.Length)
 				index = water.Length-1;
-			Debug.Log ("index: " + index);
-			Debug.Log ("Rotation: " + other.transform.rotation.y);
-			water[index]++;
+			//Debug.Log ("index: " + index);
+			//Debug.Log ("Rotation: " + other.transform.rotation.y);
+			water[index]+=3;
 		}
 	}
 
@@ -105,14 +109,14 @@ public class Soil : MonoBehaviour {
 			int index = (int)((other.transform.position.x - start)/slotSize);
 			other.gameObject.GetComponent<Seed>().setSoil(this.gameObject);
 			plantedSeed.setSoilIndex(index);
-			Debug.Log ("Planted");
-			/*
+			//Debug.Log ("Planted");
+
 			if(!plantedSeed.checkIfPlanted()){
 				plantedSeed.setPlanted(true);
-				this.isPlanted = true;
+				//this.isPlanted = true;
 				//Debug.Log ("Planted");
 			}
-			*/
+
 		}
 	}
 

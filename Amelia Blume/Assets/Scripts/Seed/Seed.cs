@@ -70,6 +70,7 @@ public class Seed : MonoBehaviour
         loc += transform.position;
         GameObject newPlant = Instantiate(Resources.Load(plantType), loc, Quaternion.identity) as GameObject;
         newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject);
+		newPlant.gameObject.GetComponent<Plant>().SetSoilIndex (soilIndex);
 		//newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject)
         Debug.Log("called sproutPlant()");
 
@@ -85,44 +86,56 @@ public class Seed : MonoBehaviour
         //waterCount++;
         //soil.ChangeHydrationLevel(-1);
 		if (soil.GetWaterCount (soilIndex) > 0) { //WaterCount of Current Slot
-			soil.ChangeHydrationLevel(-1);
-			soil.ChangeWaterCount(soilIndex, -1);
-			waterCount++;
+			//Debug.Log ("Soil Water Before: " + soilIndex + " = " + soil.GetWaterCount (soilIndex));
+			soil.ChangeHydrationLevel(-3);
+			soil.ChangeWaterCount(soilIndex, -3);
+			//Debug.Log ("Soil Water After: " + soilIndex + " = " + soil.GetWaterCount (soilIndex));
+			waterCount+=3;
 		}
 
 		if (soilIndex > 0) { //Water Count of left neighbor
 			if (soil.GetWaterCount (soilIndex - 1) > 0) {
-				soil.ChangeHydrationLevel (-1);
-				soil.ChangeWaterCount (soilIndex-1, -1);
-				waterCount++;
+				//Debug.Log ("Soil Water Before: " + (soilIndex-1) + " = " + soil.GetWaterCount (soilIndex-1));
+				soil.ChangeHydrationLevel (-2);
+				soil.ChangeWaterCount (soilIndex-1, -2);
+				//Debug.Log ("Soil Water After: " + (soilIndex-1) + " = " + soil.GetWaterCount (soilIndex-1));
+				waterCount+=2;
 			}
 		}
 
 		if (soilIndex < soil.getWaterLength () - 1) { //water count of right neighbor
 			if (soil.GetWaterCount (soilIndex + 1) > 0) {
-				soil.ChangeHydrationLevel (-1);
-				soil.ChangeWaterCount (soilIndex + 1, -1);
-				waterCount++;
+				//Debug.Log ("Soil Water Before: " + (soilIndex+1) + " = " + soil.GetWaterCount (soilIndex+1));
+				soil.ChangeHydrationLevel (-2);
+				soil.ChangeWaterCount (soilIndex + 1, -2);
+				//Debug.Log ("Soil Water After: " + (soilIndex+1) + " = " + soil.GetWaterCount (soilIndex+1));
+				waterCount+=2;
 			}
 		}
 
 		if (soilIndex > 1) { //water count of 2nd left neighbor
 			if (soil.GetWaterCount (soilIndex - 2) > 0) { 
+				//Debug.Log ("Soil Water Before: " + (soilIndex-2) + " = " + soil.GetWaterCount (soilIndex-2));
 				soil.ChangeHydrationLevel (-1);
 				soil.ChangeWaterCount (soilIndex - 2, -1);
+				//Debug.Log ("Soil Water After: " + (soilIndex-2) + " = " + soil.GetWaterCount (soilIndex-2));
 				waterCount++;
 			}
 		}
 
 		if (soilIndex < soil.getWaterLength () - 2) { //water count of 2nd right neighbor
 			if (soil.GetWaterCount (soilIndex + 2) > 0) {
+				//Debug.Log ("Soil Water Before: " + (soilIndex+2) + " = " + soil.GetWaterCount (soilIndex+2));
 				soil.ChangeHydrationLevel (-1);
 				soil.ChangeWaterCount (soilIndex + 2, -1);
+				//Debug.Log ("Soil Water After: " + (soilIndex+2) + " = " + soil.GetWaterCount (soilIndex+2));
 				waterCount++;
 			}
 		}
-        Debug.Log("Seed collected water. Seed waterCount: " + waterCount + ", Soil Hydration level: " + soil.GetHydrationLevel());
-        // check to see if we've collected enough water
+        //Debug.Log("Seed collected water. Seed waterCount: " + waterCount + ", Soil Hydration level: " + soil.GetHydrationLevel());
+		//Debug.Log ("Watercount: " + waterCount);
+		//Debug.Log ("SoilIndex: " + soilIndex);
+		// check to see if we've collected enough water
         if (waterCount >= hydrationGoal)
         {
             sproutPlant();

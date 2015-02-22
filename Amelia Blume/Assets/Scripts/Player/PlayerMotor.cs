@@ -363,6 +363,17 @@ public class PlayerMotor : BaseBehavior {
 		}
 	
 	}
+
+	public void Sun() {
+		if (player.canSun) {
+			player.Broadcast("OnSun");
+			//SunStuff
+			GameObject sun = (GameObject) Resources.Load("Sun");
+			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			Instantiate(sun);
+		}
+		
+	}
 	
 	public void RotateTowardCameraDirection() {
 		if (pendingInput.x != 0 || pendingInput.z != 0 || player.controller.isTurning) {
