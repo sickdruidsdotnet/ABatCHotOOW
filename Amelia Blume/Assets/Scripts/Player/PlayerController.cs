@@ -93,7 +93,10 @@ public class PlayerController : BaseBehavior {
 		//debug, remove this when we get it properly detaching via health drops
 		if (Input.GetKey ("1")) {
 			for(int i = 0; i < 10; i++)
-				blossoms[i].GetComponent<blossomMover>().detach ();
+			{	
+				if(blossoms[i] != null)
+					blossoms[i].GetComponent<blossomMover>().detach ();
+			}
 		}
 
 		HandleStun ();
