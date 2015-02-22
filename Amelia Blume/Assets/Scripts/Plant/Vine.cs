@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /*
 This class is gonna be chill as fuck.
@@ -27,6 +28,21 @@ public class Vine : MonoBehaviour
 		public float ringRadiusVariation = 0.1f;
 		public float ringDirectionVariation = 0.1f;
 	}
+
+	public class VineNode {
+		public float radius;
+		public Vector3 startPoint;
+		public Vector3 nodeRay;
+
+		public VineNode(float rad, Vector3 start, Vector3 ray)
+		{
+			radius = rad;
+			startPoint = start;
+			nodeRay = ray;
+		}
+	}
+
+	public List<VineNode> vineSkeleton;
 
 	public VineSettings vineSettings = new VineSettings();
 
@@ -66,6 +82,8 @@ public class Vine : MonoBehaviour
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
 
+	int debugCount = 0;
+
 
 	void Start()
 	{
@@ -87,6 +105,7 @@ public class Vine : MonoBehaviour
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
+		vineSkeleton = new List<VineNode>();
 
 		// initialize ringRadii to the default radius value from vineSettings
 		ringRadii = new List<float>();
@@ -114,14 +133,14 @@ public class Vine : MonoBehaviour
 		mesh.name = "Vine";
 
 
-		createInitialVineMesh();
+		createInitialVineSkeleton();
 
-		int debugCount = 0;
+		
 	}
 
 	void Update()
 	{
-		updateVineData();
+		//updateVineData();
 
 		// update mesh, if needed (like when we add a new segment)
 
@@ -138,8 +157,108 @@ public class Vine : MonoBehaviour
 	{
 	}
 
+	private void createInitialVineSkeleton()
+	{
+		vineSkeleton.Add(new VineNode(initialRadius, Vector3.zero, new Vector3(0,initialSegLength,0)));
+		Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
+
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
+		Debug.Log("Node 1 start: " + vineSkeleton[1].startPoint);
+
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
+		Debug.Log("Node 2 start: " + vineSkeleton[2].startPoint);
+
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
+		Debug.Log("Node 3 start: " + vineSkeleton[3].startPoint);
+
+		createMesh();
+	}
+
+	void createMesh()
+	{
+
+		int res = vineSettings.resolution;
+
+		// just in case, clear things that should already be empty
+		mesh.Clear();
+		vertices.Clear();
+		triangles.Clear();
+
+		// push the tip vertex
+		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay);
+		Debug.Log("tip: " + vertices[0]);
+
+		// push vertices for each ring
+
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			for (int ringVert = 0; ringVert < res; ringVert++)
+			{
+				float angle = ringVert * ringRadians * -1;
+				float v_x = vineSkeleton[node].radius * Mathf.Cos(angle);
+				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
+				float v_y = 0;
+
+				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+
+				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
+			}
+		}
+
+		mesh.vertices = vertices.ToArray();
+
+		// now, define how to triangles are to be drawn between these vertices
+
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			for (int faceNum = 0; faceNum < res; faceNum++)
+			{
+				//check if we're at a segment, or at the point
+				if (node < vineSkeleton.Count - 1)
+				{
+					// this is a segment.
+					// we will draw two triangles for each rectangular face created between this ring and the next ring
+
+					int bottomLeft = (node * res) + faceNum + 1;
+					int bottomRight = (node * res) + ((faceNum + 2) % res);
+					int topLeft = bottomLeft + res;
+					int topRight = bottomRight + res;
+
+					// add first triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(topRight);
+					triangles.Add(topLeft);
+
+					// add second triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(bottomRight);
+					triangles.Add(topRight);
+				}
+				else
+				{
+					// this is the point.
+					// we will draw one triangle for each face between this ring and the tip
+
+					int bottomLeft = (node * res) + faceNum + 1;
+					int bottomRight = (node * res) + ((faceNum + 2) % res);
+					int top = 0;
+
+					// add the triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(bottomRight);
+					triangles.Add(top);
+				}
+			}
+		}
+
+		mesh.triangles = triangles.ToArray();
+
+	}
+	
 	// starts off the mesh with just a base ring, a tip
 	// this will get called only once, in Start
+
+	
 	private void createInitialVineMesh()
 	{
 		int res = vineSettings.resolution;
@@ -218,8 +337,8 @@ public class Vine : MonoBehaviour
 		}
 
 		mesh.triangles = triangles.ToArray();
-
 	}
+	
 
 	private void addNewSegment()
 	{
@@ -248,7 +367,8 @@ public class Vine : MonoBehaviour
 		// note the <=, since this will include the tip point's vertex as well
 		for (int ringVert = 0; ringVert <= res; ringVert++)
 		{
-			vertices[res+ringVert].y += initialSegLength;
+			Vector3 newVec = new Vector3(vertices[res+ringVert].x, vertices[res+ringVert].y + initialSegLength, vertices[res+ringVert].z);
+			vertices[res+ringVert] = newVec;
 		}
 
 		mesh.vertices = vertices.ToArray();
