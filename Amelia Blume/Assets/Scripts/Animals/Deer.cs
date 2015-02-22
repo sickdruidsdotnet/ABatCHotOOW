@@ -109,6 +109,10 @@ public class Deer : Animal
             else
             {
                 recentlyRotated = false;
+				//unfreeze deer 
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				rigidbody.freezeRotation = true;
             }
             
 
@@ -229,10 +233,14 @@ public class Deer : Animal
     { 
         if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
         {
-	            recentlyRotated = true;
-				isCharging = false;
-	            rotationCooldown = 60;
-				speed = walkSpeed;
+            recentlyRotated = true;
+			isCharging = false;
+            rotationCooldown = 60;
+			speed = walkSpeed;
+			//freeze the deer to prevent weird player interaction physics
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			rigidbody.freezeRotation = true;
 		}
     }
 	//deals the impact and damage to the player
