@@ -31,14 +31,21 @@ public class Vine : MonoBehaviour
 
 	public class VineNode {
 		public float radius;
+		public float length;
 		public Vector3 startPoint;
-		public Vector3 nodeRay;
+		public Vector3 direction;
 
-		public VineNode(float rad, Vector3 start, Vector3 ray)
+		public VineNode(float rad, float magnitude, Vector3 start, Vector3 normalizedRay)
 		{
 			radius = rad;
+			length = magnitude;
 			startPoint = start;
-			nodeRay = ray;
+			direction = normalizedRay;
+		}
+
+		public Vector3 getNodeRay()
+		{
+			return direction * length;
 		}
 	}
 
@@ -50,6 +57,12 @@ public class Vine : MonoBehaviour
 	private int numSegments = 1;
 	private float initialRadius = 0.1f;
 	private float initialSegLength = 0.4f;
+	private float tipLength = 0.5f;
+	private float maxSegLength = 0.3f;
+
+	private float growthRate = 0.05f;
+	private float lengthGoal;
+	private float growthStart;
 	
 	private int numRings;
 	private int numFaces;
@@ -90,6 +103,8 @@ public class Vine : MonoBehaviour
 		numTriVerts = 3 * numTriangles;
 		ringRadians = 2 * Mathf.PI / vineSettings.resolution;
 
+		lengthGoal = growthStart = initialSegLength;
+
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
@@ -108,11 +123,15 @@ public class Vine : MonoBehaviour
 	void Update()
 	{
 		// update vine skeleton structure (such as adding a new segment)
+		if (getTotalLength() < lengthGoal)
+		{
+			growVine();
+		}
 
 		// debug vine growth testing
 		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
 		{
-			addSegment(initialRadius, new Vector3(0, initialSegLength,0));
+			setGrowthInfo(5.0f, 0.01f);
 			pressedVineButton = true;
 		}
 		else
@@ -124,24 +143,68 @@ public class Vine : MonoBehaviour
 
 	private void createInitialVineSkeleton()
 	{
-		vineSkeleton.Add(new VineNode(initialRadius, Vector3.zero, new Vector3(0,initialSegLength,0)));
+		vineSkeleton.Add(new VineNode(initialRadius, initialSegLength, Vector3.zero, Vector3.up));
 		Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
-		
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
-		Debug.Log("Node 1 start: " + vineSkeleton[1].startPoint);
-		
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
-		Debug.Log("Node 2 start: " + vineSkeleton[2].startPoint);
-
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
-		Debug.Log("Node 3 start: " + vineSkeleton[3].startPoint);
-		
 
 		createMesh();
 
 	}
 
-	void createMesh()
+	private void growVine()
+	{
+		// Extend the length of the vine.
+		// The segment before the tip ring will be extended. If it reaches its max length,
+		// then a new segment will be added, and the overflow growth distance
+		// will be its initial length.
+
+		float newGrowth = (lengthGoal - growthStart) * growthRate * Time.deltaTime;
+		int growIndex = vineSkeleton.Count - 2;
+
+		// should probably throw an error if newGrowth > maxSegLength
+		if (newGrowth > maxSegLength)
+		{
+			Debug.Log("Whoops, newGrowth > maxSegLength in growVine(). We should do something to handle this case.");
+		}
+
+		// trim the new growth if our vine is overshooting the total length goal
+		if (getTotalLength() + newGrowth > lengthGoal)
+		{
+			newGrowth = lengthGoal - getTotalLength();
+			growthStart = lengthGoal;
+		}
+
+		// if the only segment is the tip segment, then we need to start fresh on a new one.
+		if (vineSkeleton.Count == 1)
+		{
+			addSegment(initialRadius, newGrowth, Vector3.up);
+			Debug.Log("Creating first non-tip segment");
+		}
+		else
+		{
+			// we're not editing the very last segment, but the one right before it.
+			// this is to maintain constant tip length. Otherwise growth will look funky.
+			float currentLength = vineSkeleton[growIndex].length;
+			float newSegLength = currentLength + newGrowth;
+
+			if (newSegLength < maxSegLength)
+			{
+				vineSkeleton[growIndex].length = newSegLength;
+			}
+			else
+			{
+				vineSkeleton[growIndex].length = maxSegLength;
+				float overflow = newSegLength - maxSegLength;
+				addSegment(initialRadius, overflow, Vector3.up);
+				Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + vineSkeleton[growIndex].length + ", so a new node is created with length " + overflow);
+			}
+		}
+
+		updateSkeleton();
+	}
+
+	// createMesh() is only called once, at the beginning.
+	// vertices[] and triangles[] are cleared and started from scratch.
+	private void createMesh()
 	{
 
 		// maybe do some error handling here to make sure that there is at least one segment!
@@ -154,7 +217,7 @@ public class Vine : MonoBehaviour
 		triangles.Clear();
 
 		// push the tip vertex
-		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay);
+		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay());
 		Debug.Log("tip: " + vertices[0]);
 
 		// push vertices for each ring
@@ -221,10 +284,11 @@ public class Vine : MonoBehaviour
 		}
 
 		mesh.triangles = triangles.ToArray();
-
 	}
 
-	private void updateMesh()
+	// expandMesh() is called whenever a new segment is added.
+	// vertices[] is added to, and triangles[] is manipulated.
+	private void expandMesh()
 	{
 		int res = vineSettings.resolution;
 
@@ -255,7 +319,7 @@ public class Vine : MonoBehaviour
 		}
 
 		// also, we need to move the tip point to it's new location.
-		Vector3 newTip = vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay;
+		Vector3 newTip = vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay();
 		vertices[0] = newTip;
 
 		mesh.vertices = vertices.ToArray();
@@ -266,8 +330,8 @@ public class Vine : MonoBehaviour
 
 		// purge the triangles forming the tip,
 		int numPointsToPurge = 3 * res;
-		// but preserve the faces forming the previous segments (don't forget that 0 is the point vertex index)
-		int oldTipSegIndex = (3 * 2 * res * (prevSegCount - 1)) - 1;
+		// but preserve the faces forming the previous segments
+		int oldTipSegIndex = 3 * 2 * res * (prevSegCount - 1);
 
 		triangles.RemoveRange(oldTipSegIndex, numPointsToPurge);
 
@@ -314,14 +378,100 @@ public class Vine : MonoBehaviour
 		}
 
 		mesh.triangles = triangles.ToArray();
-
 	}
 
-	private void addSegment(float rad, Vector3 ray)
+	
+	private void updateSkeleton()
 	{
-		VineNode newNode = new VineNode(rad, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, ray);
+		// Iterate through all the nodes and make sure the start points correspond 
+		// to the ends of the previous nodes.
+		if (vineSkeleton.Count > 1)
+		{
+			for (int node = 1; node < vineSkeleton.Count; node++)
+			{
+				vineSkeleton[node].startPoint = vineSkeleton[node - 1].startPoint + vineSkeleton[node - 1].getNodeRay();
+			}
+		}
+		
+		updateMesh();
+	}
+
+	// updateMesh() is called whenever existing mesh vertices need to be transformed.
+	// vertices[] is cleared and started from scratch, but triangles[] is left untouched.
+	private void updateMesh()
+	{
+		float res = vineSettings.resolution;
+		// when the vine moves, pretty much all vertices are subject to change.
+		// it's easier just to clear it and start from scratch.
+		vertices.Clear();
+
+		// push the tip vertex
+		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay());
+
+		// push vertices for each ring
+
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			for (int ringVert = 0; ringVert < res; ringVert++)
+			{
+				float angle = ringVert * ringRadians * -1;
+				float v_x = vineSkeleton[node].radius * Mathf.Cos(angle);
+				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
+				float v_y = 0;
+
+				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+
+				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
+			}
+		}
+
+		mesh.vertices = vertices.ToArray();
+	}
+
+	private void addSegment(float rad, float magnitude, Vector3 direction)
+	{
+		// since the tip is always of uniform length, we are actually adding a new tip,
+		// and shrinking the previous end segment. It can now grow to its full length,
+		// and then the process will start again.
+
+		if (magnitude > maxSegLength)
+		{
+			Debug.Log("Whoops, magnitude > maxSegLength in addSegment(). We should do something to handle this case.");
+		}
+
+		vineSkeleton.Last().length = magnitude;
+		VineNode newNode = new VineNode(rad, tipLength, vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), direction);
 		vineSkeleton.Add(newNode);
 
-		updateMesh();
+		expandMesh();
+	}
+
+	/*
+
+	PUBLIC FUNCTIONS
+
+	These functions either:
+
+	- GET information about this vine to be used outside of the Vine class, or
+	- SET values in the Vine class that internal private functions will use to change the vine.
+
+	These functions should never directly manipulate the mesh or vertices.
+	*/
+	public void setGrowthInfo(float goal, float rate)
+	{
+		lengthGoal = goal;
+		growthRate = rate;
+	}
+
+	public float getTotalLength()
+	{
+		float len = 0f;
+
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			len += vineSkeleton[node].length;
+		}
+
+		return len;
 	}
 }
