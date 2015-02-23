@@ -68,6 +68,8 @@ public class Vine : MonoBehaviour
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
 
+	public bool pressedVineButton = false;
+
 	int debugCount = 0;
 
 
@@ -105,14 +107,19 @@ public class Vine : MonoBehaviour
 
 	void Update()
 	{
-		// update mesh, if needed (like when we add a new segment)
+		// update vine skeleton structure (such as adding a new segment)
 
-		// apply transformations to position the mesh (this should really be sent to the vertex shader)
+		// debug vine growth testing
+		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
+		{
+			addSegment(initialRadius, new Vector3(0, initialSegLength,0));
+			pressedVineButton = true;
+		}
+		else
+		{
+			pressedVineButton = false;
+		}
 
-	}
-
-	private void refreshMeshValues()
-	{
 	}
 
 	private void createInitialVineSkeleton()
@@ -120,31 +127,24 @@ public class Vine : MonoBehaviour
 		vineSkeleton.Add(new VineNode(initialRadius, Vector3.zero, new Vector3(0,initialSegLength,0)));
 		Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
 		
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(initialSegLength,initialSegLength,0)));
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
 		Debug.Log("Node 1 start: " + vineSkeleton[1].startPoint);
 		
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(-initialSegLength,initialSegLength,0)));
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
 		Debug.Log("Node 2 start: " + vineSkeleton[2].startPoint);
 
-		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(initialSegLength,initialSegLength,0)));
+		vineSkeleton.Add(new VineNode(initialRadius, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, new Vector3(0,initialSegLength,0)));
 		Debug.Log("Node 3 start: " + vineSkeleton[3].startPoint);
 		
 
 		createMesh();
 
-		string vertString = "";
-		for (int v = 0; v < mesh.triangles.Length; v++)
-		{
-			vertString += mesh.triangles[v];
-			vertString += ", ";
-		}
-
-		Debug.Log(vertString);
-
 	}
 
 	void createMesh()
 	{
+
+		// maybe do some error handling here to make sure that there is at least one segment!
 
 		int res = vineSettings.resolution;
 
@@ -223,10 +223,105 @@ public class Vine : MonoBehaviour
 		mesh.triangles = triangles.ToArray();
 
 	}
-	
 
-	private void addNewSegment()
+	private void updateMesh()
 	{
-		
+		int res = vineSettings.resolution;
+
+		// no need to clear mesh, vertices, or triangles.
+		// we're just going to append to vertices,
+		// and modify the tail end of triangles
+
+		// first, add the new vertices.
+		// usually we're just adding one segment at a time,
+		// but we should be able to handle any number of new segments
+
+		int prevSegCount = (mesh.vertices.Length - 1) / res;
+		int newSegCount = vineSkeleton.Count;
+
+		for (int node = prevSegCount; node < newSegCount; node++)
+		{
+			for (int ringVert = 0; ringVert < res; ringVert++)
+			{
+				float angle = ringVert * ringRadians * -1;
+				float v_x = vineSkeleton[node].radius * Mathf.Cos(angle);
+				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
+				float v_y = 0;
+
+				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+
+				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
+			}
+		}
+
+		// also, we need to move the tip point to it's new location.
+		Vector3 newTip = vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay;
+		vertices[0] = newTip;
+
+		mesh.vertices = vertices.ToArray();
+
+		// next, we need to fix the triangles array.
+		// the segment connected to the tip should now be connected to a newly created segment.
+		// so, we'll delete the triangle information for that segment.
+
+		// purge the triangles forming the tip,
+		int numPointsToPurge = 3 * res;
+		// but preserve the faces forming the previous segments (don't forget that 0 is the point vertex index)
+		int oldTipSegIndex = (3 * 2 * res * (prevSegCount - 1)) - 1;
+
+		triangles.RemoveRange(oldTipSegIndex, numPointsToPurge);
+
+		for (int node = prevSegCount - 1; node < newSegCount; node++)
+		{
+			for (int faceNum = 0; faceNum < res; faceNum++)
+			{
+				//check if we're at a segment, or at the point
+				if (node < vineSkeleton.Count - 1)
+				{
+					// this is a segment.
+					// we will draw two triangles for each rectangular face created between this ring and the next ring
+
+					int bottomLeft = (node * res) + faceNum + 1;
+					int bottomRight = (node * res) + ((faceNum + 1) % res) + 1;
+					int topLeft = bottomLeft + res;
+					int topRight = bottomRight + res;
+
+					// add first triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(topRight);
+					triangles.Add(topLeft);
+
+					// add second triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(bottomRight);
+					triangles.Add(topRight);
+				}
+				else
+				{
+					// this is the point.
+					// we will draw one triangle for each face between this ring and the tip
+
+					int bottomLeft = (node * res) + faceNum + 1;
+					int bottomRight = (node * res) + ((faceNum + 1) % res + 1);
+					int top = 0;
+
+					// add the triangle's vertices
+					triangles.Add(bottomLeft);
+					triangles.Add(bottomRight);
+					triangles.Add(top);
+				}
+			}
+		}
+
+		mesh.triangles = triangles.ToArray();
+
+	}
+
+	private void addSegment(float rad, Vector3 ray)
+	{
+		VineNode newNode = new VineNode(rad, vineSkeleton.Last().startPoint + vineSkeleton.Last().nodeRay, ray);
+		vineSkeleton.Add(newNode);
+
+		updateMesh();
 	}
 }
