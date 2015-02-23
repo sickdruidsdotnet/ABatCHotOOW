@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerMotor : BaseBehavior {
@@ -22,20 +22,24 @@ public class PlayerMotor : BaseBehavior {
 		public float airControlRatio = 0.3f;
 		
 		public float sidestepSpeed = 3f;
+		// I think this part is irrelevant, since we constrain the Z axis.
 		public float sidestepWhileMovingRatio = 0.7f;
 		public bool sidestepAtFullSpeed = false;
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
 		public float jumpForce = 15f;
+		public float dashForce = 15f;
 		public float acceleration = 10f;
+		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
 				
 		public float fallSpeed = 0f;
 		public float baseFallSpeed = -5f;
 
 		public float jumpForceRemaining = 0f;
-		
+		public float dashForceRemaining = 0f;
+
 		public Vector3 momentum = Vector3.zero;
 	}
 	
@@ -100,6 +104,8 @@ public class PlayerMotor : BaseBehavior {
 		groundTestMask = ~(1 << LayerMask.NameToLayer("Player"));
 	}
 		
+	// this is the only function that actually moves the player. All other functions prepare
+	// information that will be processed here, before applying the work vector.
 	public void UpdateMotor(Vector3 movementInput) {
 		environment.wasGrounded = environment.grounded;
 		
@@ -134,7 +140,7 @@ public class PlayerMotor : BaseBehavior {
 			} else if (pendingInput.x != 0 || pendingInput.z != 0) {
 				targetSpeed = movement.walkSpeed;
 				acceleration = movement.acceleration;
-			} else if (player.isGrounded) {
+			} else {
 				targetSpeed = 0;
 				acceleration = movement.stoppingPower;
 			}
@@ -174,10 +180,10 @@ public class PlayerMotor : BaseBehavior {
 		workVector = ApplySlide(workVector);
 		workVector = ApplyGravity(workVector);
 		workVector = ApplyJumpPower(workVector);
+		workVector = ApplyDashPower(workVector);
 		workVector = ApplyGroundMovement(workVector);
 		
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
-		
 	}
 	
 	protected Vector3 ApplyJumpPower(Vector3 workVector) {
@@ -193,6 +199,22 @@ public class PlayerMotor : BaseBehavior {
 		return workVector;
 	}
 	
+	protected Vector3 ApplyDashPower(Vector3 workVector) {
+		
+		if (movement.dashForceRemaining > 0 && player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+				movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
+		}
+
+		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+				movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
+		}
+		
+		
+		return workVector;
+	}
+
 	protected Vector3 ApplyGravity(Vector3 workVector) {
 		if (environment.grounded) {
 			if (!environment.wasGrounded) {
@@ -341,6 +363,19 @@ public class PlayerMotor : BaseBehavior {
 		}
 	}
 
+	public void Dash() {
+		if (player.canDash) {
+			player.Broadcast("OnDash");
+			if(player.isFacingRight)
+				movement.dashForceRemaining = movement.dashForce;
+			else {
+				movement.dashForceRemaining = movement.dashForce * -1;
+			}
+		} else {
+			player.Broadcast("OnDashDenied");
+		}
+	}
+
 	public void ThrowSeed() {
 		if(player.canThrowSeed) {
 			player.Broadcast("OnThrowSeed");
@@ -354,14 +389,6 @@ public class PlayerMotor : BaseBehavior {
 		else{
 			player.Broadcast("OnThrowSeedDenied");
 		}
-	}
-
-	public void Dash() {
-		if (player.canDash) {
-			player.Broadcast("OnDash");
-			transform.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(player.GetDirection() * 4, 0f, 0f), 100f);
-		}
-	
 	}
 	
 	public void RotateTowardCameraDirection() {
