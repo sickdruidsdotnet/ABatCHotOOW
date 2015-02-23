@@ -35,7 +35,7 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
-
+    	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
@@ -53,7 +53,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-        //get the value to lock the player to. Should Iddeally be 0 in the editor
+        //get the value to lock the player to (this is a sidescroller after all). Should ideally be 0 in the editor
         lockedAxisValue = this.transform.position.z;
 
         //set the angle to face the proper directions, then assign isFacingRight
@@ -63,6 +63,9 @@ public class PlayerController : BaseBehavior {
                                     - transform.position).normalized;
             Quaternion _lookRotation = Quaternion.LookRotation(_direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 50f);
+
+            // TODO we should find a better solution for this. Always flipping these values together is not good practice.
+            // can we consolidate to one variable? I recognize the advantages of both, but two seems bad. --Derk
             faceDirection = 1;
             isFacingRight = true;
         }
@@ -81,6 +84,7 @@ public class PlayerController : BaseBehavior {
 
     }
 	
+	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
 	protected void Update() {
 
 		if (Camera.main == null) {
@@ -96,6 +100,8 @@ public class PlayerController : BaseBehavior {
 				blossoms[i].GetComponent<blossomMover>().detach ();
 		}
 
+		// these functions should not directly move the player. They only handle input, and 
+		// send information to the motor, which will move the player in UpdateMotor().
 		HandleStun ();
 		HandleMovementInput();
 		HandleActionInput();
@@ -118,6 +124,8 @@ public class PlayerController : BaseBehavior {
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}
 	
+	// FixedUpdate is called every 0.02 seconds (or something).
+	// this is where we apply movement to make sure everything is fluid and consistent across time.
 	protected void FixedUpdate() {
 		player.motor.UpdateMotor(pendingMovementInput);		
 		
@@ -174,8 +182,10 @@ public class PlayerController : BaseBehavior {
 		isTurning = false;
         //if we ever want to use vertical, it works like horizontal:
         //vertical = Input.GetAxis("Vertical");
-		
+
+		// TODO can this be removed? we say this at the top of the function, and nothing's changed.
 		lastInput = pendingMovementInput;
+		
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
