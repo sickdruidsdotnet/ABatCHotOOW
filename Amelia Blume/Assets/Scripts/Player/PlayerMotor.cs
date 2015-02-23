@@ -29,6 +29,7 @@ public class PlayerMotor : BaseBehavior {
 		public float turnToFaceCameraSpeed = 8f;
 		
 		public float jumpForce = 15f;
+		public float dashforce = 15f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
@@ -37,7 +38,8 @@ public class PlayerMotor : BaseBehavior {
 		public float baseFallSpeed = -5f;
 
 		public float jumpForceRemaining = 0f;
-		
+		public float dashForceRemaining = 0f;
+
 		public Vector3 momentum = Vector3.zero;
 	}
 	
@@ -178,6 +180,7 @@ public class PlayerMotor : BaseBehavior {
 		workVector = ApplySlide(workVector);
 		workVector = ApplyGravity(workVector);
 		workVector = ApplyJumpPower(workVector);
+		workVector = ApplyDashPower(workVector);
 		workVector = ApplyGroundMovement(workVector);
 		
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
@@ -196,6 +199,19 @@ public class PlayerMotor : BaseBehavior {
 		return workVector;
 	}
 	
+	protected Vector3 ApplyDashPower(Vector3 workVector) {
+		if (player.isCollidingAbove) {
+			movement.dashForceRemaining = 0;
+		}
+		
+		if (movement.dashForceRemaining > 0) {
+			workVector.x += movement.dashForceRemaining;
+			//movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
+		}
+		
+		return workVector;
+	}
+
 	protected Vector3 ApplyGravity(Vector3 workVector) {
 		if (environment.grounded) {
 			if (!environment.wasGrounded) {
@@ -341,6 +357,15 @@ public class PlayerMotor : BaseBehavior {
 			movement.jumpForceRemaining = movement.jumpForce;
 		} else {
 			player.Broadcast("OnJumpDenied");
+		}
+	}
+
+	public void Dash() {
+		if (player.canDash) {
+			player.Broadcast("OnDash");
+			movement.dashForceRemaining = movement.dashForce;
+		} else {
+			player.Broadcast("OnDashDenied");
 		}
 	}
 
