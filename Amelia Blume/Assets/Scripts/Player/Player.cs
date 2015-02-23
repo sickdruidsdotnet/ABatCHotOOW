@@ -186,21 +186,26 @@ public class Player : BaseBehavior {
 
 	public bool canDash {
 		get {
-			if (!isGrounded && !dashed){
-				dashed = true;
-				return true;
-				}
-			else if(!isGrounded && dashed){
-				return false;
-				}
-			else if(isGrounded && Time.time - dashedAtTime >= 1.0F){
+			if(Time.time - dashedAtTime >= 1.0F)
+			{
 				dashedAtTime = Time.time;
-				return true;
+
+				if (!isGrounded && !dashed){
+					dashed = true;
+					return true;
 				}
-			else
-				return false;
+				else if(!isGrounded && dashed)
+					return false;
+		
+				else if(isGrounded)
+					return true;
+			}
+			
+			return false;
 		}
 	}
+
+
 #endregion
 	
 	
