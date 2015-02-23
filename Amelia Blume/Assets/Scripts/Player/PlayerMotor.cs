@@ -29,7 +29,7 @@ public class PlayerMotor : BaseBehavior {
 		public float turnToFaceCameraSpeed = 8f;
 		
 		public float jumpForce = 15f;
-		public float dashforce = 15f;
+		public float dashForce = 15f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
@@ -200,14 +200,17 @@ public class PlayerMotor : BaseBehavior {
 	}
 	
 	protected Vector3 ApplyDashPower(Vector3 workVector) {
-		if (player.isCollidingAbove) {
-			movement.dashForceRemaining = 0;
+		
+		if (movement.dashForceRemaining > 0 && player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+				movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
+		}
+
+		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+				movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
 		}
 		
-		if (movement.dashForceRemaining > 0) {
-			workVector.x += movement.dashForceRemaining;
-			//movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
-		}
 		
 		return workVector;
 	}
@@ -363,7 +366,11 @@ public class PlayerMotor : BaseBehavior {
 	public void Dash() {
 		if (player.canDash) {
 			player.Broadcast("OnDash");
-			movement.dashForceRemaining = movement.dashForce;
+			if(player.isFacingRight)
+				movement.dashForceRemaining = movement.dashForce;
+			else {
+				movement.dashForceRemaining = movement.dashForce * -1;
+			}
 		} else {
 			player.Broadcast("OnDashDenied");
 		}
@@ -382,14 +389,6 @@ public class PlayerMotor : BaseBehavior {
 		else{
 			player.Broadcast("OnThrowSeedDenied");
 		}
-	}
-
-	public void Dash() {
-		if (player.canDash) {
-			player.Broadcast("OnDash");
-			transform.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(player.GetDirection() * 4, 0f, 0f), 100f);
-		}
-	
 	}
 	
 	public void RotateTowardCameraDirection() {

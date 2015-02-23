@@ -117,9 +117,6 @@ public class PlayerController : BaseBehavior {
 		if (player.isGrounded && player.dashed)
 			player.dashed = false;
 
-		if (player.ticksSinceDashed <= 100)
-			player.ticksSinceDashed++;
-
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}
@@ -132,6 +129,7 @@ public class PlayerController : BaseBehavior {
 		if (player.isGrounded) {
 			player.transform.rotation *= player.motor.environment.groundRotation;
 		}
+
 	}
 	
 	public void CommitMove(Vector3 finalMovement) {
