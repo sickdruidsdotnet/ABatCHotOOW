@@ -155,9 +155,9 @@ public class Deer : Animal
 	//preventing the player from just running into the deer and being completely safe
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == "Player" && !isCharging) {
+		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
-			if(other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true)
+			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
 			{
 				other.GetComponent<PlayerController>().canControl = false;
 				other.GetComponent<PlayerController>().stunTimer = 30;
@@ -178,6 +178,10 @@ public class Deer : Animal
 				((transform.position.x - other.transform.position.x < 0) && !isFacingRight))
 			{
 				beginRotate();
+			}
+			else if(isCharging && !isInChargeUp)
+			{
+				HitPlayer(other.transform.gameObject);
 			}
 		}
 	}
