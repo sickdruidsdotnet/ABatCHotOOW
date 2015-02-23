@@ -11,8 +11,8 @@ public class Deer : Animal
     public int damageValue;
 
     //make some variables editable in the editor for debugging
-    public float chargeSpeed = 2.5f;
-    public float walkSpeed = 1.25f;
+    public float chargeSpeed = 0.1f;
+    public float walkSpeed = 0.05f;
 
     //again, how we do states will change, but for now I'm doing bools
     public bool isCharging;
@@ -95,6 +95,7 @@ public class Deer : Animal
         {
 
 			MoveRight();
+			checkRotate();
 
             //rotation management
 
@@ -108,6 +109,10 @@ public class Deer : Animal
             else
             {
                 recentlyRotated = false;
+				//unfreeze deer 
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				rigidbody.freezeRotation = true;
             }
             
 
@@ -146,24 +151,36 @@ public class Deer : Animal
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
     }
 
-    //this will be used for rotating when hitting walls mainly
-    void OnCollisionStay(Collision collision)
-    {
-		//Debug.Log ("Colliding with " + collision.gameObject.tag);
-        if (collision.gameObject.tag == "Wall" || collision.gameObject.name == "Deer")
-		{
-            beginRotate();
-		}
-		if(collision.gameObject.tag == "Player")
-		{
-			if(isCharging){
-				HitPlayer(collision.gameObject);
+	//uses raycasting to see if it needs to turn around or not, bypassing tags
+	void checkRotate()
+	{
+		Ray nearVision = new Ray(new Vector3(transform.position.x + (1.3f * faceDirection),
+		                                 transform.position.y + 1f,
+		                                 transform.position.z),
+		                     Vector3.right * faceDirection);
+		RaycastHit[] visionHits;
+		Debug.DrawRay(new Vector3(transform.position.x + (1.3f * faceDirection),
+		                          transform.position.y + 1f,
+		                          transform.position.z),
+		              Vector3.right * faceDirection,
+					              Color.red, 0);
+		visionHits = Physics.RaycastAll (nearVision, 0.5f);
+		foreach( RaycastHit hit in visionHits) {
+			if(hit.transform.tag == "Player")
+			{
+				if(isCharging){
+					HitPlayer(hit.transform.gameObject);
+				}
 			}
-            beginRotate();
+			//ignore itself. this is also where you would ignore other objects
+			if(!hit.transform != transform)
+				beginRotate();
+		
 		}
+	}
 
-    }
 
+	//checks if the player is in the deer's sight using raycasting
 	void checkSeen()
 	{
 		float xDistance = Mathf.Abs(transform.position.x - player.transform.position.x);
@@ -211,18 +228,22 @@ public class Deer : Animal
 		//animation["Walking"].enabled = true;
 		anim.SetBool ("isRunning", true);
     }
-
+	//starts the deer turning around
     public void beginRotate()
     { 
         if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
         {
-	            recentlyRotated = true;
-				isCharging = false;
-	            rotationCooldown = 60;
-				speed = walkSpeed;
+            recentlyRotated = true;
+			isCharging = false;
+            rotationCooldown = 60;
+			speed = walkSpeed;
+			//freeze the deer to prevent weird player interaction physics
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			rigidbody.freezeRotation = true;
 		}
     }
-
+	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
@@ -241,12 +262,5 @@ public class Deer : Animal
 		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 		isCharging = false;
 
-	}
-
-	void CheckRotation(){
-		if ((!isFacingRight && this.transform.rotation.y != 0) || (isFacingRight && this.transform.rotation.y != 180) ) {
-			//if(this.transform.rotation.y > 0)
-			this.transform.Rotate(0,1f,0);
-		}
 	}
 }

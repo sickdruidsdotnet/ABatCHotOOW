@@ -28,7 +28,6 @@ public class Player : BaseBehavior {
 	public float dashedAtTime = 0;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
-	public Camera camera;
 	private GameObject fruit;
 	private bool canGrow = false;
 	public PlayerController controller {
