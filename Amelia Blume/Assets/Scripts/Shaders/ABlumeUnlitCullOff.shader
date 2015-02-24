@@ -1,4 +1,4 @@
-﻿Shader "ABlumeUnlit" {
+﻿Shader "ABlumeUnlitCullOff" {
     Properties {
         _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
@@ -6,7 +6,7 @@
     Category {
        Lighting Off
        ZWrite On
-       Cull Back
+       Cull Off
        SubShader {
             Pass {
             Blend SrcAlpha OneMinusSrcAlpha

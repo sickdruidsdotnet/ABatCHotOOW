@@ -25,10 +25,9 @@ public class Player : BaseBehavior {
 	 */
 	public int health;
 	public bool dashed = false;
-	public int ticksSinceDashed = 0;
+	public float dashedAtTime = 0;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
-	public Camera camera;
 	private GameObject fruit;
 	private bool canGrow = false;
 	private bool sunning = false;
@@ -152,6 +151,12 @@ public class Player : BaseBehavior {
 		}
 	}
 	
+	public bool isFacingRight {
+		get {
+			return controller.isFacingRight;	
+		}
+	}
+
 	public float groundSlope {
 		get {
 			return motor.slide.groundSlope;	
@@ -188,21 +193,26 @@ public class Player : BaseBehavior {
 
 	public bool canDash {
 		get {
-			if (!isGrounded && !dashed){
-				dashed = true;
-				return true;
+			if(Time.time - dashedAtTime >= 1.0F)
+			{
+				dashedAtTime = Time.time;
+
+				if (!isGrounded && !dashed){
+					dashed = true;
+					return true;
 				}
-			else if(!isGrounded && dashed){
-				return false;
-				}
-			else if(isGrounded && ticksSinceDashed >= 100){
-				ticksSinceDashed = 0;
-				return true;
-				}
-			else
-				return false;
+				else if(!isGrounded && dashed)
+					return false;
+		
+				else if(isGrounded)
+					return true;
+			}
+			
+			return false;
 		}
 	}
+
+
 #endregion
 	
 	

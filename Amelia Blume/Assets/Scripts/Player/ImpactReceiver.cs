@@ -14,12 +14,18 @@ public class ImpactReceiver : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// apply the impact force:
-		if (impact.magnitude > 0.2F) character.Move(impact * Time.deltaTime);
-		// consumes the impact energy each cycle:
-		impact = Vector3.Lerp(impact, Vector3.zero, 5*Time.deltaTime);
+		if (impact.magnitude > 0.2F) {
+			//makes sure to cancel out players input if they can't control it
+			if(!transform.GetComponent<PlayerController>().canControl)
+				transform.GetComponent<PlayerMotor>().movement.momentum = Vector3.zero;
+			character.Move (impact * Time.deltaTime);
+		}
+			// consumes the impact energy each cycle:
+			impact = Vector3.Lerp(impact, Vector3.zero, 5*Time.deltaTime);
 	}
 	// call this function to add an impact force:
 	public void AddImpact(Vector3 dir, float force){
+
 		dir.Normalize();
 		if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
 		impact += dir.normalized * force / mass;

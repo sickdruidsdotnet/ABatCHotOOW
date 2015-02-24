@@ -23,6 +23,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void Start()
 	{
+		target = GameObject.FindGameObjectWithTag ("Player").transform;
 		canPanUp = true;
 		canPanRight = true;
 		canPanLeft = true;
@@ -36,11 +37,11 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		if( target.GetComponent<PlayerController>().running || target.GetComponent<PlayerController>().alwaysRun)
 		{
-			panSpeed = target.GetComponent<PlayerMotor>().movement.runSpeed;
+			panSpeed = target.GetComponent<PlayerMotor>().movement.runSpeed + 1f;
 		}
 		else
 		{
-			panSpeed = target.GetComponent<PlayerMotor>().movement.walkSpeed;
+			panSpeed = target.GetComponent<PlayerMotor>().movement.walkSpeed + 1f;
 		}
 
 		//get player's position in viewport

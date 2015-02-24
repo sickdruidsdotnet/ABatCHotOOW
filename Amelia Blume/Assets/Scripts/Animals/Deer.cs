@@ -109,6 +109,10 @@ public class Deer : Animal
             else
             {
                 recentlyRotated = false;
+				//unfreeze deer 
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				rigidbody.freezeRotation = true;
             }
             
 
@@ -146,6 +150,42 @@ public class Deer : Animal
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
     }
+
+	//this will bounce the player and cause the deer to look towards them,
+	//preventing the player from just running into the deer and being completely safe
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "Player") {
+			//make sure the player isn't in stun before bouncing to prevent exponential force addition
+			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
+			{
+				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().stunTimer = 30;
+				
+				int hitDirection;
+				
+				if (other.GetComponent<PlayerController>().isFacingRight)
+					hitDirection = -1;
+				else
+					hitDirection = 1;
+				lockCounter = 60;
+				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+				rigidbody.freezeRotation = true;
+				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+			}
+			//rotate the deer to face the player if that's not already the case
+			if(((transform.position.x - other.transform.position.x >= 0) && isFacingRight) ||
+				((transform.position.x - other.transform.position.x < 0) && !isFacingRight))
+			{
+				beginRotate();
+			}
+			else if(isCharging && !isInChargeUp)
+			{
+				HitPlayer(other.transform.gameObject);
+			}
+		}
+	}
+
 
 	//uses raycasting to see if it needs to turn around or not, bypassing tags
 	void checkRotate()
@@ -195,10 +235,10 @@ public class Deer : Animal
 				if (Physics.Raycast (vision, out visionHit, deerXSight)) {
 					//draws the vision ray in editor
 					/*Debug.DrawRay(new Vector3(transform.position.x + (2f * faceDirection),
-					                          transform.position.y + 1f,
+					                          transform.position.y + 1.5f,
 					                          transform.position.z),
-												Vector3.right * faceDirection,
-					              Color.red, 1f);*/
+					              Vector3.right * faceDirection,
+					              Color.green, 1f);*/
 					if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 					{
 						//Debug.Log("found player");
@@ -229,10 +269,14 @@ public class Deer : Animal
     { 
         if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
         {
-	            recentlyRotated = true;
-				isCharging = false;
-	            rotationCooldown = 60;
-				speed = walkSpeed;
+            recentlyRotated = true;
+			isCharging = false;
+            rotationCooldown = 60;
+			speed = walkSpeed;
+			//freeze the deer to prevent weird player interaction physics
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			rigidbody.freezeRotation = true;
 		}
     }
 	//deals the impact and damage to the player

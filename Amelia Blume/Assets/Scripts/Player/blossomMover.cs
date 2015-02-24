@@ -45,11 +45,16 @@ public class blossomMover : MonoBehaviour {
 		//raycasting instead of colliders, allows for more concise code
 		if (!attached) {
 			//check down
-			if (Physics.Raycast (transform.position, -Vector3.up, 0.02f)) {
-				falling = false;
-			} else {
-				falling = true;
+			//Debug.DrawRay(transform.position, -Vector3.up * 0.01f, Color.blue);
+			RaycastHit[] downHits;
+			downHits = Physics.RaycastAll (new Vector3(transform.position.x, transform.position.y+0.1f), -Vector3.up, 0.01f);
+			foreach(RaycastHit hit in downHits)
+			{
+				if (hit.transform.tag!= "Blossom") 
+					falling = false;
 			}
+			if(downHits.Length ==0)
+				falling = true;
 			//check right
 			if (Physics.Raycast (transform.position, Vector3.right, 0.02f)) {
 				canSwayRight = false;
@@ -97,11 +102,11 @@ public class blossomMover : MonoBehaviour {
 		//handling transparency fade-out
 		if (destroyTimer <= 180) {
 			//change this to handle multiple materials.
-			Color newColor = new Color(gameObject.renderer.material.color.r, 
-			                           gameObject.renderer.material.color.b,
-			                           gameObject.renderer.material.color.g,
+			Color newColor = new Color(transform.GetChild(0).renderer.material.color.r, 
+			                           transform.GetChild(0).renderer.material.color.g,
+			                           transform.GetChild(0).renderer.material.color.b,
 			                           ((float)destroyTimer/180f));
-			this.gameObject.renderer.material.SetColor("_Color", newColor);
+			transform.GetChild(0).renderer.material.SetColor("_Color", newColor);
 		}
 	}
 	
