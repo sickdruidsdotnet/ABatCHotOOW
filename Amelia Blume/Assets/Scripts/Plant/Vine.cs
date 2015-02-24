@@ -70,6 +70,10 @@ public class Vine : MonoBehaviour
 	private int numTriVerts;
 	private float ringRadians;
 
+	// debug draw values
+	private float debugSphereSize = 1f;
+	private Color debugColor = Color.red;
+
 	private Mesh mesh;
 
 	/* vertices has the following format:
@@ -139,6 +143,22 @@ public class Vine : MonoBehaviour
 			pressedVineButton = false;
 		}
 
+	}
+
+	// debug drawing of the skeleton
+	void OnDrawGizmos()
+	{
+		if (vineSkeleton != null)
+		{
+			Gizmos.color = debugColor;
+			for (int node = 0; node < vineSkeleton.Count; node++)
+			{
+				Gizmos.DrawSphere(vineSkeleton[node].startPoint, debugSphereSize);
+				Gizmos.DrawLine(vineSkeleton[node].startPoint, vineSkeleton[node].getNodeRay());
+			}
+
+			Gizmos.DrawSphere(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), debugSphereSize);
+		}
 	}
 
 	private void createInitialVineSkeleton()
