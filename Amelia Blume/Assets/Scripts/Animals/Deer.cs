@@ -206,10 +206,11 @@ public class Deer : Animal
 			{
 				if(isCharging){
 					HitPlayer(hit.transform.gameObject);
+					beginRotate();
 				}
 			}
 			//ignore itself. this is also where you would ignore other objects
-			if(!hit.transform != transform)
+			else if(!hit.transform != transform && !hit.collider.isTrigger)
 				beginRotate();
 		
 		}

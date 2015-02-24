@@ -73,14 +73,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 		Vector3 destination = transform.position + delta;
 		transform.position = new Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedx).x,
 		                                 Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedy).y,
-		                                 -10f);
+		                                 transform.position.z);
 
 		
 	}
 
-	public void MoveToPlayer(float xCoord )
+	public void MoveToPlayer(float xCoord, float yCoord )
 	{
 		//GameObject amelia = GameObject.Find ("Player");
-		transform.position = new Vector3(xCoord, transform.position.y, transform.position.z);
+		transform.position = new Vector3(xCoord, yCoord, transform.position.z);
 	}
 }
