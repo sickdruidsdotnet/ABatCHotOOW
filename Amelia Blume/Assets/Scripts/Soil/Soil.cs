@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Soil : MonoBehaviour {
-	private int HydrationLevel;
+	public int HydrationLevel;
 	public bool isPlanted;
 	private Vector3 SeedLocation;
 	private int SeedWater;
@@ -10,13 +10,29 @@ public class Soil : MonoBehaviour {
 	private int MaxWater;
 	private Seed plantedSeed;
 	private int timer;
-	public float alpha = 1;
+	private float size;
+	public int[] water;
+	private float start;
+	private float slotSize;
 	// Use this for initialization
 	void Start () {
 		HydrationLevel = 0;
 		isPlanted = false;
 		MaxWater = 100;
 		timer = 0;
+		size = renderer.bounds.size.x;
+		water = new int[10];
+		start = this.transform.position.x - size / 2;
+		slotSize = size / water.Length;
+		/*
+		for (int i = 0; i < water.Length; i++) {
+			float x = start+slotSize*i;
+			GameObject fruit = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			fruit.transform.position = new Vector3(x, this.transform.position.y, this.transform.position.z);
+			Instantiate(fruit);
+		}
+		*/
+		//Debug.Log (start);
 	}
 	
 	// Update is called once per frame
@@ -27,6 +43,8 @@ public class Soil : MonoBehaviour {
 		}
 	}
 
+
+	//Return Amount of Water in the complete plot of soil
 	public int GetHydrationLevel(){
 		return HydrationLevel;
 	}
@@ -41,28 +59,64 @@ public class Soil : MonoBehaviour {
 
 	public void ChangeHydrationLevel(int water){
 		HydrationLevel += water;
+		if (HydrationLevel < 0)
+			HydrationLevel = 0;
 	}
 
 	public bool CheckIsPlanted(){
 		return isPlanted;
 	}
 
+	//Return the amount of water in an indiviual slot
+	public int GetWaterCount(int index)
+	{
+		return water[index];
+	}
+
+	public void ChangeWaterCount(int index, int changeAmount)
+	{
+		water [index] += changeAmount;
+		if (water [index] < 0)
+			water [index] = 0;
+	}
+
+	public int getWaterLength()
+	{
+		return water.Length;
+	}
+
 	void OnParticleCollision(GameObject other) {
 		if (other.tag == "Water" && GetHydrationLevel() < MaxWater) {
-			ChangeHydrationLevel (1);
-			Debug.Log("Soil water:" + GetHydrationLevel());
+			ChangeHydrationLevel (3);
+			//Debug.Log("Soil water:" + GetHydrationLevel());
+			//Debug.Log ("Position = " + other.transform.position.x);
+			int index;
+			if(other.transform.rotation.y > 0)
+				index = (int)((other.transform.position.x+2f - start)/slotSize);
+			else
+				index = (int)((other.transform.position.x-2f - start)/slotSize);
+			if(index >= water.Length)
+				index = water.Length-1;
+			//Debug.Log ("index: " + index);
+			//Debug.Log ("Rotation: " + other.transform.rotation.y);
+			water[index]+=3;
 		}
 	}
 
 	void OnCollisionEnter(Collision other){
-		if (other.gameObject.tag == "Seed" && !CheckIsPlanted()) {
+		if (other.gameObject.tag == "Seed") {
 			plantedSeed = other.gameObject.GetComponent<Seed>();
+			int index = (int)((other.transform.position.x - start)/slotSize);
 			other.gameObject.GetComponent<Seed>().setSoil(this.gameObject);
+			plantedSeed.setSoilIndex(index);
+			//Debug.Log ("Planted");
+
 			if(!plantedSeed.checkIfPlanted()){
 				plantedSeed.setPlanted(true);
-				this.isPlanted = true;
+				//this.isPlanted = true;
 				//Debug.Log ("Planted");
 			}
+
 		}
 	}
 
