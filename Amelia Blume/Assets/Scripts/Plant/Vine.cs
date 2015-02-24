@@ -47,6 +47,11 @@ public class Vine : MonoBehaviour
 		{
 			return direction * length;
 		}
+
+		public Vector3 getNodeEndPoint()
+		{
+			return startPoint + getNodeRay();
+		}
 	}
 
 	public List<VineNode> vineSkeleton;
@@ -71,7 +76,7 @@ public class Vine : MonoBehaviour
 	private float ringRadians;
 
 	// debug draw values
-	private float debugSphereSize = 1f;
+	private float debugSphereSize = 0.01f;
 	private Color debugColor = Color.red;
 
 	private Mesh mesh;
@@ -86,6 +91,7 @@ public class Vine : MonoBehaviour
 	private MeshRenderer meshRenderer;
 
 	public bool pressedVineButton = false;
+	public bool isGrowing = false;
 
 	int debugCount = 0;
 
@@ -126,16 +132,27 @@ public class Vine : MonoBehaviour
 
 	void Update()
 	{
+		bool wasGrowing = isGrowing;
 		// update vine skeleton structure (such as adding a new segment)
 		if (getTotalLength() < lengthGoal)
 		{
 			growVine();
+
+			if (!wasGrowing)
+			{
+				isGrowing = true;
+			}
+		}
+		else if (wasGrowing)
+		{
+			printSkeletonInfo();
+			isGrowing = false;
 		}
 
 		// debug vine growth testing
 		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
 		{
-			setGrowthInfo(5.0f, 0.01f);
+			setGrowthInfo(2.5f, 0.05f);
 			pressedVineButton = true;
 		}
 		else
@@ -145,20 +162,51 @@ public class Vine : MonoBehaviour
 
 	}
 
-	// debug drawing of the skeleton
+	// Debug drawing of the skeleton.
+	// Uncheck the vine's Mesh Renderer in the Inspector to turn off mesh
+	// for easier skeleton viewing.
 	void OnDrawGizmos()
 	{
-		if (vineSkeleton != null)
+		// Avoid NPE in the editor when the game isn't running,
+		// (and therefore the object hasn't been initialized).
+		if (_transform)
 		{
-			Gizmos.color = debugColor;
-			for (int node = 0; node < vineSkeleton.Count; node++)
-			{
-				Gizmos.DrawSphere(vineSkeleton[node].startPoint, debugSphereSize);
-				Gizmos.DrawLine(vineSkeleton[node].startPoint, vineSkeleton[node].getNodeRay());
-			}
+			Vector3 mPos = _transform.position;
 
-			Gizmos.DrawSphere(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), debugSphereSize);
+			if (vineSkeleton != null)
+			{
+				for (int node = 0; node < vineSkeleton.Count; node++)
+				{
+					Vector3 nStart = vineSkeleton[node].startPoint;
+					Vector3 nEnd = vineSkeleton[node].getNodeEndPoint();
+
+					// Draw segment endpoints with red spheres
+					Gizmos.color = Color.red;
+					Gizmos.DrawSphere(mPos + nStart, debugSphereSize);
+
+					// Draw segments with lines. Alternate colors for each segment,
+					// but keep the tip segment red (or it swaps colors weirdly)
+					if (node == vineSkeleton.Count - 1)
+					{
+						Gizmos.color = Color.red;
+					}
+					else if (node % 2 == 0)
+					{
+						Gizmos.color = Color.blue;
+					}
+					else
+					{
+						Gizmos.color = Color.white;
+					}
+					Gizmos.DrawLine(mPos + nStart, mPos + nEnd);
+				}
+
+				// Draw the tip as another segment endpoint
+				Gizmos.color = Color.red;
+				Gizmos.DrawSphere(mPos + vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), debugSphereSize);
+			}
 		}
+			
 	}
 
 	private void createInitialVineSkeleton()
@@ -197,7 +245,7 @@ public class Vine : MonoBehaviour
 		if (vineSkeleton.Count == 1)
 		{
 			addSegment(initialRadius, newGrowth, Vector3.up);
-			Debug.Log("Creating first non-tip segment");
+			//Debug.Log("Creating first non-tip segment");
 		}
 		else
 		{
@@ -215,7 +263,7 @@ public class Vine : MonoBehaviour
 				vineSkeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
 				addSegment(initialRadius, overflow, Vector3.up);
-				Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + vineSkeleton[growIndex].length + ", so a new node is created with length " + overflow);
+				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + vineSkeleton[growIndex].length + ", so a new node is created with length " + overflow);
 			}
 		}
 
@@ -474,6 +522,7 @@ public class Vine : MonoBehaviour
 
 	- GET information about this vine to be used outside of the Vine class, or
 	- SET values in the Vine class that internal private functions will use to change the vine.
+	- PRINT debug info about the Vine
 
 	These functions should never directly manipulate the mesh or vertices.
 	*/
@@ -493,5 +542,22 @@ public class Vine : MonoBehaviour
 		}
 
 		return len;
+	}
+
+	public void printSkeletonInfo()
+	{
+		string vineInfo = "Number of nodes: " + vineSkeleton.Count
+						   + "\nVine Length: " + getTotalLength();
+
+		string nodeInfo = "";
+
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			nodeInfo += "Node #" + node + "\n";
+			nodeInfo += "\tStart: " + vineSkeleton[node].startPoint + "\n";
+			nodeInfo += "\tEnd: " + vineSkeleton[node].getNodeEndPoint() + "\n";
+		}
+
+		Debug.Log(vineInfo + "\n" + nodeInfo);
 	}
 }
