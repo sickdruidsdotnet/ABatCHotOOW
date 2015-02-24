@@ -13,8 +13,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool canPanUp;
 	public bool canPanDown;
 
-	float minPanSpeed = 4f;
-	float panSpeed;
+	float minPanSpeed = 6f;
+	float panSpeedx;
+	float panSpeedy;
 
 	public float leftThreshold = 0.36f;
 	public float rightThreshold = 0.64f;
@@ -35,9 +36,13 @@ public class SideScrollerCameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		panSpeed = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.x);
-		if (panSpeed < minPanSpeed)
-			panSpeed = minPanSpeed;
+		panSpeedx = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.x)+1f;
+		if (panSpeedx < minPanSpeed)
+			panSpeedx = minPanSpeed;
+
+		panSpeedy = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.y)+1f;
+		if (panSpeedy < minPanSpeed)
+			panSpeedy = minPanSpeed;
 
 		//get player's position in viewport
 		Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
@@ -66,7 +71,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(horizontalPan, verticalPan, point.z));
 		Vector3 destination = transform.position + delta;
-		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, panSpeed);
+		transform.position = new Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedx).x,
+		                                 Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedy).y,
+		                                 -10f);
 
 		
 	}
