@@ -190,7 +190,7 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl) {
+		if (!canControl || player.isSunning()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
@@ -221,14 +221,20 @@ public class PlayerController : BaseBehavior {
 		if(!canControl)
 			return;
 
-		if (Input.GetButtonDown("Jump")) {
-			Jump();
+		if (!player.isSunning()) {
+			if (Input.GetButtonDown ("Jump")) {
+				Jump ();
+			}
+			if (Input.GetButtonDown ("ThrowSeed")) {
+				ThrowSeed ();
+			}
+			if (Input.GetButtonDown ("Dash")) {
+				Dash ();
+			}
 		}
-		if (Input.GetButtonDown("ThrowSeed")) {
-			ThrowSeed();
-		}
-		if (Input.GetButtonDown("Dash")) {
-			Dash();
+		if (Input.GetButtonDown ("Sun")) {
+			Sun();
+			player.SetSunning(true);
 		}
 	}
 	
@@ -245,6 +251,11 @@ public class PlayerController : BaseBehavior {
 	protected void Dash() {
 		player.Broadcast("OnDashRequest");
 		player.motor.Dash();
+	}
+
+	protected void Sun() {
+		player.Broadcast("OnSunRequest");
+		player.motor.Sun();
 	}
 
 	public void HandleStun()

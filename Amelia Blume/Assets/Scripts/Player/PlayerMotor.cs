@@ -390,6 +390,28 @@ public class PlayerMotor : BaseBehavior {
 			player.Broadcast("OnThrowSeedDenied");
 		}
 	}
+<<<<<<< HEAD
+
+	public void Dash() {
+		if (player.canDash) {
+			player.Broadcast("OnDash");
+			transform.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(player.GetDirection() * 4, 0f, 0f), 100f);
+		}
+	
+	}
+
+	public void Sun() {
+		if (player.canSun) {
+			player.Broadcast("OnSun");
+			//SunStuff
+			GameObject sun = (GameObject) Resources.Load("Sun");
+			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			Instantiate(sun);
+		}
+		
+	}
+=======
+>>>>>>> master
 	
 	public void RotateTowardCameraDirection() {
 		if (pendingInput.x != 0 || pendingInput.z != 0 || player.controller.isTurning) {

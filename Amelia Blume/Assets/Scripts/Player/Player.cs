@@ -30,6 +30,7 @@ public class Player : BaseBehavior {
 	protected PlayerController cachedPlayerController;
 	private GameObject fruit;
 	private bool canGrow = false;
+	private bool sunning = false;
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -184,6 +185,12 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canSun {
+		get {
+			return true;
+		}
+	}
+
 	public bool canDash {
 		get {
 			if(Time.time - dashedAtTime >= 1.0F)
@@ -283,6 +290,15 @@ public class Player : BaseBehavior {
 		canGrow = value;
 	}
 
+	public bool isSunning()
+	{
+		return sunning;
+	}
+
+	public void SetSunning(bool value)
+	{
+		sunning = value;
+	}
 
 	//returns direction the player is currently facing as an int. 1=right, -1=left
 	//we don't call it derkrection
