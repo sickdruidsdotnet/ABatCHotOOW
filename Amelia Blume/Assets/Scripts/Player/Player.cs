@@ -317,10 +317,10 @@ public class Player : BaseBehavior {
 		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");
 		fruit.transform.position = fruitPosition;
-		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y, 0);
-		//SetHealth (100);
+		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y + 4f, 0);
+		SetHealth (100);
 
-		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
+		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
 		controller.MoveToPlayer(spawner.transform.position.x);
 		Instantiate (fruit);
 		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);

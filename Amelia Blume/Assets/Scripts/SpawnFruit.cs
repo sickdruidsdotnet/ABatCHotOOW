@@ -14,10 +14,12 @@ public class SpawnFruit : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision other){
-		GameObject amelia = GameObject.Find ("Player");
-		Player script = amelia.GetComponent<Player>();
-		script.SetCanGrow(true);
-		Debug.Log ("Destroy fruit");
-		Destroy(this.gameObject);
+		if (other.transform.tag != "Player") {
+			GameObject amelia = GameObject.Find ("Player");
+			Player script = amelia.GetComponent<Player> ();
+			script.SetCanGrow (true);
+			Debug.Log ("Destroy fruit");
+			Destroy (this.gameObject);
+		}
 	}
 }

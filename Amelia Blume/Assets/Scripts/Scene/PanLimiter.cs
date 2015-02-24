@@ -25,6 +25,9 @@ public class PanLimiter : MonoBehaviour {
 
 	void OnBecameVisible()
 	{
+		if (Camera.current.tag != "MainCamera") 
+			return;
+
 		if (limitLeft) {
 			cameraScript.canPanLeft = false;
 		}
@@ -44,6 +47,9 @@ public class PanLimiter : MonoBehaviour {
 
 	void OnBecameInvisible()
 	{
+		/*if (Camera.current.tag != "MainCamera") 
+			return;*/
+
 		if (limitLeft) {
 			cameraScript.canPanLeft = true;
 		}

@@ -13,6 +13,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool canPanUp;
 	public bool canPanDown;
 
+	float minPanSpeed = 4f;
 	float panSpeed;
 
 	public float leftThreshold = 0.36f;
@@ -34,15 +35,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-
-		if( target.GetComponent<PlayerController>().running || target.GetComponent<PlayerController>().alwaysRun)
-		{
-			panSpeed = target.GetComponent<PlayerMotor>().movement.runSpeed + 1f;
-		}
-		else
-		{
-			panSpeed = target.GetComponent<PlayerMotor>().movement.walkSpeed + 1f;
-		}
+		panSpeed = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.x);
+		if (panSpeed < minPanSpeed)
+			panSpeed = minPanSpeed;
 
 		//get player's position in viewport
 		Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);

@@ -282,7 +282,6 @@ public class Deer : Animal
 	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
-		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		player.GetComponent<PlayerController>().canControl = false;
 		player.GetComponent<PlayerController>().stunTimer = 45;
 
@@ -295,7 +294,11 @@ public class Deer : Animal
 		lockCounter = 60;
 		rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 		rigidbody.freezeRotation = true;
-		player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+		//don't add the impact if player is about to die
+		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
+			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
+		}
+		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
 
 	}
