@@ -22,9 +22,33 @@ public class PanLimiter : MonoBehaviour {
 			cameraScript = mainCameraObject.GetComponent<SideScrollerCameraController>();
 		}
 	}
+	void Update()
+	{
+		if (renderer.isVisible) {
+			if (limitLeft) {
+				cameraScript.canPanLeft = false;
+			}
+		
+			if (limitRight) {
+				cameraScript.canPanRight = false;
+			}
+		
+			if (limitUp) {
+				cameraScript.canPanUp = false;
+			}
+		
+			if (limitDown) {
+				cameraScript.canPanDown = false;
+			}
+		}
+	}
+
 
 	void OnBecameVisible()
 	{
+		if (Camera.current.tag != "MainCamera") 
+			return;
+
 		if (limitLeft) {
 			cameraScript.canPanLeft = false;
 		}
@@ -44,6 +68,9 @@ public class PanLimiter : MonoBehaviour {
 
 	void OnBecameInvisible()
 	{
+		/*if (Camera.current.tag != "MainCamera") 
+			return;*/
+
 		if (limitLeft) {
 			cameraScript.canPanLeft = true;
 		}

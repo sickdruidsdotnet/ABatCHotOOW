@@ -24,9 +24,13 @@ public class Player : BaseBehavior {
 	 * future calls.
 	 */
 	public int health;
+	public bool dashed = false;
+	public float dashedAtTime = 0;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
-	public Camera camera;
+	private GameObject fruit;
+	private bool canGrow = false;
+	private bool sunning = false;
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -147,6 +151,12 @@ public class Player : BaseBehavior {
 		}
 	}
 	
+	public bool isFacingRight {
+		get {
+			return controller.isFacingRight;	
+		}
+	}
+
 	public float groundSlope {
 		get {
 			return motor.slide.groundSlope;	
@@ -174,6 +184,35 @@ public class Player : BaseBehavior {
 			return true;
 		}
 	}
+
+	public bool canSun {
+		get {
+			return true;
+		}
+	}
+
+	public bool canDash {
+		get {
+			if(Time.time - dashedAtTime >= 1.0F)
+			{
+				dashedAtTime = Time.time;
+
+				if (!isGrounded && !dashed){
+					dashed = true;
+					return true;
+				}
+				else if(!isGrounded && dashed)
+					return false;
+		
+				else if(isGrounded)
+					return true;
+			}
+			
+			return false;
+		}
+	}
+
+
 #endregion
 	
 	
@@ -210,13 +249,25 @@ public class Player : BaseBehavior {
 
 	void Update()
 	{
+
+
 		//ReduceHealth(1);
+
+
+
+		//ReduceHealth(1);
+		if (canGrow && this.transform.localScale.x < 1) {
+			this.transform.localScale = new Vector3 (this.transform.localScale.x + .1f, this.
+			                                        transform.localScale.y + .1f, this.transform.localScale.z + .1f);
+		} else
+			SetCanGrow (false);
+
 	}
 
 	public void ReduceHealth(int subtract)
 	{
 		health -= subtract;
-		if (GetHealth() == 0)
+		if (GetHealth() <= 0)
 			Kill ();
 	}
 
@@ -230,15 +281,53 @@ public class Player : BaseBehavior {
 		return health;
 	}
 
+	public bool CheckCanGrow()
+	{
+		return canGrow;
+	}
+
+	public void SetCanGrow(bool value){
+		canGrow = value;
+	}
+
+	public bool isSunning()
+	{
+		return sunning;
+	}
+
+	public void SetSunning(bool value)
+	{
+		sunning = value;
+	}
+
+	//returns direction the player is currently facing as an int. 1=right, -1=left
+	//we don't call it derkrection
+	public int GetDirection()
+	{
+		if (cachedPlayerController.isFacingRight)
+			return 1;
+		else
+			return -1;
+	}
+
 
 	void Kill()
 	{
+		Debug.Log ("Killed Called");
 		spawner = GameObject.Find ("Spawner");
-		this.transform.position = spawner.transform.position;
-		SetHealth (-5);
-		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
-		controller.MoveToPlayer();
+		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
+		fruit = (GameObject)Resources.Load ("RespawnFruit");
+		fruit.transform.position = fruitPosition;
+		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y + 4f, 0);
+		SetHealth (100);
+
+		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
+		controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
+		Instantiate (fruit);
+		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}
+
+
 
 	
 

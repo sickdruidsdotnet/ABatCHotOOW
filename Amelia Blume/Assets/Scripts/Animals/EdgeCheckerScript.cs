@@ -4,7 +4,7 @@ using System.Collections;
 public class EdgeCheckerScript : MonoBehaviour {
 
 	private Deer parentDeer;
-	private int count;
+	public int count;
 
 	// Use this for initialization
 	void Start () {
