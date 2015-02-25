@@ -273,12 +273,13 @@ public class PlayerController : BaseBehavior {
 	}
 
 	//essentially check if the blossoms need to be detached/added
-	void checkHealth()
+	public void checkHealth()
 	{
 		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
 		int currTens = currentHealth / 10;
+		currTens -= 1;
 		//checking if lost health
-		Debug.Log (currTens);
+		//Debug.Log (currTens);
 		if (currTens < 9 && currTens >= 0) {
 			for(int i = 9; i > currTens; i--)
 			{
@@ -291,7 +292,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//checking if gained health back
-		if (currTens != 10 && currTens >=0) {
+		if (currTens <= 10 && currTens >=0) {
 			int i;
 			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
      		{

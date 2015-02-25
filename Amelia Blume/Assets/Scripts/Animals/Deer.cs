@@ -158,13 +158,10 @@ public class Deer : Animal
 		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
 			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
-			{
-				other.GetComponent<PlayerController>().canControl = false;
-				other.GetComponent<PlayerController>().stunTimer = 30;
-				
+			{	
 				int hitDirection;
 				
-				if (other.GetComponent<PlayerController>().isFacingRight)
+				if (transform.position.x - other.transform.position.x >= 0)
 					hitDirection = -1;
 				else
 					hitDirection = 1;
@@ -172,6 +169,8 @@ public class Deer : Animal
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.freezeRotation = true;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().stunTimer = 30;
 			}
 			//rotate the deer to face the player if that's not already the case
 			if(((transform.position.x - other.transform.position.x >= 0) && isFacingRight) ||
@@ -283,8 +282,6 @@ public class Deer : Animal
 	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
-		player.GetComponent<PlayerController>().canControl = false;
-		player.GetComponent<PlayerController>().stunTimer = 45;
 
 		int hitDirection;
 
@@ -299,6 +296,8 @@ public class Deer : Animal
 		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
 		}
+		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
 

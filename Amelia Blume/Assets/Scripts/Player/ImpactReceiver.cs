@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 
 public class ImpactReceiver : MonoBehaviour {
@@ -25,7 +26,12 @@ public class ImpactReceiver : MonoBehaviour {
 	}
 	// call this function to add an impact force:
 	public void AddImpact(Vector3 dir, float force){
+		//avoid multplying impact
+		if (!transform.GetComponent<PlayerController> ().canControl) {
+			return;
+		}
 
+		transform.GetComponent<PlayerMotor>().movement.momentum = Vector3.zero;
 		dir.Normalize();
 		if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
 		impact += dir.normalized * force / mass;
