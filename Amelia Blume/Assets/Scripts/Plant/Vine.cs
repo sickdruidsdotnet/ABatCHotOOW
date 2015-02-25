@@ -75,6 +75,8 @@ public class Vine : MonoBehaviour
 	private int numTriVerts;
 	private float ringRadians;
 
+	public GameObject vineTarget;
+
 	// debug draw values
 	private float debugSphereSize = 0.01f;
 	private Color debugColor = Color.red;
@@ -124,8 +126,13 @@ public class Vine : MonoBehaviour
 		mesh.Clear();
 		mesh.name = "Vine";
 
-
 		createInitialVineSkeleton();
+
+		// initialize vine target
+		vineTarget = new GameObject("VineTarget");
+		vineTarget.transform.position = new Vector3(getTotalLength() / 2, getTotalLength() / 2, 0) + _transform.position;
+
+
 
 		
 	}
@@ -152,13 +159,17 @@ public class Vine : MonoBehaviour
 		// debug vine growth testing
 		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
 		{
-			setGrowthInfo(2.5f, 0.05f);
+			setGrowthInfo(getTotalLength() + 0.5f, 0.15f);
+			//Debug.Log(Vector3.Cross(vineSkeleton.Last().getNodeEndPoint(), vineTarget.transform.position - _transform.position));
+			//moveTowardsTarget();
 			pressedVineButton = true;
 		}
 		else
 		{
 			pressedVineButton = false;
 		}
+
+		moveTowardsTarget();
 
 	}
 
@@ -209,12 +220,25 @@ public class Vine : MonoBehaviour
 			
 	}
 
+	/*
+	SKELETON FUNCTIONS
+
+	These are private functions which create and manipulate the vine's skeleton.
+	This includes growing and moving the vine.
+	*/
+
 	private void createInitialVineSkeleton()
 	{
 		vineSkeleton.Add(new VineNode(initialRadius, initialSegLength, Vector3.zero, Vector3.up));
-		Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
+		//Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
+
+
 
 		createMesh();
+
+		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
+		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
+		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
 
 	}
 
@@ -244,7 +268,7 @@ public class Vine : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (vineSkeleton.Count == 1)
 		{
-			addSegment(initialRadius, newGrowth, Vector3.up);
+			addSegment(initialRadius, newGrowth, vineSkeleton.Last().direction);
 			//Debug.Log("Creating first non-tip segment");
 		}
 		else
@@ -262,13 +286,105 @@ public class Vine : MonoBehaviour
 			{
 				vineSkeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialRadius, overflow, Vector3.up);
+				addSegment(initialRadius, overflow, vineSkeleton.Last().direction);
 				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + vineSkeleton[growIndex].length + ", so a new node is created with length " + overflow);
 			}
 		}
 
-		updateSkeleton();
+		updateSkeleton(vineSkeleton);
 	}
+
+	private void updateSkeleton(List<VineNode> v)
+	{
+		// Iterate through all the nodes and make sure the start points correspond 
+		// to the ends of the previous nodes.
+		if (v.Count > 1)
+		{
+			for (int node = 1; node < v.Count; node++)
+			{
+				v[node].startPoint = v[node - 1].startPoint + v[node - 1].getNodeRay();
+			}
+		}
+		
+		updateMesh();
+	}
+
+	private void addSegment(float rad, float magnitude, Vector3 direction)
+	{
+		// since the tip is always of uniform length, we are actually adding a new tip,
+		// and shrinking the previous end segment. It can now grow to its full length,
+		// and then the process will start again.
+
+		if (magnitude > maxSegLength)
+		{
+			Debug.Log("Whoops, magnitude > maxSegLength in addSegment(). We should do something to handle this case.");
+		}
+
+		vineSkeleton.Last().length = magnitude;
+		VineNode newNode = new VineNode(rad, tipLength, vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), direction);
+		vineSkeleton.Add(newNode);
+
+		expandMesh();
+	}
+
+	private float vineDistToGoal(List<VineNode> v)
+	{
+		float dist = 0;
+		Vector3 vineTip = _transform.position + v.Last().getNodeEndPoint();
+		Vector3 target = vineTarget.transform.position;
+
+		return Vector3.Distance(vineTip, target);
+	}
+
+	private void moveTowardsTarget()
+	{
+		
+		float rotAmount = 1f;
+
+		string debugOutput = "Initial distance to target: " + vineDistToGoal(vineSkeleton);
+
+		// find the gradient for each node, and rotate by that amount.
+		for (int node = 0; node < vineSkeleton.Count; node++)
+		{
+			debugOutput += "\n\tNode " + node + ":";
+
+			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - _transform.position).normalized;
+
+			Vector3 tipPoint = vineSkeleton.Last().getNodeEndPoint();
+			Vector3 toTip = tipPoint - vineSkeleton[node].startPoint;
+			Vector3 toTarget = (vineTarget.transform.position - _transform.position) - tipPoint;
+
+			Vector3 movementVector = Vector3.Cross(toTip, rotAxis);
+
+			float gradient = Vector3.Dot(movementVector, toTarget);
+			Vector3 rotGrad = Quaternion.AngleAxis(-gradient, rotAxis) * vineSkeleton[node].direction;
+
+			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
+			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
+			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
+			debugOutput += "\n\t\ttoTarget: " + toTarget.ToString("F8");
+			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
+			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
+			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
+
+
+			// apply the rotation to the node
+			vineSkeleton[node].direction = rotGrad;
+			updateSkeleton(vineSkeleton);
+
+		}
+
+		debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
+		//Debug.Log(debugOutput);
+
+		updateMesh();
+	}
+
+	/*
+	MESH FUNCTIONS
+
+	These are private functions which manage the mesh constructed around the skeleton.
+	*/
 
 	// createMesh() is only called once, at the beginning.
 	// vertices[] and triangles[] are cleared and started from scratch.
@@ -286,7 +402,7 @@ public class Vine : MonoBehaviour
 
 		// push the tip vertex
 		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay());
-		Debug.Log("tip: " + vertices[0]);
+		//Debug.Log("tip: " + vertices[0]);
 
 		// push vertices for each ring
 
@@ -448,22 +564,6 @@ public class Vine : MonoBehaviour
 		mesh.triangles = triangles.ToArray();
 	}
 
-	
-	private void updateSkeleton()
-	{
-		// Iterate through all the nodes and make sure the start points correspond 
-		// to the ends of the previous nodes.
-		if (vineSkeleton.Count > 1)
-		{
-			for (int node = 1; node < vineSkeleton.Count; node++)
-			{
-				vineSkeleton[node].startPoint = vineSkeleton[node - 1].startPoint + vineSkeleton[node - 1].getNodeRay();
-			}
-		}
-		
-		updateMesh();
-	}
-
 	// updateMesh() is called whenever existing mesh vertices need to be transformed.
 	// vertices[] is cleared and started from scratch, but triangles[] is left untouched.
 	private void updateMesh()
@@ -496,24 +596,6 @@ public class Vine : MonoBehaviour
 		mesh.vertices = vertices.ToArray();
 	}
 
-	private void addSegment(float rad, float magnitude, Vector3 direction)
-	{
-		// since the tip is always of uniform length, we are actually adding a new tip,
-		// and shrinking the previous end segment. It can now grow to its full length,
-		// and then the process will start again.
-
-		if (magnitude > maxSegLength)
-		{
-			Debug.Log("Whoops, magnitude > maxSegLength in addSegment(). We should do something to handle this case.");
-		}
-
-		vineSkeleton.Last().length = magnitude;
-		VineNode newNode = new VineNode(rad, tipLength, vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), direction);
-		vineSkeleton.Add(newNode);
-
-		expandMesh();
-	}
-
 	/*
 
 	PUBLIC FUNCTIONS
@@ -534,14 +616,24 @@ public class Vine : MonoBehaviour
 
 	public float getTotalLength()
 	{
-		float len = 0f;
-
-		for (int node = 0; node < vineSkeleton.Count; node++)
+		if (vineSkeleton != null)
 		{
-			len += vineSkeleton[node].length;
-		}
+			float len = 0f;
 
-		return len;
+			for (int node = 0; node < vineSkeleton.Count; node++)
+			{
+				len += vineSkeleton[node].length;
+			}
+
+			return len;
+		}
+		else
+		{
+			Debug.Log("Can not get length of vine before it's been created!");
+
+			return 0f;
+		}
+			
 	}
 
 	public void printSkeletonInfo()
