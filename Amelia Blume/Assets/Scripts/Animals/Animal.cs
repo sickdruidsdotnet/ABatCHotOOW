@@ -8,6 +8,7 @@ public class Animal : MonoBehaviour
     //protected AnimalState[] state;
     public bool isRestrained;
     public bool isInfected;
+	public bool isBeingLured;
 
     //public AnimalState[] getStates(){}
 
@@ -26,5 +27,12 @@ public class Animal : MonoBehaviour
     {
         isInfected = false;
     }
+
+	public void LurePlant(Vector3 plantPosition)
+	{
+		NavMeshAgent agent = GetComponent<NavMeshAgent> ();
+		agent.SetDestination (plantPosition);
+		isBeingLured = true;
+	}
 
 }
