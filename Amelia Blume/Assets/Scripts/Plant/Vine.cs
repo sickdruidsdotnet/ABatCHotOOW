@@ -27,6 +27,10 @@ public class Vine : MonoBehaviour
 		public float growthAcceleration = 1.0f;
 		public float ringRadiusVariation = 0.1f;
 		public float ringDirectionVariation = 0.1f;
+		public float targetHeight = 5f;
+		public float targetSpeed = 10f;
+		public float targetTrackRadius = 5f;
+		public float targetAngle = 0f;
 	}
 
 	public class VineNode {
@@ -66,8 +70,10 @@ public class Vine : MonoBehaviour
 	private float maxSegLength = 0.3f;
 
 	private float growthRate = 0.05f;
-	private float lengthGoal;
+	public float lengthGoal;
 	private float growthStart;
+
+	public float length;
 	
 	private int numRings;
 	private int numFaces;
@@ -132,6 +138,12 @@ public class Vine : MonoBehaviour
 		vineTarget = new GameObject("VineTarget");
 		vineTarget.transform.position = new Vector3(getTotalLength() / 2, getTotalLength() / 2, 0) + _transform.position;
 
+		// initialize random vine target movement properties
+		vineSettings.targetTrackRadius = UnityEngine.Random.Range(2f, 10f);
+		vineSettings.targetAngle = UnityEngine.Random.Range(0f, 360f);
+		vineSettings.targetHeight = UnityEngine.Random.Range(5f, 15f);
+		vineSettings.targetSpeed = UnityEngine.Random.Range(-0.5f, 0.5f);
+
 
 
 		
@@ -139,6 +151,8 @@ public class Vine : MonoBehaviour
 
 	void Update()
 	{
+		length = getTotalLength();
+
 		bool wasGrowing = isGrowing;
 		// update vine skeleton structure (such as adding a new segment)
 		if (getTotalLength() < lengthGoal)
@@ -171,6 +185,7 @@ public class Vine : MonoBehaviour
 		}
 		*/
 
+		moveTarget();
 		moveTowardsTarget();
 
 	}
@@ -237,10 +252,6 @@ public class Vine : MonoBehaviour
 
 
 		createMesh();
-
-		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
-		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
-		addSegment(initialRadius, maxSegLength, vineSkeleton.Last().direction);
 
 	}
 
@@ -380,6 +391,19 @@ public class Vine : MonoBehaviour
 		//Debug.Log(debugOutput);
 
 		updateMesh();
+	}
+
+	//move the target for the vine
+	private void moveTarget()
+	{
+		//target should orbit above the vine's base
+		vineSettings.targetAngle += (vineSettings.targetSpeed * Time.deltaTime) % 360f;
+		float t_x = vineSettings.targetTrackRadius * Mathf.Cos(vineSettings.targetAngle);
+		float t_z = vineSettings.targetTrackRadius * Mathf.Sin(vineSettings.targetAngle);
+		float t_y = vineSettings.targetHeight;
+
+		vineTarget.transform.position = new Vector3(t_x, t_y, t_z);
+
 	}
 
 	/*

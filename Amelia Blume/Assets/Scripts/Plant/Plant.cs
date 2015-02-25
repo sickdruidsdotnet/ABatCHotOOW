@@ -5,12 +5,12 @@ using System.Collections;
 //also known as the Parent class.
 public class Plant : MonoBehaviour
 {
-    protected int waterCount;
-    protected int hydrationGoal;
-    protected float maturity;
+    public int waterCount;
+    public int hydrationGoal;
+    public float maturity;
     public Soil soil;
-    private int collectionTimer;
-    private int collectionDelay;
+    public int collectionTimer;
+    public int collectionDelay;
     private Vector3 baseScale;
     private float scaleFactor;
 	private float Sunfactor;
@@ -47,6 +47,7 @@ public class Plant : MonoBehaviour
 
     void Update()
     {
+        maturity = (float)waterCount / (float)hydrationGoal;
 
         if(soil != null)
         {
@@ -74,7 +75,7 @@ public class Plant : MonoBehaviour
     }
 
     // Grows the plant.
-    public void grow()
+    public virtual void grow()
     {
         // do something with procedural growth.
 

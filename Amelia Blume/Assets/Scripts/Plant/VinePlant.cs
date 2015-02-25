@@ -9,6 +9,8 @@ public class VinePlant : Plant
     private List<GameObject> vines;
     private float vineSpawnRadians;
     private float vineSpawnRadius = 0.2f;
+    public float maxVineLength = 7f;
+    public float growthRate = 0.35f;
 
     
     // Constructor
@@ -35,7 +37,7 @@ public class VinePlant : Plant
             float angle = vine * vineSpawnRadians;
             float v_x = vineSpawnRadius * Mathf.Cos(angle);
             float v_z = vineSpawnRadius * Mathf.Sin(angle);
-            Vector3 vineLocation = new Vector3(v_x, 0, v_z);
+            Vector3 vineLocation = new Vector3(v_x, 0, v_z) + transform.position;
 
             vines.Add(Instantiate(Resources.Load("VinePrefab"), vineLocation, Quaternion.identity) as GameObject);
         }
@@ -46,5 +48,16 @@ public class VinePlant : Plant
     {
     	// make enemy a child of this GameObject
     	// switch to 
+    }
+
+    public override void grow()
+    {
+        
+        float goal = maturity * maxVineLength;
+
+        for (int vine = 0; vine < vines.Count; vine++)
+        {
+            vines[vine].GetComponent<Vine>().setGrowthInfo(goal, growthRate);
+        }
     }
 }
