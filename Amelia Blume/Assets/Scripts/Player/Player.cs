@@ -267,7 +267,7 @@ public class Player : BaseBehavior {
 	public void ReduceHealth(int subtract)
 	{
 		health -= subtract;
-		if (GetHealth() == 0)
+		if (GetHealth() <= 0)
 			Kill ();
 	}
 
@@ -313,6 +313,7 @@ public class Player : BaseBehavior {
 
 	void Kill()
 	{
+		Debug.Log ("Killed Called");
 		spawner = GameObject.Find ("Spawner");
 		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");

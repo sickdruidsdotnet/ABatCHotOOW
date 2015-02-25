@@ -278,7 +278,8 @@ public class PlayerController : BaseBehavior {
 		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
 		int currTens = currentHealth / 10;
 		//checking if lost health
-		if (currTens < 9 && blossoms[currTens+1] != null) {
+		Debug.Log (currTens);
+		if (currTens < 9 && currTens >= 0) {
 			for(int i = 9; i > currTens; i--)
 			{
 				if(blossoms[i] != null){
@@ -290,7 +291,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//checking if gained health back
-		if (currTens != 10 && blossoms [currTens] == null) {
+		if (currTens != 10 && currTens >=0) {
 			int i;
 			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
      		{
