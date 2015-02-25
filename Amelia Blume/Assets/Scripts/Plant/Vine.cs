@@ -157,6 +157,7 @@ public class Vine : MonoBehaviour
 		}
 
 		// debug vine growth testing
+		/*
 		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
 		{
 			setGrowthInfo(getTotalLength() + 0.5f, 0.15f);
@@ -168,6 +169,7 @@ public class Vine : MonoBehaviour
 		{
 			pressedVineButton = false;
 		}
+		*/
 
 		moveTowardsTarget();
 

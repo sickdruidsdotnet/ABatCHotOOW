@@ -1,10 +1,15 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 //This is the base class which is
 //also known as the Parent class.
 public class VinePlant : Plant 
 {
+    public int numVines = 5;
+    private List<GameObject> vines;
+    private float vineSpawnRadians;
+    private float vineSpawnRadius = 0.2f;
+
     
     // Constructor
     public VinePlant()
@@ -15,6 +20,25 @@ public class VinePlant : Plant
 
         Debug.Log("VinePlant created");
         Debug.Log("VinePlant hydrationGoal: " + hydrationGoal);
+    }
+
+    void Start()
+    {
+        // initialize vines
+        vines = new List<GameObject>();
+
+        // vines should be spawned in a ring around the VinePlant's location.
+        vineSpawnRadians = 2 * Mathf.PI / numVines;
+
+        for (int vine = 0; vine < numVines; vine++)
+        {
+            float angle = vine * vineSpawnRadians;
+            float v_x = vineSpawnRadius * Mathf.Cos(angle);
+            float v_z = vineSpawnRadius * Mathf.Sin(angle);
+            Vector3 vineLocation = new Vector3(v_x, 0, v_z);
+
+            vines.Add(Instantiate(Resources.Load("VinePrefab"), vineLocation, Quaternion.identity) as GameObject);
+        }
     }
 
     // restrain enemy

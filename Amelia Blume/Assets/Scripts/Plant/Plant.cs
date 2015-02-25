@@ -64,11 +64,12 @@ public class Plant : MonoBehaviour
         {
             Debug.Log("Plant has no soil!");
         }
-
+        /*
 		if (amelia.GetComponent<Player>().isSunning()){
 			CollectSun();
 			//Debug.Log("Sunning");
 		}
+        */
         collectionTimer++;
     }
 
