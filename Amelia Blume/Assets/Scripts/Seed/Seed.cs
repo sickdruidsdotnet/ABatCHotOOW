@@ -34,6 +34,12 @@ public class Seed : MonoBehaviour
         Debug.Log("Seed created");
         Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
+	void Start()
+	{
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+	}
+
 
     void Update()
     {
