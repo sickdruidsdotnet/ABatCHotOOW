@@ -382,7 +382,8 @@ public class PlayerMotor : BaseBehavior {
 			// spawn a seed
 			Vector3 loc = new Vector3(1, 1, 0);
 			loc += transform.position;
-			GameObject newSeed = Instantiate(Resources.Load("VineSeed"), loc, Quaternion.identity) as GameObject;
+			GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+			newSeed.transform.position = loc;
 			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
 			Debug.Log("called ThrowSeed");
 		}
