@@ -16,7 +16,7 @@ And the actual computation, logic, and movement of the vines is handled here.
 */
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class Vine : MonoBehaviour
+public class ManualVine : MonoBehaviour
 {
 	// global class variables
 
@@ -24,41 +24,47 @@ public class Vine : MonoBehaviour
 	public class VineSettings {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
 		public int resolution = 5;
-		public float growthAcceleration = 1.0f;
-		public float ringRadiusVariation = 0.1f;
-		public float ringDirectionVariation = 0.1f;
-		public float targetHeight = 5f;
-		public float targetSpeed = 10f;
-		public float targetTrackRadius = 5f;
-		public float targetAngle = 0f;
 	}
 
-	public class VineNode {
+	public class ManualNode {
 		public float radius;
-		public float length;
 		public Vector3 startPoint;
+		public Vector3 nodeRay;
+		public GameObject draggable;
+		private string draggableName;
 		public Vector3 direction;
 
-		public VineNode(float rad, float magnitude, Vector3 start, Vector3 normalizedRay)
+		public ManualNode(float rad, Vector3 start, Vector3 ray, int nodeNum, Transform t)
 		{
 			radius = rad;
-			length = magnitude;
 			startPoint = start;
-			direction = normalizedRay;
+			nodeRay = ray;
+			draggableName = "NodeControl_" + nodeNum;
+			direction = nodeRay.normalized;
+
+			draggable = new GameObject(draggableName);
+			draggable.transform.position = getNodeEndPoint() + t.position;
 		}
 
 		public Vector3 getNodeRay()
 		{
-			return direction * length;
+			return nodeRay;
 		}
 
 		public Vector3 getNodeEndPoint()
 		{
-			return startPoint + getNodeRay();
+			return startPoint + nodeRay;
 		}
+
+		public void updatePos(Transform t)
+		{
+			nodeRay = draggable.transform.position - t.position - startPoint;
+			direction = nodeRay.normalized;
+		}
+
 	}
 
-	public List<VineNode> vineSkeleton;
+	public List<ManualNode> vineSkeleton;
 
 	public VineSettings vineSettings = new VineSettings();
 
@@ -66,12 +72,8 @@ public class Vine : MonoBehaviour
 	private int numSegments = 1;
 	private float initialRadius = 0.1f;
 	private float initialSegLength = 0.4f;
-	private float tipLength = 0.5f;
+	private float tipLength = 0.4f;
 	private float maxSegLength = 0.3f;
-
-	private float growthRate = 0.05f;
-	public float lengthGoal;
-	private float growthStart;
 
 	public float length;
 	
@@ -80,8 +82,6 @@ public class Vine : MonoBehaviour
 	private int numTriangles;
 	private int numTriVerts;
 	private float ringRadians;
-
-	public GameObject vineTarget;
 
 	// debug draw values
 	private float debugSphereSize = 0.01f;
@@ -99,7 +99,6 @@ public class Vine : MonoBehaviour
 	private MeshRenderer meshRenderer;
 
 	public bool pressedVineButton = false;
-	public bool isGrowing = false;
 
 	int debugCount = 0;
 
@@ -121,68 +120,33 @@ public class Vine : MonoBehaviour
 		numTriVerts = 3 * numTriangles;
 		ringRadians = 2 * Mathf.PI / vineSettings.resolution;
 
-		lengthGoal = growthStart = initialSegLength;
-
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
-		vineSkeleton = new List<VineNode>();
+		vineSkeleton = new List<ManualNode>();
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
-		mesh.name = "Vine";
+		mesh.name = "ManualVine";
 
 		createInitialVineSkeleton();
-
-		// initialize vine target
-		vineTarget = new GameObject("VineTarget");
-		vineTarget.transform.position = new Vector3(getTotalLength() / 2, getTotalLength() / 2, 0) + _transform.position;
-
-		// initialize random vine target movement properties
-		vineSettings.targetTrackRadius = UnityEngine.Random.Range(2f, 10f);
-		vineSettings.targetAngle = UnityEngine.Random.Range(0f, 360f);
-		vineSettings.targetHeight = UnityEngine.Random.Range(5f, 15f);
-		vineSettings.targetSpeed = UnityEngine.Random.Range(-0.5f, 0.5f);
 	}
 
 	void Update()
 	{
 		length = getTotalLength();
 
-		bool wasGrowing = isGrowing;
-		// update vine skeleton structure (such as adding a new segment)
-		if (getTotalLength() < lengthGoal)
-		{
-			growVine();
-
-			if (!wasGrowing)
-			{
-				isGrowing = true;
-			}
-		}
-		else if (wasGrowing)
-		{
-			printSkeletonInfo();
-			isGrowing = false;
-		}
-
-		// debug vine growth testing
-		/*
 		if (Input.GetButtonDown("GrowVineDebug") && !pressedVineButton)
 		{
-			setGrowthInfo(getTotalLength() + 0.5f, 0.15f);
-			//Debug.Log(Vector3.Cross(vineSkeleton.Last().getNodeEndPoint(), vineTarget.transform.position - _transform.position));
-			//moveTowardsTarget();
+			addSegment(initialRadius, Vector3.up * initialSegLength);
 			pressedVineButton = true;
 		}
 		else
 		{
 			pressedVineButton = false;
 		}
-		*/
 
-		moveTarget();
-		moveTowardsTarget();
+		updateNodePositions();
 
 	}
 
@@ -242,7 +206,7 @@ public class Vine : MonoBehaviour
 
 	private void createInitialVineSkeleton()
 	{
-		vineSkeleton.Add(new VineNode(initialRadius, initialSegLength, Vector3.zero, Vector3.up));
+		vineSkeleton.Add(new ManualNode(initialRadius, Vector3.zero, Vector3.up * initialSegLength, 0, _transform));
 		//Debug.Log("Node 0 start: " + vineSkeleton[0].startPoint);
 
 
@@ -251,59 +215,7 @@ public class Vine : MonoBehaviour
 
 	}
 
-	private void growVine()
-	{
-		// Extend the length of the vine.
-		// The segment before the tip ring will be extended. If it reaches its max length,
-		// then a new segment will be added, and the overflow growth distance
-		// will be its initial length.
-
-		float newGrowth = (lengthGoal - growthStart) * growthRate * Time.deltaTime;
-		int growIndex = vineSkeleton.Count - 2;
-
-		// should probably throw an error if newGrowth > maxSegLength
-		if (newGrowth > maxSegLength)
-		{
-			Debug.Log("Whoops, newGrowth > maxSegLength in growVine(). We should do something to handle this case.");
-		}
-
-		// trim the new growth if our vine is overshooting the total length goal
-		if (getTotalLength() + newGrowth > lengthGoal)
-		{
-			newGrowth = lengthGoal - getTotalLength();
-			growthStart = lengthGoal;
-		}
-
-		// if the only segment is the tip segment, then we need to start fresh on a new one.
-		if (vineSkeleton.Count == 1)
-		{
-			addSegment(initialRadius, newGrowth, vineSkeleton.Last().direction);
-			//Debug.Log("Creating first non-tip segment");
-		}
-		else
-		{
-			// we're not editing the very last segment, but the one right before it.
-			// this is to maintain constant tip length. Otherwise growth will look funky.
-			float currentLength = vineSkeleton[growIndex].length;
-			float newSegLength = currentLength + newGrowth;
-
-			if (newSegLength < maxSegLength)
-			{
-				vineSkeleton[growIndex].length = newSegLength;
-			}
-			else
-			{
-				vineSkeleton[growIndex].length = maxSegLength;
-				float overflow = newSegLength - maxSegLength;
-				addSegment(initialRadius, overflow, vineSkeleton.Last().direction);
-				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + vineSkeleton[growIndex].length + ", so a new node is created with length " + overflow);
-			}
-		}
-
-		updateSkeleton(vineSkeleton);
-	}
-
-	private void updateSkeleton(List<VineNode> v)
+	private void updateSkeleton(List<ManualNode> v)
 	{
 		// Iterate through all the nodes and make sure the start points correspond 
 		// to the ends of the previous nodes.
@@ -316,89 +228,30 @@ public class Vine : MonoBehaviour
 		}
 		
 		updateMesh();
+		printSkeletonInfo();
 	}
 
-	private void addSegment(float rad, float magnitude, Vector3 direction)
+	private void addSegment(float rad, Vector3 ray)
 	{
 		// since the tip is always of uniform length, we are actually adding a new tip,
 		// and shrinking the previous end segment. It can now grow to its full length,
 		// and then the process will start again.
 
-		if (magnitude > maxSegLength)
-		{
-			Debug.Log("Whoops, magnitude > maxSegLength in addSegment(). We should do something to handle this case.");
-		}
-
-		vineSkeleton.Last().length = magnitude;
-		VineNode newNode = new VineNode(rad, tipLength, vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), direction);
+		ManualNode newNode = new ManualNode(rad, vineSkeleton.Last().getNodeEndPoint(), ray, vineSkeleton.Count, _transform);
 		vineSkeleton.Add(newNode);
 
 		expandMesh();
 	}
 
-	private float vineDistToGoal(List<VineNode> v)
+	private void updateNodePositions()
 	{
-		float dist = 0;
-		Vector3 vineTip = _transform.position + v.Last().getNodeEndPoint();
-		Vector3 target = vineTarget.transform.position;
-
-		return Vector3.Distance(vineTip, target);
-	}
-
-	private void moveTowardsTarget()
-	{
-		
-		float rotAmount = 1f;
-
-		string debugOutput = "Initial distance to target: " + vineDistToGoal(vineSkeleton);
-
-		// find the gradient for each node, and rotate by that amount.
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
-			debugOutput += "\n\tNode " + node + ":";
-
-			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - _transform.position).normalized;
-
-			Vector3 tipPoint = vineSkeleton.Last().getNodeEndPoint();
-			Vector3 toTip = tipPoint - vineSkeleton[node].startPoint;
-			Vector3 toTarget = (vineTarget.transform.position - _transform.position) - tipPoint;
-
-			Vector3 movementVector = Vector3.Cross(toTip, rotAxis);
-
-			float gradient = Vector3.Dot(movementVector, toTarget);
-			Vector3 rotGrad = Quaternion.AngleAxis(-gradient, rotAxis) * vineSkeleton[node].direction;
-
-			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
-			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
-			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
-			debugOutput += "\n\t\ttoTarget: " + toTarget.ToString("F8");
-			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
-			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
-			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
-
-
-			// apply the rotation to the node
-			vineSkeleton[node].direction = rotGrad;
-			updateSkeleton(vineSkeleton);
-
+			vineSkeleton[node].updatePos(_transform);
 		}
 
-		debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
-		//Debug.Log(debugOutput);
-
+		updateSkeleton(vineSkeleton);
 		updateMesh();
-	}
-
-	//move the target for the vine
-	private void moveTarget()
-	{
-		//target should orbit above the vine's base
-		vineSettings.targetAngle += (vineSettings.targetSpeed * Time.deltaTime) % 360f;
-		float t_x = vineSettings.targetTrackRadius * Mathf.Cos(vineSettings.targetAngle);
-		float t_z = vineSettings.targetTrackRadius * Mathf.Sin(vineSettings.targetAngle);
-		float t_y = vineSettings.targetHeight;
-
-		vineTarget.transform.position = new Vector3(t_x, t_y, t_z);
 	}
 
 	/*
@@ -609,12 +462,20 @@ public class Vine : MonoBehaviour
 			debugString += "\n\tNode " + node;
 
 			Vector3 rotAxis = Vector3.right; // I don't even know what that means
+			float topAngle = 0f;
+			float bottomAngle = 0f;
 			float nodeAngle = 0f;
+			float rotAngle = 0f;
 
 			if (node > 0)
 			{
 				rotAxis = Vector3.Cross(vineSkeleton[node-1].direction, vineSkeleton[node].direction).normalized;
 				nodeAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
+				// bisection of node angle MINUS how far it's already "rotated" in that direction
+				topAngle = Vector3.Angle(vineSkeleton[node].direction, new Vector3(vineSkeleton[node].direction.x, 0, vineSkeleton[node].direction.z));
+
+				bottomAngle = Vector3.Angle(vineSkeleton[node-1].direction, new Vector3(vineSkeleton[node-1].direction.x, 0, vineSkeleton[node-1].direction.z));
+				rotAngle = (Mathf.Abs((topAngle - bottomAngle)) / 2.0f) /*+ Vector3.Angle(vineSkeleton[node-1].direction, new Vector3(vineSkeleton[node-1].direction.x, 0, vineSkeleton[node-1].direction.z))*/;
 
 				debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
 				debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
@@ -634,7 +495,7 @@ public class Vine : MonoBehaviour
 
 				debugString += "\n\t\t\tringVert before rotation: " + relativeVec.ToString("F8");
 
-				relativeVec = Quaternion.AngleAxis(nodeAngle / -2.0f, rotAxis) * relativeVec;
+				relativeVec = Quaternion.AngleAxis(nodeAngle / 2f, rotAxis) * relativeVec;
 
 				debugString += "\n\t\t\tringVert after rotation: " + relativeVec.ToString("F8");
 
@@ -646,7 +507,6 @@ public class Vine : MonoBehaviour
 
 		mesh.vertices = vertices.ToArray();
 		Debug.Log(debugString);
-		Debug.Break();
 	}
 
 	/*
@@ -660,12 +520,6 @@ public class Vine : MonoBehaviour
 
 	These functions should never directly manipulate the mesh or vertices.
 	*/
-	public void setGrowthInfo(float goal, float rate)
-	{
-		lengthGoal = goal;
-		growthRate = rate;
-	}
-
 	public float getTotalLength()
 	{
 		if (vineSkeleton != null)
@@ -674,7 +528,7 @@ public class Vine : MonoBehaviour
 
 			for (int node = 0; node < vineSkeleton.Count; node++)
 			{
-				len += vineSkeleton[node].length;
+				len += vineSkeleton[node].getNodeRay().magnitude;
 			}
 
 			return len;
@@ -702,6 +556,6 @@ public class Vine : MonoBehaviour
 			nodeInfo += "\tEnd: " + vineSkeleton[node].getNodeEndPoint() + "\n";
 		}
 
-		Debug.Log(vineInfo + "\n" + nodeInfo);
+		//Debug.Log(vineInfo + "\n" + nodeInfo);
 	}
 }

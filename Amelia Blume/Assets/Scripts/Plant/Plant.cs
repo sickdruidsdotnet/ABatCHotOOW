@@ -34,8 +34,8 @@ public class Plant : MonoBehaviour
 		Sunfactor = 1;
 
         
-        Debug.Log("Plant created");
-        Debug.Log("Default hydrationGoal: " + hydrationGoal);
+        //Debug.Log("Plant created");
+        //Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
 
     void Start()

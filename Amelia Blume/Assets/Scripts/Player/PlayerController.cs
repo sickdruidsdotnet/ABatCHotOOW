@@ -278,7 +278,7 @@ public class PlayerController : BaseBehavior {
 		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
 		int currTens = currentHealth / 10;
 		//checking if lost health
-		Debug.Log (currTens);
+		//Debug.Log (currTens);
 		if (currTens < 9 && currTens >= 0) {
 			for(int i = 9; i > currTens; i--)
 			{

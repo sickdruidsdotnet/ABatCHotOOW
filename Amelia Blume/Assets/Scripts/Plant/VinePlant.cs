@@ -20,8 +20,8 @@ public class VinePlant : Plant
         // set hydrationGoal to match VineSeed requirements
         this.hydrationGoal = 200;
 
-        Debug.Log("VinePlant created");
-        Debug.Log("VinePlant hydrationGoal: " + hydrationGoal);
+        //Debug.Log("VinePlant created");
+        //Debug.Log("VinePlant hydrationGoal: " + hydrationGoal);
     }
 
     void Start()
