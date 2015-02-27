@@ -56,7 +56,6 @@ public class Plant : MonoBehaviour
                 if (collectionTimer > collectionDelay)
                 {
                     collectWater();
-                    grow();
                     collectionTimer = 0;
                 }
             }
@@ -72,6 +71,9 @@ public class Plant : MonoBehaviour
 		}
         */
         collectionTimer++;
+
+
+        grow(); 
     }
 
     // Grows the plant.

@@ -606,6 +606,16 @@ public class Vine : MonoBehaviour
 
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
+			// determine ring rotation based on the angle between the nodes it connects.
+			// but skip the first ring, it should be horizontal.
+			Vector3 rotAxis = Vector3.right; // I don't even know what that means
+			float nodeAngle = 0f;
+
+			if (node > 0)
+			{
+				rotAxis = Vector3.Cross(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
+				nodeAngle = 180f - Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
+			}
 			for (int ringVert = 0; ringVert < res; ringVert++)
 			{
 				float angle = ringVert * ringRadians * -1;
@@ -614,6 +624,10 @@ public class Vine : MonoBehaviour
 				float v_y = 0;
 
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+
+				relativeVec = Quaternion.AngleAxis(nodeAngle / -2.0f, rotAxis) * relativeVec;
+
+				
 
 				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
 			}
