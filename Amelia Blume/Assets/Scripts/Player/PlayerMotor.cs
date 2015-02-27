@@ -380,7 +380,7 @@ public class PlayerMotor : BaseBehavior {
 		if(player.canThrowSeed) {
 			player.Broadcast("OnThrowSeed");
 			// spawn a seed
-			Vector3 loc = new Vector3(1, 1, 0);
+			Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.5f, 1, 0);
 			loc += transform.position;
 			GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
 			newSeed.transform.position = loc;

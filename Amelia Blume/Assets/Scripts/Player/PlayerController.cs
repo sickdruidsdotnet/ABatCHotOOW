@@ -17,7 +17,7 @@ public class PlayerController : BaseBehavior {
 	public bool slidingFast = false;
 
     public bool isFacingRight;
-    int faceDirection;
+    public int faceDirection;
 
 	public bool canControl;
 	public int stunTimer;

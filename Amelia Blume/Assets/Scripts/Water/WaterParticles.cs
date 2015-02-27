@@ -12,7 +12,7 @@ public class WaterParticles : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rightTrigger = Input.GetKey (KeyCode.JoystickButton7);
+		rightTrigger = Input.GetButton ("Water");
 		if (rightTrigger && coolDown > 10)
 		{
 			StartWater ();
