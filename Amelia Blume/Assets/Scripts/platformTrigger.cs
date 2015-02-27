@@ -23,7 +23,7 @@ public class platformTrigger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetAxis ("Vertical") < (-1f * aController.inputDeadZone)) {
+		if (Input.GetAxis ("Vertical") < (-1f * (aController.inputDeadZone + 0.4))) {
 			Physics.IgnoreCollision (amelia.GetComponent<BoxCollider> (), platParent.collider, true);
 			Physics.IgnoreCollision (amelia.GetComponent<CharacterController> (), platParent.collider, true);
 		} else if(!playerColliding) {

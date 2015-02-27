@@ -91,7 +91,11 @@ public class Deer : Animal
 		//function to check if the player is in sight
 		checkSeen ();
 
-        if (!isRestrained)
+        if (isRestrained) {
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+		}
+		else
         {
 
 			MoveRight();
@@ -155,6 +159,9 @@ public class Deer : Animal
 	//preventing the player from just running into the deer and being completely safe
 	void OnTriggerEnter(Collider other)
 	{
+		if (isRestrained || !isInfected)
+			return;
+
 		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
 			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
