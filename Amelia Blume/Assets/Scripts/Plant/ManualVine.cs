@@ -459,23 +459,28 @@ public class ManualVine : MonoBehaviour
 			// determine ring rotation based on the angle between the nodes it connects.
 			// but skip the first ring, it should be horizontal.
 
+			// Get the angle between each segment's direction (top and bottom) and Vector3.up.
+			// then find the angle between each angle's projection onto the XZ plane (rotation)
+			// then rotate the segment by ((top + (Mathf.Cos(rotation) * bottom)) / 2)
+
 			debugString += "\n\tNode " + node;
 
 			Vector3 rotAxis = Vector3.right; // I don't even know what that means
 			float topAngle = 0f;
 			float bottomAngle = 0f;
+			float planeRotAngle = 0f;
 			float nodeAngle = 0f;
 			float rotAngle = 0f;
 
 			if (node > 0)
 			{
 				rotAxis = Vector3.Cross(vineSkeleton[node-1].direction, vineSkeleton[node].direction).normalized;
-				nodeAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
+				//nodeAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
 				// bisection of node angle MINUS how far it's already "rotated" in that direction
-				topAngle = Vector3.Angle(vineSkeleton[node].direction, new Vector3(vineSkeleton[node].direction.x, 0, vineSkeleton[node].direction.z));
-
-				bottomAngle = Vector3.Angle(vineSkeleton[node-1].direction, new Vector3(vineSkeleton[node-1].direction.x, 0, vineSkeleton[node-1].direction.z));
-				rotAngle = (Mathf.Abs((topAngle - bottomAngle)) / 2.0f) /*+ Vector3.Angle(vineSkeleton[node-1].direction, new Vector3(vineSkeleton[node-1].direction.x, 0, vineSkeleton[node-1].direction.z))*/;
+				topAngle = Vector3.Angle(vineSkeleton[node].direction, Vector3.up);
+				bottomAngle = Vector3.Angle(vineSkeleton[node-1].direction, Vector3.up);
+				planeRotAngle = Vector3.Angle(Vector3.ProjectOnPlane(vineSkeleton[node].direction, Vector3.up), Vector3.ProjectOnPlane(vineSkeleton[node-1].direction, Vector3.up));
+				rotAngle = (Mathf.Cos(planeRotAngle) * topAngle + bottomAngle) / 2f;
 
 				debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
 				debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
@@ -495,7 +500,7 @@ public class ManualVine : MonoBehaviour
 
 				debugString += "\n\t\t\tringVert before rotation: " + relativeVec.ToString("F8");
 
-				relativeVec = Quaternion.AngleAxis(nodeAngle / 2f, rotAxis) * relativeVec;
+				relativeVec = Quaternion.AngleAxis(rotAngle, rotAxis) * relativeVec;
 
 				debugString += "\n\t\t\tringVert after rotation: " + relativeVec.ToString("F8");
 
