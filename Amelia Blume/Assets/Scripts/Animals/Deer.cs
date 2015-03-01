@@ -40,7 +40,7 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
-
+		sporeResistance = 10f;
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
 		if (playerObject == null) {

@@ -8,6 +8,9 @@ public class Animal : MonoBehaviour
     //protected AnimalState[] state;
     public bool isRestrained;
     public bool isInfected;
+	public bool isSpored;
+	//how long it will last in seconds after being infected by fern spores
+	public float sporeResistance;
 
     //public AnimalState[] getStates(){}
 
@@ -27,4 +30,17 @@ public class Animal : MonoBehaviour
         isInfected = false;
     }
 
+	public void becomeSpored()
+	{
+		isSpored = true;
+		StartCoroutine (sporeTimer ());
+	}
+
+	IEnumerator sporeTimer()
+	{
+		yield return new WaitForSeconds (sporeResistance);
+		if (isSpored) {
+			becomeRestrained ();
+		}
+	}
 }
