@@ -27,6 +27,8 @@ public class FernPlant : Plant
 	public void infect(Animal other){
 		if (!other.isSpored) {
 			other.becomeSpored();
+			Vector3 spawnLoc = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f);
+			GameObject newPlant = Instantiate(Resources.Load("Spore_effect"), spawnLoc, Quaternion.identity) as GameObject;
 		}
 	}
 }

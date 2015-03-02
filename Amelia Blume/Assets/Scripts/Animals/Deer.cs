@@ -41,6 +41,8 @@ public class Deer : Animal
     void Start()
     {
 		sporeResistance = 10f;
+		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
+
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
 		if (playerObject == null) {
@@ -81,10 +83,12 @@ public class Deer : Animal
 		{
 			faceDirection = 1;
 			isFacingRight = true;
+			sporeLoc = new Vector3 (1.5f, 1.5f, 0f);
 		}
 		else {
 			faceDirection = -1;
 			isFacingRight = false;
+			sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 		}
 
 

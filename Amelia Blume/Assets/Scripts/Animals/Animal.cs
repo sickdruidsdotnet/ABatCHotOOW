@@ -12,6 +12,8 @@ public class Animal : MonoBehaviour
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 
+	//this will store the location on each animal where the spore effect should spawn
+	protected Vector3 sporeLoc;
     //public AnimalState[] getStates(){}
 
     public void addState(/*AnimalState*/) { }
@@ -34,6 +36,7 @@ public class Animal : MonoBehaviour
 	{
 		isSpored = true;
 		StartCoroutine (sporeTimer ());
+		StartCoroutine (sporeSpawner ());
 	}
 
 	IEnumerator sporeTimer()
@@ -41,6 +44,16 @@ public class Animal : MonoBehaviour
 		yield return new WaitForSeconds (sporeResistance);
 		if (isSpored) {
 			becomeRestrained ();
+			isSpored = false;
+		}
+	}
+
+	IEnumerator sporeSpawner()
+	{
+		if (isSpored) {
+			Instantiate(Resources.Load("Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
+			yield return new WaitForSeconds(1f);
+			StartCoroutine(sporeSpawner());
 		}
 	}
 }
