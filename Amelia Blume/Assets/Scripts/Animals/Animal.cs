@@ -28,11 +28,19 @@ public class Animal : MonoBehaviour
         isInfected = false;
     }
 
-	public void LurePlant(Vector3 plantPosition)
+	public void LurePlant(Transform plantPosition)
 	{
-		NavMeshAgent agent = GetComponent<NavMeshAgent> ();
-		agent.SetDestination (plantPosition);
+		Debug.Log ("LurePlant called: " + gameObject.name);
+		NavMeshAgentController agent = this.GetComponent<NavMeshAgentController> ();
+		agent.target = plantPosition;
+		agent.enabled = true;
+		//agent.SetDestination (plantPosition);
 		isBeingLured = true;
+	}
+
+	public void DoThis()
+	{
+		Debug.Log ("Debug");
 	}
 
 }

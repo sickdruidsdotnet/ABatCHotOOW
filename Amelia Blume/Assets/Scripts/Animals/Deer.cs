@@ -93,8 +93,8 @@ public class Deer : Animal
 
         if (!isRestrained)
         {
-
-			MoveRight();
+			if(!isBeingLured)
+				MoveRight();
 			checkRotate();
 
             //rotation management
