@@ -604,24 +604,30 @@ public class Vine : MonoBehaviour
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
 			// determine ring rotation based on the angle between the nodes it connects.
-			// but skip the first ring, it should be horizontal.
+			// but skip the first ring, it should fall on the local Vector3.up plane
 
 			debugString += "\n\tNode " + node;
 
-			Vector3 rotAxis = Vector3.right; // I don't even know what that means
-			float nodeAngle = 0f;
+			Vector3 bisectAxis = Vector3.up;
+			Vector3 prevSegAxis = Vector3.up;
+			float bottomAngle = 0f;
+			float bisectAngle = 0f;
 
 			if (node > 0)
 			{
-				rotAxis = Vector3.Cross(vineSkeleton[node-1].direction, vineSkeleton[node].direction).normalized;
-				nodeAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction);
+				bisectAxis = Vector3.Cross(vineSkeleton[node-1].direction, vineSkeleton[node].direction).normalized;
+				bisectAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction) / 2f;
+				bottomAngle = Vector3.Angle(vineSkeleton[node-1].direction, Vector3.up);
+				prevSegAxis = Vector3.Cross(vineSkeleton[node-1].direction, Vector3.up);
 
-				debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
-				debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
+				// debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
+				// debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
 			}
 
-			debugString += "\n\t\trotAxis: " + rotAxis.ToString("F8");
-			debugString += "\n\t\tnodeAngle: " + nodeAngle;
+			// debugString += "\n\t\trotAxis: " + bisectAxis.ToString("F8");
+			// debugString += "\n\t\tnodeAngle: " + bisectAngle;
+
+			
 
 			for (int ringVert = 0; ringVert < res; ringVert++)
 			{
@@ -630,23 +636,28 @@ public class Vine : MonoBehaviour
 				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
 				float v_y = 0;
 
+				// ring is first initialized to fall on the Vecotr3.up plane.
+				// now, rotate the rings to fall on the vineSkeleton[node-1].direction plane.
+
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
 
-				debugString += "\n\t\t\tringVert before rotation: " + relativeVec.ToString("F8");
+				// debugString += "\n\t\t\tringVert before rotation: " + relativeVec.ToString("F8");
 
-				relativeVec = Quaternion.AngleAxis(nodeAngle / -2.0f, rotAxis) * relativeVec;
+				relativeVec = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * relativeVec;
 
-				debugString += "\n\t\t\tringVert after rotation: " + relativeVec.ToString("F8");
+				// debugString += "\n\t\t\tringVert after rotation: " + relativeVec.ToString("F8");
 
-				
+				// from here, we want to rotate the ring halfway to the vineSkeleton[node].direction plane
+
+				relativeVec = Quaternion.AngleAxis(bisectAngle, bisectAxis) * relativeVec;
 
 				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
 			}
 		}
 
 		mesh.vertices = vertices.ToArray();
-		Debug.Log(debugString);
-		Debug.Break();
+		//Debug.Log(debugString);
+		//Debug.Break();
 	}
 
 	/*
