@@ -69,6 +69,8 @@ public class Vine : MonoBehaviour
 	private float tipLength = 0.5f;
 	private float maxSegLength = 0.3f;
 
+	private Color vineColor = Color.green;
+
 	private float growthRate = 0.05f;
 	public float lengthGoal;
 	private float growthStart;
@@ -94,6 +96,7 @@ public class Vine : MonoBehaviour
 	Vertices (VineNodeNum, resolution * VineNodeNum) correspond to the ring for each VineNode */
 	private List<Vector3> vertices;
 	private List<int> triangles;
+	private List<Vector2> uvs;
 
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
@@ -126,6 +129,7 @@ public class Vine : MonoBehaviour
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
+		uvs = new List<Vector2>();
 		vineSkeleton = new List<VineNode>();
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
@@ -419,6 +423,7 @@ public class Vine : MonoBehaviour
 		// just in case, clear things that should already be empty
 		mesh.Clear();
 		vertices.Clear();
+		uvs.Clear();
 		triangles.Clear();
 
 		// push the tip vertex
@@ -443,6 +448,15 @@ public class Vine : MonoBehaviour
 		}
 
 		mesh.vertices = vertices.ToArray();
+
+		// next, define the uv coordinates for the vertices that were created
+
+		for (int vert = 0; vert < vertices.Count; vert++)
+		{
+			uvs.Add(new Vector2(0,0));
+		}
+
+		mesh.uv = uvs.ToArray();
 
 		// now, define how to triangles are to be drawn between these vertices
 
@@ -520,6 +534,7 @@ public class Vine : MonoBehaviour
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
 
 				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
+				uvs.Add(new Vector2(0,0));
 			}
 		}
 
@@ -528,6 +543,7 @@ public class Vine : MonoBehaviour
 		vertices[0] = newTip;
 
 		mesh.vertices = vertices.ToArray();
+		mesh.uv = uvs.ToArray();
 
 		// next, we need to fix the triangles array.
 		// the segment connected to the tip should now be connected to a newly created segment.
