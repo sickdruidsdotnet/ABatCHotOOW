@@ -9,6 +9,7 @@ public class Animal : MonoBehaviour
     public bool isRestrained;
     public bool isInfected;
 	public bool isSpored;
+	protected float sporeModifier = 1f;
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 
@@ -34,16 +35,25 @@ public class Animal : MonoBehaviour
 
 	public void becomeSpored()
 	{
+		//start the spore breath effect only while the animal is spored
+		if(!isSpored)
+			StartCoroutine (sporeSpawner ());
 		isSpored = true;
+		sporeModifier = 0.5f;
+	}
+
+	public void resistSpores()
+	{
+		sporeModifier = 0.75f;
 		StartCoroutine (sporeTimer ());
-		StartCoroutine (sporeSpawner ());
 	}
 
 	IEnumerator sporeTimer()
 	{
 		yield return new WaitForSeconds (sporeResistance);
-		if (isSpored) {
-			becomeRestrained ();
+		//check to make sure they aren't back in the fern's AOE
+		if (isSpored && sporeModifier == 0.75f) {
+			sporeModifier = 1f;
 			isSpored = false;
 		}
 	}

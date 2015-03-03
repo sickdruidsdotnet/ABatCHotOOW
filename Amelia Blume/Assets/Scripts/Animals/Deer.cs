@@ -271,7 +271,7 @@ public class Deer : Animal
 
     void MoveRight()
     {
-		transform.Translate (speed *-1, 0, 0);
+		transform.Translate (speed *-1 * sporeModifier, 0, 0);
 		//animation["Walking"].enabled = true;
 		anim.SetBool ("isRunning", true);
     }
