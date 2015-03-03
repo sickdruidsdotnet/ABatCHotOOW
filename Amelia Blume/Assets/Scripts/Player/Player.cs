@@ -320,6 +320,8 @@ public class Player : BaseBehavior {
 		fruit.transform.position = fruitPosition;
 		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y + 4f, 0);
 		SetHealth (100);
+		//make sure to set the blossoms before scaling
+		transform.GetComponent<PlayerController> ().checkHealth ();
 
 		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
 		controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
