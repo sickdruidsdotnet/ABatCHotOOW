@@ -3,13 +3,8 @@ using System.Collections;
 
 public class ringPulser : MonoBehaviour {
 	public int offset = 0;
-	Vector3 startScale;
 	float progress = 120;
 	float transparency = 1f;
-	// Use this for initialization
-	void Start () {
-		startScale = transform.localScale;
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -20,6 +15,7 @@ public class ringPulser : MonoBehaviour {
 				                           renderer.material.color.g,
 				                           renderer.material.color.b,
 				                           1f);
+				renderer.material.SetColor("_Color", newColor);
 			}
 			else{
 				Color newColor = new Color(renderer.material.color.r, 
@@ -43,7 +39,6 @@ public class ringPulser : MonoBehaviour {
 			//transform.localScale = startScale;
 		} else {
 			progress += 1f;
-			Vector3 tempScale = transform.localScale;
 			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress);
 			/*tempScale = new Vector3(transform.localScale.x + 0.1f, 
                                    transform.localScale.y + 0.1f, 

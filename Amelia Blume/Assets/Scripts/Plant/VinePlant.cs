@@ -5,22 +5,49 @@ using System.Collections;
 //also known as the Parent class.
 public class VinePlant : Plant 
 {
-    
+	public Animal[] restrainedAnimals;
     // Constructor
     public VinePlant()
     {
         
         // set hydrationGoal to match VineSeed requirements
         this.hydrationGoal = 200;
-
+		this.restrainedAnimals = new Animal[3];
         Debug.Log("VinePlant created");
         Debug.Log("VinePlant hydrationGoal: " + hydrationGoal);
     }
 
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "Animal" && other.collider.isTrigger == false)
+		{
+			restrain (other.transform.GetComponent<Animal>());
+		}
+	}
+
     // restrain enemy
-    public void restrain()
+    public void restrain(Animal other)
     {
-    	// make enemy a child of this GameObject
-    	// switch to 
+		// check to make sure it needs to be restrained
+		if (other.isRestrained || !other.isInfected) {
+			return;
+		}
+
+		// make enemy a child of this GameObject
+		//doing that means anything affecting the plants transform(growth) would apply to animal
+		//storing it in an array instead, for now anyway
+		for (int i = 0; i < restrainedAnimals.Length; i++) {
+			if (restrainedAnimals [i] == null) {
+				restrainedAnimals [i] = other;
+				other.becomeRestrained();
+				break;
+			}
+			else if(restrainedAnimals [i] == other)
+			{
+				//animal is already in here, restrained
+				break;
+			}
+		}
+ 
     }
 }

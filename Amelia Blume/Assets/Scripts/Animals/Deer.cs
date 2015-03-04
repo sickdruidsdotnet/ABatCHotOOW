@@ -41,6 +41,8 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
+		sporeResistance = 10f;
+		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
@@ -82,10 +84,12 @@ public class Deer : Animal
 		{
 			faceDirection = 1;
 			isFacingRight = true;
+			sporeLoc = new Vector3 (1.5f, 1.5f, 0f);
 		}
 		else {
 			faceDirection = -1;
 			isFacingRight = false;
+			sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 		}
 
 
@@ -267,6 +271,7 @@ public class Deer : Animal
 
     void MoveRight()
     {
+<<<<<<< HEAD
 		//checkRotate ();
 		if (!isBeingLured)
 			transform.Translate (speed * -1, 0, 0);
@@ -275,6 +280,10 @@ public class Deer : Animal
 				beginRotate();
 			transform.position = Vector3.MoveTowards (transform.position, target, speed);
 		}
+=======
+		transform.Translate (speed *-1 * sporeModifier, 0, 0);
+		//animation["Walking"].enabled = true;
+>>>>>>> master
 		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around
