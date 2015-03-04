@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class SideScrollerCameraController : MonoBehaviour {
 
 	public float dampTime = 0.2f;
 	private Vector3 velocity = Vector3.zero;
 	public Transform target;
+
+	public List<Transform> paraLayers;
 
 	//we'll put empty's limiting the camera in places where we want the camera to stop
 	public bool canPanLeft;
@@ -30,6 +34,15 @@ public class SideScrollerCameraController : MonoBehaviour {
 		canPanRight = true;
 		canPanLeft = true;
 		canPanDown = true;
+
+		IEnumerable<GameObject> tempLayers = GameObject.FindGameObjectsWithTag ("Parallax");
+		GameObject[] tempList = GameObject.FindGameObjectsWithTag ("Parallax");
+		int temp = tempList.Length;
+		tempLayers = tempLayers.OrderBy(parallax => parallax.transform.position.z);
+		paraLayers = new List<Transform>();
+		for (int i = 0; i < temp; i++) {
+			paraLayers.Add (tempLayers.ElementAt(i).transform);
+		}
 
 	}
 
@@ -74,8 +87,23 @@ public class SideScrollerCameraController : MonoBehaviour {
 		transform.position = new Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedx).x,
 		                                 Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedy).y,
 		                                 transform.position.z);
+		HandleParallax (panSpeedx, panSpeedy, delta);
 
 		
+	}
+
+	void HandleParallax (float panSpeedX, float panSpeedY, Vector3 difference)
+	{
+		float dif = 1f / (float)(paraLayers.Count );
+		Vector3 newDest;
+		for (int i = 0; i < paraLayers.Count; i++) {
+			newDest = paraLayers[i].position + (new Vector3( difference.x * (1f-(dif * (float)((paraLayers.Count + 1) - (i+1)))), 
+			                                                difference.y * (1f-(dif * (float)((paraLayers.Count + 1) - (i + 1))))));
+			paraLayers[i].transform.position = new Vector3 (Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, dampTime, panSpeedx).x,
+			                                                Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, dampTime, panSpeedy).y,
+			                                                paraLayers[i].position.z);
+			
+		}
 	}
 
 	public void MoveToPlayer(float xCoord, float yCoord )
