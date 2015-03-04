@@ -35,9 +35,11 @@ public class Animal : MonoBehaviour
 
 	public void becomeSpored()
 	{
-		//start the spore breath effect only while the animal is spored
-		if(!isSpored)
+		//start the spore breath effect only while the animal is spored and only once
+		if (!isSpored) {
+			isSpored = true;
 			StartCoroutine (sporeSpawner ());
+		}
 		isSpored = true;
 		sporeModifier = 0.5f;
 	}
