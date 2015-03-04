@@ -36,6 +36,7 @@ public class Deer : Animal
     public float speed;
 
 	public bool isFacingRight = false;
+	
 
     // Use this for initialization
     void Start()
@@ -97,8 +98,7 @@ public class Deer : Animal
 		}
 		else
         {
-			if(!isBeingLured)
-				MoveRight();
+			MoveRight();
 			checkRotate();
 
             //rotation management
@@ -267,8 +267,14 @@ public class Deer : Animal
 
     void MoveRight()
     {
-		transform.Translate (speed *-1, 0, 0);
-		//animation["Walking"].enabled = true;
+		//checkRotate ();
+		if (!isBeingLured)
+			transform.Translate (speed * -1, 0, 0);
+		else {
+			if(target.x > transform.position.x && !isFacingRight)
+				beginRotate();
+			transform.position = Vector3.MoveTowards (transform.position, target, speed);
+		}
 		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around
@@ -309,4 +315,6 @@ public class Deer : Animal
 		isCharging = false;
 
 	}
+
+
 }
