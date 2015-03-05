@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class SideScrollerCameraController : MonoBehaviour {
-
-	public float dampTime = 0.2f;
+	
 	private Vector3 velocity = Vector3.zero;
 	public Transform target;
+	bool lastFaceDirection;
+	bool recentlyRotated1;
+	bool recentlyRotated2;
 
 	public List<Transform> paraLayers;
 
@@ -16,15 +18,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool canPanRight;
 	public bool canPanUp;
 	public bool canPanDown;
+	bool panLeft;
+	bool panRight;
 
-	float minPanSpeed = 6f;
-	float panSpeedx;
-	float panSpeedy;
-
-	public float leftThreshold = 0.36f;
-	public float rightThreshold = 0.64f;
-	public float upThreshold = 0.8f;
-	public float downThreshold = 0.1f;
+	public float panSpeed = 0.4f;
+	bool panning;
+	Vector3 panTo;
 	
 
 	void Start()
@@ -43,52 +42,107 @@ public class SideScrollerCameraController : MonoBehaviour {
 		for (int i = 0; i < temp; i++) {
 			paraLayers.Add (tempLayers.ElementAt(i).transform);
 		}
-
+		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
+		recentlyRotated1 = false;
+		recentlyRotated2 = false;
+		panning = true;
+		panTo = transform.position;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		panSpeedx = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.x)+1f;
-		if (panSpeedx < minPanSpeed)
-			panSpeedx = minPanSpeed;
-
-		panSpeedy = Mathf.Abs(target.GetComponent<CharacterController> ().velocity.y)+1f;
-		if (panSpeedy < minPanSpeed)
-			panSpeedy = minPanSpeed;
-
 		//get player's position in viewport
 		Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
-		float horizontalPan = point.x;
-		float verticalPan = point.y;
 
-		//to the left
-		if (canPanLeft && point.x < leftThreshold)
-		{
-			horizontalPan = rightThreshold;
+		//new camera movement. Adjust dynamically depending on Player's direction
+		//geet the world distance of 0.1 to properly adjust the camera
+		float xDistance = GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.4f, 0.5f)).x -
+			GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.5f, 0.5f)).x;
+		//recentlyroated 1 &2 allow for some player movement leeway before adjusting the camera
+		if(recentlyRotated1)
+			recentlyRotated2 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
+		else
+			recentlyRotated1 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
+		if (recentlyRotated2) {
+			recentlyRotated1 = false;
+			recentlyRotated2 = false;
 		}
-		else if (canPanRight && point.x > rightThreshold) //to the right
-		{
-			horizontalPan = leftThreshold;
+		//if the player is facing right, give 3/5ths the screen of lead space to the right
+		if (target.GetComponent<Player> ().isFacingRight) {
+			if(point.x >= 0.4f && canPanRight && !recentlyRotated1)
+			{
+				panTo = new Vector3(target.transform.position.x - xDistance,
+				                    transform.position.y, transform.position.z);
+				panRight = true;
+				panLeft = false;
+			}
+			else if(recentlyRotated1 && point.x >= 0.8f && canPanRight )
+			{
+				//player has reached the threshold of leeway for space after turning around from left
+				recentlyRotated1 = false;
+				panTo = new Vector3(target.transform.position.x - xDistance,
+				                    transform.position.y, transform.position.z);
+				panRight = true;
+				panLeft = true;
+			}
+			else
+			{
+				panRight = false;
+			}
+		} else { //if the player is facing left, give 3/5ths the screen of lead space to the left
+			if(point.x <= 0.6f && canPanLeft && !recentlyRotated1)
+			{
+				panTo = new Vector3(target.transform.position.x + xDistance,
+				                                 transform.position.y, transform.position.z);
+				panLeft = true;
+				panRight = false;
+			}
+			else if(recentlyRotated1 && point.x <= 0.2f && canPanLeft )
+			{
+				//player has reached the threshold of leeway for space after turning around from right
+				recentlyRotated1 = false;
+				panTo = new Vector3(target.transform.position.x + xDistance,
+				                    transform.position.y, transform.position.z);
+				panLeft = true;
+				panRight = false;
+			}
+			else{
+				panLeft = false;
+			}
 		}
 
-		//go up?
-		if (canPanUp && point.y > upThreshold)
-		{
-			verticalPan = downThreshold;
-		}
-		else if(canPanDown && point.y < downThreshold)
-		{
-			verticalPan = upThreshold;
-		}
-
-		Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(horizontalPan, verticalPan, point.z));
-		Vector3 destination = transform.position + delta;
-		transform.position = new Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedx).x,
+		/*transform.position = new Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedx).x,
 		                                 Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedy).y,
-		                                 transform.position.z);
-		HandleParallax (panSpeedx, panSpeedy, delta);
+		                                 transform.position.z);*/
+		//HandleParallax (panSpeedx, panSpeedy, delta);
+		if (panRight) {
+			if(Mathf.Abs (panTo.x - transform.position.x) <= panSpeed)
+			{
+				transform.position = new Vector3(panTo.x, transform.position.y, transform.position.z);
+				panRight = false;
+			}
+			else
+			{
+				transform.position = new Vector3(transform.position.x + panSpeed, 
+				                                 transform.position.y, transform.position.z);
+			}
+		} else if (panLeft) {
+			if(Mathf.Abs (panTo.x - transform.position.x)<= panSpeed)
+			{
+				transform.position = new Vector3(panTo.x, transform.position.y, transform.position.z);
+				panLeft = false;
+			}
+			else
+			{
+				transform.position = new Vector3(transform.position.x - panSpeed, 
+				                                 transform.position.y, transform.position.z);
+			}
+		}
 
+
+		//get the face direction to properly check for change next frame
+		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
 		
 	}
 
@@ -99,8 +153,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 		for (int i = 0; i < paraLayers.Count; i++) {
 			newDest = paraLayers[i].position + (new Vector3( difference.x * (1f-(dif * (float)((paraLayers.Count + 1) - (i+1)))), 
 			                                                difference.y * (1f-(dif * (float)((paraLayers.Count + 1) - (i + 1))))));
-			paraLayers[i].transform.position = new Vector3 (Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, dampTime, panSpeedx).x,
-			                                                Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, dampTime, panSpeedy).y,
+			paraLayers[i].transform.position = new Vector3 (Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, Mathf.Infinity, panSpeedX).x,
+			                                                Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, Mathf.Infinity, panSpeedY).y,
 			                                                paraLayers[i].position.z);
 			
 		}
