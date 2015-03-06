@@ -126,10 +126,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 			panDown = true;
 		}
 
-		/*transform.position = new	 Vector3 (Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedXx).x,
-		                                 Vector3.SmoothDamp (transform.position, destination, ref velocity, dampTime, panSpeedXy).y,
-		                                 transform.position.z);*/
-		//HandleParallax (panSpeedXx, panSpeedXy, delta);
+		//let's save the current position for later use;
+		Vector3 oldPos = transform.position;
 		if (panRight) {
 			if(Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX)
 			{
@@ -183,20 +181,23 @@ public class SideScrollerCameraController : MonoBehaviour {
 			}
 		}
 
+		//let's get how much has changed between frames and handle that parallax
+		Vector3 delta = new Vector3 ( transform.position.x - oldPos.x, transform.position.y - oldPos.y, 0f);
+		HandleParallax (delta);
 		//get the face direction to properly check for change next frame
 		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
 		prevTargetPos = target.position;
 	}
 
-	void HandleParallax (float panSpeedXX, float panSpeedXY, Vector3 difference)
+	void HandleParallax (Vector3 difference)
 	{
-		float dif = 1f / (float)(paraLayers.Count );
+		float dif = 0.5f / (float)(paraLayers.Count );
 		Vector3 newDest;
 		for (int i = 0; i < paraLayers.Count; i++) {
-			newDest = paraLayers[i].position + (new Vector3( difference.x * (1f-(dif * (float)((paraLayers.Count + 1) - (i+1)))), 
-			                                                difference.y * (1f-(dif * (float)((paraLayers.Count + 1) - (i + 1))))));
-			paraLayers[i].transform.position = new Vector3 (Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, Mathf.Infinity, panSpeedXX).x,
-			                                                Vector3.SmoothDamp (paraLayers[i].position, newDest, ref velocity, Mathf.Infinity, panSpeedXY).y,
+			newDest = new Vector3( difference.x * (1f-(dif * (float)((paraLayers.Count + 1) - (i+1)))), 
+	                                                difference.y * (1f-(dif * (float)((paraLayers.Count + 1) - (i + 1)))));
+			paraLayers[i].transform.position = new Vector3 (paraLayers[i].transform.position.x + newDest.x,
+			                                                paraLayers[i].transform.position.y + newDest.y,
 			                                                paraLayers[i].position.z);
 			
 		}
