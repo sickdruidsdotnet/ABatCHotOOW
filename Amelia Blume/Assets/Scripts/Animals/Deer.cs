@@ -271,7 +271,7 @@ public class Deer : Animal
 
     void MoveRight()
     {
-<<<<<<< HEAD
+
 		//checkRotate ();
 		if (!isBeingLured)
 			transform.Translate (speed * -1, 0, 0);
@@ -280,10 +280,10 @@ public class Deer : Animal
 				beginRotate();
 			transform.position = Vector3.MoveTowards (transform.position, target, speed);
 		}
-=======
+
 		transform.Translate (speed *-1 * sporeModifier, 0, 0);
 		//animation["Walking"].enabled = true;
->>>>>>> master
+
 		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around

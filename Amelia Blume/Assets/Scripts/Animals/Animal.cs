@@ -8,17 +8,16 @@ public class Animal : MonoBehaviour
     //protected AnimalState[] state;
     public bool isRestrained;
     public bool isInfected;
-<<<<<<< HEAD
 	public bool isBeingLured;
 	public Vector3 target;
 	public float targetOffset;
 
-=======
+
 	public bool isSpored;
 	protected float sporeModifier = 1f;
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
->>>>>>> master
+
 
 	//this will store the location on each animal where the spore effect should spawn
 	protected Vector3 sporeLoc;
@@ -40,7 +39,7 @@ public class Animal : MonoBehaviour
         isInfected = false;
     }
 
-<<<<<<< HEAD
+
 	public void LurePlant(Transform plantPosition)
 	{
 		Debug.Log ("LurePlant called: " + gameObject.name);
@@ -60,7 +59,7 @@ public class Animal : MonoBehaviour
 
 
 
-=======
+
 	public void becomeSpored()
 	{
 		//start the spore breath effect only while the animal is spored and only once
@@ -96,5 +95,5 @@ public class Animal : MonoBehaviour
 			StartCoroutine(sporeSpawner());
 		}
 	}
->>>>>>> master
+
 }

@@ -1,11 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animals/Animal.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animals/Owl.cs">
     <Files>
-      <File FileName="Assets/Scripts/Plant/LurePlant.cs" Line="34" Column="1" />
-      <File FileName="Assets/Scripts/Animals/Deer.cs" Line="275" Column="19" />
-      <File FileName="Assets/Scripts/Animals/Animal.cs" Line="48" Column="89" />
-      <File FileName="Assets/Scripts/Animals/NavMeshAgentController.cs" Line="26" Column="5" />
+      <File FileName="Assets/Scripts/Animals/Animal.cs" Line="98" Column="1" />
+      <File FileName="Assets/Scripts/Animals/Deer.cs" Line="297" Column="12" />
+      <File FileName="Assets/Scripts/Animals/Owl.cs" Line="40" Column="71" />
+      <File FileName="Assets/Scripts/Soil/Soil.cs" Line="22" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
