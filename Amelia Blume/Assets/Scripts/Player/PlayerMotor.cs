@@ -382,7 +382,31 @@ public class PlayerMotor : BaseBehavior {
 			// spawn a seed
 			Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.5f, 1, 0);
 			loc += transform.position;
-			GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+			GameObject newSeed;
+			Player.SeedType currSeed = player.getCurrentSeedType();
+			switch(currSeed){
+			case Player.SeedType.VineSeed:
+				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.TreeSeed:
+				newSeed = Instantiate(Resources.Load("TreeSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FlowerSeed:
+				newSeed = Instantiate(Resources.Load("FlowerSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FernSeed:
+				newSeed = Instantiate(Resources.Load("FernSeed")) as GameObject;
+				break;
+
+			default:
+				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				break;
+			}
+
 			newSeed.transform.position = loc;
 			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
 			Debug.Log("called ThrowSeed");
