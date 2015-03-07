@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class SideScrollerCameraController : MonoBehaviour {
-	
-	private Vector3 velocity = Vector3.zero;
 	public Transform target;
 	Vector3 prevTargetPos;
 	bool lastFaceDirection;
@@ -13,6 +11,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 	bool recentlyRotated2;
 
 	public List<Transform> paraLayers;
+	public List<Transform> frontLayers;
+	float layerDifference;
 
 	//we'll put empty's limiting the camera in places where we want the camera to stop
 	public bool canPanLeft;
@@ -41,10 +41,16 @@ public class SideScrollerCameraController : MonoBehaviour {
 		GameObject[] tempList = GameObject.FindGameObjectsWithTag ("Parallax");
 		int temp = tempList.Length;
 		tempLayers = tempLayers.OrderBy(parallax => parallax.transform.position.z);
-		paraLayers = new List<Transform>();
+		frontLayers = new List<Transform> ();
+		paraLayers = new List<Transform> ();
 		for (int i = 0; i < temp; i++) {
-			paraLayers.Add (tempLayers.ElementAt(i).transform);
+			if(tempLayers.ElementAt (i).transform.position.z < target.position.z)
+				frontLayers.Add (tempLayers.ElementAt(i).transform);
+			else
+				paraLayers.Add (tempLayers.ElementAt(i).transform);
 		}
+		layerDifference = 0.5f / (float)(tempLayers.Count());
+
 		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
 		recentlyRotated1 = false;
 		recentlyRotated2 = false;
@@ -191,15 +197,22 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void HandleParallax (Vector3 difference)
 	{
-		float dif = 0.5f / (float)(paraLayers.Count );
 		Vector3 newDest;
+		//backLayers
 		for (int i = 0; i < paraLayers.Count; i++) {
-			newDest = new Vector3( difference.x * (1f-(dif * (float)((paraLayers.Count + 1) - (i+1)))), 
-	                                                difference.y * (1f-(dif * (float)((paraLayers.Count + 1) - (i + 1)))));
+			newDest = new Vector3( difference.x * (1f-(layerDifference* (float)((paraLayers.Count + 1) - (i+1)))), 
+			                      difference.y * (1f-(layerDifference * (float)((paraLayers.Count + 1) - (i + 1)))));
 			paraLayers[i].transform.position = new Vector3 (paraLayers[i].transform.position.x + newDest.x,
 			                                                paraLayers[i].transform.position.y + newDest.y,
 			                                                paraLayers[i].position.z);
-			
+		}
+		//frontLayers
+		for (int i = 0; i < frontLayers.Count; i++) {
+			newDest = new Vector3( difference.x * -1*(1f-(layerDifference* (float)((frontLayers.Count + 1) + (i+1)))), 
+			                      difference.y * -1*(1f-(layerDifference * (float)((frontLayers.Count + 1) + (i + 1)))));
+			frontLayers[i].transform.position = new Vector3 (frontLayers[i].transform.position.x + newDest.x,
+			                                                frontLayers[i].transform.position.y + newDest.y,
+			                                                frontLayers[i].position.z);
 		}
 	}
 
