@@ -6,11 +6,16 @@ public class Animal : MonoBehaviour
 
     //variables for however we're handling states, for now I'll do bools
     //protected AnimalState[] state;
+	[HideInInspector]
+	public string animalType;
     public bool isRestrained;
     public bool isInfected;
 	public bool isBeingLured;
 	public Vector3 target;
 	public float targetOffset;
+
+	//how long in seconds it takes this animal to break free from a vine
+	public float strength;
 
 	public bool isSpored;
 	protected float sporeModifier = 1f;
