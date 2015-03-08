@@ -9,7 +9,7 @@ public class Soil : MonoBehaviour {
 	private int SeedType;
 	private int MaxWater;
 	private Seed plantedSeed;
-	private int timer;
+//	private int timer;
 	private float size;
 	public int[] water;
 	private float start;
@@ -19,7 +19,7 @@ public class Soil : MonoBehaviour {
 		HydrationLevel = 0;
 		isPlanted = false;
 		MaxWater = 100;
-		timer = 0;
+//		timer = 0;
 		size = renderer.bounds.size.x;
 		water = new int[10];
 		start = this.transform.position.x - size / 2;

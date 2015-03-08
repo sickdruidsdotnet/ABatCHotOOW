@@ -12,6 +12,7 @@ public class Animal : MonoBehaviour
 	public Vector3 target;
 	public float targetOffset;
 
+
 	public bool isSpored;
 	protected float sporeModifier = 1f;
 	//how long it will last in seconds after being infected by fern spores
@@ -38,6 +39,7 @@ public class Animal : MonoBehaviour
         isInfected = false;
     }
 
+
 	public void LurePlant(Transform plantPosition)
 	{
 		Debug.Log ("LurePlant called: " + gameObject.name);
@@ -54,6 +56,7 @@ public class Animal : MonoBehaviour
 	public void SetTarget(Vector3 position){
 		this.target = new Vector3 (position.x + targetOffset, transform.position.y, transform.position.z);
 	}
+
 
 	public void becomeSpored()
 	{
@@ -90,4 +93,5 @@ public class Animal : MonoBehaviour
 			StartCoroutine(sporeSpawner());
 		}
 	}
+
 }
