@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
@@ -117,8 +118,11 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
-		if (player.isGrounded && player.dashed)
-			player.dashed = false;
+		if (player.isGrounded && player.airDashed)
+			player.airDashed = false;
+
+		if(player.isDashing && Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0)
+			player.isDashing = false;
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
