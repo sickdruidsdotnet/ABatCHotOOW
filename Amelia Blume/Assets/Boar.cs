@@ -19,9 +19,12 @@ public class Boar : Animal
 	public bool isInChargeUp;
 	
 	public float boarXSight = 5;
-	
+
 	bool recentlyRotated;
 	bool recentlyChargedUp;
+	public bool hasLeaped;
+
+	public int rampageCount = 3;
 	
 	int lockCounter;
 	
@@ -113,8 +116,6 @@ public class Boar : Animal
 			{
 				rotationCooldown--;
 				transform.Rotate(0f, 3f, 0f);
-				isCharging = false;
-				isInChargeUp = false;
 			}
 			else
 			{
@@ -142,6 +143,13 @@ public class Boar : Animal
 						isInChargeUp = false;
 					
 					speed = chargeSpeed;
+
+					//check if leap it should leap
+					if(!hasLeaped && Mathf.Abs(player.transform.position.x - transform.position.x) >= 3.0 && 
+					   player.transform.position.y > transform.position.y)
+					{
+						leap ();
+					}
 				}
 			}
 		}
@@ -155,7 +163,13 @@ public class Boar : Animal
 				rigidbody.freezeRotation = true;
 			}
 		}
-		
+
+		//checking if it has hit the ground via raycasting
+		if(hasLeaped){
+			//check to see if the velocity has been 0 for two frames
+			if(rigidbody.velocity.y == 0)
+				hasLeaped = false;
+		}
 		
 		//locking needs to happen last
 		transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -202,6 +216,7 @@ public class Boar : Animal
 	//uses raycasting to see if it needs to turn around or not, bypassing tags
 	void checkRotate()
 	{
+
 		Ray nearVision = new Ray(new Vector3(transform.position.x + (2.3f * faceDirection),
 		                                     transform.position.y + 0.5f,
 		                                     transform.position.z),
@@ -310,12 +325,26 @@ public class Boar : Animal
 	//starts the boar turning around
 	public void beginRotate()
 	{ 
+		if (hasLeaped)
+			return;
+
 		if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
 		{
 			recentlyRotated = true;
-			isCharging = false;
+			if(isCharging)
+			{
+				if(rampageCount > 0)
+				{
+					rampageCount--;
+				}
+				else{
+					isCharging = false;
+					rampageCount = 3;
+					speed = walkSpeed;
+				}
+
+			}
 			rotationCooldown = 60;
-			speed = walkSpeed;
 			//freeze the boar to prevent weird player interaction physics
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
@@ -327,7 +356,6 @@ public class Boar : Animal
 	{
 		
 		int hitDirection;
-		
 		if (transform.position.x - player.transform.position.x >= 0)
 			hitDirection = -1;
 		else
@@ -343,7 +371,21 @@ public class Boar : Animal
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
+		rampageCount = 3;
+		speed = walkSpeed;
 		
+	}
+
+	void OnCollisionStay()
+	{
+		hasLeaped = false;
+	}
+
+	//the boar leaps if the player is higher than the boar while it's charging and within and X radius
+	public void leap()
+	{
+		hasLeaped = true;
+		rigidbody.AddForce(new Vector3(0, 8000f,0));
 	}
 	
 	
