@@ -154,19 +154,6 @@ public class Plant : MonoBehaviour
 		}
 	}
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Animal")
-        {
-            // call becomeRestrained() on animal
-            if (other.isTrigger == false)
-            {
-                other.gameObject.GetComponent<Animal>().becomeRestrained();
-            }
-            
-        }
-    }
-
     public int getWaterCount()
     {
         return waterCount;

@@ -18,7 +18,7 @@ public class PlayerController : BaseBehavior {
 	public bool slidingFast = false;
 
     public bool isFacingRight;
-    int faceDirection;
+    public int faceDirection;
 
 	public bool canControl;
 	public int stunTimer;
@@ -222,6 +222,22 @@ public class PlayerController : BaseBehavior {
 	
 	protected void HandleActionInput() {
 
+		float horizontal2 = Input.GetAxis("Horizontal 2");
+		float vertical2 = Input.GetAxis("Vertical 2");
+
+		if (horizontal2 > 0)
+			player.SetCurrentSeed(Player.SeedType.TreeSeed);
+		if (horizontal2 < 0)
+			player.SetCurrentSeed(Player.SeedType.VineSeed);
+		if (vertical2 > 0)
+			player.SetCurrentSeed(Player.SeedType.FernSeed);
+		if (vertical2 < 0)
+			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+
+
+		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
+		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+
 		if(!canControl)
 			return;
 
@@ -283,7 +299,6 @@ public class PlayerController : BaseBehavior {
 		int currTens = currentHealth / 10;
 		currTens -= 1;
 		//checking if lost health
-		//Debug.Log (currTens);
 		if (currTens < 9 && currTens >= 0) {
 			for(int i = 9; i > currTens; i--)
 			{

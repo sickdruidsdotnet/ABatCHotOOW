@@ -36,10 +36,13 @@ public class Deer : Animal
     public float speed;
 
 	public bool isFacingRight = false;
+	
 
     // Use this for initialization
     void Start()
     {
+		sporeResistance = 10f;
+		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
@@ -81,19 +84,24 @@ public class Deer : Animal
 		{
 			faceDirection = 1;
 			isFacingRight = true;
+			sporeLoc = new Vector3 (1.5f, 1.5f, 0f);
 		}
 		else {
 			faceDirection = -1;
 			isFacingRight = false;
+			sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 		}
 
 
 		//function to check if the player is in sight
 		checkSeen ();
 
-        if (!isRestrained)
+        if (isRestrained) {
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+		}
+		else
         {
-
 			MoveRight();
 			checkRotate();
 
@@ -155,6 +163,9 @@ public class Deer : Animal
 	//preventing the player from just running into the deer and being completely safe
 	void OnTriggerEnter(Collider other)
 	{
+		if (isRestrained || !isInfected)
+			return;
+
 		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
 			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
@@ -260,8 +271,23 @@ public class Deer : Animal
 
     void MoveRight()
     {
-		transform.Translate (speed *-1, 0, 0);
+
+		//checkRotate ();
+		if (!isBeingLured)
+			transform.Translate (speed * -1 * sporeModifier, 0, 0);
+		else {
+			if(target.x > transform.position.x && !isFacingRight)
+				beginRotate();
+			transform.position = Vector3.MoveTowards (transform.position, target, speed*sporeModifier);
+		}
+
+
+		transform.Translate (speed *-1 * sporeModifier, 0, 0);
 		//animation["Walking"].enabled = true;
+
+
+		//animation["Walking"].enabled = true;
+
 		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around
@@ -302,4 +328,6 @@ public class Deer : Animal
 		isCharging = false;
 
 	}
+
+
 }

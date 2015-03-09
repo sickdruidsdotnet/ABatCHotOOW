@@ -24,6 +24,15 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
+
+	public enum SeedType
+	{
+		VineSeed,
+		FernSeed,
+		TreeSeed,
+		FlowerSeed,
+	};
+
 	public int health;
 	public bool airDashed = false;
 	public bool isDashing = false;
@@ -34,6 +43,10 @@ public class Player : BaseBehavior {
 	private GameObject fruit;
 	private bool canGrow = false;
 	private bool sunning = false;
+	public SeedType currentSeed = SeedType.VineSeed;
+
+	
+
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -250,7 +263,6 @@ public class Player : BaseBehavior {
 	void Update()
 	{
 
-
 		//ReduceHealth(1);
 
 
@@ -298,6 +310,16 @@ public class Player : BaseBehavior {
 	public void SetSunning(bool value)
 	{
 		sunning = value;
+	}
+
+	public SeedType getCurrentSeedType()
+	{
+		return currentSeed;
+	}
+
+	public void SetCurrentSeed(SeedType seed)
+	{
+		currentSeed = seed;
 	}
 
 	//returns direction the player is currently facing as an int. 1=right, -1=left

@@ -195,4 +195,15 @@ public class Seed : MonoBehaviour
 	{
 		return soilIndex;
 	}
+
+	//freezes the seed when it collides with soil
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.transform.tag == "Soil") {
+			transform.rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+		} else if (collision.transform.tag == "Player") {
+			Physics.IgnoreCollision(collision.collider, collider, true);
+		}
+	}
+
 }
