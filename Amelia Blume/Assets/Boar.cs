@@ -148,9 +148,14 @@ public class Boar : Animal
 					if(!hasLeaped && Mathf.Abs(player.transform.position.x - transform.position.x) >= 3.0 && 
 					   player.transform.position.y > transform.position.y)
 					{
-						leap ();
+						//make sure it's only leaping when facing the player
+						if((player.transform.position.x <= transform.position.x && !isFacingRight) || 
+						   (player.transform.position.x >= transform.position.x && isFacingRight)){
+							leap ();
+						}
 					}
 				}
+
 			}
 		}
 		
@@ -378,7 +383,17 @@ public class Boar : Animal
 
 	void OnCollisionStay()
 	{
-		hasLeaped = false;
+		//make sure it's touching the gorund before refreshing its leap
+		if (GetComponentInChildren<EdgeCheckerScript> ().count > 0) {
+			hasLeaped = false;
+			
+			//for turning around after passing the player while rampaging, only when grounded
+			//checks if the boar is to the left/right of the player and is charging the same direction
+			if( isCharging && ((player.transform.position.x > transform.position.x && !isFacingRight) || 
+			   (player.transform.position.x < transform.position.x && isFacingRight))){
+				beginRotate();
+			}
+		}
 	}
 
 	//the boar leaps if the player is higher than the boar while it's charging and within and X radius
@@ -387,6 +402,5 @@ public class Boar : Animal
 		hasLeaped = true;
 		rigidbody.AddForce(new Vector3(0, 8000f,0));
 	}
-	
-	
+
 }
