@@ -64,9 +64,9 @@ public class Vine : MonoBehaviour
 
 	// number of segments, not including the tip.
 	private int numSegments = 1;
-	private float initialRadius = 0.1f;
-	private float initialSegLength = 0.4f;
-	private float tipLength = 0.5f;
+	private float initialRadius = 0.05f;
+	private float initialSegLength = 0.3f;
+	private float tipLength = 0.3f;
 	private float maxSegLength = 0.3f;
 
 	private Color vineColor = Color.green;

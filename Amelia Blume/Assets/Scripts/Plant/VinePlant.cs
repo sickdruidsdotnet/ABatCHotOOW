@@ -9,7 +9,7 @@ public class VinePlant : Plant
     private List<GameObject> vines;
     private float vineSpawnRadians;
     private float vineSpawnRadius = 0.2f;
-    public float maxVineLength = 7f;
+    public float maxVineLength = 3f;
     public float growthRate = 0.35f;
 
     
