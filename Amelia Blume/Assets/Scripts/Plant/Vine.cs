@@ -100,6 +100,7 @@ public class Vine : MonoBehaviour
 
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
+	private Material vineMat;
 
 	public bool pressedVineButton = false;
 	public bool isGrowing = false;
@@ -110,6 +111,8 @@ public class Vine : MonoBehaviour
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
+		vineMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
+		meshRenderer.material = vineMat;
 
 		// cache the transform so we don't have to do expensive lookups
 		// idk why, but it's a thing
@@ -402,7 +405,7 @@ public class Vine : MonoBehaviour
 		float t_z = vineSettings.targetTrackRadius * Mathf.Sin(vineSettings.targetAngle);
 		float t_y = vineSettings.targetHeight;
 
-		vineTarget.transform.position = new Vector3(t_x, t_y, t_z);
+		vineTarget.transform.position = new Vector3(t_x, t_y, t_z) + _transform.position;
 	}
 
 	/*
@@ -441,7 +444,7 @@ public class Vine : MonoBehaviour
 				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
 				float v_y = 0;
 
-				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+				Vector3 relativeVec = new Vector3(v_x, v_y, v_z) + _transform.position;
 
 				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
 			}

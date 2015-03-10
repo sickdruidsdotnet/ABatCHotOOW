@@ -47,6 +47,7 @@ public class Plant : MonoBehaviour
 
     void Update()
     {
+
         maturity = (float)waterCount / (float)hydrationGoal;
 
         if(soil != null)
@@ -56,6 +57,7 @@ public class Plant : MonoBehaviour
                 if (collectionTimer > collectionDelay)
                 {
                     collectWater();
+                    grow();
                     collectionTimer = 0;
                 }
             }
@@ -65,15 +67,12 @@ public class Plant : MonoBehaviour
             Debug.Log("Plant has no soil!");
         }
         /*
-		if (amelia.GetComponent<Player>().isSunning()){
-			CollectSun();
-			//Debug.Log("Sunning");
-		}
+        if (amelia.GetComponent<Player>().isSunning()){
+            CollectSun();
+            //Debug.Log("Sunning");
+        }
         */
         collectionTimer++;
-
-
-        grow(); 
     }
 
     // Grows the plant.
