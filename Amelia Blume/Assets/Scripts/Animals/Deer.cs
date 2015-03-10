@@ -42,7 +42,7 @@ public class Deer : Animal
     void Start()
     {
 		animalType = "Deer";
-		strength = 10f;
+		strength = 2f;
 		sporeResistance = 10f;
 		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 

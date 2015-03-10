@@ -39,7 +39,7 @@ public class VinePlant : Plant
 		for (int i = 0; i < restrainedAnimals.Length; i++) {
 			if (restrainedAnimals [i] == null) {
 				restrainedAnimals [i] = other;
-				other.becomeRestrained();
+				other.becomeRestrained(collider);
 				break;
 			}
 			else if(restrainedAnimals [i] == other)

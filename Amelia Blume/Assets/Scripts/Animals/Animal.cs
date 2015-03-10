@@ -14,7 +14,8 @@ public class Animal : MonoBehaviour
 	public Vector3 target;
 	public float targetOffset;
 
-	//how long in seconds it takes this animal to break free from a vine
+	//on a scale oof 0-10, how powerful is this animal. the more strenght, the easier it
+	//breaks free from vines
 	public float strength;
 
 	public bool isSpored;
@@ -33,9 +34,10 @@ public class Animal : MonoBehaviour
 
     public void removeState(/*AnimalState*/) { }
 
-    public void becomeRestrained(/*&Plant*/)
+    public void becomeRestrained(Collider vineCollider)
     {
         isRestrained = true;
+		StartCoroutine (breakFree (vineCollider));
     }
 
     public void changeInfection()
@@ -93,6 +95,20 @@ public class Animal : MonoBehaviour
 			Instantiate(Resources.Load("Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
 			yield return new WaitForSeconds(1f);
 			StartCoroutine(sporeSpawner());
+		}
+	}
+
+	IEnumerator breakFree(Collider vineCollider)
+	{
+		yield return new WaitForSeconds (10f - (strength * sporeModifier));
+		if (isRestrained && isInfected) {
+			//ignore that vine's collider from now on, it's broken free from it
+			Collider[] animalColliders = transform.GetComponents<Collider>();
+			foreach (Collider animalCollider in animalColliders)
+			{
+				Physics.IgnoreCollision(vineCollider, animalCollider);
+			}
+			isRestrained = false;
 		}
 	}
 }

@@ -45,7 +45,7 @@ public class Boar : Animal
 	void Start()
 	{
 		animalType = "Boar";
-		strength = 1.5f;
+		strength = 8f;
 		sporeResistance = 10f;
 		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 		
