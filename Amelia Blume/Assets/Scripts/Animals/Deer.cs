@@ -36,10 +36,13 @@ public class Deer : Animal
     public float speed;
 
 	public bool isFacingRight = false;
+	
 
     // Use this for initialization
     void Start()
     {
+		sporeResistance = 10f;
+		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
@@ -81,19 +84,24 @@ public class Deer : Animal
 		{
 			faceDirection = 1;
 			isFacingRight = true;
+			sporeLoc = new Vector3 (1.5f, 1.5f, 0f);
 		}
 		else {
 			faceDirection = -1;
 			isFacingRight = false;
+			sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 		}
 
 
 		//function to check if the player is in sight
 		checkSeen ();
 
-        if (!isRestrained)
+        if (isRestrained) {
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+		}
+		else
         {
-
 			MoveRight();
 			checkRotate();
 
@@ -155,16 +163,16 @@ public class Deer : Animal
 	//preventing the player from just running into the deer and being completely safe
 	void OnTriggerEnter(Collider other)
 	{
+		if (isRestrained || !isInfected)
+			return;
+
 		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
 			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
-			{
-				other.GetComponent<PlayerController>().canControl = false;
-				other.GetComponent<PlayerController>().stunTimer = 30;
-				
+			{	
 				int hitDirection;
 				
-				if (other.GetComponent<PlayerController>().isFacingRight)
+				if (transform.position.x - other.transform.position.x >= 0)
 					hitDirection = -1;
 				else
 					hitDirection = 1;
@@ -172,6 +180,8 @@ public class Deer : Animal
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.freezeRotation = true;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
+				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().stunTimer = 30;
 			}
 			//rotate the deer to face the player if that's not already the case
 			if(((transform.position.x - other.transform.position.x >= 0) && isFacingRight) ||
@@ -261,8 +271,23 @@ public class Deer : Animal
 
     void MoveRight()
     {
-		transform.Translate (speed *-1, 0, 0);
+
+		//checkRotate ();
+		if (!isBeingLured)
+			transform.Translate (speed * -1 * sporeModifier, 0, 0);
+		else {
+			if(target.x > transform.position.x && !isFacingRight)
+				beginRotate();
+			transform.position = Vector3.MoveTowards (transform.position, target, speed*sporeModifier);
+		}
+
+
+		transform.Translate (speed *-1 * sporeModifier, 0, 0);
 		//animation["Walking"].enabled = true;
+
+
+		//animation["Walking"].enabled = true;
+
 		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around
@@ -283,8 +308,6 @@ public class Deer : Animal
 	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
-		player.GetComponent<PlayerController>().canControl = false;
-		player.GetComponent<PlayerController>().stunTimer = 45;
 
 		int hitDirection;
 
@@ -299,8 +322,12 @@ public class Deer : Animal
 		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
 		}
+		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
 
 	}
+
+
 }

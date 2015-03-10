@@ -29,7 +29,7 @@ public class PlayerMotor : BaseBehavior {
 		public float turnToFaceCameraSpeed = 8f;
 		
 		public float jumpForce = 15f;
-		public float dashForce = 15f;
+		public float dashForce = 50f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
@@ -39,6 +39,8 @@ public class PlayerMotor : BaseBehavior {
 
 		public float jumpForceRemaining = 0f;
 		public float dashForceRemaining = 0f;
+
+		public bool cancelY = true;
 
 		public Vector3 momentum = Vector3.zero;
 	}
@@ -173,7 +175,6 @@ public class PlayerMotor : BaseBehavior {
 				workVector = workVector.normalized * movement.momentum.magnitude;	
 			}
 		}
-		
 
 		lastAttemptedMovement = workVector;
 		
@@ -201,21 +202,31 @@ public class PlayerMotor : BaseBehavior {
 	
 	protected Vector3 ApplyDashPower(Vector3 workVector) {
 		
+		if(!player.isDashing ){
+			movement.dashForceRemaining = 0;
+		}
+
 		if (movement.dashForceRemaining > 0 && player.isFacingRight) {
 				workVector.x += movement.dashForceRemaining;
-				movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
+				//movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
+				//movement.dashForceRemaining -= 100 * Time.fixedDeltaTime;
 		}
 
 		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
 				workVector.x += movement.dashForceRemaining;
-				movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
+				//movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
+				//movement.dashForceRemaining += 100 * Time.fixedDeltaTime;
 		}
-		
 		
 		return workVector;
 	}
 
 	protected Vector3 ApplyGravity(Vector3 workVector) {
+		if((player.isDashing || player.airDashed) && workVector.y > 0) {
+			
+			return workVector;
+		}
+
 		if (environment.grounded) {
 			if (!environment.wasGrounded) {
 				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));		
@@ -231,8 +242,6 @@ public class PlayerMotor : BaseBehavior {
 				workVector.y += movement.fallSpeed;
 			}
 		}
-		
-		
 		return workVector;
 	}
 	
@@ -365,6 +374,13 @@ public class PlayerMotor : BaseBehavior {
 
 	public void Dash() {
 		if (player.canDash) {
+			
+			Debug.Log("dashForce:" + movement.dashForce);
+
+			player.dashStartX = player.transform.position.x;
+			player.dashedAtTime = Time.time;
+			player.isDashing = true;
+
 			player.Broadcast("OnDash");
 			if(player.isFacingRight)
 				movement.dashForceRemaining = movement.dashForce;
@@ -380,11 +396,35 @@ public class PlayerMotor : BaseBehavior {
 		if(player.canThrowSeed) {
 			player.Broadcast("OnThrowSeed");
 			// spawn a seed
-			Vector3 loc = new Vector3(1, 1, 0);
+			Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.5f, 1, 0);
 			loc += transform.position;
-			GameObject newSeed = Instantiate(Resources.Load("VineSeed"), loc, Quaternion.identity) as GameObject;
+			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+			GameObject newSeed;
+			Player.SeedType currSeed = player.getCurrentSeedType();
+			switch(currSeed){
+			case Player.SeedType.VineSeed:
+				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.TreeSeed:
+				newSeed = Instantiate(Resources.Load("TreeSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FlowerSeed:
+				newSeed = Instantiate(Resources.Load("FlowerSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FernSeed:
+				newSeed = Instantiate(Resources.Load("FernSeed")) as GameObject;
+				break;
+
+			default:
+				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				break;
+			}
+
+			newSeed.transform.position = loc;
 			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
-			Debug.Log("called ThrowSeed");
 		}
 		else{
 			player.Broadcast("OnThrowSeedDenied");

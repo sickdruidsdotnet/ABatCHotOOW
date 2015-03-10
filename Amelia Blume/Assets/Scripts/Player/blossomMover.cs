@@ -50,7 +50,7 @@ public class blossomMover : MonoBehaviour {
 			downHits = Physics.RaycastAll (new Vector3(transform.position.x, transform.position.y+0.1f), -Vector3.up, 0.01f);
 			foreach(RaycastHit hit in downHits)
 			{
-				if (hit.transform.tag!= "Blossom") 
+				if (hit.transform.tag!= "Blossom" && !hit.transform.collider.isTrigger) 
 					falling = false;
 			}
 			if(downHits.Length ==0)
