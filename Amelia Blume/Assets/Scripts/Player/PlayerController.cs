@@ -104,6 +104,9 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
+		if (Input.GetButtonUp ("Jump"))
+			StopJump();
+
 		// these functions should not directly move the player. They only handle input, and 
 		// send information to the motor, which will move the player in UpdateMotor().
 		HandleStun ();
@@ -121,7 +124,7 @@ public class PlayerController : BaseBehavior {
 		if (player.isGrounded && player.airDashed)
 			player.airDashed = false;
 
-		if(player.isDashing && Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0)
+		if(player.isDashing && (Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides))
 			player.isDashing = false;
 
         //locking needs to happen last
@@ -261,6 +264,11 @@ public class PlayerController : BaseBehavior {
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+	}
+
+	protected void StopJump() {
+		player.Broadcast("OnStopJumpRequest");
+		player.motor.StopJump();
 	}
 
 	protected void ThrowSeed() {
