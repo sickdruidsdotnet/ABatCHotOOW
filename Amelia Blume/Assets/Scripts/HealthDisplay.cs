@@ -20,6 +20,6 @@ public class HealthDisplay : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		health = player.health;
-		healthText.text = health + "";
+		healthText.text =  "";
 	}
 }
