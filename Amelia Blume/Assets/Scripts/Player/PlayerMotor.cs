@@ -19,7 +19,7 @@ public class PlayerMotor : BaseBehavior {
 		public float speed = 0f;
 		public float walkSpeed = 4f;
 		public float runSpeed = 8f;
-		public float airControlRatio = 0.3f;
+		public float airControlRatio = 10f;
 		
 		public float sidestepSpeed = 3f;
 		// I think this part is irrelevant, since we constrain the Z axis.
@@ -28,7 +28,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
-		public float jumpForce = 15f;
+		public float jumpForce = 30f;
 		public float dashForce = 50f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
@@ -167,13 +167,19 @@ public class PlayerMotor : BaseBehavior {
 
 		workVector *= movement.speed;
 
+		movement.momentum = workVector;
+
 		if (player.isGrounded) {
 			movement.momentum = workVector;
 		} else {
-			workVector = movement.momentum + workVector * movement.airControlRatio;
-			if (workVector.magnitude > movement.momentum.magnitude) {
-				workVector = workVector.normalized * movement.momentum.magnitude;	
-			}
+			workVector = movement.momentum + workVector ;//* movement.airControlRatio;
+			workVector = workVector.normalized * movement.airControlRatio;
+//			if (workVector.magnitude > movement.momentum.magnitude) {
+//				if (movement.momentum.magnitude > 0)
+//					workVector = workVector.normalized * movement.momentum.magnitude;
+//				else 
+//					workVector = workVector.normalized;
+//			}
 		}
 
 		lastAttemptedMovement = workVector;
@@ -374,22 +380,19 @@ public class PlayerMotor : BaseBehavior {
 
 	public void Dash() {
 		if (player.canDash) {
-			
-			Debug.Log("dashForce:" + movement.dashForce);
-
 			player.dashStartX = player.transform.position.x;
 			player.dashedAtTime = Time.time;
 			player.isDashing = true;
 
 			player.Broadcast("OnDash");
+
 			if(player.isFacingRight)
 				movement.dashForceRemaining = movement.dashForce;
-			else {
+			else
 				movement.dashForceRemaining = movement.dashForce * -1;
-			}
-		} else {
+		} 
+		else 
 			player.Broadcast("OnDashDenied");
-		}
 	}
 
 	public void ThrowSeed() {
