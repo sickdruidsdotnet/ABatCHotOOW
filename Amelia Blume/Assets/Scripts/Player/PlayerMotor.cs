@@ -19,7 +19,7 @@ public class PlayerMotor : BaseBehavior {
 		public float speed = 0f;
 		public float walkSpeed = 4f;
 		public float runSpeed = 8f;
-		public float airControlRatio = 0.3f;
+		public float airControlRatio = 10f;
 		
 		public float sidestepSpeed = 3f;
 		// I think this part is irrelevant, since we constrain the Z axis.
@@ -28,7 +28,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
-		public float jumpForce = 15f;
+		public float jumpForce = 30f;
 		public float dashForce = 50f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
@@ -40,7 +40,7 @@ public class PlayerMotor : BaseBehavior {
 		public float jumpForceRemaining = 0f;
 		public float dashForceRemaining = 0f;
 
-		public bool cancelY = true;
+		public bool stopJump = false;
 
 		public Vector3 momentum = Vector3.zero;
 	}
@@ -167,13 +167,19 @@ public class PlayerMotor : BaseBehavior {
 
 		workVector *= movement.speed;
 
+		movement.momentum = workVector;
+
 		if (player.isGrounded) {
 			movement.momentum = workVector;
 		} else {
-			workVector = movement.momentum + workVector * movement.airControlRatio;
-			if (workVector.magnitude > movement.momentum.magnitude) {
-				workVector = workVector.normalized * movement.momentum.magnitude;	
-			}
+			workVector = movement.momentum + workVector; //* movement.airControlRatio;
+			workVector = workVector.normalized * movement.airControlRatio;
+//			if (workVector.magnitude > movement.momentum.magnitude) {
+//				if (movement.momentum.magnitude > 0)
+//					workVector = workVector.normalized * movement.momentum.magnitude;
+//				else 
+//					workVector = workVector.normalized;
+//			}
 		}
 
 		lastAttemptedMovement = workVector;
@@ -184,11 +190,17 @@ public class PlayerMotor : BaseBehavior {
 		workVector = ApplyDashPower(workVector);
 		workVector = ApplyGroundMovement(workVector);
 		
+//		if(movement.stopJump){
+//			workVector.y /= 2;
+//			if(player.isGrounded)
+//				movement.stopJump = false;
+//		}
+
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
 	}
 	
 	protected Vector3 ApplyJumpPower(Vector3 workVector) {
-		if (player.isCollidingAbove) {
+		if (player.isDashing || player.isCollidingAbove) {
 			movement.jumpForceRemaining = 0;
 		}
 		
@@ -202,18 +214,24 @@ public class PlayerMotor : BaseBehavior {
 	
 	protected Vector3 ApplyDashPower(Vector3 workVector) {
 		
-		if(!player.isDashing ){
+		if(!player.isDashing || player.isCollidingSides){
 			movement.dashForceRemaining = 0;
 		}
 
 		if (movement.dashForceRemaining > 0 && player.isFacingRight) {
 				workVector.x += movement.dashForceRemaining;
+				
+				if(!player.isGrounded)
+					workVector.y = environment.gravity * Time.fixedDeltaTime;
 				//movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
 				//movement.dashForceRemaining -= 100 * Time.fixedDeltaTime;
 		}
 
 		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
 				workVector.x += movement.dashForceRemaining;
+
+				if(!player.isGrounded)
+					workVector.y = environment.gravity * Time.fixedDeltaTime;
 				//movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
 				//movement.dashForceRemaining += 100 * Time.fixedDeltaTime;
 		}
@@ -367,29 +385,38 @@ public class PlayerMotor : BaseBehavior {
 		if (player.canJump) {
 			player.Broadcast("OnJump");
 			movement.jumpForceRemaining = movement.jumpForce;
+			movement.stopJump = false;
 		} else {
 			player.Broadcast("OnJumpDenied");
 		}
 	}
 
+	public void StopJump() {
+		if (!player.canJump) {
+			player.Broadcast("OnStopJump");
+			movement.jumpForceRemaining = movement.jumpForceRemaining/2 + 1;
+			movement.stopJump = true;
+		} 
+		else {
+			player.Broadcast("OnStopJumpDenied");
+		}
+	}	
+
 	public void Dash() {
 		if (player.canDash) {
-			
-			Debug.Log("dashForce:" + movement.dashForce);
-
 			player.dashStartX = player.transform.position.x;
 			player.dashedAtTime = Time.time;
 			player.isDashing = true;
 
 			player.Broadcast("OnDash");
+
 			if(player.isFacingRight)
 				movement.dashForceRemaining = movement.dashForce;
-			else {
+			else
 				movement.dashForceRemaining = movement.dashForce * -1;
-			}
-		} else {
+		} 
+		else 
 			player.Broadcast("OnDashDenied");
-		}
 	}
 
 	public void ThrowSeed() {
