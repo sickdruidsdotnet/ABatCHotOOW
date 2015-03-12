@@ -23,6 +23,9 @@ public class PlayerController : BaseBehavior {
 	public bool canControl;
 	public int stunTimer;
 
+	public bool canConvert = false;
+	public GameObject conversionTarget;
+
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
@@ -197,7 +200,7 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning()) {
+		if (!canControl || player.isSunning() || player.isConverting()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
@@ -244,7 +247,7 @@ public class PlayerController : BaseBehavior {
 		if(!canControl)
 			return;
 
-		if (!player.isSunning()) {
+		if (!player.isSunning() && !player.isConverting()) {
 			if (Input.GetButtonDown ("Jump")) {
 				Jump ();
 			}
@@ -256,8 +259,14 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		if (Input.GetButtonDown ("Sun")) {
-			Sun();
-			player.SetSunning(true);
+			if(canConvert){
+				AnimalConvert();
+				player.SetConverting(true);
+			}
+			else{
+				Sun();
+				player.SetSunning(true);
+			}
 		}
 	}
 	
@@ -284,6 +293,11 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+	}
+
+	protected void AnimalConvert() {
+		player.Broadcast("OnConvertRequest");
+		player.motor.Convert();
 	}
 
 	public void HandleStun()

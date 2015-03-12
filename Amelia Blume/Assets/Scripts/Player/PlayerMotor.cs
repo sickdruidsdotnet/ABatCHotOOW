@@ -466,7 +466,17 @@ public class PlayerMotor : BaseBehavior {
 			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
 			Instantiate(sun);
 		}
-		
+	}
+
+	public void Convert(){
+		if (player.canConvert) {
+			player.Broadcast("OnConvert");
+
+			GameObject converter = (GameObject) Resources.Load ("Converter");
+			converter.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			converter.GetComponent<Converter>().target = transform.GetComponent<PlayerController>().conversionTarget;
+			Instantiate(converter);
+		}
 	}
 	
 	public void RotateTowardCameraDirection() {

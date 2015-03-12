@@ -96,7 +96,14 @@ public class Deer : Animal
 
 
 		//function to check if the player is in sight
-		checkSeen ();
+		if (isInfected) {
+			checkSeen ();
+		} else {
+			//do some check to make sure it behaves neutrally
+			isCharging = false;
+			isInChargeUp = false;
+			speed = walkSpeed;
+		}
 
         if (isRestrained) {
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;

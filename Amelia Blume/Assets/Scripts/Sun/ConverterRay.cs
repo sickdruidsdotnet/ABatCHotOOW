@@ -33,7 +33,7 @@ public class ConverterRay : MonoBehaviour {
 			rotationSpeed = distanceFromBottom/ startLife;
 			transparencySpeed = (float)transparencyMax / (float)lifeThirds;
 		} else {
-			startLife = 320;
+			startLife = 200;
 			life = startLife;
 			transform.Rotate(new Vector3(180f, 0f, 0f));
 			Color newColor = new Color(0.95f, 
@@ -108,7 +108,7 @@ public class ConverterRay : MonoBehaviour {
 	void HandleMainRay(){
 		life--;
 		if (life > 80) {
-			transform.localScale = transform.localScale = new Vector3 (transform.localScale.x + 0.0015f, 
+			transform.localScale = transform.localScale = new Vector3 (transform.localScale.x + 0.0025f, 
 			                                                          transform.localScale.y, transform.localScale.z);
 		} else if (life <= 20 && life > 0) {
 			transform.localScale = transform.localScale = new Vector3 (transform.localScale.x - 0.018f, 

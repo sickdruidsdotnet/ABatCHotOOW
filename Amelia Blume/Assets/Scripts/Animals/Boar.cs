@@ -99,8 +99,16 @@ public class Boar : Animal
 		
 		
 		//function to check if the player is in sight
-		checkSeen ();
-		
+		if (isInfected) {
+			checkSeen ();
+		} else {
+			//do some check to make sure it behaves neutrally
+			isCharging = false;
+			rampageCount = 3;
+			isInChargeUp = false;
+			speed = walkSpeed;
+		}
+
 		if (isRestrained) {
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
@@ -176,7 +184,11 @@ public class Boar : Animal
 		}
 
 		//locking needs to happen last
-		transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
+		//if it's not infected it should be behind in the background
+		if(isInfected)
+			transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
+		else
+			transform.position = new Vector3(transform.position.x, transform.position.y, 4);
 		//ensure z rotation doesn't exceed reasonable amounts
 		float angle = transform.rotation.eulerAngles.z;
 		//if rotated greater than 35 degrees
