@@ -174,9 +174,22 @@ public class Boar : Animal
 			if(rigidbody.velocity.y == 0)
 				hasLeaped = false;
 		}
-		
+
 		//locking needs to happen last
 		transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
+		//ensure z rotation doesn't exceed reasonable amounts
+		float angle = transform.rotation.eulerAngles.z;
+		//if rotated greater than 35 degrees
+		if (angle > 35f && angle < 325f) {
+			if (angle > 35f && angle <= 180f) {
+				angle = 35f;
+			} else if (angle < 325f && angle >= 180f) {
+				angle = 325f;
+			}
+			angle = angle / 360f;
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y,
+		                                    angle, transform.rotation.w);
+		}
 	}
 	
 	//this will bounce the player and cause the boar to look towards them,
