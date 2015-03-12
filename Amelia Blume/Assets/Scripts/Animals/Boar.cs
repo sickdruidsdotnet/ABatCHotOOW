@@ -44,6 +44,11 @@ public class Boar : Animal
 	// Use this for initialization
 	void Start()
 	{
+
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
+
+
 		animalType = "Boar";
 		strength = 8f;
 		sporeResistance = 10f;
@@ -126,9 +131,25 @@ public class Boar : Animal
 				transform.Rotate(0f, 3f, 0f);
 				if(rotationCooldown <= 0){
 					recentlyRotated = false;
+					//make sure it's perfectly in profile
+					//set the angle to face the proper directions, then assign isFacingRight
+					if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
+					{
+						transform.rotation = new Quaternion(0f, 180f, transform.rotation.z, transform.rotation.w);
+						
+						// TODO we should find a better solution for this. Always flipping these values together is not good practice.
+						// can we consolidate to one variable? I recognize the advantages of both, but two seems bad. --Derk
+						faceDirection = 1;
+						isFacingRight = true;
+					}
+					else
+					{
+						transform.rotation = new Quaternion(0f, 0f, transform.rotation.z, transform.rotation.w);
+						isFacingRight = false;
+						faceDirection = -1;
+					}
 					//unfreeze boar 
 					rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
-					rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
 					rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
 
 				}
@@ -171,8 +192,7 @@ public class Boar : Animal
 			lockCounter--;
 			if(lockCounter == 0)
 			{
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
-				rigidbody.freezeRotation = true;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 			}
 		}
 
@@ -222,8 +242,8 @@ public class Boar : Animal
 				else
 					hitDirection = 1;
 				lockCounter = 60;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
-				rigidbody.freezeRotation = true;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
 				other.GetComponent<PlayerController>().stunTimer = 30;
@@ -376,9 +396,8 @@ public class Boar : Animal
 			}
 			rotationCooldown = 60;
 			//freeze the boar to prevent weird player interaction physics
-			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+			rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
-			rigidbody.freezeRotation = true;
 		}
 	}
 	//deals the impact and damage to the player
@@ -391,8 +410,7 @@ public class Boar : Animal
 		else
 			hitDirection = 1;
 		lockCounter = 60;
-		rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
-		rigidbody.freezeRotation = true;
+		rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 		//don't add the impact if player is about to die
 		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
@@ -425,7 +443,8 @@ public class Boar : Animal
 	public void leap()
 	{
 		hasLeaped = true;
-		rigidbody.AddForce(new Vector3(0, 8000f,0));
+		rigidbody.velocity = new Vector3(rigidbody.velocity.x, rigidbody.velocity.y + 1f, rigidbody.velocity.z);
+
 	}
 
 }
