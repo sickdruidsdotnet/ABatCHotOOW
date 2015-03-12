@@ -116,16 +116,15 @@ public class Boar : Animal
 			{
 				rotationCooldown--;
 				transform.Rotate(0f, 3f, 0f);
+				if(rotationCooldown <= 0){
+					recentlyRotated = false;
+					//unfreeze boar 
+					rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+					rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+					rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+
+				}
 			}
-			else
-			{
-				recentlyRotated = false;
-				//unfreeze boar 
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
-				rigidbody.freezeRotation = true;
-			}
-			
 			
 			
 			//charging
@@ -212,6 +211,7 @@ public class Boar : Animal
 			}
 			else if(isCharging && !isInChargeUp)
 			{
+				beginRotate();
 				HitPlayer(other.transform.gameObject);
 			}
 		}
