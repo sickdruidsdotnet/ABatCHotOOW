@@ -10,27 +10,35 @@ public class PlantSway : MonoBehaviour {
 	bool hitGoal = false;
 	bool moveBack = false;
 
-	//for passing stuff
+	float offsetValue;
+	
+	void Start()
+	{
+		offsetValue = transform.position.x / 2f;
+	}
 
 	// Update is called once per frame
 	void Update () {
 		if (inPassingLeft || inPassingRight) {
 			//handle things moving left passed it
 			if (inPassingLeft) {
-				float tempProgress = (Mathf.Sin (Time.time + transform.position.x) * 50f);
+				float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
 
 				// part 1, get to the leftmost part of animation
 				if(!hitGoal)
 				{
 					progress -= 5f;
-					if(progress <= -100f)
+					if(progress <= (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75)
 					{
 						hitGoal = true;
-						progress = -100f;
+						progress = (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75;
 					}
 				} // Part 2,we've hit the left most frame time to stop
-				else if(!moveBack && tempProgress <= -49){
-					moveBack = true;
+				else if(!moveBack){
+					progress = (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75;
+					if(tempProgress <= -47){
+						moveBack = true;
+					}
 				}// Part 3, return to normal sway
 				else if(moveBack)
 				{
@@ -43,26 +51,29 @@ public class PlantSway : MonoBehaviour {
 						inPassingLeft = false;
 					}
 					else {
-						progress += 5f;
+						progress += 1;
 					}
 				}
 			}
 			else {
 				//inPassingRight
-				float tempProgress = (Mathf.Sin (Time.time + transform.position.x) * 50f);
+				float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
 				
 				// part 1, get to the leftmost part of animation
 				if(!hitGoal)
 				{
 					progress += 5f;
-					if(progress >= 100f)
+					if(progress >= (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75)
 					{
 						hitGoal = true;
-						progress = 100f;
+						progress = (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75;
 					}
 				} // Part 2,we've hit the left most frame time to stop
-				else if(!moveBack && tempProgress >= 49){
-					moveBack = true;
+				else if(!moveBack){
+					progress = (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75;
+					if(tempProgress >= 47){
+						moveBack = true;
+					}
 				}// Part 3, return to normal sway
 				else if(moveBack)
 				{
@@ -75,13 +86,13 @@ public class PlantSway : MonoBehaviour {
 						inPassingRight = false;
 					}
 					else {
-						progress -= 5f;
+						progress -= 1f;
 					}
 				}
 			}
 			
 		} else {
-			progress = (Mathf.Sin (Time.time + transform.position.x) * 50f);
+			progress = (Mathf.Sin (Time.time + offsetValue) * 50f);
 		}
 
 		//handles which blendshapes to use for left and right
