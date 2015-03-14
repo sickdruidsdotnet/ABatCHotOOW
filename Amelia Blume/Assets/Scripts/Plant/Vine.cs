@@ -444,6 +444,7 @@ public class Vine : MonoBehaviour
 				float v_z = vineSkeleton[node].radius * Mathf.Sin(angle);
 				float v_y = 0;
 
+				// I'm 99% sure that the "+ _transform.position" part should not be there... test this some time.
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z) + _transform.position;
 
 				vertices.Add(vineSkeleton[node].startPoint + relativeVec);
