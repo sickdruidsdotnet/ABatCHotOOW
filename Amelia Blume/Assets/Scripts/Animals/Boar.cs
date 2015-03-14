@@ -375,8 +375,6 @@ public class Boar : Animal
 	//starts the boar turning around
 	public void beginRotate()
 	{ 
-		if (hasLeaped)
-			return;
 
 		if (!(recentlyRotated) && !(isInChargeUp) && !(recentlyChargedUp))
 		{

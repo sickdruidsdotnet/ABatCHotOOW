@@ -101,6 +101,13 @@ public class Animal : MonoBehaviour
 		}
 	}
 
+	void OnTriggerExit(Collider other){
+		if (other.tag == "Player") {
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
+		}
+	}
+
 	IEnumerator sporeTimer()
 	{
 		yield return new WaitForSeconds (sporeResistance);
@@ -130,8 +137,8 @@ public class Animal : MonoBehaviour
 			{
 				Physics.IgnoreCollision(vineCollider, animalCollider);
 			}
-			Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
-			Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
+			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
+			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
 			isRestrained = false;
 		}
 	}
