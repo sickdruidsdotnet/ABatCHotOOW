@@ -40,7 +40,7 @@ public class VinePlant : Plant
             float v_z = vineSpawnRadius * Mathf.Sin(angle);
             Vector3 vineLocation = new Vector3(v_x, 0, v_z) + transform.position;
 
-            vines.Add(Instantiate(Resources.Load("VinePrefab"), vineLocation, Quaternion.identity) as GameObject);
+            vines.Add(Instantiate(Resources.Load("VinePlant/VinePrefab"), vineLocation, Quaternion.identity) as GameObject);
         }
     }
 

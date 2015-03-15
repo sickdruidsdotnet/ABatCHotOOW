@@ -45,7 +45,7 @@ public class Plant : MonoBehaviour
 		amelia = GameObject.Find ("Player");
     }
 
-    void Update()
+    public virtual void Update()
     {
 
         maturity = (float)waterCount / (float)hydrationGoal;

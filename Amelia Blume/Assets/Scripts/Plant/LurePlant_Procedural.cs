@@ -1,10 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class LurePlantProcedural : MonoBehaviour {
-	GameObject[] animals;
+public class LurePlant_Procedural : Plant {
+
+	public GameObject stalk;
+	public List<GameObject> leaves;
+	public List<GameObject> petals;
+	private GameObject[] animals;
 	public int health;
-	Animal animalCon;
+	private Animal animalCon;
 
 	[System.Serializable]
 	public class PlantSettings {
@@ -24,6 +28,8 @@ public class LurePlantProcedural : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		stalk = Instantiate(Resources.Load("LurePlant/PlantStalk"), transform.position, Quaternion.identity) as GameObject;
+
 		animals = GameObject.FindGameObjectsWithTag ("Animal");
 		health = 120;
 		//Debug.Log (animals.Length);
@@ -34,11 +40,33 @@ public class LurePlantProcedural : MonoBehaviour {
 			//Debug.Log (animals[i]);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public override void Update()
+	{
+		base.Update();
+		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
+		{
+			spawnLeaf(5,0f);
+			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
+		}
 	}
+
+    private void spawnLeaf(int node, float rotation)
+    {
+    	GameObject leaf;
+    	leaf = Instantiate(Resources.Load("LurePlant/PlantLeaf"), transform.position, Quaternion.identity) as GameObject;
+    	if (leaf == null)
+    	{
+    		Debug.Log("leaf is null?");
+    	}
+    	if (stalk == null)
+    	{
+    		Debug.Log("stalk is null?");
+    	}
+    	leaf.transform.parent = stalk.transform;
+    	leaf.GetComponent<PlantLeaf>().setLeafInfo(node, rotation);
+    	stalk.GetComponent<PlantStalk>().repositionLeaf(leaf);
+    }
 
 	void OnTriggerStay(Collider other)
 	{

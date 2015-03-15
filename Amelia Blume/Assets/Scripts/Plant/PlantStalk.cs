@@ -35,12 +35,13 @@ public class PlantStalk : MonoBehaviour
 		}
 	}
 
+	
 	public List<StalkNode> skeleton;
 
 	private int resolution = 8;
 	private float initialRadius = 0.05f;
-	private float initialSegLength = 0.3f;
-	private float maxSegLength = 0.3f;
+	private float initialSegLength = 0.1f;
+	private float maxSegLength = 0.1f;
 
 
 	private float ringRadians;
@@ -48,6 +49,7 @@ public class PlantStalk : MonoBehaviour
 	public float length;
 
 	public bool isGrowing = false;
+	public bool debugDoneGrowing = false;
 	private float growthRate = 0.5f;
 	public float lengthGoal;
 	private float growthStart;
@@ -108,6 +110,7 @@ public class PlantStalk : MonoBehaviour
 		else if (wasGrowing)
 		{
 			isGrowing = false;
+			debugDoneGrowing = true;
 		}
 
 	}
@@ -480,6 +483,53 @@ public class PlantStalk : MonoBehaviour
 			
 	}
 
+	public void repositionLeaf(GameObject leaf)
+	{
+		int node = leaf.GetComponent<PlantLeaf>().stalkNode;
+		float angle = leaf.GetComponent<PlantLeaf>().growthAngle;
+		if (node == 0)
+		{
+			Debug.Log("Error, leaf attempting to grow on base node");
+			Debug.Break();
+		}
+		// use leaf.stalkNode and leaf.growthAngle to determine the leaf's transform
+		// remember that the tranform is already relative to the transform of the stalk (skeleton[0].startPoint)
+
+		// translate leaf to base of the stalk
+		leaf.transform.localPosition = Vector3.zero;
+
+		// translate leaf to edge of target node's stalk radius
+		leaf.transform.localPosition += new Vector3(skeleton[node].radius, 0, 0);
+
+		// rotate leaf around the stalk by growthAngle
+		leaf.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.up) * leaf.transform.localPosition;
+		leaf.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up);
+
+		// rotate leaf similarly to the ring axis it is on.
+		Vector3 bisectAxis = Vector3.Cross(skeleton[node-1].direction, skeleton[node].direction).normalized;
+		float bisectAngle = Vector3.Angle(skeleton[node-1].direction, skeleton[node].direction) / 2f;
+		float bottomAngle = Vector3.Angle(skeleton[node-1].direction, Vector3.up);
+		Vector3 prevSegAxis = Vector3.Cross(skeleton[node-1].direction, Vector3.up);
+
+		leaf.transform.localPosition = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * leaf.transform.localPosition;
+		leaf.transform.localPosition = Quaternion.AngleAxis(bisectAngle, bisectAxis) * leaf.transform.localPosition;
+
+		leaf.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up) * leaf.transform.localRotation; // try swapping these if it looks wrong
+		leaf.transform.localRotation = Quaternion.AngleAxis(bisectAngle, bisectAxis) * leaf.transform.localRotation; // try swapping these if it looks wrong
+
+		// add node's position to the leaf position to move it into place
+		leaf.transform.localPosition += skeleton[node].startPoint;
+
+
+
+
+
+
+
+
+
+	}
+
 	public void setGrowthInfo(float goal, float rate)
 	{
 		lengthGoal = goal;
@@ -502,5 +552,6 @@ public class PlantStalk : MonoBehaviour
 
 		Debug.Log(stalkInfo + "\n" + nodeInfo);
 	}
+
 
 }

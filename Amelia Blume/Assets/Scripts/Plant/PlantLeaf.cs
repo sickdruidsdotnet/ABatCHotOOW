@@ -42,6 +42,9 @@ public class PlantLeaf : MonoBehaviour
 
 	public List<LeafNode> skeleton;
 
+	public int stalkNode;
+	public float growthAngle;
+
 	private int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE LEAF AND DO BAD THINGS.
 	private float initialWidth = 0.1f;
 	private float initialSegLength = 0.15f;
@@ -90,6 +93,12 @@ public class PlantLeaf : MonoBehaviour
 
 		createInitialLeafSkeleton();
 		printSkeletonInfo();
+	}
+
+	public void setLeafInfo(int node, float angle)
+	{
+		stalkNode = node;
+		growthAngle = angle;
 	}
 
 	void Update()
@@ -413,7 +422,7 @@ public class PlantLeaf : MonoBehaviour
 
 			float nodeLoc = getNodeLocation(node);
 			skeleton[node].width = leafWidthFunction(nodeLoc) * leafWidth;
-			
+
 			debugString += "\n\t\tnodeLoc: " + nodeLoc;
 			debugString += "\n\t\twidth: " + skeleton[node].width;
 
