@@ -365,8 +365,8 @@ public class Deer : Animal
 					faceDirection = -1;
 				}
 				//unfreeze boar 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				rigidbody.freezeRotation = true;
 				
 			}
 		}
