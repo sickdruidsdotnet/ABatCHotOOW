@@ -32,7 +32,9 @@ public class Converter : MonoBehaviour {
 			{
 				//successful conversion
 				conversionSuccess = true;
-				target.SendMessage("changeInfection");
+				if(target.GetComponent<Animal>().isRestrained){
+					target.SendMessage("changeInfection");
+				}
 				player.GetComponent<Player>().SetConverting(false);
 			}
 		} else {

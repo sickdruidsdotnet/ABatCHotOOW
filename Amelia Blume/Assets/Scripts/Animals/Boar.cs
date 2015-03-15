@@ -52,7 +52,7 @@ public class Boar : Animal
 		animalType = "Boar";
 		strength = 8f;
 		sporeResistance = 10f;
-		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
+		sporeLoc = new Vector3 (-3.3f, 0.5f, 0f);
 		
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
@@ -87,7 +87,7 @@ public class Boar : Animal
 	}
 	
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		//keep faceDirection Up to Date
 		if (transform.rotation.eulerAngles.y >= 90 && transform.rotation.eulerAngles.y <= 270)
@@ -122,39 +122,8 @@ public class Boar : Animal
 		{
 			MoveRight();
 			checkRotate();
-			
+			HandleRotation();
 			//rotation management
-			
-			if (rotationCooldown > 0)
-			{
-				rotationCooldown--;
-				transform.Rotate(0f, 3f, 0f);
-				if(rotationCooldown <= 0){
-					recentlyRotated = false;
-					//make sure it's perfectly in profile
-					//set the angle to face the proper directions, then assign isFacingRight
-					if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
-					{
-						transform.rotation = new Quaternion(0f, 180f, transform.rotation.z, transform.rotation.w);
-						
-						// TODO we should find a better solution for this. Always flipping these values together is not good practice.
-						// can we consolidate to one variable? I recognize the advantages of both, but two seems bad. --Derk
-						faceDirection = 1;
-						isFacingRight = true;
-					}
-					else
-					{
-						transform.rotation = new Quaternion(0f, 0f, transform.rotation.z, transform.rotation.w);
-						isFacingRight = false;
-						faceDirection = -1;
-					}
-					//unfreeze boar 
-					rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
-					rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
-
-				}
-			}
-			
 			
 			//charging
 			if (isCharging)
@@ -342,7 +311,8 @@ public class Boar : Animal
 					//Vector3 rayVector = vision.direction;
 					float angle = Vector3.Angle(visionHead.direction, Vector3.right * faceDirection);
 					if(Mathf.Abs(angle) <= 45){
-						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
+						if(visionHit.transform != null && visionHit.transform.tag != null && 
+						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
 							isCharging = true;
@@ -361,9 +331,14 @@ public class Boar : Animal
 	
 	void MoveRight()
 	{
-		//checkRotate ();
-		if (!isBeingLured)
-			transform.Translate (speed * -1 * sporeModifier, 0, 0);
+		if (!isBeingLured) {
+			if(recentlyRotated){
+				transform.Translate ((walkSpeed * -1 * sporeModifier), 0, 0);
+			}
+			else{
+				transform.Translate ((speed * -1 * sporeModifier), 0, 0);
+			}
+		}
 		else {
 			if(target.x > transform.position.x && !isFacingRight)
 				beginRotate();
@@ -398,6 +373,42 @@ public class Boar : Animal
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
 		}
 	}
+
+	//TODO change this when we get boar animations. THere's no need to physically rotate over time if animation's are good
+	void HandleRotation ()
+	{
+		if (rotationCooldown > 0)
+		{
+			rotationCooldown--;
+			transform.Rotate(0f, 3f, 0f);
+			if(rotationCooldown <= 0){
+				recentlyRotated = false;
+				//make sure it's perfectly in profile
+				//set the angle to face the proper directions, then assign isFacingRight
+				if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
+				{
+					transform.rotation = new Quaternion(0f, 180f, transform.rotation.z, transform.rotation.w);
+					
+					// TODO we should find a better solution for this. Always flipping these values together is not good practice.
+					// can we consolidate to one variable? I recognize the advantages of both, but two seems bad. --Derk
+					faceDirection = 1;
+					isFacingRight = true;
+				}
+				else
+				{
+					transform.rotation = new Quaternion(0f, 0f, transform.rotation.z, transform.rotation.w);
+					isFacingRight = false;
+					faceDirection = -1;
+				}
+				//unfreeze boar 
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				
+			}
+		}
+	}
+
+
 	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
@@ -417,6 +428,7 @@ public class Boar : Animal
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
+		isInChargeUp = false;
 		rampageCount = 3;
 		speed = walkSpeed;
 		
