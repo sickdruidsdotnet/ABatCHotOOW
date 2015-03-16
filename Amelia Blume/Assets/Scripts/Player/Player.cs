@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// Primary player controller class. Provides a few basic
@@ -23,14 +24,30 @@ public class Player : BaseBehavior {
 	 * On first lookup, the result is cached to speed up all
 	 * future calls.
 	 */
+
+	public enum SeedType
+	{
+		VineSeed,
+		FernSeed,
+		TreeSeed,
+		FlowerSeed,
+	};
+
 	public int health;
-	public bool dashed = false;
-	public float dashedAtTime = 0;
+	public bool airDashed = false;
+	public bool isDashing = false;
+	public float dashStartX = 0F;
+	public float dashedAtTime = 0F;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
 	private GameObject fruit;
 	private bool canGrow = false;
 	private bool sunning = false;
+	private bool converting = false;
+	public SeedType currentSeed = SeedType.VineSeed;
+
+	
+
 	public PlayerController controller {
 		get {
 			if (cachedPlayerController == null) {
@@ -191,24 +208,27 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canConvert {
+		get {
+			return cachedPlayerController.canConvert;
+		}
+	}
+
 	public bool canDash {
 		get {
-			if(Time.time - dashedAtTime >= 1.0F)
-			{
-				dashedAtTime = Time.time;
-
-				if (!isGrounded && !dashed){
-					dashed = true;
-					return true;
-				}
-				else if(!isGrounded && dashed)
-					return false;
-		
-				else if(isGrounded)
-					return true;
+			if (!isGrounded && !airDashed){
+				airDashed = true;
+				return true;
 			}
-			
-			return false;
+			else if(!isGrounded && airDashed)
+				return false;
+
+			else if(isGrounded && Time.time - dashedAtTime >= 1.0F)
+			{
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 
@@ -250,7 +270,6 @@ public class Player : BaseBehavior {
 	void Update()
 	{
 
-
 		//ReduceHealth(1);
 
 
@@ -267,7 +286,7 @@ public class Player : BaseBehavior {
 	public void ReduceHealth(int subtract)
 	{
 		health -= subtract;
-		if (GetHealth() == 0)
+		if (GetHealth() <= 0)
 			Kill ();
 	}
 
@@ -300,6 +319,26 @@ public class Player : BaseBehavior {
 		sunning = value;
 	}
 
+	public bool isConverting()
+	{
+		return converting;
+	}
+	
+	public void SetConverting(bool value)
+	{
+		converting = value;
+	}
+
+	public SeedType getCurrentSeedType()
+	{
+		return currentSeed;
+	}
+
+	public void SetCurrentSeed(SeedType seed)
+	{
+		currentSeed = seed;
+	}
+
 	//returns direction the player is currently facing as an int. 1=right, -1=left
 	//we don't call it derkrection
 	public int GetDirection()
@@ -313,15 +352,18 @@ public class Player : BaseBehavior {
 
 	void Kill()
 	{
+		Debug.Log ("Killed Called");
 		spawner = GameObject.Find ("Spawner");
-		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4, 0);
+		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");
 		fruit.transform.position = fruitPosition;
-		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y, 0);
-		//SetHealth (100);
+		this.transform.position = new Vector3(spawner.transform.position.x,spawner.transform.position.y + 4f, 0);
+		SetHealth (100);
+		//make sure to set the blossoms before scaling
+		transform.GetComponent<PlayerController> ().checkHealth ();
 
-		SideScrollerCameraController controller = camera.GetComponent<SideScrollerCameraController>();
-		controller.MoveToPlayer(spawner.transform.position.x);
+		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
+		controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
 		Instantiate (fruit);
 		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}

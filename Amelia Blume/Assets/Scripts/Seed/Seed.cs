@@ -34,6 +34,12 @@ public class Seed : MonoBehaviour
         Debug.Log("Seed created");
         Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
+	void Start()
+	{
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+	}
+
 
     void Update()
     {
@@ -189,4 +195,15 @@ public class Seed : MonoBehaviour
 	{
 		return soilIndex;
 	}
+
+	//freezes the seed when it collides with soil
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.transform.tag == "Soil") {
+			transform.rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+		} else if (collision.transform.tag == "Player") {
+			Physics.IgnoreCollision(collision.collider, collider, true);
+		}
+	}
+
 }

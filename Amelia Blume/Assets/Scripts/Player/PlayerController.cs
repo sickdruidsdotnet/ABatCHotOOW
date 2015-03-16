@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
@@ -17,10 +18,13 @@ public class PlayerController : BaseBehavior {
 	public bool slidingFast = false;
 
     public bool isFacingRight;
-    int faceDirection;
+    public int faceDirection;
 
 	public bool canControl;
 	public int stunTimer;
+
+	public bool canConvert = false;
+	public GameObject conversionTarget;
 
 	public bool isTurning = false;
 	public float turnDirection = 0f;
@@ -103,6 +107,9 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
+		if (Input.GetButtonUp ("Jump"))
+			StopJump();
+
 		// these functions should not directly move the player. They only handle input, and 
 		// send information to the motor, which will move the player in UpdateMotor().
 		HandleStun ();
@@ -117,8 +124,11 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
-		if (player.isGrounded && player.dashed)
-			player.dashed = false;
+		if (player.isGrounded && player.airDashed)
+			player.airDashed = false;
+
+		if(player.isDashing && (Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides))
+			player.isDashing = false;
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -190,7 +200,7 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning()) {
+		if (!canControl || player.isSunning() || player.isConverting()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
@@ -218,10 +228,26 @@ public class PlayerController : BaseBehavior {
 	
 	protected void HandleActionInput() {
 
+		float horizontal2 = Input.GetAxis("Horizontal 2");
+		float vertical2 = Input.GetAxis("Vertical 2");
+
+		if (horizontal2 > 0)
+			player.SetCurrentSeed(Player.SeedType.TreeSeed);
+		if (horizontal2 < 0)
+			player.SetCurrentSeed(Player.SeedType.VineSeed);
+		if (vertical2 > 0)
+			player.SetCurrentSeed(Player.SeedType.FernSeed);
+		if (vertical2 < 0)
+			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+
+
+		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
+		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+
 		if(!canControl)
 			return;
 
-		if (!player.isSunning()) {
+		if (!player.isSunning() && !player.isConverting()) {
 			if (Input.GetButtonDown ("Jump")) {
 				Jump ();
 			}
@@ -233,14 +259,25 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		if (Input.GetButtonDown ("Sun")) {
-			Sun();
-			player.SetSunning(true);
+			if(canConvert){
+				AnimalConvert();
+				player.SetConverting(true);
+			}
+			else{
+				Sun();
+				player.SetSunning(true);
+			}
 		}
 	}
 	
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+	}
+
+	protected void StopJump() {
+		player.Broadcast("OnStopJumpRequest");
+		player.motor.StopJump();
 	}
 
 	protected void ThrowSeed() {
@@ -258,6 +295,11 @@ public class PlayerController : BaseBehavior {
 		player.motor.Sun();
 	}
 
+	protected void AnimalConvert() {
+		player.Broadcast("OnConvertRequest");
+		player.motor.Convert();
+	}
+
 	public void HandleStun()
 	{
 		if (!canControl) {
@@ -273,12 +315,13 @@ public class PlayerController : BaseBehavior {
 	}
 
 	//essentially check if the blossoms need to be detached/added
-	void checkHealth()
+	public void checkHealth()
 	{
 		int currentHealth = transform.GetComponent<Player> ().GetHealth ();
 		int currTens = currentHealth / 10;
+		currTens -= 1;
 		//checking if lost health
-		if (currTens < 9 && blossoms[currTens+1] != null) {
+		if (currTens < 9 && currTens >= 0) {
 			for(int i = 9; i > currTens; i--)
 			{
 				if(blossoms[i] != null){
@@ -290,7 +333,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//checking if gained health back
-		if (currTens != 10 && blossoms [currTens] == null) {
+		if (currTens <= 10 && currTens >=0) {
 			int i;
 			for ( i = 0; (i < currTens) && (blossoms[currTens-i] == null); i++)
      		{

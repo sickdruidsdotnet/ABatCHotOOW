@@ -1,0 +1,144 @@
+using UnityEngine;
+using System;
+using System.Collections.Generic;
+ 
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+public class MeshTesting : MonoBehaviour {
+   
+    private float distance;
+    private float height = 1.83f;
+    private int partNo = 30;
+    private int groundRes = 25;
+    private Vector2[] groundPos;
+    private float newVel;
+    private float[] ratio;
+    private float g = 9.81f;
+    private float initSpeed = 20f;
+    private float angle = 0f;
+    private float radius = 1f;
+    private int particleCounter = 0;
+ 
+    private Mesh mesh;
+    private List<Vector3> vertices;
+    private int[] triangles;   
+    public Transform angleMeasurer;
+    private Transform _transform;
+    private MeshRenderer meshRenderer;
+   
+    //private bool isActive = true;
+   
+    public Transform cube;
+   
+    private Transform[,] cubeList;
+   
+    // Use this for initialization
+    void Start () {
+       
+        meshRenderer = GetComponent<MeshRenderer>();
+       
+        _transform = transform;
+        vertices = new List<Vector3>();
+        triangles = new int[groundRes*3*partNo*6];
+       
+        cubeList = new Transform[groundRes,3*partNo];
+       
+       
+        GetComponent<MeshFilter>().mesh = mesh = new Mesh();
+        mesh.Clear();
+        mesh.name = "TrajectoryMesh";
+ 
+        float temp = 2* Mathf.PI / groundRes;
+        groundPos = new Vector2[groundRes];
+        ratio = new float[groundRes];
+           
+        angle = Mathf.Deg2Rad*45f; //angle = Mathf.Deg2Rad*AngleConvert(cam.eulerAngles.x);
+        distance = (Mathf.Tan (angle)+Mathf.Sqrt(Mathf.Pow(Mathf.Tan (angle),2f)+height*2f*(g / Mathf.Pow (Mathf.Cos(angle)*initSpeed,2f))))/(g/ Mathf.Pow (Mathf.Cos(angle)*initSpeed,2)); //distance = MidPoint (angle);
+                       
+        for(int i = 0; i < groundRes; i++)
+        {
+            float ang = i * temp;
+            groundPos[i] = new Vector2(radius*Mathf.Cos (ang),radius*Mathf.Sin (ang));
+            float addon = distance + groundPos[i].y;
+ 
+            newVel = height+addon*Mathf.Tan (angle) < 0f ? initSpeed : Mathf.Sqrt(g*Mathf.Pow(addon/Mathf.Cos (angle),2f)/(2f*(height + addon*Mathf.Tan (angle))));
+ 
+            ratio[i] = groundPos[i].x/addon;
+           
+            for(int j = 0; j < 3*partNo; j++)
+            {              
+                float zed = (addon*(j))/partNo;
+                float why = -g*Mathf.Pow (zed,2f)/(2f*Mathf.Pow(Mathf.Cos(angle)*newVel,2f)) + Mathf.Tan (angle)*zed; //float why = TrajectoryHeight(angle, zed, initSpeed);
+                float ecks = ratio[i]*zed;
+                //Debug.Log (instPos + " " + particleCounter);
+                vertices.Add(new Vector3(ecks, why, zed));
+                cubeList[i,j] = Instantiate(cube,  transform.TransformPoint(new Vector3(ecks,why,zed)),Quaternion.identity) as Transform;
+                particleCounter++;
+            }          
+        }      
+       
+        mesh.vertices = vertices.ToArray();
+       
+        for(int i = 0; i < groundRes; i++)
+        {
+            triangles[3*i + 1] = i*90 + 1;
+            triangles[3*i + 2] = (i+1)*90 + 1;         
+            if(3*i+2 == 74) triangles[3*i+2] = 1;
+        }
+       
+        for(int j = 0, k = 0; j < 40; j++)
+        {
+            for(int i = 0; i < groundRes - 1; i++)
+            {
+                triangles[74+ 6*k + 1] = 90*i + 1 + j;
+                triangles[74+ 6*k + 2] = 90*i + 2 + j;
+                triangles[74+ 6*k + 3] = 90*(i+1) + 2 + j;
+                triangles[74+ 6*k + 4] = 90*(i+1) + 2 + j;
+                triangles[74+ 6*k + 5] = 90*(i+1) + 1 + j;
+                triangles[74+ 6*k + 6] = 90*i + 1 + j;
+               
+                k++;
+            }          
+           
+            triangles[74+ 6*k + 1] = 90*24 + 1 + j;
+            triangles[74+ 6*k + 2] = 90*24 + 2 + j;
+            triangles[74+ 6*k + 3] = 2 + j;
+            triangles[74+ 6*k + 4] = 2 + j;
+            triangles[74+ 6*k + 5] = 1 + j;
+            triangles[74+ 6*k + 6] = 90*24 + 1 + j;
+            k++;
+        }
+       
+        mesh.triangles = triangles;
+        }  
+   
+    void Update()
+    {
+        if(meshRenderer.enabled)
+        {
+            float angle = Mathf.Atan((angleMeasurer.position.y - _transform.position.y)/(angleMeasurer.position.x - _transform.position.x));
+            vertices.Clear();
+           
+            int count = 0;
+           
+            distance = (Mathf.Tan (angle)+Mathf.Sqrt(Mathf.Pow(Mathf.Tan (angle),2f)+height*2f*(g / Mathf.Pow (Mathf.Cos(angle)*initSpeed,2f))))/(g/ Mathf.Pow (Mathf.Cos(angle)*initSpeed,2)); //distance = MidPoint (angle);
+   
+            for(int j = 0; j < groundRes; j++)
+            {
+                float addon = distance + groundPos[j].y < 0 ? -(distance + groundPos[j].y) : distance + groundPos[j].y;
+                float newVel = height+addon*Mathf.Tan (angle) < 0 ? initSpeed : Mathf.Sqrt(g*Mathf.Pow(addon/Mathf.Cos (angle),2f)/(2f*(height + addon*Mathf.Tan (angle))));
+                ratio[j] = groundPos[j].x/addon;
+               
+                for(int i = 0; i < 3*partNo; i++)
+                {
+                    float zed = (addon*i)/partNo;
+                    float why = -g*Mathf.Pow (zed,2f)/(2f*Mathf.Pow(Mathf.Cos(angle)*newVel,2f)) + Mathf.Tan (angle)*zed; //float why = TrajectoryHeight(angle, zed, initSpeed);
+                    float ecks = ratio[j]*zed;
+                   
+                    cubeList[j,i].position = transform.TransformPoint(new Vector3(ecks,why,zed));
+                    vertices.Add(new Vector3(ecks,why,zed));
+                    count++;
+                }          
+            }      
+           
+            mesh.vertices = vertices.ToArray();
+        }
