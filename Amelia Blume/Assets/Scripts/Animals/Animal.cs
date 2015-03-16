@@ -50,6 +50,9 @@ public class Animal : MonoBehaviour
 		//unrestrain as it's no longer a threat, move it to background
 		isRestrained = false;
 		transform.position = new Vector3 (transform.position.x, transform.position.y, 4f);
+		BroadcastMessage ("clearInfection");
+		//quit spawning spores unecessarily
+		isSpored = false;
     }
 
 

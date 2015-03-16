@@ -46,6 +46,10 @@ public class Deer : Animal
 		sporeResistance = 10f;
 		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 
+		if (!isInfected) {
+			BroadcastMessage ("clearInfection");
+		}
+
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
 		if (playerObject == null) {

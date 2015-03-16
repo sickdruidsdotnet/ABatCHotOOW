@@ -11,7 +11,7 @@ public class RGBandHSVconverter{
 	 * V - Value/Brightness. Any value from 0 to 1
 	 * A - Alpha. Any value from 0 to 1
 	 */
-	public static Color HSVtoRGB(float H, float S, float V){
+	public static Color HSVtoRGB(float H, float S, float V, float A = 1){
 		S = Mathf.Clamp (S, 0, 1);
 		V = Mathf.Clamp (V, 0, 1);
 		Color ret = new Color ();
@@ -53,6 +53,7 @@ public class RGBandHSVconverter{
 		ret.r += m;
 		ret.g += m;
 		ret.b += m;
+		ret.a = A;
 		return ret;
 	}
 
@@ -86,6 +87,43 @@ public class RGBandHSVconverter{
 		h *= 60;				// degrees
 		if( h < 0 )
 			h += 360;
+
+		//h = h / 255;
+
+		return new Vector3(h,s,v);
+	}
+
+	public static Vector3 RGBtoHSV( Color rgb )
+	{
+		float h;
+		float s; 
+		float v;
+		float min; 
+		float max; 
+		float delta;
+		min = Mathf.Min( rgb.r, rgb.g, rgb.b);
+		max = Mathf.Max( rgb.r, rgb.g, rgb.b );
+		v = max;				// v
+		delta = max - min;
+		if( max != 0 )
+			s = delta / max;		// s
+		else {
+			// r = g = b = 0		// s = 0, v is undefined
+			s = 0;
+			h = -1;
+			
+			return new Vector3(h,s,v);
+		}
+		if( rgb.r == max )
+			h = ( rgb.g - rgb.b ) / delta;		// between yellow & magenta
+		else if( rgb.g == max )
+			h = 2 + ( rgb.b - rgb.r ) / delta;	// between cyan & yellow
+		else
+			h = 4 + ( rgb.r - rgb.g ) / delta;	// between magenta & cyan
+		h *= 60;				// degrees
+		if( h < 0 )
+			h += 360;
+		//h = h / 255f;
 
 		return new Vector3(h,s,v);
 	}
