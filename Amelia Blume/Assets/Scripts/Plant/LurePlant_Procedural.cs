@@ -9,11 +9,13 @@ public class LurePlant_Procedural : Plant {
 	private GameObject[] animals;
 	public int health;
 	private Animal animalCon;
+	public PlantSettings plantSettings;
 
 	[System.Serializable]
 	public class PlantSettings {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
-		public int resolution = 5;
+		public int stalkRingResolution = 8;
+		public float stalkSegLength = 0.1f;
 		public float maxStalkHeight = 2.0f;
 		public float maxStalkWidth = 0.1f;
 		public float maxOvarySize = 0.08f;
@@ -26,9 +28,18 @@ public class LurePlant_Procedural : Plant {
 		public float leafSize = 0.6f;
 	}
 
+	private int lastNodeCount = 0;
+
 	// Use this for initialization
 	void Start () {
+
+		plantSettings = new PlantSettings();
+
 		stalk = Instantiate(Resources.Load("LurePlant/PlantStalk"), transform.position, Quaternion.identity) as GameObject;
+		stalk.transform.parent = gameObject.transform;
+		stalk.GetComponent<PlantStalk>().resolution = plantSettings.stalkRingResolution;
+		stalk.GetComponent<PlantStalk>().maxSegLength = plantSettings.stalkSegLength;
+
 
 		animals = GameObject.FindGameObjectsWithTag ("Animal");
 		health = 120;
@@ -44,11 +55,29 @@ public class LurePlant_Procedural : Plant {
 	public override void Update()
 	{
 		base.Update();
+
+		// grow a leaf at each new node, excluding the top and bottom
+		int nodeCount = stalk.GetComponent<PlantStalk>().getNodeCount();
+		if (lastNodeCount < nodeCount)
+		{
+			if (nodeCount > 3)
+			{
+				int growNode = nodeCount - 3;
+				Debug.Log("Spawning leaf at node " + growNode);
+				spawnLeaf(growNode, Random.Range(0f, 360f));
+			}
+
+			lastNodeCount = nodeCount;
+		}
+
+
+		/*
 		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
 		{
-			spawnLeaf(5,0f);
+			spawnLeaf(5,90f);
 			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
 		}
+		*/
 	}
 
     private void spawnLeaf(int node, float rotation)
@@ -68,6 +97,7 @@ public class LurePlant_Procedural : Plant {
     	stalk.GetComponent<PlantStalk>().repositionLeaf(leaf);
     }
 
+    /*
 	void OnTriggerStay(Collider other)
 	{
 		Debug.Log ("collision stay");
@@ -75,5 +105,6 @@ public class LurePlant_Procedural : Plant {
 			this.health-=1;
 		}
 	}
+	*/
 	
 }

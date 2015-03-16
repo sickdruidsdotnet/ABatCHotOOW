@@ -38,10 +38,11 @@ public class PlantStalk : MonoBehaviour
 	
 	public List<StalkNode> skeleton;
 
-	private int resolution = 8;
-	private float initialRadius = 0.05f;
+	public int resolution = 8;
+	private float initialRadius = 0.02f;
+	private float maxRadius = 0.06f;
 	private float initialSegLength = 0.1f;
-	private float maxSegLength = 0.1f;
+	public float maxSegLength = 0.1f;
 
 
 	private float ringRadians;
@@ -50,7 +51,7 @@ public class PlantStalk : MonoBehaviour
 
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
-	private float growthRate = 0.5f;
+	private float growthRate = 0.1f;
 	public float lengthGoal;
 	private float growthStart;
 
@@ -111,8 +112,8 @@ public class PlantStalk : MonoBehaviour
 		{
 			isGrowing = false;
 			debugDoneGrowing = true;
+			printSkeletonInfo();
 		}
-
 	}
 
 	private void createInitialStalkSkeleton()
@@ -147,7 +148,7 @@ public class PlantStalk : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(initialRadius, newGrowth, skeleton.Last().direction);
+			addSegment(initialRadius, newGrowth, varyDirection(skeleton.Last().direction, 10f));
 		}
 		else
 		{
@@ -164,11 +165,34 @@ public class PlantStalk : MonoBehaviour
 			{
 				skeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialRadius, overflow, skeleton.Last().direction);
+				addSegment(initialRadius, overflow, varyDirection(skeleton.Last().direction, 10f));
 			}
 		}
 
 		updateSkeleton(skeleton);
+
+		// Update the width of the stalk.
+		// Usually, only the top X nodes will need to grow in width
+
+
+	}
+
+	private Vector3 varyDirection(Vector3 inVec, float maxAngle)
+	{
+		float xRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
+		float yRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
+		float zRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
+
+		// rotate along X
+		inVec = Quaternion.AngleAxis(xRot, Vector3.right) * inVec;
+
+		// rotate along Y
+		inVec = Quaternion.AngleAxis(yRot, Vector3.forward) * inVec;
+
+		// rotate along Z
+		inVec = Quaternion.AngleAxis(zRot, Vector3.up) * inVec;
+
+		return inVec;
 	}
 
 	private void updateSkeleton(List<StalkNode> s)
@@ -480,7 +504,11 @@ public class PlantStalk : MonoBehaviour
 
 			return 0f;
 		}
-			
+	}
+
+	public int getNodeCount()
+	{
+		return skeleton.Count;
 	}
 
 	public void repositionLeaf(GameObject leaf)
@@ -499,7 +527,7 @@ public class PlantStalk : MonoBehaviour
 		leaf.transform.localPosition = Vector3.zero;
 
 		// translate leaf to edge of target node's stalk radius
-		leaf.transform.localPosition += new Vector3(skeleton[node].radius, 0, 0);
+		leaf.transform.localPosition += new Vector3(skeleton[node].radius * .9f, 0, 0);
 
 		// rotate leaf around the stalk by growthAngle
 		leaf.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.up) * leaf.transform.localPosition;
@@ -514,20 +542,11 @@ public class PlantStalk : MonoBehaviour
 		leaf.transform.localPosition = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * leaf.transform.localPosition;
 		leaf.transform.localPosition = Quaternion.AngleAxis(bisectAngle, bisectAxis) * leaf.transform.localPosition;
 
-		leaf.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up) * leaf.transform.localRotation; // try swapping these if it looks wrong
+		leaf.transform.localRotation = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * leaf.transform.localRotation; // try swapping these if it looks wrong
 		leaf.transform.localRotation = Quaternion.AngleAxis(bisectAngle, bisectAxis) * leaf.transform.localRotation; // try swapping these if it looks wrong
 
 		// add node's position to the leaf position to move it into place
 		leaf.transform.localPosition += skeleton[node].startPoint;
-
-
-
-
-
-
-
-
-
 	}
 
 	public void setGrowthInfo(float goal, float rate)
@@ -538,7 +557,7 @@ public class PlantStalk : MonoBehaviour
 
 	public void printSkeletonInfo()
 	{
-		string stalkInfo = "Number of nodes: " + skeleton.Count
+		string stalkInfo = "Number of stalk nodes: " + skeleton.Count
 						   + "\nStalk Length: " + getTotalLength();
 
 		string nodeInfo = "";
@@ -548,6 +567,9 @@ public class PlantStalk : MonoBehaviour
 			nodeInfo += "Node #" + node + "\n";
 			nodeInfo += "\tStart: " + skeleton[node].startPoint + "\n";
 			nodeInfo += "\tEnd: " + skeleton[node].getNodeEndPoint() + "\n";
+			nodeInfo += "\tDirection: " + skeleton[node].direction.ToString("F4") + "\n";
+			nodeInfo += "\tLength: " + skeleton[node].length + "\n";
+			nodeInfo += "\tRadius: " + skeleton[node].radius + "\n";
 		}
 
 		Debug.Log(stalkInfo + "\n" + nodeInfo);

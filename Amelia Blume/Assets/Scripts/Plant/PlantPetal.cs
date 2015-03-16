@@ -8,15 +8,15 @@ Class Description
 */
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class PlantLeaf : MonoBehaviour
+public class PlantPetal : MonoBehaviour
 {
-	public class LeafNode {
+	public class PetalNode {
 		public float width;
 		public float length;
 		public Vector3 startPoint;
 		public Vector3 direction;
 
-		public LeafNode(float wid, float magnitude, Vector3 start, Vector3 normalizedRay)
+		public PetalNode(float wid, float magnitude, Vector3 start, Vector3 normalizedRay)
 		{
 			width = wid;
 			length = magnitude;
@@ -40,7 +40,7 @@ public class PlantLeaf : MonoBehaviour
 		}
 	}
 
-	public List<LeafNode> skeleton;
+	public List<PetalNode> skeleton;
 
 	public int stalkNode;
 	public float growthAngle;
@@ -72,7 +72,7 @@ public class PlantLeaf : MonoBehaviour
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
-		leafMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
+		leafMat = Resources.Load("Materials/LurePlantMagenta", typeof(Material)) as Material;
 		meshRenderer.material = leafMat;
 
 		_transform = transform;
@@ -85,7 +85,7 @@ public class PlantLeaf : MonoBehaviour
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
 		uvs = new List<Vector2>();
-		skeleton = new List<LeafNode>();
+		skeleton = new List<PetalNode>();
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
@@ -127,7 +127,7 @@ public class PlantLeaf : MonoBehaviour
 
 	private void createInitialLeafSkeleton()
 	{
-		skeleton.Add(new LeafNode(initialWidth, 0, Vector3.zero, Vector3.right));
+		skeleton.Add(new PetalNode(initialWidth, 0, Vector3.zero, Vector3.right));
 		createMesh();
 	}
 
@@ -157,7 +157,7 @@ public class PlantLeaf : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(initialWidth, newGrowth, curlNode(skeleton.Last().direction, 45f));
+			addSegment(initialWidth, newGrowth, skeleton.Last().direction);
 		}
 		else
 		{
@@ -174,21 +174,14 @@ public class PlantLeaf : MonoBehaviour
 			{
 				skeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialWidth, overflow, curlNode(skeleton.Last().direction, 45f));
+				addSegment(initialWidth, overflow, skeleton.Last().direction);
 			}
 		}
 
 		updateSkeleton(skeleton);
 	}
 
-	private Vector3 curlNode(Vector3 inVec, float angle)
-	{
-		inVec = Quaternion.AngleAxis(angle, Vector3.forward) * inVec;
-
-		return inVec;
-	}
-
-	private void updateSkeleton(List<LeafNode> s)
+	private void updateSkeleton(List<PetalNode> s)
 	{
 		// Iterate through all the nodes and make sure the start points correspond 
 		// to the ends of the previous nodes.
@@ -509,7 +502,7 @@ public class PlantLeaf : MonoBehaviour
 		}
 
 		skeleton.Last().length = magnitude;
-		LeafNode newNode = new LeafNode(wid, 0, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
+		PetalNode newNode = new PetalNode(wid, 0, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
 		skeleton.Add(newNode);
 
 		expandMesh();
