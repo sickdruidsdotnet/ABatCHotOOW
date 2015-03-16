@@ -18,7 +18,7 @@ public class PlantSway : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (inPassingLeft || inPassingRight) {
 			//handle things moving left passed it
 			if (inPassingLeft) {
