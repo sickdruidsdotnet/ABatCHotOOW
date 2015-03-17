@@ -72,7 +72,7 @@ public class Vine : MonoBehaviour
 	private Color vineColor = Color.green;
 
 	private float growthRate = 0.05f;
-	public float lengthGoal;
+	public float lengthGoal = 2.0f;
 	private float growthStart;
 
 	public float length;
@@ -127,7 +127,7 @@ public class Vine : MonoBehaviour
 		numTriVerts = 3 * numTriangles;
 		ringRadians = 2 * Mathf.PI / vineSettings.resolution;
 
-		lengthGoal = growthStart = initialSegLength;
+		growthStart = initialSegLength;
 
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
@@ -169,7 +169,7 @@ public class Vine : MonoBehaviour
 		}
 		else if (wasGrowing)
 		{
-			printSkeletonInfo();
+			//printSkeletonInfo();
 			isGrowing = false;
 		}
 
@@ -196,6 +196,7 @@ public class Vine : MonoBehaviour
 	// Debug drawing of the skeleton.
 	// Uncheck the vine's Mesh Renderer in the Inspector to turn off mesh
 	// for easier skeleton viewing.
+	/*
 	void OnDrawGizmos()
 	{
 		// Avoid NPE in the editor when the game isn't running,
@@ -239,6 +240,7 @@ public class Vine : MonoBehaviour
 		}
 			
 	}
+	*/
 
 	/*
 	SKELETON FUNCTIONS
@@ -264,6 +266,9 @@ public class Vine : MonoBehaviour
 		// The segment before the tip ring will be extended. If it reaches its max length,
 		// then a new segment will be added, and the overflow growth distance
 		// will be its initial length.
+
+		//Debug.Log("Entered growVine()");
+		//Debug.Break();
 
 		float newGrowth = (lengthGoal - growthStart) * growthRate * Time.deltaTime;
 		int growIndex = vineSkeleton.Count - 2;
