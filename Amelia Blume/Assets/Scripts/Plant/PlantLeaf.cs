@@ -51,6 +51,8 @@ public class PlantLeaf : MonoBehaviour
 	private float maxSegLength = 0.05f;
 	private float leafThickness = 0.01f;
 	private float leafWidth = 0.08f;
+	private float curlStart = 0f;
+	private float curlBloom = 0f;
 
 	public float length;
 
@@ -95,10 +97,12 @@ public class PlantLeaf : MonoBehaviour
 		printSkeletonInfo();
 	}
 
-	public void setLeafInfo(int node, float angle)
+	public void setLeafInfo(int node, float angle, float s, float b)
 	{
 		stalkNode = node;
 		growthAngle = angle;
+		curlStart = s;
+		curlBloom = b;
 	}
 
 	void Update()
@@ -157,7 +161,7 @@ public class PlantLeaf : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(initialWidth, newGrowth, curlNode(skeleton.Last().direction, 45f));
+			addSegment(initialWidth, newGrowth, curlNode(skeleton.Last().direction, curlStart));
 		}
 		else
 		{
@@ -174,7 +178,7 @@ public class PlantLeaf : MonoBehaviour
 			{
 				skeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialWidth, overflow, curlNode(skeleton.Last().direction, 45f));
+				addSegment(initialWidth, overflow, curlNode(skeleton.Last().direction, curlStart));
 			}
 		}
 

@@ -45,12 +45,14 @@ public class PlantPetal : MonoBehaviour
 	public int stalkNode;
 	public float growthAngle;
 
-	private int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE LEAF AND DO BAD THINGS.
+	private int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE PETAL AND DO BAD THINGS.
 	private float initialWidth = 0.1f;
 	private float initialSegLength = 0f;
 	private float maxSegLength = 0.05f;
-	private float leafThickness = 0.01f;
-	private float leafWidth = 0.08f;
+	private float petalThickness = 0.01f;
+	private float petalWidth = 0.08f;
+	private float curlStart = 0f;
+	private float curlBloom = 0f;
 
 	public float length;
 
@@ -67,13 +69,13 @@ public class PlantPetal : MonoBehaviour
 	private Mesh mesh;
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
-	private Material leafMat;
+	private Material petalMat;
 
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
-		leafMat = Resources.Load("Materials/LurePlantMagenta", typeof(Material)) as Material;
-		meshRenderer.material = leafMat;
+		petalMat = Resources.Load("Materials/LurePlantMagenta", typeof(Material)) as Material;
+		meshRenderer.material = petalMat;
 
 		_transform = transform;
 
@@ -89,16 +91,18 @@ public class PlantPetal : MonoBehaviour
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
-		mesh.name = "PlantLeaf";
+		mesh.name = "PlantPetal";
 
-		createInitialLeafSkeleton();
+		createInitialPetalSkeleton();
 		printSkeletonInfo();
 	}
 
-	public void setLeafInfo(int node, float angle)
+	public void setPetalInfo(int node, float angle, float s, float b)
 	{
 		stalkNode = node;
 		growthAngle = angle;
+		curlStart = s;
+		curlBloom = b;
 	}
 
 	void Update()
@@ -109,7 +113,7 @@ public class PlantPetal : MonoBehaviour
 		// update skeleton structure (such as adding a new segment)
 		if (getTotalLength() < lengthGoal)
 		{
-			growLeaf();
+			growPetal();
 
 			if (!wasGrowing)
 			{
@@ -125,13 +129,13 @@ public class PlantPetal : MonoBehaviour
 
 	}
 
-	private void createInitialLeafSkeleton()
+	private void createInitialPetalSkeleton()
 	{
 		skeleton.Add(new PetalNode(initialWidth, 0, Vector3.zero, Vector3.right));
 		createMesh();
 	}
 
-	private void growLeaf()
+	private void growPetal()
 	{
 		// Extend the length of the stalk.
 		// The segment before the tip ring will be extended. If it reaches its max length,
@@ -144,7 +148,7 @@ public class PlantPetal : MonoBehaviour
 		// should probably throw an error if newGrowth > maxSegLength
 		if (newGrowth > maxSegLength)
 		{
-			Debug.Log("Whoops, newGrowth > maxSegLength in growLeaf(). We should do something to handle this case.");
+			Debug.Log("Whoops, newGrowth > maxSegLength in growPetal(). We should do something to handle this case.");
 		}
 
 		// trim the new growth if our stalk is overshooting the total length goal
@@ -157,7 +161,7 @@ public class PlantPetal : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(initialWidth, newGrowth, skeleton.Last().direction);
+			addSegment(initialWidth, newGrowth, curlNode(skeleton.Last().direction, curlStart));
 		}
 		else
 		{
@@ -174,11 +178,18 @@ public class PlantPetal : MonoBehaviour
 			{
 				skeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialWidth, overflow, skeleton.Last().direction);
+				addSegment(initialWidth, overflow, curlNode(skeleton.Last().direction, curlStart));
 			}
 		}
 
 		updateSkeleton(skeleton);
+	}
+
+	private Vector3 curlNode(Vector3 inVec, float angle)
+	{
+		inVec = Quaternion.AngleAxis(angle, Vector3.forward) * inVec;
+
+		return inVec;
 	}
 
 	private void updateSkeleton(List<PetalNode> s)
@@ -219,13 +230,13 @@ public class PlantPetal : MonoBehaviour
 
 		for (int node = 0; node < skeleton.Count; node++)
 		{
-			// define and push the four corners of this leaf "ring"
+			// define and push the four corners of this petal "ring"
 			// for reference, we are "looking" in the direction of the node's direction vec
 
-			Vector3 topLeft = skeleton[node].startPoint + new Vector3(0f, leafThickness / 2f, skeleton[node].width / 2f);
-			Vector3 topRight = skeleton[node].startPoint + new Vector3(0f, leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomRight = skeleton[node].startPoint + new Vector3(0f, -leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomLeft = skeleton[node].startPoint + new Vector3(0f, -leafThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topLeft = skeleton[node].startPoint + new Vector3(0f, petalThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topRight = skeleton[node].startPoint + new Vector3(0f, petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomRight = skeleton[node].startPoint + new Vector3(0f, -petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomLeft = skeleton[node].startPoint + new Vector3(0f, -petalThickness / 2f, skeleton[node].width / 2f);
 
 			vertices.Add(topLeft);
 			vertices.Add(topRight);
@@ -314,13 +325,13 @@ public class PlantPetal : MonoBehaviour
 		for (int node = prevSegCount; node < newSegCount; node++)
 		{
 
-			// define and push the four corners of this leaf "ring"
+			// define and push the four corners of this petal "ring"
 			// for reference, we are "looking" in the direction of the node's direction vec
 
-			Vector3 topLeft = skeleton[node].startPoint + new Vector3(0f, leafThickness / 2f, skeleton[node].width / 2f);
-			Vector3 topRight = skeleton[node].startPoint + new Vector3(0f, leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomRight = skeleton[node].startPoint + new Vector3(0f, -leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomLeft = skeleton[node].startPoint + new Vector3(0f, -leafThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topLeft = skeleton[node].startPoint + new Vector3(0f, petalThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topRight = skeleton[node].startPoint + new Vector3(0f, petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomRight = skeleton[node].startPoint + new Vector3(0f, -petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomLeft = skeleton[node].startPoint + new Vector3(0f, -petalThickness / 2f, skeleton[node].width / 2f);
 
 			vertices.Add(topLeft);
 			uvs.Add(new Vector2(0,0));
@@ -421,7 +432,7 @@ public class PlantPetal : MonoBehaviour
 			// determine the width for this segment
 
 			float nodeLoc = getNodeLocation(node);
-			skeleton[node].width = leafWidthFunction(nodeLoc) * leafWidth;
+			skeleton[node].width = petalWidthFunction(nodeLoc) * petalWidth;
 
 			debugString += "\n\t\tnodeLoc: " + nodeLoc;
 			debugString += "\n\t\twidth: " + skeleton[node].width;
@@ -453,10 +464,10 @@ public class PlantPetal : MonoBehaviour
 
 			//create the "ring" around the origin
 
-			Vector3 topLeft = new Vector3(0f, leafThickness / 2f, skeleton[node].width / 2f);
-			Vector3 topRight = new Vector3(0f, leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomRight = new Vector3(0f, -leafThickness / 2f, -skeleton[node].width / 2f);
-			Vector3 bottomLeft = new Vector3(0f, -leafThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topLeft = new Vector3(0f, petalThickness / 2f, skeleton[node].width / 2f);
+			Vector3 topRight = new Vector3(0f, petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomRight = new Vector3(0f, -petalThickness / 2f, -skeleton[node].width / 2f);
+			Vector3 bottomLeft = new Vector3(0f, -petalThickness / 2f, skeleton[node].width / 2f);
 
 			// now rotate it properly.
 			// First to the normal of the previous node's direction...
@@ -531,10 +542,10 @@ public class PlantPetal : MonoBehaviour
 
 	private float getNodeLocation(int node)
 	{
-		// returns a value between 0 and 1 to represent the node's loaction along the leaf's length.
+		// returns a value between 0 and 1 to represent the node's loaction along the petal's length.
 		// 0 is the base, 1 is the tip.
 		// this function is mainly used to determine the node's width.
-		float leafLength = getTotalLength();
+		float petalLength = getTotalLength();
 		float location = 0f;
 		float nodeDistance = 0f;
 
@@ -543,22 +554,22 @@ public class PlantPetal : MonoBehaviour
 			nodeDistance += skeleton[n].length;
 		}
 
-		location = nodeDistance / leafLength;
+		location = nodeDistance / petalLength;
 
 		return location;
 
 	}
 
-	private float leafWidthFunction(float x)
+	private float petalWidthFunction(float x)
 	{
 
-		// x is a number between 0 and 1 defining it's position along the leaf
+		// x is a number between 0 and 1 defining it's position along the petal
 
 
-		// Third Order Polynomial defining the leaf's shape
+		// Third Order Polynomial defining the petal's shape
 		float y = 5.333f * (x*x*x) -11.886f * (x*x) + 5.952f * (x) + 0.614f;
 
-		// since this defines only one side of the leaf, mulitply by two to get full width
+		// since this defines only one side of the petal, mulitply by two to get full width
 
 		return y;
 	}
@@ -571,8 +582,8 @@ public class PlantPetal : MonoBehaviour
 
 	public void printSkeletonInfo()
 	{
-		string stalkInfo = "Number of leaf nodes: " + skeleton.Count
-						   + "\nLeaf Length: " + getTotalLength();
+		string stalkInfo = "Number of petal nodes: " + skeleton.Count
+						   + "\nPetal Length: " + getTotalLength();
 
 		string nodeInfo = "";
 

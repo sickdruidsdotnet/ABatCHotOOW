@@ -60,27 +60,38 @@ public class LurePlant_Procedural : Plant {
 		int nodeCount = stalk.GetComponent<PlantStalk>().getNodeCount();
 		if (lastNodeCount < nodeCount)
 		{
+			if (nodeCount > 1)
+			{
+				spawnBud(5, 45f, 0f);
+
+			}
+
 			if (nodeCount > 3)
 			{
 				int growNode = nodeCount - 3;
 				Debug.Log("Spawning leaf at node " + growNode);
-				spawnLeaf(growNode, Random.Range(0f, 360f));
+				spawnLeaf(growNode, Random.Range(0f, 360f), Random.Range(-30f, 30f), 0);
 			}
 
 			lastNodeCount = nodeCount;
 		}
 
+		if (petals.Count > 0)
+		{
+			stalk.GetComponent<PlantStalk>().repositionBud(petals);
+		}
 
-		/*
+
+		
 		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
 		{
-			spawnLeaf(5,90f);
+			
 			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
 		}
-		*/
+		
 	}
 
-    private void spawnLeaf(int node, float rotation)
+    private void spawnLeaf(int node, float rotation, float curlStart, float curlBloom)
     {
     	GameObject leaf;
     	leaf = Instantiate(Resources.Load("LurePlant/PlantLeaf"), transform.position, Quaternion.identity) as GameObject;
@@ -93,8 +104,38 @@ public class LurePlant_Procedural : Plant {
     		Debug.Log("stalk is null?");
     	}
     	leaf.transform.parent = stalk.transform;
-    	leaf.GetComponent<PlantLeaf>().setLeafInfo(node, rotation);
+    	leaf.GetComponent<PlantLeaf>().setLeafInfo(node, rotation, curlStart, curlBloom);
     	stalk.GetComponent<PlantStalk>().repositionLeaf(leaf);
+    	leaves.Add(leaf);
+    }
+
+    private void spawnBud(int numPetals, float curlStart, float curlBloom)
+    {
+    	int lastNodeIndex = stalk.GetComponent<PlantStalk>().getNodeCount() - 1;
+    	float petalAngle = 360f / numPetals;
+
+    	for (int p = 0; p < numPetals; p++)
+    	{
+    		spawnPetal(lastNodeIndex, petalAngle * (p+1), curlStart, curlBloom);
+    	}
+    }
+
+    private void spawnPetal(int node, float rotation, float curlStart, float curlBloom)
+    {
+    	GameObject petal;
+    	petal = Instantiate(Resources.Load("LurePlant/PlantPetal"), transform.position, Quaternion.identity) as GameObject;
+    	if (petal == null)
+    	{
+    		Debug.Log("petal is null?");
+    	}
+    	if (stalk == null)
+    	{
+    		Debug.Log("stalk is null?");
+    	}
+    	petal.transform.parent = stalk.transform;
+    	petal.GetComponent<PlantPetal>().setPetalInfo(node, rotation, curlStart, curlBloom);
+    	stalk.GetComponent<PlantStalk>().repositionLeaf(petal);
+    	petals.Add(petal);
     }
 
     /*

@@ -43,6 +43,7 @@ public class PlantStalk : MonoBehaviour
 	private float maxRadius = 0.06f;
 	private float initialSegLength = 0.1f;
 	public float maxSegLength = 0.1f;
+	public float crookedFactor = 10f;
 
 
 	private float ringRadians;
@@ -148,7 +149,7 @@ public class PlantStalk : MonoBehaviour
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(initialRadius, newGrowth, varyDirection(skeleton.Last().direction, 10f));
+			addSegment(initialRadius, newGrowth, varyDirection(skeleton.Last().direction, crookedFactor));
 		}
 		else
 		{
@@ -165,7 +166,7 @@ public class PlantStalk : MonoBehaviour
 			{
 				skeleton[growIndex].length = maxSegLength;
 				float overflow = newSegLength - maxSegLength;
-				addSegment(initialRadius, overflow, varyDirection(skeleton.Last().direction, 10f));
+				addSegment(initialRadius, overflow, varyDirection(skeleton.Last().direction, crookedFactor));
 			}
 		}
 
@@ -179,6 +180,7 @@ public class PlantStalk : MonoBehaviour
 
 	private Vector3 varyDirection(Vector3 inVec, float maxAngle)
 	{
+		/*
 		float xRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
 		float yRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
 		float zRot = UnityEngine.Random.Range(-maxAngle, maxAngle);
@@ -191,6 +193,13 @@ public class PlantStalk : MonoBehaviour
 
 		// rotate along Z
 		inVec = Quaternion.AngleAxis(zRot, Vector3.up) * inVec;
+		*/
+
+		float angle = UnityEngine.Random.Range(-maxAngle, maxAngle);
+
+		Vector3 axis = UnityEngine.Random.insideUnitSphere;
+
+		inVec = Quaternion.AngleAxis(angle, axis) * inVec;
 
 		return inVec;
 	}
@@ -513,8 +522,25 @@ public class PlantStalk : MonoBehaviour
 
 	public void repositionLeaf(GameObject leaf)
 	{
-		int node = leaf.GetComponent<PlantLeaf>().stalkNode;
-		float angle = leaf.GetComponent<PlantLeaf>().growthAngle;
+		int node = 0;
+		float angle = 0f;
+
+		if (leaf.GetComponent<PlantLeaf>() != null)
+		{
+			node = leaf.GetComponent<PlantLeaf>().stalkNode;
+			angle = leaf.GetComponent<PlantLeaf>().growthAngle;
+		}
+		else if (leaf.GetComponent<PlantPetal>() != null)
+		{
+			node = leaf.GetComponent<PlantPetal>().stalkNode;
+			angle = leaf.GetComponent<PlantPetal>().growthAngle;
+		}
+		else
+		{
+			Debug.Log("in repositionLeaf(), leaf is neither a leaf or a petal");
+			Debug.Break();
+		}
+		
 		if (node == 0)
 		{
 			Debug.Log("Error, leaf attempting to grow on base node");
@@ -547,6 +573,20 @@ public class PlantStalk : MonoBehaviour
 
 		// add node's position to the leaf position to move it into place
 		leaf.transform.localPosition += skeleton[node].startPoint;
+	}
+
+	public void repositionBud(List<GameObject> petals)
+	{
+		// always make sure the bud is at the top node.
+		// since the top node changes, we'll need to fix this often.
+
+		int lastStalkNode = getNodeCount() - 1;
+
+		for (int p = 0; p < petals.Count; p++)
+		{
+			petals[p].GetComponent<PlantPetal>().stalkNode = lastStalkNode;
+			repositionLeaf(petals[p]);
+		}
 	}
 
 	public void setGrowthInfo(float goal, float rate)
