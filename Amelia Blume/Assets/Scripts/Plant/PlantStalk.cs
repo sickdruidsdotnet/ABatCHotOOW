@@ -39,11 +39,15 @@ public class PlantStalk : MonoBehaviour
 	public List<StalkNode> skeleton;
 
 	public int resolution = 8;
-	private float initialRadius = 0.02f;
-	private float maxRadius = 0.06f;
-	private float initialSegLength = 0.1f;
+	public float initialRadius = 0.02f;
+	public float maxRadius = 0.02f;
+	public float initialSegLength = 0f;
 	public float maxSegLength = 0.1f;
 	public float crookedFactor = 10f;
+
+	public int colorHue = 100;
+	public float colorSat = 0.5f;
+	public float colorVal = 0.4f;
 
 
 	private float ringRadians;
@@ -52,9 +56,9 @@ public class PlantStalk : MonoBehaviour
 
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
-	private float growthRate = 0.1f;
+	public float growthRate = 0.1f;
 	public float lengthGoal = 1f;
-	private float growthStart;
+	public float growthStart;
 
 
 	private List<Vector3> vertices;
@@ -71,6 +75,10 @@ public class PlantStalk : MonoBehaviour
 		meshRenderer = GetComponent<MeshRenderer>();
 		stalkMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
 		meshRenderer.material = stalkMat;
+
+		float r, g, b;
+		GetComponent<ColorConverter>().HsvToRgb(colorHue, colorSat, colorVal, out r, out g, out b);
+		meshRenderer.material.color = new Color(r,g,b);
 
 		_transform = transform;
 
@@ -91,7 +99,7 @@ public class PlantStalk : MonoBehaviour
 		mesh.name = "PlantStalk";
 
 		createInitialStalkSkeleton();
-		printSkeletonInfo();
+		//printSkeletonInfo();
 	}
 
 	void Update()
@@ -113,7 +121,7 @@ public class PlantStalk : MonoBehaviour
 		{
 			isGrowing = false;
 			debugDoneGrowing = true;
-			printSkeletonInfo();
+			//printSkeletonInfo();
 		}
 	}
 
@@ -236,7 +244,7 @@ public class PlantStalk : MonoBehaviour
 
 		// push the tip vertex
 		vertices.Add(skeleton.Last().startPoint + skeleton.Last().getNodeRay());
-		Debug.Log("tip: " + vertices[0]);
+		//Debug.Log("tip: " + vertices[0]);
 
 		// push vertices for each ring
 
@@ -252,7 +260,7 @@ public class PlantStalk : MonoBehaviour
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
 
 				vertices.Add(skeleton[node].startPoint + relativeVec);
-				Debug.Log("ringVert: " + vertices[ringVert + 1 + (node * res)]);
+				//Debug.Log("ringVert: " + vertices[ringVert + 1 + (node * res)]);
 			}
 		}
 

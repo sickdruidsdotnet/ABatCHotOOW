@@ -45,21 +45,25 @@ public class PlantLeaf : MonoBehaviour
 	public int stalkNode;
 	public float growthAngle;
 
-	private int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE LEAF AND DO BAD THINGS.
-	private float initialWidth = 0.1f;
-	private float initialSegLength = 0f;
-	private float maxSegLength = 0.05f;
-	private float leafThickness = 0.01f;
-	private float leafWidth = 0.08f;
-	private float curlStart = 0f;
-	private float curlBloom = 0f;
+	public int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE LEAF AND DO BAD THINGS.
+	public float initialWidth = 0.1f;
+	public float initialSegLength = 0f;
+	public float maxSegLength = 0.05f;
+	public float leafThickness = 0.01f;
+	public float leafWidth = 0.08f;
+	public float curlStart = 0f;
+	public float curlBloom = 0f;
+
+	public int colorHue = 100;
+	public float colorSat = 0.5f;
+	public float colorVal = 0.4f;
 
 	public float length;
 
 	public bool isGrowing = false;
-	private float growthRate = 0.6f;
-	public float lengthGoal;
-	private float growthStart;
+	public float growthRate = 0.6f;
+	public float lengthGoal = 0.2f;
+	public float growthStart;
 
 
 	private List<Vector3> vertices;
@@ -77,11 +81,15 @@ public class PlantLeaf : MonoBehaviour
 		leafMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
 		meshRenderer.material = leafMat;
 
+		float r, g, b;
+		GetComponent<ColorConverter>().HsvToRgb(colorHue, colorSat, colorVal, out r, out g, out b);
+		meshRenderer.material.color = new Color(r,g,b);
+
 		_transform = transform;
 
 		growthStart = initialSegLength;
 
-		lengthGoal = 0.2f;
+		//lengthGoal = 0.2f;
 
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();

@@ -45,25 +45,29 @@ public class PlantPetal : MonoBehaviour
 	public int stalkNode;
 	public float growthAngle;
 
-	private int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE PETAL AND DO BAD THINGS.
-	private float initialWidth = 0.1f;
-	private float initialSegLength = 0f;
-	private float maxSegLength = 0.05f;
-	private float petalThickness = 0.01f;
-	private float petalWidth = 0.08f;
+	public int resolution = 4; // DO NOT CHANGE THIS, IT WILL BREAK THE PETAL AND DO BAD THINGS.
+	public float initialWidth = 0.1f;
+	public float initialSegLength = 0f;
+	public float maxSegLength = 0.05f;
+	public float petalThickness = 0.01f;
+	public float petalWidth = 0.08f;
 
 	public bool bloomTrigger = false;
 	public bool isBlooming = false;
-	private float curlStart = 0f;
-	private float curlBloom = 0f;
-	private float bloomRate = 1.0f;
+	public float curlStart = 0f;
+	public float curlBloom = 0f;
+	public float bloomRate = 1.0f;
+
+	public int colorHue = 200;
+	public float colorSat = 0.9f;
+	public float colorVal = 0.9f;
 
 	public float length;
 
 	public bool isGrowing = false;
-	private float growthRate = 0.6f;
+	public float growthRate = 0.6f;
 	public float lengthGoal;
-	private float growthStart;
+	public float growthStart;
 
 
 	private List<Vector3> vertices;
@@ -80,6 +84,10 @@ public class PlantPetal : MonoBehaviour
 		meshRenderer = GetComponent<MeshRenderer>();
 		petalMat = Resources.Load("Materials/LurePlantMagenta", typeof(Material)) as Material;
 		meshRenderer.material = petalMat;
+
+		float r, g, b;
+		GetComponent<ColorConverter>().HsvToRgb(colorHue, colorSat, colorVal, out r, out g, out b);
+		meshRenderer.material.color = new Color(r,g,b);
 
 		_transform = transform;
 
@@ -149,7 +157,7 @@ public class PlantPetal : MonoBehaviour
 			else if (wasBlooming)
 			{
 				isBlooming = false;
-				printSkeletonInfo();
+				//printSkeletonInfo();
 			}
 		}
 
