@@ -16,7 +16,7 @@ public class LurePlant_Procedural : Plant {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
 		public int stalkRingResolution = 8;
 		public float stalkSegLength = 0.1f;
-		public float maxStalkHeight = 2.0f;
+		public float maxStalkHeight = 1.0f;
 		public float maxStalkWidth = 0.1f;
 		public float maxOvarySize = 0.08f;
 		public float petalDensity = 0.5f;
@@ -26,6 +26,8 @@ public class LurePlant_Procedural : Plant {
 		public float stamenDensity = 0.5f;
 		public float leafDensity = 0.2f;
 		public float leafSize = 0.6f;
+		public float bloomRate = 0.3f;
+
 	}
 
 	private int lastNodeCount = 0;
@@ -39,6 +41,7 @@ public class LurePlant_Procedural : Plant {
 		stalk.transform.parent = gameObject.transform;
 		stalk.GetComponent<PlantStalk>().resolution = plantSettings.stalkRingResolution;
 		stalk.GetComponent<PlantStalk>().maxSegLength = plantSettings.stalkSegLength;
+		stalk.GetComponent<PlantStalk>().lengthGoal = plantSettings.maxStalkHeight;
 
 
 		animals = GameObject.FindGameObjectsWithTag ("Animal");
@@ -60,16 +63,16 @@ public class LurePlant_Procedural : Plant {
 		int nodeCount = stalk.GetComponent<PlantStalk>().getNodeCount();
 		if (lastNodeCount < nodeCount)
 		{
-			if (nodeCount > 1)
+			if (nodeCount > 1 && petals.Count == 0)
 			{
-				spawnBud(5, 45f, 0f);
+				spawnBud(6, 25f, -5f, plantSettings.bloomRate);
 
 			}
 
 			if (nodeCount > 3)
 			{
 				int growNode = nodeCount - 3;
-				Debug.Log("Spawning leaf at node " + growNode);
+				//Debug.Log("Spawning leaf at node " + growNode);
 				spawnLeaf(growNode, Random.Range(0f, 360f), Random.Range(-30f, 30f), 0);
 			}
 
@@ -85,7 +88,7 @@ public class LurePlant_Procedural : Plant {
 		
 		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
 		{
-			
+			bloomFlower();	
 			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
 		}
 		
@@ -109,18 +112,7 @@ public class LurePlant_Procedural : Plant {
     	leaves.Add(leaf);
     }
 
-    private void spawnBud(int numPetals, float curlStart, float curlBloom)
-    {
-    	int lastNodeIndex = stalk.GetComponent<PlantStalk>().getNodeCount() - 1;
-    	float petalAngle = 360f / numPetals;
-
-    	for (int p = 0; p < numPetals; p++)
-    	{
-    		spawnPetal(lastNodeIndex, petalAngle * (p+1), curlStart, curlBloom);
-    	}
-    }
-
-    private void spawnPetal(int node, float rotation, float curlStart, float curlBloom)
+    private void spawnPetal(int node, float rotation, float curlStart, float curlBloom, float bloomRate)
     {
     	GameObject petal;
     	petal = Instantiate(Resources.Load("LurePlant/PlantPetal"), transform.position, Quaternion.identity) as GameObject;
@@ -133,9 +125,28 @@ public class LurePlant_Procedural : Plant {
     		Debug.Log("stalk is null?");
     	}
     	petal.transform.parent = stalk.transform;
-    	petal.GetComponent<PlantPetal>().setPetalInfo(node, rotation, curlStart, curlBloom);
+    	petal.GetComponent<PlantPetal>().setPetalInfo(node, rotation, curlStart, curlBloom, bloomRate);
     	stalk.GetComponent<PlantStalk>().repositionLeaf(petal);
     	petals.Add(petal);
+    }
+
+    private void spawnBud(int numPetals, float curlStart, float curlBloom, float bloomRate)
+    {
+    	int lastNodeIndex = stalk.GetComponent<PlantStalk>().getNodeCount() - 1;
+    	float petalAngle = 360f / numPetals;
+
+    	for (int p = 0; p < numPetals; p++)
+    	{
+    		spawnPetal(lastNodeIndex, petalAngle * (p+1), curlStart, curlBloom, bloomRate);
+    	}
+    }
+
+    private void bloomFlower()
+    {
+    	for (int p = 0; p < petals.Count; p++)
+    	{
+    		petals[p].GetComponent<PlantPetal>().bloomTrigger = true;
+    	}
     }
 
     /*

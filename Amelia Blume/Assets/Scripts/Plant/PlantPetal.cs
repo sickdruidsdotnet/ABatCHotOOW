@@ -51,8 +51,12 @@ public class PlantPetal : MonoBehaviour
 	private float maxSegLength = 0.05f;
 	private float petalThickness = 0.01f;
 	private float petalWidth = 0.08f;
+
+	public bool bloomTrigger = false;
+	public bool isBlooming = false;
 	private float curlStart = 0f;
 	private float curlBloom = 0f;
+	private float bloomRate = 1.0f;
 
 	public float length;
 
@@ -94,15 +98,15 @@ public class PlantPetal : MonoBehaviour
 		mesh.name = "PlantPetal";
 
 		createInitialPetalSkeleton();
-		printSkeletonInfo();
 	}
 
-	public void setPetalInfo(int node, float angle, float s, float b)
+	public void setPetalInfo(int node, float angle, float cStart, float cBloom, float rate)
 	{
 		stalkNode = node;
 		growthAngle = angle;
-		curlStart = s;
-		curlBloom = b;
+		curlStart = cStart;
+		curlBloom = cBloom;
+		bloomRate = rate;
 	}
 
 	void Update()
@@ -123,15 +127,39 @@ public class PlantPetal : MonoBehaviour
 		else if (wasGrowing)
 		{
 			isGrowing = false;
-			printSkeletonInfo();
-			updateMesh(true);
+			//printSkeletonInfo();
+			//updateMesh(true);
 		}
+
+		if (bloomTrigger)
+		{
+			bool wasBlooming = isBlooming;
+			// check if we still need to bloom more.
+			// this is harder than length, since it depends all node angles
+			// make a function to handle this
+			if (!isDoneBlooming())
+			{
+				bloomPetal();
+
+				if (!wasBlooming)
+				{
+					isBlooming = true;
+				}
+			}
+			else if (wasBlooming)
+			{
+				isBlooming = false;
+				printSkeletonInfo();
+			}
+		}
+
+			
 
 	}
 
 	private void createInitialPetalSkeleton()
 	{
-		skeleton.Add(new PetalNode(initialWidth, 0, Vector3.zero, Vector3.right));
+		skeleton.Add(new PetalNode(initialWidth, 0, Vector3.zero, curlNode(Vector3.right, curlStart)));
 		createMesh();
 	}
 
@@ -183,6 +211,31 @@ public class PlantPetal : MonoBehaviour
 		}
 
 		updateSkeleton(skeleton);
+	}
+
+	private void bloomPetal()
+	{
+		string debugString = "Curling petal:";
+		float amountToCurl = (curlBloom - curlStart) * bloomRate * Time.deltaTime;
+
+		for (int node = 0; node < skeleton.Count; node++)
+		{
+			debugString += "\n\tNode " + node + ":";
+
+			Vector3 curDirection = skeleton[node].direction;
+			debugString += "\n\t\tcurDirection: " + curDirection.ToString("F4");
+
+			Vector3 newDirection = curlNode(curDirection, amountToCurl * (node + 1));
+			debugString += "\n\t\tnewDirection: " + newDirection.ToString("F4");
+
+			debugString += "\n\t\tAmount Curled: " + Vector3.Angle(curDirection, newDirection);
+
+			skeleton[node].direction = newDirection;
+		}
+		//Debug.Log(debugString);
+		//printSkeletonInfo();
+		updateSkeleton(skeleton);
+		//Debug.Break();
 	}
 
 	private Vector3 curlNode(Vector3 inVec, float angle)
@@ -472,10 +525,10 @@ public class PlantPetal : MonoBehaviour
 			// now rotate it properly.
 			// First to the normal of the previous node's direction...
 
-			topLeft = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * topLeft;
-			topRight = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * topRight;
-			bottomRight = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * bottomRight;
-			bottomLeft = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * bottomLeft;
+			topLeft = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * topLeft;
+			topRight = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * topRight;
+			bottomRight = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * bottomRight;
+			bottomLeft = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * bottomLeft;
 
 			// ...and now halfway to the normal of this node's direction. Split the difference.
 
@@ -589,15 +642,108 @@ public class PlantPetal : MonoBehaviour
 
 		for (int node = 0; node < skeleton.Count; node++)
 		{
+			Vector3 prevNodeDirection = Vector3.right;
+			Vector3 curNodeDirection = skeleton[node].direction;
+			float angle;
+			if (node > 0)
+			{
+				prevNodeDirection = skeleton[node - 1].direction;
+			}
+
+			angle = Vector3.Angle(prevNodeDirection, curNodeDirection);
+
 			nodeInfo += "Node #" + node + "\n";
 			nodeInfo += "\tStart: " + skeleton[node].startPoint + "\n";
 			nodeInfo += "\tEnd: " + skeleton[node].getNodeEndPoint() + "\n";
 			nodeInfo += "\tDirection: " + skeleton[node].direction + "\n";
+			nodeInfo += "\tAngle: " + angle + "\n";
 			nodeInfo += "\tLength: " + skeleton[node].length + "\n";
 			nodeInfo += "\tWidth: " + skeleton[node].width + "\n";
 		}
 
 		Debug.Log(stalkInfo + "\n" + nodeInfo);
+	}
+
+	private bool isDoneBlooming()
+	{
+		// first, error check to make sure all nodes have the same rotation
+		List<float> angles = new List<float>();
+		for (int node = 0; node < skeleton.Count; node++)
+		{
+			Vector3 prevNodeDirection = Vector3.right;
+			Vector3 curNodeDirection = skeleton[node].direction;
+			float angle;
+			if (node > 0)
+			{
+				prevNodeDirection = skeleton[node - 1].direction;
+			}
+
+			angle = Vector3.Angle(prevNodeDirection, curNodeDirection);
+
+			angles.Add(angle);
+		}
+
+		// check to see if any elements on the list are not identical to the others
+		// http://stackoverflow.com/questions/5307172/check-if-all-items-are-the-same-in-a-list
+		// due to floating point errors, account for slight differences
+		// http://stackoverflow.com/questions/3420812/how-do-i-find-if-two-variables-are-approximately-equals
+		/*
+		float tolerance = 0.0000001f;
+		if (!angles.All(a => Math.Abs(a - angles.First()) < tolerance))
+		{
+			string debugString = "Angles are not identical. Could be a floating point error though.";
+			
+			for (int a = 0; a < angles.Count; a++)
+			{
+				debugString += "\n\tAngle " + a + ": " + angles[a].ToString("F20");
+			}
+			Debug.Log(debugString);
+			Debug.Break();
+		}
+		*/
+
+		// finally, check if we're done blooming
+		// theoretically, we could be blooming in either direction.
+		Vector3 goalDirection = curlNode(Vector3.right, curlBloom);
+		Vector3 curDirection = skeleton[0].direction;
+		Vector3 nextDirection = curlNode(skeleton[0].direction, (curlBloom - curlStart) * bloomRate * Time.deltaTime);
+		float thisAngle = Vector3.Angle(curDirection, goalDirection);
+		float nextAngle = Vector3.Angle(nextDirection, goalDirection);
+
+		if (thisAngle < nextAngle)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		/*
+		if (curlStart < curlBloom)
+		{
+			if (angles[0] < curlBloom)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (angles[0] > curlBloom)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		*/
+
+
 	}
 
 }

@@ -94,7 +94,7 @@ public class PlantLeaf : MonoBehaviour
 		mesh.name = "PlantLeaf";
 
 		createInitialLeafSkeleton();
-		printSkeletonInfo();
+		//printSkeletonInfo();
 	}
 
 	public void setLeafInfo(int node, float angle, float s, float b)
@@ -123,8 +123,8 @@ public class PlantLeaf : MonoBehaviour
 		else if (wasGrowing)
 		{
 			isGrowing = false;
-			printSkeletonInfo();
-			updateMesh(true);
+			//printSkeletonInfo();
+			//updateMesh(true);
 		}
 
 	}
@@ -472,10 +472,10 @@ public class PlantLeaf : MonoBehaviour
 			// now rotate it properly.
 			// First to the normal of the previous node's direction...
 
-			topLeft = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * topLeft;
-			topRight = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * topRight;
-			bottomRight = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * bottomRight;
-			bottomLeft = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * bottomLeft;
+			topLeft = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * topLeft;
+			topRight = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * topRight;
+			bottomRight = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * bottomRight;
+			bottomLeft = Quaternion.AngleAxis(bottomAngle, prevSegAxis) * bottomLeft;
 
 			// ...and now halfway to the normal of this node's direction. Split the difference.
 

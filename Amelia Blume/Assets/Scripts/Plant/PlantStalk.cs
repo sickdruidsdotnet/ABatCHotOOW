@@ -53,7 +53,7 @@ public class PlantStalk : MonoBehaviour
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
 	private float growthRate = 0.1f;
-	public float lengthGoal;
+	public float lengthGoal = 1f;
 	private float growthStart;
 
 
@@ -78,7 +78,7 @@ public class PlantStalk : MonoBehaviour
 
 		growthStart = initialSegLength;
 
-		lengthGoal = 1f;
+		//lengthGoal = 1f;
 
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
