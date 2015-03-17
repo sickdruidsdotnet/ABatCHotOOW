@@ -390,6 +390,7 @@ public class Deer : Animal
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
 		}
 		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController> ().isStunned = true;
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
