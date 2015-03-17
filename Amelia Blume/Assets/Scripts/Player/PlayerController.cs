@@ -12,6 +12,12 @@ public class PlayerController : BaseBehavior {
 		
 	public bool running = false;
 	public bool alwaysRun = false;
+	public bool isRunning = false;
+
+	public bool isDashing = false;
+	public bool isJumping = false;
+	public bool isAirDashing = false;
+	public bool isStunned = false;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -126,9 +132,14 @@ public class PlayerController : BaseBehavior {
 
 		if (player.isGrounded && player.airDashed)
 			player.airDashed = false;
+		if (!player.isGrounded && player.isDashing)
+			isAirDashing = true;
 
-		if(player.isDashing && (Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides))
+		if (player.isDashing && (Math.Abs (Convert.ToDouble (player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides)) {
+			isDashing = false;
 			player.isDashing = false;
+			isAirDashing = false;
+		}
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -167,6 +178,7 @@ public class PlayerController : BaseBehavior {
             horizontal = 0f;
 		}
 		else{
+			isRunning = true;
 			//now we do some checks and corrections depending on how the player is facing
 			if (horizontal < 0 && isFacingRight) //facing right, pushing left
 			{
@@ -206,6 +218,7 @@ public class PlayerController : BaseBehavior {
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;
+			isRunning = false;
 			if (wasRunning) {
 				player.Broadcast("OnStopRunning");	
 			}
@@ -273,11 +286,14 @@ public class PlayerController : BaseBehavior {
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+		isJumping = true;
+		isRunning = false;
 	}
 
 	protected void StopJump() {
 		player.Broadcast("OnStopJumpRequest");
 		player.motor.StopJump();
+		isJumping = false;
 	}
 
 	protected void ThrowSeed() {
@@ -288,6 +304,8 @@ public class PlayerController : BaseBehavior {
 	protected void Dash() {
 		player.Broadcast("OnDashRequest");
 		player.motor.Dash();
+		isDashing = true;
+		isRunning = false;
 	}
 
 	protected void Sun() {
@@ -306,6 +324,7 @@ public class PlayerController : BaseBehavior {
 			if(stunTimer <= 0)
 			{
 				canControl = true;
+				isStunned = false;
 			}
 			else
 			{
