@@ -11,14 +11,14 @@ public class Boar : Animal
 	public int damageValue;
 	
 	//make some variables editable in the editor for debugging
-	public float chargeSpeed = 0.1f;
-	public float walkSpeed = 0.05f;
+	public float chargeSpeed = 0.08f;
+	public float walkSpeed = 0.03f;
 	
 	//again, how we do states will change, but for now I'm doing bools
 	public bool isCharging;
 	public bool isInChargeUp;
 	
-	public float boarXSight = 5;
+	public float boarXSight = 10;
 
 	bool recentlyRotated;
 	bool recentlyChargedUp;
@@ -50,7 +50,7 @@ public class Boar : Animal
 
 
 		animalType = "Boar";
-		strength = 8f;
+		strength = 7f;
 		sporeResistance = 10f;
 		sporeLoc = new Vector3 (-3.3f, 0.5f, 0f);
 		
