@@ -28,7 +28,8 @@ public class PanLimiter : MonoBehaviour {
 			cameraScript = mainCameraObject.GetComponent<SideScrollerCameraController>();
 		}
 	}
-	void Update()
+
+	void FixedUpdate()
 	{
 		if (totalVerticalLimiter) {
 			transform.position = new Vector3(cameraScript.transform.position.x,
@@ -40,7 +41,31 @@ public class PanLimiter : MonoBehaviour {
 			                                 cameraScript.transform.position.y,
 			                                 transform.position.z);
 		}
-		if (renderer.isVisible) {
+
+		//ignoring the editor camera when unrendering is more difficult than it should be
+		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
+		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
+			if (limitLeft) {
+				cameraScript.canPanLeft = true;
+			}
+			
+			if (limitRight) {
+				cameraScript.canPanRight = true;
+			}
+			
+			if (limitUp) {
+				cameraScript.canPanUp = true;
+			}
+			
+			if (limitDown) {
+				cameraScript.canPanDown = true;
+			}
+		}
+	}
+
+	void OnWillRenderObject()
+	{
+		if (Camera.current.tag == "MainCamera") {
 			if (limitLeft) {
 				cameraScript.canPanLeft = false;
 			}
@@ -56,51 +81,6 @@ public class PanLimiter : MonoBehaviour {
 			if (limitDown) {
 				cameraScript.canPanDown = false;
 			}
-		}
-	}
-
-
-	void OnBecameVisible()
-	{
-		if (Camera.current.tag != "MainCamera") 
-			return;
-
-		if (limitLeft) {
-			cameraScript.canPanLeft = false;
-		}
-
-		if (limitRight) {
-			cameraScript.canPanRight = false;
-		}
-
-		if (limitUp) {
-			cameraScript.canPanUp = false;
-		}
-
-		if (limitDown) {
-			cameraScript.canPanDown = false;
-		}
-	}
-
-	void OnBecameInvisible()
-	{
-		/*if (Camera.current.tag != "MainCamera") 
-			return;*/
-
-		if (limitLeft) {
-			cameraScript.canPanLeft = true;
-		}
-		
-		if (limitRight) {
-			cameraScript.canPanRight = true;
-		}
-		
-		if (limitUp) {
-			cameraScript.canPanUp = true;
-		}
-		
-		if (limitDown) {
-			cameraScript.canPanDown = true;
 		}
 	}
 }

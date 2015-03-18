@@ -12,6 +12,12 @@ public class PlayerController : BaseBehavior {
 		
 	public bool running = false;
 	public bool alwaysRun = false;
+	public bool isRunning = false;
+
+	public bool isDashing = false;
+	public bool isJumping = false;
+	public bool isAirDashing = false;
+	public bool isStunned = false;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -22,6 +28,9 @@ public class PlayerController : BaseBehavior {
 
 	public bool canControl;
 	public int stunTimer;
+
+	public bool canConvert = false;
+	public GameObject conversionTarget;
 
 	public bool isTurning = false;
 	public float turnDirection = 0f;
@@ -93,7 +102,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//check to see if blossoms are up-to-date
-		checkHealth ();
+		//checkHealth ();
 
 		//debug, remove this when we get it properly detaching via health drops
 		if (Input.GetKey ("1")) {
@@ -123,9 +132,14 @@ public class PlayerController : BaseBehavior {
 
 		if (player.isGrounded && player.airDashed)
 			player.airDashed = false;
+		if (!player.isGrounded && player.isDashing)
+			isAirDashing = true;
 
-		if(player.isDashing && (Math.Abs(Convert.ToDouble(player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides))
+		if (player.isDashing && (Math.Abs (Convert.ToDouble (player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides)) {
+			isDashing = false;
 			player.isDashing = false;
+			isAirDashing = false;
+		}
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -164,6 +178,7 @@ public class PlayerController : BaseBehavior {
             horizontal = 0f;
 		}
 		else{
+			isRunning = true;
 			//now we do some checks and corrections depending on how the player is facing
 			if (horizontal < 0 && isFacingRight) //facing right, pushing left
 			{
@@ -197,12 +212,13 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning()) {
+		if (!canControl || player.isSunning() || player.isConverting()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;
+			isRunning = false;
 			if (wasRunning) {
 				player.Broadcast("OnStopRunning");	
 			}
@@ -244,7 +260,7 @@ public class PlayerController : BaseBehavior {
 		if(!canControl)
 			return;
 
-		if (!player.isSunning()) {
+		if (!player.isSunning() && !player.isConverting()) {
 			if (Input.GetButtonDown ("Jump")) {
 				Jump ();
 			}
@@ -256,19 +272,28 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		if (Input.GetButtonDown ("Sun")) {
-			Sun();
-			player.SetSunning(true);
+			if(canConvert){
+				AnimalConvert();
+				player.SetConverting(true);
+			}
+			else{
+				Sun();
+				player.SetSunning(true);
+			}
 		}
 	}
 	
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+		isJumping = true;
+		isRunning = false;
 	}
 
 	protected void StopJump() {
 		player.Broadcast("OnStopJumpRequest");
 		player.motor.StopJump();
+		isJumping = false;
 	}
 
 	protected void ThrowSeed() {
@@ -279,11 +304,18 @@ public class PlayerController : BaseBehavior {
 	protected void Dash() {
 		player.Broadcast("OnDashRequest");
 		player.motor.Dash();
+		isDashing = true;
+		isRunning = false;
 	}
 
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+	}
+
+	protected void AnimalConvert() {
+		player.Broadcast("OnConvertRequest");
+		player.motor.Convert();
 	}
 
 	public void HandleStun()
@@ -292,6 +324,7 @@ public class PlayerController : BaseBehavior {
 			if(stunTimer <= 0)
 			{
 				canControl = true;
+				isStunned = false;
 			}
 			else
 			{

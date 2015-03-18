@@ -43,6 +43,7 @@ public class Player : BaseBehavior {
 	private GameObject fruit;
 	private bool canGrow = false;
 	private bool sunning = false;
+	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
 
 	
@@ -207,6 +208,12 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canConvert {
+		get {
+			return cachedPlayerController.canConvert;
+		}
+	}
+
 	public bool canDash {
 		get {
 			if (!isGrounded && !airDashed){
@@ -310,6 +317,16 @@ public class Player : BaseBehavior {
 	public void SetSunning(bool value)
 	{
 		sunning = value;
+	}
+
+	public bool isConverting()
+	{
+		return converting;
+	}
+	
+	public void SetConverting(bool value)
+	{
+		converting = value;
 	}
 
 	public SeedType getCurrentSeedType()

@@ -64,7 +64,7 @@ public class Plant : MonoBehaviour
         }
         else
         {
-            Debug.Log("Plant has no soil!");
+            //Debug.Log("Plant has no soil!");
         }
         /*
         if (amelia.GetComponent<Player>().isSunning()){

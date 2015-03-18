@@ -38,12 +38,21 @@ public class Animal : MonoBehaviour
     public void becomeRestrained(Collider vineCollider)
     {
         isRestrained = true;
+		//ignore the player to allow them to convert
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
 		StartCoroutine (breakFree (vineCollider));
     }
 
     public void changeInfection()
     {
         isInfected = false;
+		//unrestrain as it's no longer a threat, move it to background
+		isRestrained = false;
+		transform.position = new Vector3 (transform.position.x, transform.position.y, 4f);
+		BroadcastMessage ("clearInfection");
+		//quit spawning spores unecessarily
+		isSpored = false;
     }
 
 
@@ -82,6 +91,26 @@ public class Animal : MonoBehaviour
 		StartCoroutine (sporeTimer ());
 	}
 
+	void OnTriggerStay(Collider other){
+		if (other.tag == "Player") {
+			if(isRestrained && isInfected){
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = true;
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = gameObject;
+			}
+			else{
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
+			}
+		}
+	}
+
+	void OnTriggerExit(Collider other){
+		if (other.tag == "Player") {
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
+				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
+		}
+	}
+
 	IEnumerator sporeTimer()
 	{
 		yield return new WaitForSeconds (sporeResistance);
@@ -111,7 +140,10 @@ public class Animal : MonoBehaviour
 			{
 				Physics.IgnoreCollision(vineCollider, animalCollider);
 			}
+			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
+			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
 			isRestrained = false;
 		}
 	}
+
 }
