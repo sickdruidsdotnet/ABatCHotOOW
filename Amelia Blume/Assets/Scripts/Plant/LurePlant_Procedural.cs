@@ -51,6 +51,7 @@ public class LurePlant_Procedural : Plant {
 		public float petalColorVal = 0.9f;
 
 		public float bloomRate = 0.3f;
+		public float bloomMaturity = 0.8f;
 
 		public float ovaryMaxSize = 0.08f;
 		public float stamenLength = 0.1f;
@@ -87,7 +88,6 @@ public class LurePlant_Procedural : Plant {
 		stalk.GetComponent<PlantStalk>().colorHue = plantSettings.stalkColorHue;
 		stalk.GetComponent<PlantStalk>().colorSat = plantSettings.stalkColorSat;
 		stalk.GetComponent<PlantStalk>().colorVal = plantSettings.stalkColorVal;
-
 
 
 		animals = GameObject.FindGameObjectsWithTag ("Animal");
@@ -144,10 +144,7 @@ public class LurePlant_Procedural : Plant {
     	plantSettings.petalColorVal = Random.Range(0.85f, 1f);
 
     	plantSettings.bloomRate = Random.Range(0.1f, 0.8f);
-
-
-
-    	
+		plantSettings.bloomMaturity = Random.Range(0.75f, 0.99f);
 
     }
 
@@ -189,8 +186,12 @@ public class LurePlant_Procedural : Plant {
 
 		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
 		{
-			bloomFlower();	
 			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
+		}
+
+		if (this.maturity > plantSettings.bloomMaturity)
+		{
+			bloomFlower();
 		}
 	}
 
@@ -273,6 +274,14 @@ public class LurePlant_Procedural : Plant {
     	{
     		petals[p].GetComponent<PlantPetal>().bloomTrigger = true;
     	}
+    }
+
+    public override void grow()
+    {
+        
+        float goal = maturity * plantSettings.stalkMaxHeight;
+
+        stalk.GetComponent<PlantStalk>().setGrowthInfo(goal, plantSettings.stalkGrowthRate);
     }
 
     /*

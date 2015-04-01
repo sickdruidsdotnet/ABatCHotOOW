@@ -12,6 +12,8 @@ public class VinePlant : Plant
     public float maxVineLength = 7f;
     public float growthRate = 0.35f;
 
+    public bool wasGrowing = false;
+
 	public Animal[] restrainedAnimals;
 	
     // Constructor
@@ -45,11 +47,21 @@ public class VinePlant : Plant
 
             vines.Add(newVine);
         }
+    }
 
-        for (int vine = 0; vine < vines.Count; vine++)
+    void Update()
+    {
+        base.Update();
+
+        bool isGrowing = vines[0].GetComponent<Vine>().isGrowing;
+
+        if (wasGrowing && !isGrowing)
         {
-            vines[vine].GetComponent<Vine>().setGrowthInfo(2.0f, growthRate);
+            Debug.Log("Vines maturity: " + this.maturity);
+            vines[0].GetComponent<Vine>().printSkeletonInfo();
         }
+
+        wasGrowing = isGrowing;
     }
 
 	void OnTriggerEnter(Collider other)

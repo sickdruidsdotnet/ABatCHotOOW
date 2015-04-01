@@ -24,7 +24,7 @@ public class Plant : MonoBehaviour
         waterCount = 0;
         // waterCount threshold. once reached, sproutPlant() will be called
         hydrationGoal = 100;
-        // True if the seed is inside of soil object
+
         maturity = 0.0f;
 
         // initialize collection timer and delay
@@ -47,8 +47,8 @@ public class Plant : MonoBehaviour
 
     public virtual void Update()
     {
-
-        maturity = (float)waterCount / (float)hydrationGoal;
+        // maturity is value between 0 and 1. Used for linearly interpolating growth goals.
+        maturity = Mathf.Clamp01((float)waterCount / (float)hydrationGoal);
 
         if(soil != null)
         {
@@ -57,7 +57,6 @@ public class Plant : MonoBehaviour
                 if (collectionTimer > collectionDelay)
                 {
                     collectWater();
-                    grow();
                     collectionTimer = 0;
                 }
             }
@@ -73,6 +72,8 @@ public class Plant : MonoBehaviour
         }
         */
         collectionTimer++;
+
+        grow();
     }
 
     // Grows the plant.
@@ -80,9 +81,11 @@ public class Plant : MonoBehaviour
     {
         // do something with procedural growth.
 
+        /*
         maturity = (float)waterCount / (float)hydrationGoal;
         scaleFactor = 2.0f * maturity * Sunfactor;
         transform.localScale = new Vector3(baseScale.x + scaleFactor, baseScale.y + scaleFactor, baseScale.z + scaleFactor);
+        */
     }
 
     public void collectWater()

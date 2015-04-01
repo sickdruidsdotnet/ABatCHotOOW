@@ -72,7 +72,7 @@ public class Vine : MonoBehaviour
 	private Color vineColor = Color.green;
 
 	private float growthRate = 0.05f;
-	public float lengthGoal = 2.0f;
+	public float lengthGoal = 0;
 	private float growthStart;
 
 	public float length;
