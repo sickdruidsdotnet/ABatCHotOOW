@@ -11,6 +11,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 	bool recentlyRotated1;
 	bool recentlyRotated2;
 
+	bool targetless;
+
 	public List<Transform> paraLayers;
 	public List<Transform> frontLayers;
 	float layerDifference;
@@ -50,6 +52,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void Start()
 	{
+		targetless = true;
+
 		zooming = false;
 		thisCam = gameObject.GetComponent<Camera> ();
 		target = GameObject.FindGameObjectWithTag ("Player").transform;
@@ -282,7 +286,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 						//already being tracked, put code handling that in here
 					}
 					else{
-						Debug.Log ("Begin Tracking");
 						tracking[index] = true;
 						startSize = thisCam.orthographicSize;
 						endSize = maxSize;
@@ -296,7 +299,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 					//it shouldn't be tracked, let's do some checking
 					if(tracking[index])
 					{
-						Debug.Log ("End Tracking");
 						//being tracked, that needs to change and the camera needs to resize accordingly
 						tracking[index] = false;
 						//check to make sure there's not another thing being tracked on screen
@@ -326,7 +328,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 		for (int i = removeIndices.Count - 1; i >= 0; i--) {
 			trackables.RemoveAt(removeIndices[i]);
 			tracking.RemoveAt(removeIndices[i]);
-			Debug.Log ("Removing at " + i);
 		}
 
 		foreach(bool isBeingTracked in tracking)
@@ -334,6 +335,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(isBeingTracked)
 			{
 				isTracking = true;
+				targetless = false;
 				break;
 			}
 		}
@@ -345,6 +347,10 @@ public class SideScrollerCameraController : MonoBehaviour {
 			zoomLength = Mathf.Abs(startSize - endSize);
 			zooming = true;
 			startTime = Time.time;
+		}
+
+		if (!isTracking) {
+			targetless = true;
 		}
 
 	}
