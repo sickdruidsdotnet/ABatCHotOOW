@@ -430,23 +430,23 @@ public class PlayerMotor : BaseBehavior {
 			Player.SeedType currSeed = player.getCurrentSeedType();
 			switch(currSeed){
 			case Player.SeedType.VineSeed:
-				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
 				break;
 				
 			case Player.SeedType.TreeSeed:
-				newSeed = Instantiate(Resources.Load("TreeSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/TreeSeed")) as GameObject;
 				break;
 				
 			case Player.SeedType.FlowerSeed:
-				newSeed = Instantiate(Resources.Load("FlowerSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/FlowerSeed")) as GameObject;
 				break;
 				
 			case Player.SeedType.FernSeed:
-				newSeed = Instantiate(Resources.Load("FernSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/FernSeed")) as GameObject;
 				break;
 
 			default:
-				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
 				break;
 			}
 
