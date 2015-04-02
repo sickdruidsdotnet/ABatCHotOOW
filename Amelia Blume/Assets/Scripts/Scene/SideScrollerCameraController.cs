@@ -27,7 +27,15 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public float panSpeedX = 0.4f;
 	public float panSpeedY = 0.02f;
 	Vector3 panTo;
-	
+
+	//tracking stuff
+	List<GameObject> trackables;
+	List<bool> tracking;
+	public float maxSize = 7;
+	public float minSize = 4;
+
+	public float maxScreenDist;
+	public float minScreenDist;
 
 	void Start()
 	{
@@ -56,11 +64,37 @@ public class SideScrollerCameraController : MonoBehaviour {
 		recentlyRotated2 = false;
 		panTo = transform.position;
 		prevTargetPos = target.position;
+
+		//get all animals that the camera should know about
+		trackables = new List<GameObject> ();
+		tracking = new List<bool>();
+		GameObject[] tempTrackables = GameObject.FindGameObjectsWithTag ("Animal");
+		for (int i = 0; i < tempTrackables.Count(); i++) {
+			trackables.Add (tempTrackables[i]);
+			tracking.Add (false);
+		}
+		//tracking will store true in that animal's index if it is currently being tracked
+
+		//calculate distances from center to threshold based on camera sizes
+		float startSize = gameObject.GetComponent<Camera>().orthographicSize;
+		gameObject.GetComponent<Camera> ().orthographicSize = maxSize;
+		Vector3 point1 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.5f, 0f, 0f));
+		Vector3 point2 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.9f, 0f, 0f));
+		maxScreenDist = point2.x - point1.x;
+		gameObject.GetComponent<Camera> ().orthographicSize = minSize;
+		point1 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.5f, 0f, 0f));
+		point2 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.9f, 0f, 0f));
+		minScreenDist = point2.x - point1.x;
+
+		gameObject.GetComponent<Camera> ().orthographicSize = startSize;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+
+		trackTargets ();
+
 		//get player's position in viewport
 		Vector3 point = GetComponent<Camera> ().WorldToViewportPoint (target.position);
 
@@ -193,6 +227,38 @@ public class SideScrollerCameraController : MonoBehaviour {
 		//get the face direction to properly check for change next frame
 		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
 		prevTargetPos = target.position;
+	}
+
+	void trackTargets()
+	{
+		int index = 0;
+		List<int> removeIndices = new List<int>();
+		foreach(GameObject trackable in trackables) {
+			//for starters, let's make sure it should be in this list
+			if(trackable.tag == "Animal" && trackable.GetComponent<Animal>().isInfected == false)
+			{
+				//remove uninfected animals from the list, they're no longer important enough
+				removeIndices.Add (trackables.IndexOf(trackable));
+			}
+			else {
+				Vector3 centerCamPoint = GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+				float distFromCenter = Mathf.Abs(centerCamPoint.x - trackable.transform.position.x);
+
+				//let's check if it should be being tracked
+				if(distFromCenter <= maxScreenDist)
+				{
+					//it should be tracked, but is it already being tracked?
+					Debug.Log ("TRACK IT!");
+				}
+			}
+		}
+
+		//remove all gameobject that were marked no longer necessary to track
+		for (int i = removeIndices.Count - 1; i >= 0; i--) {
+			trackables.RemoveAt(removeIndices[i]);
+			tracking.RemoveAt(removeIndices[i]);
+			Debug.Log ("Removing at " + i);
+		}
 	}
 
 	void HandleParallax (Vector3 difference)
