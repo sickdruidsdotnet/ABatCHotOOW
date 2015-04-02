@@ -6,6 +6,7 @@ using System.Linq;
 public class SideScrollerCameraController : MonoBehaviour {
 	public Transform target;
 	Vector3 prevTargetPos;
+	Vector3 prevPos;
 	bool lastFaceDirection;
 	bool recentlyRotated1;
 	bool recentlyRotated2;
@@ -14,6 +15,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public List<Transform> frontLayers;
 	float layerDifference;
 
+	//this camera for easy access
+	Camera thisCam;
+
 	//we'll put empty's limiting the camera in places where we want the camera to stop
 	public bool canPanLeft;
 	public bool canPanRight;
@@ -21,11 +25,18 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool canPanDown;
 	bool panLeft;
 	bool panRight;
-	public bool panUp;
-	public bool panDown;
+	bool panUp;
+	bool panDown;
+
+	bool zooming;
+	float zoomRate = 4f;
+	float startTime;
+	float startSize;
+	float endSize;
+	float zoomLength;
 
 	public float panSpeedX = 0.4f;
-	public float panSpeedY = 0.02f;
+	public float panSpeedY = 0.1f;
 	Vector3 panTo;
 
 	//tracking stuff
@@ -39,6 +50,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void Start()
 	{
+		zooming = false;
+		thisCam = gameObject.GetComponent<Camera> ();
 		target = GameObject.FindGameObjectWithTag ("Player").transform;
 		canPanUp = true;
 		canPanRight = true;
@@ -87,13 +100,27 @@ public class SideScrollerCameraController : MonoBehaviour {
 		minScreenDist = point2.x - point1.x;
 
 		gameObject.GetComponent<Camera> ().orthographicSize = startSize;
+
+		prevPos = transform.position;
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
 	{
+		//handle parallax changes that may have happened outside of this script immediately
+		if (prevPos != transform.position) {
+			HandleParallax (new Vector3(transform.position.x - prevPos.x, transform.position.y - prevPos.y, 0f));
+		}
 
 		trackTargets ();
+		if (zooming) {
+			float newSize = Mathf.Lerp(startSize, endSize, ((Time.time - startTime) * zoomRate) / zoomLength );
+			thisCam.orthographicSize = newSize;
+			if(thisCam.orthographicSize == endSize)
+			{
+				zooming = false;
+			}
+		}
 
 		//get player's position in viewport
 		Vector3 point = GetComponent<Camera> ().WorldToViewportPoint (target.position);
@@ -227,11 +254,13 @@ public class SideScrollerCameraController : MonoBehaviour {
 		//get the face direction to properly check for change next frame
 		lastFaceDirection = target.GetComponent<Player> ().isFacingRight;
 		prevTargetPos = target.position;
+		prevPos = transform.position;
 	}
 
 	void trackTargets()
 	{
 		int index = 0;
+		bool isTracking = false;
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
 			//for starters, let's make sure it should be in this list
@@ -243,12 +272,52 @@ public class SideScrollerCameraController : MonoBehaviour {
 			else {
 				Vector3 centerCamPoint = GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 				float distFromCenter = Mathf.Abs(centerCamPoint.x - trackable.transform.position.x);
-
+				index = trackables.IndexOf(trackable);
 				//let's check if it should be being tracked
 				if(distFromCenter <= maxScreenDist)
 				{
+					if(tracking[index])
+					{
+						isTracking = true;
+						//already being tracked, put code handling that in here
+					}
+					else{
+						Debug.Log ("Begin Tracking");
+						tracking[index] = true;
+						startSize = thisCam.orthographicSize;
+						endSize = maxSize;
+						zoomLength = Mathf.Abs(startSize - endSize);
+						zooming = true;
+						startTime = Time.time;
+					}
 					//it should be tracked, but is it already being tracked?
-					Debug.Log ("TRACK IT!");
+
+				} else {
+					//it shouldn't be tracked, let's do some checking
+					if(tracking[index])
+					{
+						Debug.Log ("End Tracking");
+						//being tracked, that needs to change and the camera needs to resize accordingly
+						tracking[index] = false;
+						//check to make sure there's not another thing being tracked on screen
+						foreach(bool isBeingTracked in tracking)
+						{
+							if(isBeingTracked)
+							{
+								isTracking = true;
+								break;
+							}
+						}
+
+						if(!isTracking)
+						{
+							startSize = thisCam.orthographicSize;
+							endSize = minSize;
+							zoomLength = Mathf.Abs(startSize - endSize);
+							zooming = true;
+							startTime = Time.time;
+						}
+					}
 				}
 			}
 		}
@@ -259,6 +328,25 @@ public class SideScrollerCameraController : MonoBehaviour {
 			tracking.RemoveAt(removeIndices[i]);
 			Debug.Log ("Removing at " + i);
 		}
+
+		foreach(bool isBeingTracked in tracking)
+		{
+			if(isBeingTracked)
+			{
+				isTracking = true;
+				break;
+			}
+		}
+
+		if(!isTracking && thisCam.orthographicSize != minSize && !zooming)
+		{
+			startSize = thisCam.orthographicSize;
+			endSize = minSize;
+			zoomLength = Mathf.Abs(startSize - endSize);
+			zooming = true;
+			startTime = Time.time;
+		}
+
 	}
 
 	void HandleParallax (Vector3 difference)

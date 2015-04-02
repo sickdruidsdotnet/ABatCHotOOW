@@ -6,7 +6,6 @@ public class Converter : MonoBehaviour {
 	public float life = 200;
 	float scaleValue;
 	private GameObject player;
-	bool fading = true;
 	bool conversionSuccess = false;
 	public GameObject target;
 	void Start()
@@ -15,7 +14,7 @@ public class Converter : MonoBehaviour {
 		scaleValue = transform.localScale.x / 11f;
 	}
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		HandleInput ();
 		life--; 
 		if (life < 0) {
