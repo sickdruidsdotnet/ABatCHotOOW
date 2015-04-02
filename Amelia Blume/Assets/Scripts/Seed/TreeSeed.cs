@@ -10,7 +10,7 @@ public class TreeSeed : Seed{
 		// set hydrationGoal to match VineSeed requirements
 		this.hydrationGoal = 20;
 		
-		this.plantType = "TreePlant";
+		this.plantType = "Tree/TreePlant";
 		
 		Debug.Log("TreeSeed created");
 		Debug.Log("TreeSeed hydrationGoal: " + hydrationGoal);

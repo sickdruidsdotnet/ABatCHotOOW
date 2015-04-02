@@ -9,8 +9,10 @@ public class VinePlant : Plant
 	private List<GameObject> vines;
 	private float vineSpawnRadians;
 	private float vineSpawnRadius = 0.2f;
-    public float maxVineLength = 7f;
+    public float maxVineLength = 3f;
     public float growthRate = 0.35f;
+
+    public bool wasGrowing = false;
 
 	public Animal[] restrainedAnimals;
 	
@@ -40,8 +42,26 @@ public class VinePlant : Plant
             float v_z = vineSpawnRadius * Mathf.Sin(angle);
             Vector3 vineLocation = new Vector3(v_x, 0, v_z) + transform.position;
 
-            vines.Add(Instantiate(Resources.Load("VinePrefab"), vineLocation, Quaternion.identity) as GameObject);
+            GameObject newVine = Instantiate(Resources.Load("VinePlant/VinePrefab"), vineLocation, Quaternion.identity) as GameObject;
+            newVine.transform.parent = gameObject.transform;
+
+            vines.Add(newVine);
         }
+    }
+
+    void Update()
+    {
+        base.Update();
+
+        bool isGrowing = vines[0].GetComponent<Vine>().isGrowing;
+
+        if (wasGrowing && !isGrowing)
+        {
+            Debug.Log("Vines maturity: " + this.maturity);
+            vines[0].GetComponent<Vine>().printSkeletonInfo();
+        }
+
+        wasGrowing = isGrowing;
     }
 
 	void OnTriggerEnter(Collider other)

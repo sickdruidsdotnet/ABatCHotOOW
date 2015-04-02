@@ -10,102 +10,101 @@ public class PlantSway : MonoBehaviour {
 	bool hitGoal = false;
 	bool moveBack = false;
 
+	GameObject mainCameraObject;
+	bool rendered = false;
+
 	float offsetValue;
 	
 	void Start()
 	{
 		offsetValue = transform.position.x / 2f;
+		mainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (inPassingLeft || inPassingRight) {
-			//handle things moving left passed it
-			if (inPassingLeft) {
-				float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
+		if (rendered) {
+			if (inPassingLeft || inPassingRight) {
+				//handle things moving left passed it
+				if (inPassingLeft) {
+					float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
 
-				// part 1, get to the leftmost part of animation
-				if(!hitGoal)
-				{
-					progress -= 5f;
-					if(progress <= (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75)
-					{
-						hitGoal = true;
-						progress = (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75;
+					// part 1, get to the leftmost part of animation
+					if (!hitGoal) {
+						progress -= 5f;
+						if (progress <= (Mathf.Cos ((Time.time) * 4) * 12.5f) - 75) {
+							hitGoal = true;
+							progress = (Mathf.Cos ((Time.time) * 4) * 12.5f) - 75;
+						}
+					} // Part 2,we've hit the left most frame time to stop
+					else if (!moveBack) {
+						progress = (Mathf.Cos ((Time.time) * 4) * 12.5f) - 75;
+						if (tempProgress <= -47) {
+							moveBack = true;
+						}
+					}// Part 3, return to normal sway
+					else if (moveBack) {
+						if (progress + 5 > tempProgress) {
+							//we've caught up, stop this nonsense and return to normal sway
+							progress = tempProgress;
+							moveBack = false;
+							hitGoal = false;
+							inPassingLeft = false;
+						} else {
+							progress += 1;
+						}
 					}
-				} // Part 2,we've hit the left most frame time to stop
-				else if(!moveBack){
-					progress = (Mathf.Cos ((Time.time)* 4) * 12.5f) - 75;
-					if(tempProgress <= -47){
-						moveBack = true;
-					}
-				}// Part 3, return to normal sway
-				else if(moveBack)
-				{
-					if(progress + 5 > tempProgress)
-					{
-						//we've caught up, stop this nonsense and return to normal sway
-						progress = tempProgress;
-						moveBack = false;
-						hitGoal = false;
-						inPassingLeft = false;
-					}
-					else {
-						progress += 1;
+				} else {
+					//inPassingRight
+					float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
+					
+					// part 1, get to the leftmost part of animation
+					if (!hitGoal) {
+						progress += 5f;
+						if (progress >= (Mathf.Cos ((Time.time) * 4) * 12.5f) + 75) {
+							hitGoal = true;
+							progress = (Mathf.Cos ((Time.time) * 4) * 12.5f) + 75;
+						}
+					} // Part 2,we've hit the left most frame time to stop
+					else if (!moveBack) {
+						progress = (Mathf.Cos ((Time.time) * 4) * 12.5f) + 75;
+						if (tempProgress >= 47) {
+							moveBack = true;
+						}
+					}// Part 3, return to normal sway
+					else if (moveBack) {
+						if (progress - 5 < tempProgress) {
+							//we've caught up, stop this nonsense and return to normal sway
+							progress = tempProgress;
+							moveBack = false;
+							hitGoal = false;
+							inPassingRight = false;
+						} else {
+							progress -= 1f;
+						}
 					}
 				}
+			} else {
+				progress = (Mathf.Sin (Time.time + offsetValue) * 50f);
 			}
-			else {
-				//inPassingRight
-				float tempProgress = (Mathf.Sin (Time.time + offsetValue) * 50f);
-				
-				// part 1, get to the leftmost part of animation
-				if(!hitGoal)
-				{
-					progress += 5f;
-					if(progress >= (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75)
-					{
-						hitGoal = true;
-						progress = (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75;
-					}
-				} // Part 2,we've hit the left most frame time to stop
-				else if(!moveBack){
-					progress = (Mathf.Cos ((Time.time )* 4) * 12.5f) + 75;
-					if(tempProgress >= 47){
-						moveBack = true;
-					}
-				}// Part 3, return to normal sway
-				else if(moveBack)
-				{
-					if(progress - 5 < tempProgress)
-					{
-						//we've caught up, stop this nonsense and return to normal sway
-						progress = tempProgress;
-						moveBack = false;
-						hitGoal = false;
-						inPassingRight = false;
-					}
-					else {
-						progress -= 1f;
-					}
-				}
-			}
-			
-		} else {
-			progress = (Mathf.Sin (Time.time + offsetValue) * 50f);
-		}
 
-		//handles which blendshapes to use for left and right
-		if (progress <= 0f) {
-			swayRight = false;
-		} else {
-			swayRight = true;
-		}
+			//handles which blendshapes to use for left and right
+			if (progress <= 0f) {
+				swayRight = false;
+			} else {
+				swayRight = true;
+			}
 	
-		if (swayRight) {
-			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (1, (float)progress);
-		} else {
-			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress * -1);
+			if (swayRight) {
+				this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (1, (float)progress);
+			} else {
+				this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress * -1);
+			}
+		}
+
+		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
+		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
+			rendered = false;
 		}
 
 	}
@@ -144,7 +143,13 @@ public class PlantSway : MonoBehaviour {
 				}
 			}
 		}
-
-
 	}
+
+	void OnWillRenderObject()
+	{
+		if (Camera.current.tag == "MainCamera") {
+			rendered = true;
+		}
+	}
+
 }
