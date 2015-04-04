@@ -11,7 +11,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	bool recentlyRotated1;
 	bool recentlyRotated2;
 
-	bool targetless;
+	//bool targetless;
 
 	public List<Transform> paraLayers;
 	public List<Transform> frontLayers;
@@ -41,6 +41,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public float panSpeedY = 0.1f;
 	Vector3 panTo;
 
+	//panlimiters for more smooth scrolling
+	List<GameObject>[] panLimiters;
+
 	//tracking stuff
 	List<GameObject> trackables;
 	List<bool> tracking;
@@ -52,7 +55,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void Start()
 	{
-		targetless = true;
+		//targetless = true;
 
 		zooming = false;
 		thisCam = gameObject.GetComponent<Camera> ();
@@ -106,6 +109,28 @@ public class SideScrollerCameraController : MonoBehaviour {
 		gameObject.GetComponent<Camera> ().orthographicSize = startSize;
 
 		prevPos = transform.position;
+
+		//get and sort the panLimiters
+		GameObject[] tempPLs = GameObject.FindGameObjectsWithTag("Pan Limiter");
+
+		panLimiters = new List<GameObject>[4];
+		panLimiters [0] = new List<GameObject> ();
+		panLimiters [1] = new List<GameObject> ();
+		panLimiters [2] = new List<GameObject> ();
+		panLimiters [3] = new List<GameObject> ();
+
+		foreach (GameObject limiter in tempPLs) {
+			PanLimiter tscript = limiter.GetComponent<PanLimiter>();
+			if(tscript.limitUp)
+				panLimiters[0].Add(limiter);
+			if(tscript.limitDown)
+				panLimiters[1].Add(limiter);
+			if(tscript.limitLeft)
+				panLimiters[2].Add (limiter);
+			if(tscript.limitRight)
+				panLimiters[3].Add(limiter);
+		}
+
 	}
 
 	// Update is called once per frame
@@ -123,6 +148,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(thisCam.orthographicSize == endSize)
 			{
 				zooming = false;
+			}
+			//make sure it hasn't run into a force pan limiter, as that will only update next frame and cause jittery movement
+			for(int i = 0; i < 4; i++)
+			{
+				foreach( GameObject panLimiter in panLimiters[i])
+					panLimiter.GetComponent<PanLimiter>().checkForcePan();
 			}
 		}
 
@@ -203,23 +234,56 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX)
 			{
 				transform.position = new Vector3(panTo.x, transform.position.y, transform.position.z);
+				//make sure to check if it's passed a force pan limiter to prevent jittery camera
+				foreach( GameObject panLimiter in panLimiters[3])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanRight = false;
+						break;
+					}
+				}
 				panRight = false;
 			}
 			else
 			{
 				transform.position = new Vector3(transform.position.x + panSpeedX, 
 				                                 transform.position.y, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[3])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanRight = false;
+						break;
+					}
+				}
 			}
 		} else if (panLeft) {
 			if(Mathf.Abs (panTo.x - transform.position.x)<= panSpeedX)
 			{
 				transform.position = new Vector3(panTo.x, transform.position.y, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[2])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanLeft = false;
+						break;
+					}
+				}
 				panLeft = false;
 			}
 			else
 			{
 				transform.position = new Vector3(transform.position.x - panSpeedX, 
 				                                 transform.position.y, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[2])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanLeft = false;
+						break;
+					}
+				}
 			}
 		}
 		if (Mathf.Abs (prevTargetPos.y - target.position.y) >= 0.2f) {
@@ -232,23 +296,54 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY)
 			{
 				transform.position = new Vector3(transform.position.x, panTo.y, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[0])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanUp = false;
+						break;
+					}
+				}
 				panUp = false;
 			}
 			else
 			{
 				transform.position = new Vector3(transform.position.x, 
 				                                 transform.position.y + panSpeedY, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[0])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanUp = false;
+						break;
+					}
+				}
 			}
 		} else if (panDown && canPanDown) {
 			if(Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY)
 			{
-				transform.position = new Vector3(transform.position.x, panTo.y, transform.position.z);
+				transform.position = new Vector3(transform.position.x, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[1])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanDown = false;
+						break;
+					}
+				}
 				panDown = false;
 			}
 			else
 			{
 				transform.position = new Vector3(transform.position.x, 
 				                                 transform.position.y - panSpeedY, transform.position.z);
+				foreach( GameObject panLimiter in panLimiters[1])
+				{
+					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())
+					{
+						canPanDown = false;
+					}
+				}
 			}
 		}
 
@@ -335,7 +430,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(isBeingTracked)
 			{
 				isTracking = true;
-				targetless = false;
+				//targetless = false;
 				break;
 			}
 		}
@@ -350,7 +445,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		}
 
 		if (!isTracking) {
-			targetless = true;
+			///targetless = true;
 		}
 
 	}

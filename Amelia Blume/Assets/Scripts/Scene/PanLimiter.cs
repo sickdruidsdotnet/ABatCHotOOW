@@ -51,41 +51,7 @@ public class PanLimiter : MonoBehaviour {
 
 		//handling force pan movement stuff
 		if (isVisible && forcePan) {
-			Vector3 viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
-			if (limitLeft) {
-				while(viewPoint.x > 0.05f)
-				{
-					mainCameraObject.transform.Translate(new Vector3(0.01f, 0f, 0f));
-					viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
-				}
-			}			
-
-			if (limitRight) {
-				while(viewPoint.x < 0.95f)
-				{
-					mainCameraObject.transform.Translate(new Vector3(-0.0f, 0f, 0f));
-					viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
-				}
-			}
-			
-			if (limitUp) {
-				while(viewPoint.y < 0.95f)
-				{
-					mainCameraObject.transform.Translate(new Vector3(0f, -0.01f, 0f));
-					viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
-				}
-			}
-			
-			if (limitDown) {
-				if(viewPoint.y > 0.05f){
-					//reposition camera until it is at 0.05f
-					while(viewPoint.y > 0.05f)
-					{
-						mainCameraObject.transform.Translate(new Vector3(0f, 0.01f, 0f));
-						viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
-					}
-				}
-			}
+			checkForcePan();
 		}
 
 		//ignoring the editor camera when unrendering is more difficult than it should be
@@ -108,6 +74,53 @@ public class PanLimiter : MonoBehaviour {
 				cameraScript.canPanDown = true;
 			}
 		}
+	}
+
+	//returns true it if moved the camera
+	public bool checkForcePan()
+	{
+		if (!forcePan)
+			return false;
+
+		bool moved = false;
+		Vector3 viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+		if (limitLeft) {
+			while(viewPoint.x > 0.000001f && viewPoint.x <= 1)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0.001f, 0f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}			
+		
+		if (limitRight) {
+			while(viewPoint.x < 0.999999f && viewPoint.x >= 0f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(-0.001f, 0f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		
+		if (limitUp) {
+			while(viewPoint.y < 0.999999f && viewPoint.y >= 0f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0f, -0.001f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		
+		if (limitDown) {
+			//reposition camera until it is at 0.01f
+			while(viewPoint.y > 0.000001f && viewPoint.y <= 1f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0f, 0.001f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		return moved;
 	}
 
 	void OnWillRenderObject()
