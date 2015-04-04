@@ -1,13 +1,14 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 class TreeStructure : MonoBehaviour
 {
 	public Branch trunk;
 
 	public int resolution = 6;
-	public float initialRadius = 0.02f;
+	public static float initialRadius = 0.02f;
 	public float maxRadius = 0.02f;
 	public float initialSegLength = 0f;
 	public float maxSegLength = 0.1f;
@@ -23,6 +24,9 @@ class TreeStructure : MonoBehaviour
 	public float lengthGoal = 1f;
 	public float growthStart;
 
+	// debug draw values
+	private float debugSphereSize = 0.01f;
+	private Color debugColor = Color.red;
 
 	private List<Vector3> vertices;
 	private List<int> triangles;
@@ -85,7 +89,7 @@ class TreeStructure : MonoBehaviour
 		}
 
 		// standard branch constructor
-		public Branch(Branch parentBranch, int node = -1, Vector3 dir)
+		public Branch(Branch parentBranch, Vector3 dir, int node = -1, float length = 0)
 		{
 			// parentBranch determines what branch this branch will... branch... off of.
 			// node determines where along the parent branch this branch will protrude from
@@ -99,7 +103,7 @@ class TreeStructure : MonoBehaviour
 			// -1 is code for "the end of the branch"
 			if (parentNode == -1)
 			{
-				int count = parent.skeleton.Count
+				int count = parent.skeleton.Count;
 				if (count > 1)
 				{
 					parentNode = count - 2;
@@ -114,7 +118,7 @@ class TreeStructure : MonoBehaviour
 			startPoint = parent.skeleton[parentNode].getNodeEndPoint();
 			direction = dir;
 
-			skeleton.Add(new BranchNode(initialRadius, 0, startPoint, direction));
+			skeleton.Add(new BranchNode(initialRadius, length, startPoint, direction));
 		}
 
 		public Branch getParent()
@@ -135,9 +139,9 @@ class TreeStructure : MonoBehaviour
 			return children;
 		}
 
-		public void addChild(int node = -1, Vector3 dir)
+		public void addChild(Vector3 dir, int node = -1, float length = 0)
 		{
-			Branch newChild = new Branch(this, node, dir);
+			Branch newChild = new Branch(this, dir, node, length);
 			children.Add(newChild);
 		}
 
@@ -174,7 +178,6 @@ class TreeStructure : MonoBehaviour
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
 		uvs = new List<Vector2>();
-		skeleton = new List<TreeNode>();
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
@@ -185,6 +188,7 @@ class TreeStructure : MonoBehaviour
 
 	void Update()
 	{
+		/*
 		length = getTotalLength();
 
 		bool wasGrowing = isGrowing;
@@ -204,17 +208,35 @@ class TreeStructure : MonoBehaviour
 			debugDoneGrowing = true;
 			//printSkeletonInfo();
 		}
+		*/
 	}
 
 	private void createInitialTreeSkeleton()
 	{
-		trunk = new Branch(Vector3.zero, Vector3.up);
-		createMesh();
+		trunk = new Branch(Vector3.zero, Vector3.up, 0.5f);
+
+		int numChildren = 3;
+
+		for (int b = 0; b < numChildren; b++)
+		{
+			Vector3 direction;
+			Vector3 crossWith = Vector3.up;
+			if (crossWith == trunk.direction)
+			{
+				crossWith = Vector3.right;
+			}
+			direction = Vector3.Cross(trunk.direction, crossWith);
+			direction = Quaternion.AngleAxis(360f * (float)b / (float)numChildren, trunk.direction) * direction;
+			trunk.addChild(dir : direction, length : 0.3f);
+		}
+
+		//createMesh();
 	}
 
 	private void growTree()
 	{}
 
+	/*
 	private void createMesh()
 	{
 
@@ -307,7 +329,67 @@ class TreeStructure : MonoBehaviour
 
 		mesh.triangles = triangles.ToArray();
 	}
+	*/
 
+	/*
 	public float getTotalLength()
 	{}
+	*/
+
+	void OnDrawGizmos()
+	{
+		// Avoid NPE in the editor when the game isn't running,
+		// (and therefore the object hasn't been initialized).
+		if (_transform)
+		{
+			Vector3 mPos = _transform.position;
+
+			if (trunk != null)
+			{
+				// recursively draw tree
+				drawTreeSkeletonGizmos(trunk, mPos);
+			}
+		}
+			
+	}
+
+	void drawTreeSkeletonGizmos(Branch b, Vector3 mPos)
+	{
+		// recursive draw function
+
+		for (int node = 0; node < b.skeleton.Count; node++)
+		{
+			Vector3 nStart = b.skeleton[node].startPoint;
+			Vector3 nEnd = b.skeleton[node].getNodeEndPoint();
+
+			// Draw segment endpoints with red spheres
+			Gizmos.color = Color.red;
+			Gizmos.DrawSphere(mPos + nStart, debugSphereSize);
+
+			// Draw segments with lines. Alternate colors for each segment,
+			// but keep the tip segment red (or it swaps colors weirdly)
+			if (node == b.skeleton.Count - 1)
+			{
+				Gizmos.color = Color.red;
+			}
+			else if (node % 2 == 0)
+			{
+				Gizmos.color = Color.blue;
+			}
+			else
+			{
+				Gizmos.color = Color.white;
+			}
+			Gizmos.DrawLine(mPos + nStart, mPos + nEnd);
+		}
+
+		// Draw the tip as another segment endpoint
+		Gizmos.color = Color.red;
+		Gizmos.DrawSphere(mPos + b.skeleton.Last().getNodeEndPoint(), debugSphereSize);
+
+		foreach (Branch childBranch in b.children)
+		{
+			drawTreeSkeletonGizmos(childBranch, mPos);
+		}
+	}
 }

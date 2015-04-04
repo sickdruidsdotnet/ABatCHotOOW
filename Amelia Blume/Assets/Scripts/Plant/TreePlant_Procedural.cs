@@ -62,27 +62,8 @@ class TreePlant_Procedural : Plant
 
 		setRandomValues();
 
-		stalk = Instantiate(Resources.Load("LurePlant/PlantStalk"), transform.position, Quaternion.identity) as GameObject;
-		stalk.transform.parent = gameObject.transform;
-		stalk.GetComponent<PlantStalk>().resolution = treeSettings.stalkRingResolution;
-		stalk.GetComponent<PlantStalk>().maxSegLength = treeSettings.stalkSegLength;
-		stalk.GetComponent<PlantStalk>().lengthGoal = treeSettings.stalkMaxHeight;
-		stalk.GetComponent<PlantStalk>().initialRadius = treeSettings.stalkMinWidth;
-		stalk.GetComponent<PlantStalk>().growthRate = treeSettings.stalkGrowthRate;
-		stalk.GetComponent<PlantStalk>().colorHue = treeSettings.stalkColorHue;
-		stalk.GetComponent<PlantStalk>().colorSat = treeSettings.stalkColorSat;
-		stalk.GetComponent<PlantStalk>().colorVal = treeSettings.stalkColorVal;
-
-
-		animals = GameObject.FindGameObjectsWithTag ("Animal");
-		health = 120;
-		//Debug.Log (animals.Length);
-
-		for(int i = 0; i < animals.Length;i++){
-			animalCon = animals[i].GetComponent<Animal>();
-			animalCon.LurePlant(this.transform);
-			//Debug.Log (animals[i]);
-		}
+		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position, Quaternion.identity) as GameObject;
+		treeStructure.transform.parent = gameObject.transform;
 	}
 
 	private void setRandomValues()
