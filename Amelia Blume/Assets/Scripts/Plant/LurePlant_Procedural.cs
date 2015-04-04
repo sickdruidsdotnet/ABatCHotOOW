@@ -63,17 +63,7 @@ public class LurePlant_Procedural : Plant {
 
 	// Use this for initialization
 	void Start () {
-
-		float red = 0;
-		float blue = 0;
-		float green = 0;
-
-		gameObject.GetComponent<ColorConverter>().HsvToRgb(120, 1, 0.5, out red, out green, out blue);
-
-		Color gColor = new Color(red, green, blue);
-
-		Debug.Log(gColor);
-
+		
 		plantSettings = new PlantSettings();
 
 		setRandomValues();
@@ -145,7 +135,6 @@ public class LurePlant_Procedural : Plant {
 
     	plantSettings.bloomRate = Random.Range(0.1f, 0.8f);
 		plantSettings.bloomMaturity = Random.Range(0.75f, 0.99f);
-
     }
 
 	public override void Update()
