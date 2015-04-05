@@ -322,7 +322,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		} else if (panDown && canPanDown) {
 			if(Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY)
 			{
-				transform.position = new Vector3(transform.position.x, transform.position.z);
+				transform.position = new Vector3(transform.position.x, panTo.y, transform.position.z);
 				foreach( GameObject panLimiter in panLimiters[1])
 				{
 					if(panLimiter.GetComponent<PanLimiter>().checkForcePan())

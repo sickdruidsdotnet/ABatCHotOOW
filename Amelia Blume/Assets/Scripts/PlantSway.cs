@@ -100,11 +100,18 @@ public class PlantSway : MonoBehaviour {
 			} else {
 				this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress * -1);
 			}
-		}
 
-		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
-			rendered = false;
+			Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
+			if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
+				rendered = false;
+				renderer.enabled = false;
+			}
+		} else {
+			Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
+			if (camPosition.x > 0 && camPosition.x < 1 && camPosition.y > 0 && camPosition.y < 1) {
+				rendered = true;
+				renderer.enabled = true;
+			}
 		}
 
 	}
@@ -142,13 +149,6 @@ public class PlantSway : MonoBehaviour {
 					inPassingRight = false;
 				}
 			}
-		}
-	}
-
-	void OnWillRenderObject()
-	{
-		if (Camera.current.tag == "MainCamera") {
-			rendered = true;
 		}
 	}
 
