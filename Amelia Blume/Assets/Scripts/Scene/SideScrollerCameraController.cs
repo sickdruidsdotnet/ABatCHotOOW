@@ -11,8 +11,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 	bool recentlyRotated1;
 	bool recentlyRotated2;
 
-	//bool targetless;
-
 	public List<Transform> paraLayers;
 	public List<Transform> frontLayers;
 	float layerDifference;
@@ -47,6 +45,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 	//tracking stuff
 	List<GameObject> trackables;
 	List<bool> tracking;
+	//this value makes
+	bool isTracking;
 	public float maxSize = 7;
 	public float minSize = 4;
 
@@ -55,7 +55,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void Start()
 	{
-		//targetless = true;
+		isTracking = false;
 
 		zooming = false;
 		thisCam = gameObject.GetComponent<Camera> ();
@@ -359,7 +359,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 	void trackTargets()
 	{
 		int index = 0;
-		bool isTracking = false;
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
 			//for starters, let's make sure it should be in this list
@@ -375,45 +374,16 @@ public class SideScrollerCameraController : MonoBehaviour {
 				//let's check if it should be being tracked
 				if(distFromCenter <= maxScreenDist)
 				{
-					if(tracking[index])
-					{
-						isTracking = true;
-						//already being tracked, put code handling that in here
-					}
-					else{
-						tracking[index] = true;
-						startSize = thisCam.orthographicSize;
-						endSize = maxSize;
-						zoomLength = Mathf.Abs(startSize - endSize);
-						zooming = true;
-						startTime = Time.time;
-					}
-					//it should be tracked, but is it already being tracked?
+					
+					isTracking = true;
+					tracking[index] = true;
 
 				} else {
-					//it shouldn't be tracked, let's do some checking
+					//it shouldn't be tracked
 					if(tracking[index])
 					{
-						//being tracked, that needs to change and the camera needs to resize accordingly
 						tracking[index] = false;
-						//check to make sure there's not another thing being tracked on screen
-						foreach(bool isBeingTracked in tracking)
-						{
-							if(isBeingTracked)
-							{
-								isTracking = true;
-								break;
-							}
-						}
 
-						if(!isTracking)
-						{
-							startSize = thisCam.orthographicSize;
-							endSize = minSize;
-							zoomLength = Mathf.Abs(startSize - endSize);
-							zooming = true;
-							startTime = Time.time;
-						}
 					}
 				}
 			}
@@ -425,27 +395,32 @@ public class SideScrollerCameraController : MonoBehaviour {
 			tracking.RemoveAt(removeIndices[i]);
 		}
 
+		bool trackCheck = false;
+
 		foreach(bool isBeingTracked in tracking)
 		{
 			if(isBeingTracked)
 			{
+				trackCheck = true;
 				isTracking = true;
-				//targetless = false;
 				break;
 			}
 		}
 
-		if(!isTracking && thisCam.orthographicSize != minSize && !zooming)
-		{
+		if (!trackCheck && thisCam.orthographicSize == maxSize && !zooming) {
+			isTracking = false;
 			startSize = thisCam.orthographicSize;
 			endSize = minSize;
 			zoomLength = Mathf.Abs(startSize - endSize);
 			zooming = true;
 			startTime = Time.time;
-		}
-
-		if (!isTracking) {
-			///targetless = true;
+		} else if (isTracking && thisCam.orthographicSize == minSize && !zooming) {
+			isTracking = true;
+			startSize = thisCam.orthographicSize;
+			endSize = maxSize;
+			zoomLength = Mathf.Abs(startSize - endSize);
+			zooming = true;
+			startTime = Time.time;
 		}
 
 	}
