@@ -12,7 +12,7 @@ public class FernSeed : Seed {
 		
 		this.plantType = "FernPlant/FernPlant";
 		
-		Debug.Log("FernSeed created");
-		Debug.Log("FernSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("FernSeed created");
+		//Debug.Log("FernSeed hydrationGoal: " + hydrationGoal);
 	}
 }

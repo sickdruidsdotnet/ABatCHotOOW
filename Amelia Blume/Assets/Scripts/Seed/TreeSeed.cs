@@ -12,7 +12,7 @@ public class TreeSeed : Seed{
 		
 		this.plantType = "Tree/TreePlant";
 		
-		Debug.Log("TreeSeed created");
-		Debug.Log("TreeSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("TreeSeed created");
+		//Debug.Log("TreeSeed hydrationGoal: " + hydrationGoal);
 	}
 }

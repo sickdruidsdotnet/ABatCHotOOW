@@ -15,7 +15,7 @@ public class VineSeed : Seed
 
         this.plantType = "VinePlant/VinePlant_Procedural";
 
-        Debug.Log("VineSeed created");
-        Debug.Log("VineSeed hydrationGoal: " + hydrationGoal);
+        //Debug.Log("VineSeed created");
+        //Debug.Log("VineSeed hydrationGoal: " + hydrationGoal);
     }
 }
