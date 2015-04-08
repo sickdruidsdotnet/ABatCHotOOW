@@ -167,6 +167,23 @@ public class SideScrollerCameraController : MonoBehaviour {
 			TrackingBehavior();
 		}
 
+		//keep the player within boundaries
+		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
+		/*Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
+		if (targetViewpoint.x < 0.2f) {
+			float xDistance = (thisCam
+			transform.position.Set(transform.position.x - panSpeedX, transform.position.y, transform.position.z);
+		}
+		else if (targetViewpoint.x > 0.8f){
+			transform.position.Set(transform.position.x + panSpeedX, transform.position.y, transform.position.z);
+		}
+		if (targetViewpoint.y < 0.2f) {
+			transform.position.Set(transform.position.x, transform.position.y - panSpeedY, transform.position.z);
+		}
+		else if (targetViewpoint.y > 0.8f){
+			transform.position.Set(transform.position.x, transform.position.y + panSpeedY, transform.position.z);
+		}*/
+
 		//make sure it hasn't run into a force pan limiter, as that will only update next frame and cause jittery movement
 		for(int i = 0; i < 4; i++)
 		{
@@ -444,16 +461,16 @@ public class SideScrollerCameraController : MonoBehaviour {
 		panTo = midpoint;
 		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
 		Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
-		if (targetViewpoint.x < 0.1f) {
-			panTo.Set(panTo.x -panSpeedX, panTo.y, panTo.z);
+		if (targetViewpoint.x < 0.2f) {
+			panTo.Set(panTo.x - panSpeedX, panTo.y, panTo.z);
 		}
-		else if (targetViewpoint.x > 0.9f){
-			panTo.Set(panTo.x +panSpeedX, panTo.y, panTo.z);
+		else if (targetViewpoint.x > 0.8f){
+			panTo.Set(panTo.x + panSpeedX, panTo.y, panTo.z);
 		}
-		if (targetViewpoint.y < 0.1f) {
+		if (targetViewpoint.y < 0.2f) {
 			panTo.Set(panTo.x, panTo.y - panSpeedY, panTo.z);
 		}
-		else if (targetViewpoint.x > 0.9f){
+		else if (targetViewpoint.y > 0.8f){
 			panTo.Set(panTo.x, panTo.y + panSpeedY, panTo.z);
 		}
 
