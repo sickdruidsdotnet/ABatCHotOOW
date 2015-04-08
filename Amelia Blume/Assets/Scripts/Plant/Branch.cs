@@ -38,6 +38,7 @@ public class Branch
 	public Branch parent;
 	public int parentNode;
 	public List<Branch> children;
+	private int depth;
 	public Vector3 startPoint;
 	public Vector3 direction;
 	public float branchMaturity;
@@ -46,9 +47,13 @@ public class Branch
 	private float growthStart;
 	public bool isGrowing = false;
 	private float maxSegLength = 0.2f;
+	private float initialRadius = 0.02f;
+	public float chanceToBranch = 0.25f;
+	public int randomBranchingFactor = 3;
+	public float randomBranchAngleFactor = 30f;
 
 	// "trunk" branch constructor
-	public Branch(Vector3 start, Vector3 dir, float initialRadius = 0.02f, float maxLength = 1.0f, float length = 0)
+	public Branch(Vector3 start, Vector3 dir, float initialRad = 0.02f, float maxLength = 1.0f, float length = 0)
 	{
 		// since there is no parent branch, we need a start point for this branch
 
@@ -57,16 +62,18 @@ public class Branch
 		parent = null;
 		parentNode = -1;
 		children = new List<Branch>();
+		depth = 0;
 		startPoint = start;
 		direction = dir;
 		lengthGoal = maxLength;
 		growthStart = length;
+		initialRadius = initialRad;
 
 		skeleton.Add(new BranchNode(initialRadius, length, startPoint, direction));
 	}
 
 	// standard branch constructor
-	public Branch(Branch parentBranch, Vector3 dir, float initialRadius = 0.02f, int node = -1, float maxLength = 1.0f, float length = 0)
+	public Branch(Branch parentBranch, Vector3 dir, float initialRad = 0.02f, int node = -1, float maxLength = 1.0f, float length = 0)
 	{
 		// parentBranch determines what branch this branch will... branch... off of.
 		// node determines where along the parent branch this branch will protrude from
@@ -92,10 +99,12 @@ public class Branch
 		}
 
 		children = new List<Branch>();
+		depth = parent.getDepth() + 1;
 		startPoint = parent.skeleton[parentNode].getNodeEndPoint();
 		direction = dir;
 		lengthGoal = maxLength;
 		growthStart = length;
+		initialRadius = initialRad;
 
 		skeleton.Add(new BranchNode(initialRadius, length, startPoint, direction));
 
@@ -106,7 +115,7 @@ public class Branch
 	{
 		bool wasGrowing = isGrowing;
 		// update vine skeleton structure (such as adding a new segment)
-		if (getTotalLength() < lengthGoal)
+		if (getLength() < lengthGoal)
 		{
 			grow();
 			isGrowing = true;
@@ -169,14 +178,67 @@ public class Branch
 		updateSkeleton(skeleton);
 	}
 
-	private void addSegment()
+	private void addSegment(float rad, float magnitude, Vector3 direction)
 	{
-		// steal from Vine
+		// since the tip is always of uniform length, we are actually adding a new tip,
+		// and shrinking the previous end segment. It can now grow to its full length,
+		// and then the process will start again.
+
+		if (magnitude > maxSegLength)
+		{
+			Debug.Log("Whoops, magnitude > maxSegLength in addSegment(). We should do something to handle this case.");
+		}
+		float tipLength = skeleton.Last().length;
+		skeleton.Last().length = magnitude;
+		BranchNode newNode = new BranchNode(rad, tipLength, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
+		skeleton.Add(newNode);
+
+		if (Random.Range(0, 1f) < chanceToBranch && depth < 3)
+		{
+			growRandomChildren(skeleton.Count - 2);
+		}
+
+		//expandMesh();
 	}
 
-	private void updateSkeleton()
+	private void growRandomChildren(int parentBranchNode)
 	{
-		// steal from Vine
+		int numChildren = Random.Range(1, randomBranchingFactor);
+		float angleStart = Random.Range(0, 360);
+		float branchAngle = Random.Range(5f, randomBranchAngleFactor);
+
+		for (int b = 0; b < numChildren; b++)
+		{
+			Vector3 direction = skeleton[parentBranchNode].direction;
+			Vector3 crossWith = Vector3.up;
+			if (crossWith == direction)
+			{
+				crossWith = Vector3.right;
+			}
+			Vector3 axis = Vector3.Cross(direction, crossWith);
+			axis = Quaternion.AngleAxis((360f * (float)b / (float)numChildren) + angleStart, direction) * axis;
+
+			direction = Quaternion.AngleAxis(branchAngle, axis) * direction;
+
+			addChild(dir : direction);
+		}
+	}
+
+	private void updateSkeleton(List<BranchNode> b)
+	{
+		// Iterate through all the nodes and make sure the start points correspond 
+		// to the ends of the previous nodes.
+		b[0].startPoint = startPoint;
+
+		if (b.Count > 1)
+		{
+			for (int node = 1; node < b.Count; node++)
+			{
+				b[node].startPoint = b[node - 1].startPoint + b[node - 1].getNodeRay();
+			}
+		}
+		
+		//updateMesh();
 	}
 
 	public Branch getParent()
@@ -201,6 +263,11 @@ public class Branch
 	{
 		Branch newChild = new Branch(this, dir, node : node, length : length);
 		children.Add(newChild);
+	}
+
+	public int getDepth()
+	{
+		return depth;
 	}
 
 	public float getLength()

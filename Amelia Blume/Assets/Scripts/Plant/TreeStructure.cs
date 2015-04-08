@@ -79,32 +79,47 @@ class TreeStructure : MonoBehaviour
 			//printSkeletonInfo();
 		}
 		*/
+
+		// update each Branch
+		updateBranches(trunk);
+		updateTreeSkeleton(trunk);
+
+	}
+
+	// recursively call Update() on all branches. This is not automatic since they are not Script Components
+	private void updateBranches(Branch b)
+	{
+		b.Update();
+
+		foreach (Branch c in b.getChildren())
+		{
+			updateBranches(c);
+		}
 	}
 
 	private void createInitialTreeSkeleton()
 	{
-		trunk = new Branch(Vector3.zero, Vector3.up, initialRadius : 0.02f, maxLength : 1.0f, length : 0.5f);
-
-		int numChildren = 5;
-
-		for (int b = 0; b < numChildren; b++)
-		{
-			Vector3 direction;
-			Vector3 crossWith = Vector3.up;
-			if (crossWith == trunk.direction)
-			{
-				crossWith = Vector3.right;
-			}
-			direction = Vector3.Cross(trunk.direction, crossWith);
-			direction = Quaternion.AngleAxis(360f * (float)b / (float)numChildren, trunk.direction) * direction;
-			trunk.addChild(dir : direction, length : 0.3f);
-		}
+		trunk = new Branch(Vector3.zero, Vector3.up, initialRad : 0.02f, maxLength : 1.0f);
 
 		//createMesh();
 	}
 
 	private void growTree()
 	{}
+
+	private void updateTreeSkeleton(Branch b)
+	{
+		if (b.getParent() != null)
+		{
+			// reposition the branch so it is still attached to the correct parent node.
+			b.startPoint = b.getParent().skeleton[b.parentNode].getNodeEndPoint();
+		}
+
+		foreach(Branch c in b.getChildren())
+			{
+				updateTreeSkeleton(c);
+			}
+	}
 
 	/*
 	private void createMesh()
