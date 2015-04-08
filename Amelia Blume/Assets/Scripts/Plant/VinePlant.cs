@@ -1,11 +1,21 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 //This is the base class which is
 //also known as the Parent class.
 public class VinePlant : Plant 
 {
+	public int numVines = 5;
+	private List<GameObject> vines;
+	private float vineSpawnRadians;
+	private float vineSpawnRadius = 0.2f;
+    public float maxVineLength = 3f;
+    public float growthRate = 0.35f;
+
+    public bool wasGrowing = false;
+
 	public Animal[] restrainedAnimals;
+	
     // Constructor
     public VinePlant()
     {
@@ -15,6 +25,43 @@ public class VinePlant : Plant
 		this.restrainedAnimals = new Animal[3];
         Debug.Log("VinePlant created");
         Debug.Log("VinePlant hydrationGoal: " + hydrationGoal);
+    }
+
+    void Start()
+    {
+        // initialize vines
+        vines = new List<GameObject>();
+
+        // vines should be spawned in a ring around the VinePlant's location.
+        vineSpawnRadians = 2 * Mathf.PI / numVines;
+
+        for (int vine = 0; vine < numVines; vine++)
+        {
+            float angle = vine * vineSpawnRadians;
+            float v_x = vineSpawnRadius * Mathf.Cos(angle);
+            float v_z = vineSpawnRadius * Mathf.Sin(angle);
+            Vector3 vineLocation = new Vector3(v_x, 0, v_z) + transform.position;
+
+            GameObject newVine = Instantiate(Resources.Load("VinePlant/VinePrefab"), vineLocation, Quaternion.identity) as GameObject;
+            newVine.transform.parent = gameObject.transform;
+
+            vines.Add(newVine);
+        }
+    }
+
+    void Update()
+    {
+        base.Update();
+
+        bool isGrowing = vines[0].GetComponent<Vine>().isGrowing;
+
+        if (wasGrowing && !isGrowing)
+        {
+            Debug.Log("Vines maturity: " + this.maturity);
+            vines[0].GetComponent<Vine>().printSkeletonInfo();
+        }
+
+        wasGrowing = isGrowing;
     }
 
 	void OnTriggerEnter(Collider other)
@@ -39,7 +86,7 @@ public class VinePlant : Plant
 		for (int i = 0; i < restrainedAnimals.Length; i++) {
 			if (restrainedAnimals [i] == null) {
 				restrainedAnimals [i] = other;
-				other.becomeRestrained();
+				other.becomeRestrained(collider);
 				break;
 			}
 			else if(restrainedAnimals [i] == other)
@@ -49,5 +96,16 @@ public class VinePlant : Plant
 			}
 		}
  
+    }
+
+    public override void grow()
+    {
+        
+        float goal = maturity * maxVineLength;
+
+        for (int vine = 0; vine < vines.Count; vine++)
+        {
+            vines[vine].GetComponent<Vine>().setGrowthInfo(goal, growthRate);
+        }
     }
 }

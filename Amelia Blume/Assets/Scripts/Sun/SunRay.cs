@@ -29,7 +29,7 @@ public class SunRay : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		life--;
 		if (life <= 0) {
 			Color newColor = new Color (renderer.material.color.r, 

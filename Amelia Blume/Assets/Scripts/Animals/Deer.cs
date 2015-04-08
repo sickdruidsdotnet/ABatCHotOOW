@@ -41,8 +41,14 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
+		animalType = "Deer";
+		strength = 2f;
 		sporeResistance = 10f;
 		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
+
+		if (!isInfected) {
+			BroadcastMessage ("clearInfection");
+		}
 
 		//get the player to easily work with
 		GameObject playerObject = GameObject.FindWithTag ("Player");
@@ -77,7 +83,7 @@ public class Deer : Animal
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 		//keep faceDirection Up to Date
 		if (transform.rotation.eulerAngles.y >= 90 && transform.rotation.eulerAngles.y <= 270)
@@ -94,7 +100,14 @@ public class Deer : Animal
 
 
 		//function to check if the player is in sight
-		checkSeen ();
+		if (isInfected) {
+			checkSeen ();
+		} else {
+			//do some check to make sure it behaves neutrally
+			isCharging = false;
+			isInChargeUp = false;
+			speed = walkSpeed;
+		}
 
         if (isRestrained) {
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
@@ -106,24 +119,7 @@ public class Deer : Animal
 			checkRotate();
 
             //rotation management
-
-            if (rotationCooldown > 0)
-            {
-                rotationCooldown--;
-                transform.Rotate(0f, 3f, 0f);
-                isCharging = false;
-                isInChargeUp = false;
-            }
-            else
-            {
-                recentlyRotated = false;
-				//unfreeze deer 
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
-				rigidbody.freezeRotation = true;
-            }
-            
-
+			HandleRotation();
 
             //charging
             if (isCharging)
@@ -156,7 +152,23 @@ public class Deer : Animal
 
 
         //locking needs to happen last
-        transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
+        if(isInfected)
+			transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
+		else
+			transform.position = new Vector3(transform.position.x, transform.position.y, 4);
+		//ensure z rotation doesn't exceed reasonable amounts
+		float angle = transform.rotation.eulerAngles.z;
+		//if rotated greater than 35 degrees
+		if (angle > 35f && angle < 325f) {
+			if (angle > 35f && angle <= 180f) {
+				angle = 35f;
+			} else if (angle < 325f && angle >= 180f) {
+				angle = 325f;
+			}
+			angle = angle / 360f;
+			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y,
+		                                    angle, transform.rotation.w);
+		}
     }
 
 	//this will bounce the player and cause the deer to look towards them,
@@ -238,30 +250,54 @@ public class Deer : Animal
 
 			//check the deer should be charging
 			if ( isInfected && !isRestrained && !(isCharging) && !recentlyRotated) {
-				Ray vision = new Ray(new Vector3(transform.position.x + (2f * faceDirection),
-				                                 transform.position.y + 1.5f,
-				                                 transform.position.z),
-				                     Vector3.right * faceDirection);
-				RaycastHit visionHit;
-				if (Physics.Raycast (vision, out visionHit, deerXSight)) {
-					//draws the vision ray in editor
-					/*Debug.DrawRay(new Vector3(transform.position.x + (2f * faceDirection),
-					                          transform.position.y + 1.5f,
-					                          transform.position.z),
-					              Vector3.right * faceDirection,
-					              Color.green, 1f);*/
-					if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
-					{
-						//Debug.Log("found player");
-						isCharging = true;
-						isInChargeUp = true;
-						chargeUpCooldown = 60;
-						speed = 0f;
-						return;
-					}
-					/*else
-						Debug.Log("found " + visionHit.transform.name);*/
+				Vector3 sightPos = new Vector3(transform.position.x + (1.7f * faceDirection),
+				                               transform.position.y + 1.5f,
+				                               transform.position.z);
+				Vector3 playerHead = new Vector3(player.transform.position.x,
+				                                 player.transform.position.y + 1.5f,
+				                                 player.transform.position.z);
+				Ray visionFeet = new Ray(sightPos, player.transform.position - sightPos);
+				Ray visionHead = new Ray(sightPos, playerHead - sightPos);
 
+				RaycastHit visionHit;
+				RaycastHit visionHeadHit;
+				if (Physics.Raycast (visionFeet, out visionHit, 2f * deerXSight)) {
+					//draws the vision ray in editor
+					Debug.DrawRay(sightPos, player.transform.position - sightPos, Color.green);
+					//check to make sure angle isn't too great to see
+					//Vector3 rayVector = vision.direction;
+					float angle = Vector3.Angle(visionFeet.direction, Vector3.right * faceDirection);
+					if(Mathf.Abs(angle) <= 45){
+						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
+						{
+							//Debug.Log("found player");
+							isCharging = true;
+							isInChargeUp = true;
+							chargeUpCooldown = 60;
+							speed = 0f;
+							return;
+						}
+					}
+				}
+				//check the head
+				if (Physics.Raycast (visionHead, out visionHeadHit, 2f * deerXSight)) {
+					//draws the vision ray in editor
+					Debug.DrawRay(sightPos, playerHead - sightPos, Color.green);
+					//check to make sure angle isn't too great to see
+					//Vector3 rayVector = vision.direction;
+					float angle = Vector3.Angle(visionHead.direction, Vector3.right * faceDirection);
+					if(Mathf.Abs(angle) <= 45){
+						if(visionHit.transform != null && visionHit.transform.tag != null && 
+						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
+						{
+							//Debug.Log("found player");
+							isCharging = true;
+							isInChargeUp = true;
+							chargeUpCooldown = 60;
+							speed = 0f;
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -305,6 +341,41 @@ public class Deer : Animal
 			rigidbody.freezeRotation = true;
 		}
     }
+
+	//TODO change this when we get boar animations. THere's no need to physically rotate over time if animation's are good
+	void HandleRotation ()
+	{
+		if (rotationCooldown > 0)
+		{
+			rotationCooldown--;
+			transform.Rotate(0f, 3f, 0f);
+			if(rotationCooldown <= 0){
+				recentlyRotated = false;
+				//make sure it's perfectly in profile
+				//set the angle to face the proper directions, then assign isFacingRight
+				if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
+				{
+					transform.rotation = new Quaternion(0f, 180f, transform.rotation.z, transform.rotation.w);
+					
+					// TODO we should find a better solution for this. Always flipping these values together is not good practice.
+					// can we consolidate to one variable? I recognize the advantages of both, but two seems bad. --Derk
+					faceDirection = 1;
+					isFacingRight = true;
+				}
+				else
+				{
+					transform.rotation = new Quaternion(0f, 0f, transform.rotation.z, transform.rotation.w);
+					isFacingRight = false;
+					faceDirection = -1;
+				}
+				//unfreeze boar 
+				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+				rigidbody.freezeRotation = true;
+				
+			}
+		}
+	}
+
 	//deals the impact and damage to the player
 	public void HitPlayer(GameObject player)
 	{
@@ -323,6 +394,7 @@ public class Deer : Animal
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
 		}
 		player.GetComponent<PlayerController>().canControl = false;
+		player.GetComponent<PlayerController> ().isStunned = true;
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;

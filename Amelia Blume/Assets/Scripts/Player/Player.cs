@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// Primary player controller class. Provides a few basic
@@ -33,13 +34,16 @@ public class Player : BaseBehavior {
 	};
 
 	public int health;
-	public bool dashed = false;
-	public float dashedAtTime = 0;
+	public bool airDashed = false;
+	public bool isDashing = false;
+	public float dashStartX = 0F;
+	public float dashedAtTime = 0F;
 	private GameObject spawner;
 	protected PlayerController cachedPlayerController;
 	private GameObject fruit;
 	private bool canGrow = false;
 	private bool sunning = false;
+	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
 
 	
@@ -204,24 +208,27 @@ public class Player : BaseBehavior {
 		}
 	}
 
+	public bool canConvert {
+		get {
+			return cachedPlayerController.canConvert;
+		}
+	}
+
 	public bool canDash {
 		get {
-			if(Time.time - dashedAtTime >= 1.0F)
-			{
-				dashedAtTime = Time.time;
-
-				if (!isGrounded && !dashed){
-					dashed = true;
-					return true;
-				}
-				else if(!isGrounded && dashed)
-					return false;
-		
-				else if(isGrounded)
-					return true;
+			if (!isGrounded && !airDashed){
+				airDashed = true;
+				return true;
 			}
-			
-			return false;
+			else if(!isGrounded && airDashed)
+				return false;
+
+			else if(isGrounded && Time.time - dashedAtTime >= 1.0F)
+			{
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 
@@ -310,6 +317,16 @@ public class Player : BaseBehavior {
 	public void SetSunning(bool value)
 	{
 		sunning = value;
+	}
+
+	public bool isConverting()
+	{
+		return converting;
+	}
+	
+	public void SetConverting(bool value)
+	{
+		converting = value;
 	}
 
 	public SeedType getCurrentSeedType()

@@ -71,6 +71,7 @@ public class Seed : MonoBehaviour
 
         // spawn a seed
 
+        Debug.Log(plantType);
 
         Vector3 loc = new Vector3(0, 0, 0);
         loc += transform.position;
