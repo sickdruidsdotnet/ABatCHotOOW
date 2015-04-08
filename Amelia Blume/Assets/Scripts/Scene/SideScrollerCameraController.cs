@@ -451,12 +451,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 			return;
 		}
 
-		Vector3 midpoint = target.transform.position;
+		Vector3 midpoint = target.transform.position * 2;
 		foreach (GameObject trackable in tracked) {
 			midpoint += trackable.transform.position;
 		}
 
-		midpoint = new Vector3 (midpoint.x / (tracked.Count + 1), midpoint.y / (tracked.Count + 1),
+		midpoint = new Vector3 (midpoint.x / (tracked.Count + 2), midpoint.y / (tracked.Count + 2),
 		                       transform.position.z);
 		panTo = midpoint;
 		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
