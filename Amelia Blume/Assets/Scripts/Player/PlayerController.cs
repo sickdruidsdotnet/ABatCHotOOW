@@ -18,6 +18,9 @@ public class PlayerController : BaseBehavior {
 	public bool isJumping = false;
 	public bool isAirDashing = false;
 	public bool isStunned = false;
+	public bool isPlanting = false;
+	public bool isSunLighting = false;
+	public float watering = 0.0f;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -267,6 +270,9 @@ public class PlayerController : BaseBehavior {
 			if (Input.GetButtonDown ("ThrowSeed")) {
 				ThrowSeed ();
 			}
+			if (Input.GetButtonUp("ThrowSeed")){
+				isPlanting = false;
+			}
 			if (Input.GetButtonDown ("Dash")) {
 				Dash ();
 			}
@@ -280,6 +286,9 @@ public class PlayerController : BaseBehavior {
 				Sun();
 				player.SetSunning(true);
 			}
+		}
+		if (Input.GetButtonUp ("Sun")) {
+			isSunLighting = false;
 		}
 	}
 	
@@ -299,6 +308,7 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+		isPlanting = true;
 	}
 
 	protected void Dash() {
@@ -311,6 +321,7 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
