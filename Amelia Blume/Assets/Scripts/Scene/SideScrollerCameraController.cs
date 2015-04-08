@@ -160,170 +160,18 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		//normal camera movement behavior if it's not tracking anything
 		if (!isTracking) {
-			//get player's position in viewport
-			Vector3 point = GetComponent<Camera> ().WorldToViewportPoint (target.position);
-
-			//new camera movement. Adjust dynamically depending on Player's direction
-			//geet the world distance of 0.1 to properly adjust the camera
-			float xDistance = GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.4f, 0.5f)).x -
-				GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.5f, 0.5f)).x;
-
-			//horizontal movement is entirely reliant on whether the player has recently turned around or not;
-			//recentlyroated 1 & 2 allow for some player movement leeway before adjusting the camera
-			if (recentlyRotated1)
-				recentlyRotated2 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
-			else
-				recentlyRotated1 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
-			if (recentlyRotated2) {
-				recentlyRotated1 = false;
-				recentlyRotated2 = false;
-			}
-
-			//if the player is facing right, give 3/5ths the screen of lead space to the right
-			if (target.GetComponent<Player> ().isFacingRight) {
-				if (point.x >= 0.4f && canPanRight && !recentlyRotated1) {
-					panTo = new Vector3 (target.transform.position.x - xDistance,
-				                    panTo.y, transform.position.z);
-					panRight = true;
-					panLeft = false;
-				} else if (recentlyRotated1 && point.x >= 0.8f && canPanRight) {
-					//player has reached the threshold of leeway for space after turning around from left
-					recentlyRotated1 = false;
-					panTo = new Vector3 (target.transform.position.x - xDistance,
-				                    panTo.y, transform.position.z);
-					panRight = true;
-					panLeft = true;
-				} else {
-					panRight = false;
-				}
-			} else { //if the player is facing left, give 3/5ths the screen of lead space to the left
-				if (point.x <= 0.6f && canPanLeft && !recentlyRotated1) {
-					panTo = new Vector3 (target.transform.position.x + xDistance,
-				                     panTo.y, transform.position.z);
-					panLeft = true;
-					panRight = false;
-				} else if (recentlyRotated1 && point.x <= 0.2f && canPanLeft) {
-					//player has reached the threshold of leeway for space after turning around from right
-					recentlyRotated1 = false;
-					panTo = new Vector3 (target.transform.position.x + xDistance,
-				                    panTo.y, transform.position.z);
-					panLeft = true;
-					panRight = false;
-				} else {
-					panLeft = false;
-				}
-			}
-
-			//vertical movement now; unlike hori, mostly dependent on user's vertical position
-			// we do want to give the player a view of where they're falling though.
-
-			float yDistance = GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.4f, 0.6f)).y -
-				GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.5f, 0.5f)).y;
-
-			//panning up
-			if (point.y >= 0.8f && canPanUp) {
-				panTo = new Vector3 (panTo.x, transform.position.y + (4f * yDistance), transform.position.z);
-				panUp = true;
-				panDown = false;
-			} else if (point.y <= 0.1f && canPanDown) {//panning down
-				panTo = new Vector3 (panTo.x, transform.position.y - (4f * yDistance), transform.position.z);
-				panUp = false;
-				panDown = true;
-			}
-
-			//let's save the current position for later use;
-			Vector3 oldPos = transform.position;
-			if (panRight) {
-				if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
-					transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
-					//make sure to check if it's passed a force pan limiter to prevent jittery camera
-					foreach (GameObject panLimiter in panLimiters[3]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanRight = false;
-							break;
-						}
-					}
-					panRight = false;
-				} else {
-					transform.position = new Vector3 (transform.position.x + panSpeedX, 
-				                                 transform.position.y, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[3]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanRight = false;
-							break;
-						}
-					}
-				}
-			} else if (panLeft) {
-				if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
-					transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[2]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanLeft = false;
-							break;
-						}
-					}
-					panLeft = false;
-				} else {
-					transform.position = new Vector3 (transform.position.x - panSpeedX, 
-				                                 transform.position.y, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[2]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanLeft = false;
-							break;
-						}
-					}
-				}
-			}
-			if (Mathf.Abs (prevTargetPos.y - target.position.y) >= 0.2f) {
-
-				panSpeedY = Mathf.Abs (prevTargetPos.y - target.position.y);
-			} else
-				panSpeedY = 0.2f;
-
-			if (panUp && canPanUp) {
-				if (Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY) {
-					transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[0]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanUp = false;
-							break;
-						}
-					}
-					panUp = false;
-				} else {
-					transform.position = new Vector3 (transform.position.x, 
-				                                 transform.position.y + panSpeedY, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[0]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanUp = false;
-							break;
-						}
-					}
-				}
-			} else if (panDown && canPanDown) {
-				if (Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY) {
-					transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[1]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanDown = false;
-							break;
-						}
-					}
-					panDown = false;
-				} else {
-					transform.position = new Vector3 (transform.position.x, 
-				                                 transform.position.y - panSpeedY, transform.position.z);
-					foreach (GameObject panLimiter in panLimiters[1]) {
-						if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
-							canPanDown = false;
-						}
-					}
-				}
-			}
+			//standard camera behavior when nothing is being tracked
+			StandardBehavior();
 		} else {
 			//animals are being tracked; need whole new behavior
 			TrackingBehavior();
+		}
+
+		//make sure it hasn't run into a force pan limiter, as that will only update next frame and cause jittery movement
+		for(int i = 0; i < 4; i++)
+		{
+			foreach( GameObject panLimiter in panLimiters[i])
+				panLimiter.GetComponent<PanLimiter>().checkForcePan();
 		}
 
 		//let's get how much has changed between frames and handle that parallax
@@ -405,6 +253,172 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	}
 
+
+	void StandardBehavior()
+	{
+		//get player's position in viewport
+		Vector3 point = GetComponent<Camera> ().WorldToViewportPoint (target.position);
+		
+		//new camera movement. Adjust dynamically depending on Player's direction
+		//geet the world distance of 0.1 to properly adjust the camera
+		float xDistance = GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.4f, 0.5f)).x -
+			GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.5f, 0.5f)).x;
+		
+		//horizontal movement is entirely reliant on whether the player has recently turned around or not;
+		//recentlyroated 1 & 2 allow for some player movement leeway before adjusting the camera
+		if (recentlyRotated1)
+			recentlyRotated2 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
+		else
+			recentlyRotated1 = (lastFaceDirection != target.GetComponent<Player> ().isFacingRight);
+		if (recentlyRotated2) {
+			recentlyRotated1 = false;
+			recentlyRotated2 = false;
+		}
+		
+		//if the player is facing right, give 3/5ths the screen of lead space to the right
+		if (target.GetComponent<Player> ().isFacingRight) {
+			if (point.x >= 0.4f && canPanRight && !recentlyRotated1) {
+				panTo = new Vector3 (target.transform.position.x - xDistance,
+				                     panTo.y, transform.position.z);
+				panRight = true;
+				panLeft = false;
+			} else if (recentlyRotated1 && point.x >= 0.8f && canPanRight) {
+				//player has reached the threshold of leeway for space after turning around from left
+				recentlyRotated1 = false;
+				panTo = new Vector3 (target.transform.position.x - xDistance,
+				                     panTo.y, transform.position.z);
+				panRight = true;
+				panLeft = true;
+			} else {
+				panRight = false;
+			}
+		} else { //if the player is facing left, give 3/5ths the screen of lead space to the left
+			if (point.x <= 0.6f && canPanLeft && !recentlyRotated1) {
+				panTo = new Vector3 (target.transform.position.x + xDistance,
+				                     panTo.y, transform.position.z);
+				panLeft = true;
+				panRight = false;
+			} else if (recentlyRotated1 && point.x <= 0.2f && canPanLeft) {
+				//player has reached the threshold of leeway for space after turning around from right
+				recentlyRotated1 = false;
+				panTo = new Vector3 (target.transform.position.x + xDistance,
+				                     panTo.y, transform.position.z);
+				panLeft = true;
+				panRight = false;
+			} else {
+				panLeft = false;
+			}
+		}
+		
+		//vertical movement now; unlike hori, mostly dependent on user's vertical position
+		// we do want to give the player a view of where they're falling though.
+		
+		float yDistance = GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.4f, 0.6f)).y -
+			GetComponent<Camera> ().ViewportToWorldPoint (new Vector2 (0.5f, 0.5f)).y;
+		
+		//panning up
+		if (point.y >= 0.8f && canPanUp) {
+			panTo = new Vector3 (panTo.x, transform.position.y + (4f * yDistance), transform.position.z);
+			panUp = true;
+			panDown = false;
+		} else if (point.y <= 0.1f && canPanDown) {//panning down
+			panTo = new Vector3 (panTo.x, transform.position.y - (4f * yDistance), transform.position.z);
+			panUp = false;
+			panDown = true;
+		}
+		
+		//let's save the current position for later use;
+		Vector3 oldPos = transform.position;
+		if (panRight) {
+			if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
+				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
+				//make sure to check if it's passed a force pan limiter to prevent jittery camera
+				foreach (GameObject panLimiter in panLimiters[3]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanRight = false;
+						break;
+					}
+				}
+				panRight = false;
+			} else {
+				transform.position = new Vector3 (transform.position.x + panSpeedX, 
+				                                  transform.position.y, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[3]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanRight = false;
+						break;
+					}
+				}
+			}
+		} else if (panLeft) {
+			if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
+				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[2]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanLeft = false;
+						break;
+					}
+				}
+				panLeft = false;
+			} else {
+				transform.position = new Vector3 (transform.position.x - panSpeedX, 
+				                                  transform.position.y, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[2]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanLeft = false;
+						break;
+					}
+				}
+			}
+		}
+		if (Mathf.Abs (prevTargetPos.y - target.position.y) >= 0.2f) {
+			
+			panSpeedY = Mathf.Abs (prevTargetPos.y - target.position.y);
+		} else
+			panSpeedY = 0.2f;
+		
+		if (panUp && canPanUp) {
+			if (Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY) {
+				transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[0]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanUp = false;
+						break;
+					}
+				}
+				panUp = false;
+			} else {
+				transform.position = new Vector3 (transform.position.x, 
+				                                  transform.position.y + panSpeedY, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[0]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanUp = false;
+						break;
+					}
+				}
+			}
+		} else if (panDown && canPanDown) {
+			if (Mathf.Abs (panTo.y - transform.position.y) <= panSpeedY) {
+				transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[1]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanDown = false;
+						break;
+					}
+				}
+				panDown = false;
+			} else {
+				transform.position = new Vector3 (transform.position.x, 
+				                                  transform.position.y - panSpeedY, transform.position.z);
+				foreach (GameObject panLimiter in panLimiters[1]) {
+					if (panLimiter.GetComponent<PanLimiter> ().checkForcePan ()) {
+						canPanDown = false;
+					}
+				}
+			}
+		}
+	}
+
 	void TrackingBehavior()
 	{
 		//average the distance and keep the camera in the center point until the player wander's too far offscreen
@@ -427,6 +441,51 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		midpoint = new Vector3 (midpoint.x / (tracked.Count + 1), midpoint.y / (tracked.Count + 1),
 		                       transform.position.z);
+		panTo = midpoint;
+		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
+		Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
+		if (targetViewpoint.x < 0.1f) {
+			panTo.Set(panTo.x -panSpeedX, panTo.y, panTo.z);
+		}
+		else if (targetViewpoint.x > 0.9f){
+			panTo.Set(panTo.x +panSpeedX, panTo.y, panTo.z);
+		}
+		if (targetViewpoint.y < 0.1f) {
+			panTo.Set(panTo.x, panTo.y - panSpeedY, panTo.z);
+		}
+		else if (targetViewpoint.x > 0.9f){
+			panTo.Set(panTo.x, panTo.y + panSpeedY, panTo.z);
+		}
+
+		//Now to actually pan
+		if (panTo.x > transform.position.x) {
+			if (panSpeedX > Mathf.Abs (panTo.x - transform.position.x)) {
+				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
+			} else {
+				transform.position = new Vector3 (transform.position.x + panSpeedX, transform.position.y, transform.position.z);
+			}
+		} else if (panTo.x < transform.position.x) {
+			if (panSpeedX > Mathf.Abs (panTo.x - transform.position.x)) {
+				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
+			} else {
+				transform.position = new Vector3 (transform.position.x - panSpeedX, transform.position.y, transform.position.z);
+			}
+		}
+
+		if (panTo.y > transform.position.y) {
+			if (panSpeedY > Mathf.Abs (panTo.y - transform.position.y)) {
+				transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
+			} else {
+				transform.position = new Vector3 (transform.position.x, transform.position.y + panSpeedY, transform.position.z);
+			}
+		} else if (panTo.y < transform.position.y) {
+			if (panSpeedY > Mathf.Abs (panTo.y - transform.position.y)) {
+				transform.position = new Vector3 (transform.position.x, panTo.y, transform.position.z);
+			} else {
+				transform.position = new Vector3 (transform.position.x, transform.position.y - panSpeedY, transform.position.z);
+			}
+		}
+
 
 	}
 
