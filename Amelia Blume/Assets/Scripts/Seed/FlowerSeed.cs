@@ -12,7 +12,7 @@ public class FlowerSeed : Seed {
 		
 		this.plantType = "LurePlant/LurePlant";
 		
-		Debug.Log("FlowerSeed created");
-		Debug.Log("FlowerSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("FlowerSeed created");
+		//Debug.Log("FlowerSeed hydrationGoal: " + hydrationGoal);
 	}
 }

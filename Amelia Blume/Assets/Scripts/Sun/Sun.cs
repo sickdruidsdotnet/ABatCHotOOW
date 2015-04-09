@@ -14,6 +14,13 @@ public class Sun : MonoBehaviour {
 		HandleInput ();
 	}
 
+	void FixedUpdate()
+	{
+		if (transform.position.x != player.transform.position.x || transform.position.y != player.transform.position.y + 2f) {
+			transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2f, transform.position.z);
+		}
+	}
+
 	protected void HandleInput() {
 		if (Input.GetButtonUp ("Sun")) {
 			player.GetComponent<Player>().SetSunning(false);
