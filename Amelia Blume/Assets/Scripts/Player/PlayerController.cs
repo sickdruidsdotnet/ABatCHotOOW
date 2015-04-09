@@ -255,7 +255,7 @@ public class PlayerController : BaseBehavior {
 				//Debug.Log ("Angle: " + angle + " Direction: Right");
 			}
 			else if( angle >= 135 && angle <= 180){
-				player.SetCurrentSeed(Player.SeedType.VineSeed);
+				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Down");
 			}
 			else if( angle >= 45 && angle < 135 && horizontal2 < 0 ){
@@ -263,7 +263,7 @@ public class PlayerController : BaseBehavior {
 				//Debug.Log ("Angle: " + angle + " Direction: Left");
 			}
 			else{
-				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+				player.SetCurrentSeed(Player.SeedType.VineSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Up");
 			}
 
