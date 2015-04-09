@@ -252,19 +252,19 @@ public class PlayerController : BaseBehavior {
 				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
 			if( angle >= 45 && angle < 135 && horizontal2 > 0){
 				player.SetCurrentSeed(Player.SeedType.TreeSeed);
-				Debug.Log ("Angle: " + angle + " Direction: Right");
+				//Debug.Log ("Angle: " + angle + " Direction: Right");
 			}
 			else if( angle >= 135 && angle <= 180){
 				player.SetCurrentSeed(Player.SeedType.VineSeed);
-				Debug.Log ("Angle: " + angle + " Direction: Down");
+				//Debug.Log ("Angle: " + angle + " Direction: Down");
 			}
 			else if( angle >= 45 && angle < 135 && horizontal2 < 0 ){
 				player.SetCurrentSeed(Player.SeedType.FernSeed);
-				Debug.Log ("Angle: " + angle + " Direction: Left");
+				//Debug.Log ("Angle: " + angle + " Direction: Left");
 			}
 			else{
 				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
-				Debug.Log ("Angle: " + angle + " Direction: Up");
+				//Debug.Log ("Angle: " + angle + " Direction: Up");
 			}
 
 		/*if (horizontal2 > 0)
