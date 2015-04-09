@@ -451,16 +451,16 @@ public class SideScrollerCameraController : MonoBehaviour {
 			return;
 		}
 
-		Vector3 midpoint = target.transform.position * tracked.Count;
+		Vector3 midpoint = target.transform.position * (tracked.Count + 1);
 		foreach (GameObject trackable in tracked) {
 			midpoint += trackable.transform.position;
 		}
 
-		midpoint = new Vector3 (midpoint.x / (tracked.Count * 2f), midpoint.y / (tracked.Count * 2f),
+		midpoint = new Vector3 (midpoint.x / ((tracked.Count * 2f)+1), midpoint.y / ((tracked.Count * 2f)+1),
 		                       transform.position.z);
 		panTo = midpoint;
 		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
-		Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
+		/*Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
 		if (targetViewpoint.x < 0.2f) {
 			panTo.Set(panTo.x - panSpeedX, panTo.y, panTo.z);
 		}
@@ -472,7 +472,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		}
 		else if (targetViewpoint.y > 0.8f){
 			panTo.Set(panTo.x, panTo.y + panSpeedY, panTo.z);
-		}
+		}*/
 
 		//Now to actually pan
 		if (panTo.x > transform.position.x) {
