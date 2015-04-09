@@ -238,24 +238,48 @@ public class PlayerController : BaseBehavior {
 		}
 
 	}
-	
+
 	protected void HandleActionInput() {
+		float horizontal2 = Input.GetAxis("Horizontal 3");
+		//Debug.Log ("Horizontal 3: " + horizontal2);
+		float vertical2 = Input.GetAxis ("Vertical 3");
+		//Debug.Log ("Vertical 3: " + vertical2);
+		if(new Vector2(horizontal2, vertical2).magnitude >= 0.5f)
+		{
+			float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
+			/*if (angle < 0)
+				angle += 360f;*/
+				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
+			if( angle >= 45 && angle < 135 && horizontal2 > 0){
+				player.SetCurrentSeed(Player.SeedType.TreeSeed);
+				Debug.Log ("Angle: " + angle + " Direction: Right");
+			}
+			else if( angle >= 135 && angle <= 180){
+				player.SetCurrentSeed(Player.SeedType.VineSeed);
+				Debug.Log ("Angle: " + angle + " Direction: Down");
+			}
+			else if( angle >= 45 && angle < 135 && horizontal2 < 0 ){
+				player.SetCurrentSeed(Player.SeedType.FernSeed);
+				Debug.Log ("Angle: " + angle + " Direction: Left");
+			}
+			else{
+				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+				Debug.Log ("Angle: " + angle + " Direction: Up");
+			}
 
-		float horizontal2 = Input.GetAxis("Horizontal 2");
-		float vertical2 = Input.GetAxis("Vertical 2");
-
-		if (horizontal2 > 0)
+		/*if (horizontal2 > 0)
 			player.SetCurrentSeed(Player.SeedType.TreeSeed);
 		if (horizontal2 < 0)
 			player.SetCurrentSeed(Player.SeedType.VineSeed);
 		if (vertical2 > 0)
 			player.SetCurrentSeed(Player.SeedType.FernSeed);
 		if (vertical2 < 0)
-			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+			player.SetCurrentSeed(Player.SeedType.FlowerSeed);*/
+		}
 
 
 		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
-		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));*/
 
 		if(!canControl)
 			return;
