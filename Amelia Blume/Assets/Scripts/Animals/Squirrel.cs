@@ -147,7 +147,7 @@ public class Squirrel : Animal {
 
 	void OnCollisionEnter(Collision other)
 	{
-		Debug.Log ("collision");
+		//Debug.Log ("collision");
 		if (other.gameObject.tag == "Seed") {
 			Destroy (other.gameObject);
 			lookingForSeed = true;

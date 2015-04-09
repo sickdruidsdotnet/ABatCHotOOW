@@ -42,6 +42,7 @@ public class PlayerMotor : BaseBehavior {
 
 		public bool stopJump = false;
 
+
 		public Vector3 momentum = Vector3.zero;
 	}
 	
@@ -466,6 +467,12 @@ public class PlayerMotor : BaseBehavior {
 			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
 			Instantiate(sun);
 		}
+	}
+
+	public void ReadSign(){
+		//Debug.Log ("Reading Sign Now");
+		GameObject sign = player.GetCurrentSign ();
+		sign.GetComponent<SignPost>().Read ();
 	}
 
 	public void Convert(){

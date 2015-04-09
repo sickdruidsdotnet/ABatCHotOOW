@@ -262,7 +262,10 @@ public class PlayerController : BaseBehavior {
 
 		if (!player.isSunning() && !player.isConverting()) {
 			if (Input.GetButtonDown ("Jump")) {
-				Jump ();
+				if(player.GetReadSign())
+					ReadSign();
+				else
+					Jump ();
 			}
 			if (Input.GetButtonDown ("ThrowSeed")) {
 				ThrowSeed ();
@@ -317,6 +320,11 @@ public class PlayerController : BaseBehavior {
 		player.Broadcast("OnConvertRequest");
 		player.motor.Convert();
 	}
+
+	public void ReadSign(){
+		player.motor.ReadSign();
+		player.Broadcast ("OnReadSignRequest");
+		}
 
 	public void HandleStun()
 	{
