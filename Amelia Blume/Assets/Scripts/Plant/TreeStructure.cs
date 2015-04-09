@@ -36,8 +36,10 @@ class TreeStructure : MonoBehaviour
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
 
+	private TreePlant_Procedural.TreeSettings treeSettings;
+
 	void Start()
-	{
+
 		meshRenderer = GetComponent<MeshRenderer>();
 
 		_transform = transform;
@@ -54,6 +56,11 @@ class TreeStructure : MonoBehaviour
 		mesh.name = "TreeStructure";
 
 		createInitialTreeSkeleton();
+	}
+
+	public void loadTreeSettings(TreePlant_Procedural.TreeSettings ts)
+	{
+		treeSettings = ts;
 	}
 
 	void Update()
@@ -99,7 +106,7 @@ class TreeStructure : MonoBehaviour
 
 	private void createInitialTreeSkeleton()
 	{
-		trunk = new Branch(Vector3.zero, Vector3.up, initialRad : 0.02f, maxLength : 1.0f);
+		trunk = new Branch(Vector3.zero, Vector3.up, treeSettings, true);
 
 		//createMesh();
 	}
