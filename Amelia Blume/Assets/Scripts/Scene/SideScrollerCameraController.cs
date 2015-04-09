@@ -144,7 +144,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		trackTargets ();
 		if (zooming) {
-			float newSize = Mathf.Lerp(startSize, endSize, ((Time.time - startTime) * zoomRate) / zoomLength );
+			float newSize = Mathf.SmoothStep(startSize, endSize, ((Time.time - startTime) * zoomRate) / zoomLength);
 			thisCam.orthographicSize = newSize;
 			if(thisCam.orthographicSize == endSize)
 			{
@@ -451,12 +451,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 			return;
 		}
 
-		Vector3 midpoint = target.transform.position * 2;
+		Vector3 midpoint = target.transform.position * tracked.Count;
 		foreach (GameObject trackable in tracked) {
 			midpoint += trackable.transform.position;
 		}
 
-		midpoint = new Vector3 (midpoint.x / (tracked.Count + 2), midpoint.y / (tracked.Count + 2),
+		midpoint = new Vector3 (midpoint.x / (tracked.Count * 2f), midpoint.y / (tracked.Count * 2f),
 		                       transform.position.z);
 		panTo = midpoint;
 		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
