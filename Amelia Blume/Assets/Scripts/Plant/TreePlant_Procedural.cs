@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-class TreePlant_Procedural : Plant
+public class TreePlant_Procedural : Plant
 {
 	public GameObject treeStructure;
 	public GameObject rootStructure;
@@ -18,12 +18,14 @@ class TreePlant_Procedural : Plant
 		public float treeDirectionWeight = 0.8f;
 		// random
 		public float treeMaxHeight = 3f;
+		public int treeMaxDepth = 4;
 		// random
-		public float maxNodeChanceToBranch = 0.25;
+		public float maxNodeChanceToBranch = 0.35f;
 		// random
 		public int maxNumNodeBranches = 3;
 		// random
-		public float maxBranchAngle = 30f;
+		public float minBranchAngle = 15f;
+		public float maxBranchAngle = 40f;
 
 		public int branchResolution = 8;
 		public float branchNodeMaxAngle = 40f;
@@ -42,7 +44,7 @@ class TreePlant_Procedural : Plant
 
 		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position, Quaternion.identity) as GameObject;
 		treeStructure.transform.parent = gameObject.transform;
-		treeStructure.loadTreeSettings(treeSettings);
+		treeStructure.GetComponent<TreeStructure>().loadTreeSettings(treeSettings);
 	}
 
 	private void setRandomValues()

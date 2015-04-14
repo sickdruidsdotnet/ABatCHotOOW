@@ -24,6 +24,8 @@ class TreeStructure : MonoBehaviour
 	public float lengthGoal = 1f;
 	public float growthStart;
 
+	public bool skeletonExpanded = false;
+
 	// debug draw values
 	private float debugSphereSize = 0.01f;
 	private Color debugColor = Color.red;
@@ -36,15 +38,15 @@ class TreeStructure : MonoBehaviour
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
 
-	private TreePlant_Procedural.TreeSettings treeSettings;
+	public TreePlant_Procedural.TreeSettings treeSettings;
 
 	void Start()
-
+	{
 		meshRenderer = GetComponent<MeshRenderer>();
 
 		_transform = transform;
 
-		ringRadians = 2 * Mathf.PI / resolution;
+		ringRadians = 2 * Mathf.PI / treeSettings.branchResolution;
 
 		// initialize our mesh's data structures
 		vertices = new List<Vector3>();
@@ -65,31 +67,18 @@ class TreeStructure : MonoBehaviour
 
 	void Update()
 	{
-		/*
-		length = getTotalLength();
-
-		bool wasGrowing = isGrowing;
-		// update skeleton structure (such as adding a new segment)
-		if (getTotalLength() < lengthGoal)
-		{
-			growTree();
-
-			if (!wasGrowing)
-			{
-				isGrowing = true;
-			}
-		}
-		else if (wasGrowing)
-		{
-			isGrowing = false;
-			debugDoneGrowing = true;
-			//printSkeletonInfo();
-		}
-		*/
-
 		// update each Branch
 		updateBranches(trunk);
 		updateTreeSkeleton(trunk);
+
+		if (skeletonExpanded)
+		{
+			createMesh();
+		}
+		else
+		{
+			createMesh();
+		}
 
 	}
 
@@ -106,9 +95,9 @@ class TreeStructure : MonoBehaviour
 
 	private void createInitialTreeSkeleton()
 	{
-		trunk = new Branch(Vector3.zero, Vector3.up, treeSettings, true);
+		trunk = new Branch(treeSettings, Vector3.zero, Vector3.up);
 
-		//createMesh();
+		createMesh();
 	}
 
 	private void growTree()
@@ -119,7 +108,7 @@ class TreeStructure : MonoBehaviour
 		if (b.getParent() != null)
 		{
 			// reposition the branch so it is still attached to the correct parent node.
-			b.startPoint = b.getParent().skeleton[b.parentNode].getNodeEndPoint();
+			b.startPoint = b.getParent().skeleton[b.parentNode].startPoint;
 		}
 
 		foreach(Branch c in b.getChildren())
@@ -128,13 +117,13 @@ class TreeStructure : MonoBehaviour
 			}
 	}
 
-	/*
+	
 	private void createMesh()
 	{
 
 		// maybe do some error handling here to make sure that there is at least one segment!
 
-		int res = resolution;
+		int res = treeSettings.branchResolution;
 
 		// just in case, clear things that should already be empty
 		mesh.Clear();
@@ -142,31 +131,10 @@ class TreeStructure : MonoBehaviour
 		uvs.Clear();
 		triangles.Clear();
 
-		// push the tip vertex
-		vertices.Add(skeleton.Last().startPoint + skeleton.Last().getNodeRay());
-		//Debug.Log("tip: " + vertices[0]);
-
-		// push vertices for each ring
-
-		for (int node = 0; node < skeleton.Count; node++)
-		{
-			for (int ringVert = 0; ringVert < res; ringVert++)
-			{
-				float angle = ringVert * ringRadians * -1;
-				float v_x = skeleton[node].radius * Mathf.Cos(angle);
-				float v_z = skeleton[node].radius * Mathf.Sin(angle);
-				float v_y = 0;
-
-				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
-
-				vertices.Add(skeleton[node].startPoint + relativeVec);
-				//Debug.Log("ringVert: " + vertices[ringVert + 1 + (node * res)]);
-			}
-		}
+		addTreeVerts(trunk);
 
 		mesh.vertices = vertices.ToArray();
-
-		// next, define the uv coordinates for the vertices that were created
+		mesh.triangles = triangles.ToArray();
 
 		for (int vert = 0; vert < vertices.Count; vert++)
 		{
@@ -175,20 +143,83 @@ class TreeStructure : MonoBehaviour
 
 		mesh.uv = uvs.ToArray();
 
-		// now, define how to triangles are to be drawn between these vertices
+	}
 
-		for (int node = 0; node < skeleton.Count; node++)
+	private void addTreeVerts(Branch b)
+	{
+		int res = treeSettings.branchResolution;
+		int verticesStart = vertices.Count;
+
+		// push the tip vertex
+		vertices.Add(b.skeleton.Last().getNodeEndPoint());
+
+		// push vertices for each ring
+
+		for (int node = 0; node < b.skeleton.Count; node++)
+		{
+			Vector3 bisectAxis = Vector3.up;
+			Vector3 prevSegAxis = Vector3.up;
+			float bottomAngle = 0f;
+			float bisectAngle = 0f;
+
+			if (node > 0)
+			{
+				bisectAxis = Vector3.Cross(b.skeleton[node-1].direction, b.skeleton[node].direction).normalized;
+				bisectAngle = Vector3.Angle(b.skeleton[node-1].direction, b.skeleton[node].direction) / 2f;
+				bottomAngle = Vector3.Angle(b.skeleton[node-1].direction, Vector3.up);
+				prevSegAxis = Vector3.Cross(b.skeleton[node-1].direction, Vector3.up);
+
+				// debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
+				// debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
+			}
+			else
+			{
+				bisectAxis = Vector3.Cross(Vector3.up, b.skeleton[node].direction).normalized;
+				bisectAngle = Vector3.Angle(Vector3.up, b.skeleton[node].direction) / 2f;
+			}
+
+			for (int ringVert = 0; ringVert < res; ringVert++)
+			{
+				float angle = ringVert * ringRadians * -1;
+				float v_x = b.skeleton[node].radius * Mathf.Cos(angle);
+				float v_z = b.skeleton[node].radius * Mathf.Sin(angle);
+				float v_y = 0;
+
+				// I'm 99% sure that the "+ _transform.position" part should not be there... test this some time.
+				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
+
+				relativeVec = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * relativeVec;
+
+				relativeVec = Quaternion.AngleAxis(bisectAngle, bisectAxis) * relativeVec;
+
+				vertices.Add(b.skeleton[node].startPoint + relativeVec);
+			}
+		}
+		int numChildren = b.getChildren().Count;
+		addBranchTriangles(b, verticesStart);
+
+		foreach (Branch c in b.getChildren())
+		{
+			addTreeVerts(c);
+		}
+	}
+
+	private void addBranchTriangles(Branch b, int startIndex)
+	{
+		int res = treeSettings.branchResolution;
+
+		for (int node = 0; node < b.skeleton.Count; node++)
 		{
 			for (int faceNum = 0; faceNum < res; faceNum++)
 			{
 				//check if we're at a segment, or at the point
-				if (node < skeleton.Count - 1)
+				if (node < b.skeleton.Count - 1)
 				{
 					// this is a segment.
 					// we will draw two triangles for each rectangular face created between this ring and the next ring
 
-					int bottomLeft = (node * res) + faceNum + 1;
-					int bottomRight = (node * res) + ((faceNum + 1) % res) + 1;
+					int bottomLeft = startIndex + (node * res) + faceNum + 1;
+					int bottomRight = startIndex + (node * res) + ((faceNum + 1) % res) + 1;
 					int topLeft = bottomLeft + res;
 					int topRight = bottomRight + res;
 
@@ -207,9 +238,9 @@ class TreeStructure : MonoBehaviour
 					// this is the point.
 					// we will draw one triangle for each face between this ring and the tip
 
-					int bottomLeft = (node * res) + faceNum + 1;
-					int bottomRight = (node * res) + ((faceNum + 1) % res + 1);
-					int top = 0;
+					int bottomLeft = startIndex + (node * res) + faceNum + 1;
+					int bottomRight = startIndex + (node * res) + ((faceNum + 1) % res + 1);
+					int top = startIndex + 0;
 
 					// add the triangle's vertices
 					triangles.Add(bottomLeft);
@@ -218,10 +249,8 @@ class TreeStructure : MonoBehaviour
 				}
 			}
 		}
-
-		mesh.triangles = triangles.ToArray();
 	}
-	*/
+	
 
 	/*
 	public float getTotalLength()
@@ -260,18 +289,27 @@ class TreeStructure : MonoBehaviour
 
 			// Draw segments with lines. Alternate colors for each segment,
 			// but keep the tip segment red (or it swaps colors weirdly)
-			if (node == b.skeleton.Count - 1)
+			if (b.getDepth() == 0)
 			{
 				Gizmos.color = Color.red;
 			}
-			else if (node % 2 == 0)
+			else if (b.getDepth() == 1)
 			{
 				Gizmos.color = Color.blue;
 			}
-			else
+			else if (b.getDepth() == 2)
 			{
 				Gizmos.color = Color.white;
 			}
+			else if (b.getDepth() == 3)
+			{
+				Gizmos.color = Color.green;
+			}
+			else
+			{
+				Gizmos.color = Color.yellow;
+			}
+			
 			Gizmos.DrawLine(mPos + nStart, mPos + nEnd);
 		}
 

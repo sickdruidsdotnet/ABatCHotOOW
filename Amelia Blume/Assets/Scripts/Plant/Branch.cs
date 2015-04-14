@@ -51,10 +51,10 @@ public class Branch
 	public int randomBranchingFactor = 3;
 	public float randomBranchAngleFactor = 30f;
 
-	private TreePlant_Procedural.TreeSettings treeSettings;
+	public TreePlant_Procedural.TreeSettings treeSettings;
 
 	// "trunk" branch constructor
-	public Branch(Vector3 start, Vector3 dir, TreePlant_Procedural.TreeSettings ts)
+	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir)
 	{
 		// since there is no parent branch, we need a start point for this branch
 
@@ -73,7 +73,7 @@ public class Branch
 	}
 
 	// standard branch constructor
-	public Branch(Branch parentBranch, Vector3 dir, int node = -1, TreePlant_Procedural.TreeSettings ts)
+	public Branch(TreePlant_Procedural.TreeSettings ts, Branch parentBranch, Vector3 dir, int node = -1)
 	{
 		// parentBranch determines what branch this branch will... branch... off of.
 		// node determines where along the parent branch this branch will protrude from
@@ -100,12 +100,12 @@ public class Branch
 
 		children = new List<Branch>();
 		depth = parent.getDepth() + 1;
-		startPoint = parent.skeleton[parentNode].getNodeEndPoint();
+		startPoint = parent.skeleton[parentNode].startPoint;
 		direction = dir;
 		treeSettings = ts;
 		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
 
-		skeleton.Add(new BranchNode(treeSettings.branchMinWidth, 0, startPoint, direction));
+		skeleton.Add(new BranchNode(treeSettings.branchMinWidth / (depth + 1), 0, startPoint, direction));
 
 		branchMaturity = Mathf.Clamp01(getLength() / lengthGoal);
 	}
@@ -151,7 +151,7 @@ public class Branch
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(treeSettings.branchMinWidth, newGrowth, skeleton.Last().direction);
+			addSegment(treeSettings.branchMinWidth / (depth + 1), newGrowth, skeleton.Last().direction);
 			//Debug.Log("Creating first non-tip segment");
 		}
 		else
@@ -169,7 +169,7 @@ public class Branch
 			{
 				skeleton[growIndex].length = treeSettings.branchSegLength;
 				float overflow = newSegLength - treeSettings.branchSegLength;
-				addSegment(initialRadius, overflow, skeleton.Last().direction);
+				addSegment(treeSettings.branchMinWidth / (depth + 1), overflow, skeleton.Last().direction);
 				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + skeleton[growIndex].length + ", so a new node is created with length " + overflow);
 			}
 		}
@@ -192,7 +192,9 @@ public class Branch
 		BranchNode newNode = new BranchNode(rad, tipLength, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
 		skeleton.Add(newNode);
 
-		if (Random.Range(0, 1f) < treeSettings.maxNodeChanceToBranch && depth < 3)
+		if (Random.Range(0, 1f) < treeSettings.maxNodeChanceToBranch
+			&& depth < (treeSettings.treeMaxDepth - 1)
+			&& skeleton.Count > 2)
 		{
 			growRandomChildren(skeleton.Count - 2);
 		}
@@ -204,7 +206,7 @@ public class Branch
 	{
 		int numChildren = Random.Range(1, treeSettings.maxNumNodeBranches);
 		float angleStart = Random.Range(0, 360);
-		float branchAngle = Random.Range(5f, treeSettings.maxBranchAngle);
+		float branchAngle = Random.Range(treeSettings.minBranchAngle, treeSettings.maxBranchAngle);
 
 		for (int b = 0; b < numChildren; b++)
 		{
@@ -258,9 +260,9 @@ public class Branch
 		return children;
 	}
 
-	public void addChild(Vector3 dir, int node = -1, float length = 0)
+	public void addChild(Vector3 dir, int node = -1)
 	{
-		Branch newChild = new Branch(this, dir, node : node, length : length);
+		Branch newChild = new Branch(treeSettings, this, dir, node);
 		children.Add(newChild);
 	}
 
