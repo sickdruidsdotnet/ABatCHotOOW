@@ -13,6 +13,9 @@ public class FallingLeaf : MonoBehaviour {
 	float offset = 0f;
 	float bottomLimit = -2;
 
+	//edit this on the falling leaf prefab (Resources) in editor to have more colors.
+	public Color[] leafColors;
+
 	// Use this for initialization
 	void Start () {
 		mainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
@@ -56,6 +59,13 @@ public class FallingLeaf : MonoBehaviour {
 		xMoveRate = Random.Range (-0.02f, 0.02f);
 		offset = Random.Range (0, 4);
 		amplitude = Random.Range (0.01f, 0.05f);
-		frequency = Random.Range (1, 2);
+		frequency = Random.Range (1f, 2f);
+		int index = Random.Range(0, leafColors.Length);
+		renderer.material.SetColor("_Color", leafColors[index]);
+
+		//they look bad when they're all facing the same direction
+		if (Random.Range (0, 11) > 5) {
+			transform.Rotate(new Vector3(0, 180f, 0f));
+		}
 	}
 }

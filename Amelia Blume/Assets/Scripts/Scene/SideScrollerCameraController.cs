@@ -355,9 +355,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 			panUp = false;
 			panDown = true;
 		}
-		
-		//let's save the current position for later use;
-		Vector3 oldPos = transform.position;
+
 		if (panRight) {
 			if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
 				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);

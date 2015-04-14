@@ -18,7 +18,7 @@ public class LeafSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (Mathf.Abs (lastSpawnTime - Time.time) > spawnRate) {
+		if (Mathf.Abs (lastSpawnTime - Time.time) > (1f/spawnRate)) {
 			spawnLeaf();
 			lastSpawnTime = Time.time;
 		}
