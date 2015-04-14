@@ -2,57 +2,83 @@
 using System.Collections;
 
 public class SignPost : MonoBehaviour {
-	public int wordsIndex = 0;
+	int wordsIndex = 0;
 	//public int INDEX = 100;
 	TextMesh myTextMesh;
-	public GameObject player;
-	public Player amelia;
+	GameObject player;
+	Player amelia;
 	string[] words;
 	bool beingRead = false;
+	TextAsset file;
+	string[] lines;
+	int sentenceIndex = 0;
+	string textDisplay = "";
+	string sentence = "";
+	float delay = 0.05f;
+	float nextUse;
 	// Use this for initialization
 	void Start () {
-		words = new string[]{"Words are here","This too", "Part 3"};
-		Debug.Log (words.Length);
+		nextUse = Time.time + delay;
+		file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
+		words = file.text.Split ('\n');
 		myTextMesh = GetComponentInChildren<TextMesh> ();
 		myTextMesh.text = words[wordsIndex];
 		myTextMesh.renderer.enabled = false;
 		player = GameObject.FindGameObjectWithTag ("Player");
 		amelia = player.GetComponent<Player> ();
+
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		myTextMesh.text = words[wordsIndex];
+		if (Time.time > nextUse) {
+			DisplayWords ();
+			nextUse = Time.time + delay;
+		}
 	}
 
 	public void Read(){
 		Debug.Log ("reading");
 		if (!beingRead) {
-			//wordsIndex = -1;
+			wordsIndex = -1;
+			beingRead = true;
+			myTextMesh.renderer.enabled = true;
 		}
 		NextSentence ();
-		//wordsIndex += 1;
-		//INDEX++;
-		myTextMesh.renderer.enabled = true;
-		myTextMesh.text = words[wordsIndex];
+
+	}
+
+	void DisplayWords()
+	{
+		if (beingRead) {
+			if (sentenceIndex < sentence.Length) {
+				textDisplay += sentence [sentenceIndex];
+				sentenceIndex++;
+			}
+		}
+		myTextMesh.text = textDisplay;
 	}
 
 	void NextSentence(){
+		textDisplay = "";
 		wordsIndex+=1;
+		sentenceIndex = 0;
 		if (wordsIndex >= words.Length) {
 			wordsIndex = 0;
 			beingRead = false;
 			myTextMesh.renderer.enabled = false;
+			sentenceIndex = 0;
 		}
-
+		sentence = words [wordsIndex];
 	}
 
-	void OnTriggerEnter(Collider other)
+	void OnTriggerStay(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
 			amelia.SetReadSign(true);
 			amelia.SetCurrentSign(this.gameObject); 
-			Debug.Log ("read now");
+			//Debug.Log ("read now");
+			//beingRead = true;
 		}
 	}
 
@@ -60,9 +86,11 @@ public class SignPost : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Player") {
 			amelia.SetReadSign(false);
-			Debug.Log ("stop reading");
+			//Debug.Log ("stop reading");
 			beingRead = false;
-			//wordsIndex = 0;
+			textDisplay = "";
+			wordsIndex = 0;
+			myTextMesh.renderer.enabled = false;
 		}
 	}
 
