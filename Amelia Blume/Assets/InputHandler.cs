@@ -47,7 +47,10 @@ public class InputHandler : MonoBehaviour {
 		//need keyboard seed selection input
 
 		jump = Input.GetButtonDown ("Jump");
+		sun = Input.GetButtonDown ("Sun");
 		throwSeed = Input.GetButtonDown ("ThrowSeed");
+		dash = Input.GetButtonDown ("Dash");
+
 	}
 
 	void Xbox360Controller(){
@@ -57,6 +60,12 @@ public class InputHandler : MonoBehaviour {
 		ySelect = Input.GetAxis ("Vertical 3");
 		jump = Input.GetButtonDown ("joystick button 0");
 		throwSeed = Input.GetButtonDown ("joystick button 2");
+		water = Input.GetButtonDown ("joystick button 1");
+		sun = Input.GetButtonDown ("joystick button 3");
+		dash = Input.GetButtonDown ("joystick button 5");
+		select = Input.GetButtonDown ("joystick button 6");
+		start = Input.GetButtonDown ("joystick button 7");
+
 	}
 
 	void Playstation4Controller(){
@@ -65,6 +74,6 @@ public class InputHandler : MonoBehaviour {
 		xSelect = Input.GetAxis ("Horizontal 3");
 		ySelect = Input.GetAxis ("Vertical 3");
 		jump = Input.GetButtonDown ("joystick button 3");
-		throwSeed = throwSeed = Input.GetButtonDown ("joystick button 6");
+		throwSeed = Input.GetButtonDown ("joystick button 6");
 	}
 }

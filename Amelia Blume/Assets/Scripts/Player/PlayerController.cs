@@ -4,7 +4,8 @@ using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
-	
+
+	public InputHandler playerInput;
 	
 	public float inputDeadZone = 0.05f;
     
@@ -45,6 +46,8 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
+		//get the input handler and reference that instead
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
