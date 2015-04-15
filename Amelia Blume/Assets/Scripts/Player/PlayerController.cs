@@ -116,7 +116,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (playerInput.jumpUp)
+		if (playerInput.jumpUp || !canControl)
 			StopJump();
 
 		// these functions should not directly move the player. They only handle input, and 
@@ -251,31 +251,22 @@ public class PlayerController : BaseBehavior {
 			/*if (angle < 0)
 				angle += 360f;*/
 				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
-			if( angle >= 45 && angle < 135 && horizontal2 > 0){
+			if( player.treeUnlocked && angle >= 45 && angle < 135 && horizontal2 > 0){
 				player.SetCurrentSeed(Player.SeedType.TreeSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Right");
 			}
-			else if( angle >= 135 && angle <= 180){
+			else if( player.fluerUnlocked && angle >= 135 && angle <= 180){
 				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Down");
 			}
-			else if( angle >= 45 && angle < 135 && horizontal2 < 0 ){
+			else if( player.fernUnlocked && angle >= 45 && angle < 135 && horizontal2 < 0 ){
 				player.SetCurrentSeed(Player.SeedType.FernSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Left");
 			}
-			else{
+			else if(player.vineUnlocked && angle < 45){
 				player.SetCurrentSeed(Player.SeedType.VineSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Up");
 			}
-
-		/*if (horizontal2 > 0)
-			player.SetCurrentSeed(Player.SeedType.TreeSeed);
-		if (horizontal2 < 0)
-			player.SetCurrentSeed(Player.SeedType.VineSeed);
-		if (vertical2 > 0)
-			player.SetCurrentSeed(Player.SeedType.FernSeed);
-		if (vertical2 < 0)
-			player.SetCurrentSeed(Player.SeedType.FlowerSeed);*/
 		}
 
 

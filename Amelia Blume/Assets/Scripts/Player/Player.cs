@@ -46,6 +46,11 @@ public class Player : BaseBehavior {
 	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
 
+	public bool vineUnlocked = false;
+	public bool treeUnlocked = false;
+	public bool fluerUnlocked = false;
+	public bool fernUnlocked = false;
+
 	
 
 	public PlayerController controller {
@@ -198,6 +203,11 @@ public class Player : BaseBehavior {
 
 	public bool canThrowSeed {
 		get {
+			//need to make sure they have seeds unlocked
+			//player will always get vine first
+			if(!vineUnlocked)
+				return false;
+
 			return true;
 		}
 	}
@@ -353,7 +363,7 @@ public class Player : BaseBehavior {
 	void Kill()
 	{
 		Debug.Log ("Killed Called");
-		spawner = GameObject.Find ("Spawner");
+		spawner = GameObject.FindGameObjectWithTag ("Spawner");
 		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");
 		fruit.transform.position = fruitPosition;
