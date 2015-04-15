@@ -92,6 +92,9 @@ public class InputHandler : MonoBehaviour {
 		case "Controller (XBOX 360 For Windows)":
 			Xbox360Controller();
 			break;
+		case "Sony Computer Entertainment Wireless Controller":
+			Playstation4Controller();
+			break;
 		}
 	}
 
@@ -162,7 +165,33 @@ public class InputHandler : MonoBehaviour {
 		yMove = Input.GetAxis ("Vertical");
 		xSelect = Input.GetAxis ("Horizontal 3");
 		ySelect = Input.GetAxis ("Vertical 3");
-		jump = Input.GetButton ("joystick button 3");
-		throwSeed = Input.GetButton ("joystick button 6");
+
+		jumpDown = Input.GetButtonDown ("joystick button 1");
+		jump = Input.GetButton ("joystick button 1");
+		jumpUp = Input.GetButtonUp ("joystick button 1");
+		
+		throwSeedDown = Input.GetButtonDown ("joystick button 0");
+		throwSeed = Input.GetButton ("joystick button 0");
+		throwSeedUp = Input.GetButtonUp ("joystick button 0");
+		
+		waterDown = Input.GetButtonDown ("joystick button 2");
+		water = Input.GetButton ("joystick button 2");
+		waterUp = Input.GetButtonUp ("joystick button 2");
+		
+		sunDown = Input.GetButtonDown ("joystick button 3");
+		sun = Input.GetButton ("joystick button 3");
+		sunUp = Input.GetButtonUp ("joystick button 3");
+		
+		dashDown = Input.GetButtonDown ("joystick button 5");
+		dash = Input.GetButton ("joystick button 5");
+		dashUp = Input.GetButtonUp ("joystick button 5");
+		
+		selectDown = Input.GetButtonDown ("joystick button 6");
+		select = Input.GetButton ("joystick button 6");
+		selectUp = Input.GetButtonUp ("joystick button 6");
+		
+		startDown = Input.GetButtonDown ("joystick button 7");
+		start = Input.GetButton ("joystick button 7");
+		startUp = Input.GetButtonUp ("joystick button 7");
 	}
 }
