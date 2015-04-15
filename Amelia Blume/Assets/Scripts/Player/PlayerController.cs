@@ -116,7 +116,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (Input.GetButtonUp ("Jump"))
+		if (playerInput.jumpUp)
 			StopJump();
 
 		// these functions should not directly move the player. They only handle input, and 
@@ -171,10 +171,8 @@ public class PlayerController : BaseBehavior {
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
-			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 				
-		horizontal  = Input.GetAxis("Horizontal");
+		horizontal  = playerInput.xMove;
         //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
@@ -243,9 +241,9 @@ public class PlayerController : BaseBehavior {
 	}
 
 	protected void HandleActionInput() {
-		float horizontal2 = Input.GetAxis("Horizontal 3");
+		float horizontal2 = playerInput.xSelect;
 		//Debug.Log ("Horizontal 3: " + horizontal2);
-		float vertical2 = Input.GetAxis ("Vertical 3");
+		float vertical2 = playerInput.ySelect;
 		//Debug.Log ("Vertical 3: " + vertical2);
 		if(new Vector2(horizontal2, vertical2).magnitude >= 0.5f)
 		{
@@ -288,17 +286,17 @@ public class PlayerController : BaseBehavior {
 			return;
 
 		if (!player.isSunning() && !player.isConverting()) {
-			if (Input.GetButtonDown ("Jump")) {
+			if (playerInput.jumpDown) {
 				Jump ();
 			}
-			if (Input.GetButtonDown ("ThrowSeed")) {
+			if (playerInput.throwSeedDown) {
 				ThrowSeed ();
 			}
-			if (Input.GetButtonDown ("Dash")) {
+			if (playerInput.dashDown) {
 				Dash ();
 			}
 		}
-		if (Input.GetButtonDown ("Sun")) {
+		if (playerInput.sunDown) {
 			if(canConvert){
 				AnimalConvert();
 				player.SetConverting(true);
