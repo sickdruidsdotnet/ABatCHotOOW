@@ -18,7 +18,7 @@ public class TreePlant_Procedural : Plant
 		public float treeDirectionWeight = 0.8f;
 		// random
 		public float treeMaxHeight = 3f;
-		public int treeMaxDepth = 4;
+		public int treeMaxDepth = 3;
 		public float treeMaxWidth = 0.1f;
 		// random
 		public float maxNodeChanceToBranch = 0.35f;
@@ -53,6 +53,7 @@ public class TreePlant_Procedural : Plant
     {
         base.Update();
         treeStructure.GetComponent<TreeStructure>().maturity = maturity;
+        treeStructure.GetComponent<TreeStructure>().isMaturing = isMaturing;
     }
 
 	private void setRandomValues()

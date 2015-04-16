@@ -112,6 +112,8 @@ public class Branch
 		direction = dir;
 		treeSettings = ts;
 		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
+		float plr = parent.getLengthRemaining(parentNode);
+		lengthGoal = Random.Range(0.5f * plr, 1.2f * plr);
 		thickness = treeSettings.branchMaxWidth / (depth + 1);
 
 		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
@@ -341,6 +343,28 @@ public class Branch
 				len += skeleton[node].length;
 			}
 			return len;
+		}
+		else
+		{
+			Debug.Log("Can not get length of branch before it's been created!");
+
+			return 0f;
+		}
+	}
+
+	public float getLengthRemaining(int node)
+	{
+		float lengthToNode = 0;
+
+		if (skeleton != null)
+		{
+
+			for (int n = 0; n < node; n++)
+			{
+				lengthToNode += skeleton[n].length;
+			}
+
+			return lengthGoal - lengthToNode;
 		}
 		else
 		{

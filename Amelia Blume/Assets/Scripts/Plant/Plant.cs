@@ -16,7 +16,7 @@ public class Plant : MonoBehaviour
 	private float Sunfactor;
 	private int soilIndex;
 	private GameObject amelia;
-    public float growthRate = 0.05f;
+    public float matureRate = 0.05f;
     public float maturityGoal;
     public bool isMaturing = false;
     
@@ -57,12 +57,17 @@ public class Plant : MonoBehaviour
 
         if (maturity < maturityGoal)
         {
-            maturity += growthRate * Time.deltaTime;
+            isMaturing = true;
+            maturity += matureRate * Time.deltaTime;
 
             if (maturity > maturityGoal)
             {
                 maturity = maturityGoal;
             }
+        }
+        else
+        {
+            isMaturing = false;
         }
 
         if(soil != null)

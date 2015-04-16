@@ -25,11 +25,12 @@ class TreeStructure : MonoBehaviour
 	public float growthRate = 0.1f;
 	public float lengthGoal = 1f;
 	public float growthStart;
+	public bool isMaturing = false;
 
 	public bool skeletonExpanded = false;
 
 	// debug draw values
-	private float debugSphereSize = 0.01f;
+	private float debugSphereSize = 0.005f;
 	private Color debugColor = Color.red;
 
 	private List<Vector3> vertices;
@@ -69,9 +70,13 @@ class TreeStructure : MonoBehaviour
 
 	void Update()
 	{
-		// update each Branch
-		updateBranches(trunk, maturity);
-		updateTreeSkeleton(trunk);
+		if (isMaturing)
+		{
+			// update each Branch
+			updateBranches(trunk, maturity);
+			updateTreeSkeleton(trunk);
+		}
+		
 
 		if (skeletonExpanded)
 		{
