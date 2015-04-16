@@ -19,6 +19,7 @@ public class TreePlant_Procedural : Plant
 		// random
 		public float treeMaxHeight = 3f;
 		public int treeMaxDepth = 4;
+		public float treeMaxWidth = 0.1f;
 		// random
 		public float maxNodeChanceToBranch = 0.35f;
 		// random
@@ -32,7 +33,8 @@ public class TreePlant_Procedural : Plant
 		public float branchSegLength = 0.1f;
 		public float branchMaxLength = 1f;
 		public float branchGrowthRate = 0.1f;
-		public float branchMinWidth = 0.02f;
+		public float branchMinWidth = 0.00f;
+		public float branchMaxWidth = 0.04f;
 		public float branchCurviness = 10f;
 	}
 
@@ -46,6 +48,12 @@ public class TreePlant_Procedural : Plant
 		treeStructure.transform.parent = gameObject.transform;
 		treeStructure.GetComponent<TreeStructure>().loadTreeSettings(treeSettings);
 	}
+
+	void Update()
+    {
+        base.Update();
+        treeStructure.GetComponent<TreeStructure>().maturity = maturity;
+    }
 
 	private void setRandomValues()
     {

@@ -7,6 +7,8 @@ class TreeStructure : MonoBehaviour
 {
 	public Branch trunk;
 
+	public float maturity;
+
 	public int resolution = 6;
 	public static float initialRadius = 0.02f;
 	public float maxRadius = 0.02f;
@@ -68,7 +70,7 @@ class TreeStructure : MonoBehaviour
 	void Update()
 	{
 		// update each Branch
-		updateBranches(trunk);
+		updateBranches(trunk, maturity);
 		updateTreeSkeleton(trunk);
 
 		if (skeletonExpanded)
@@ -83,13 +85,13 @@ class TreeStructure : MonoBehaviour
 	}
 
 	// recursively call Update() on all branches. This is not automatic since they are not Script Components
-	private void updateBranches(Branch b)
+	private void updateBranches(Branch b, float maturity)
 	{
 		b.Update();
 
 		foreach (Branch c in b.getChildren())
 		{
-			updateBranches(c);
+			updateBranches(c, maturity);
 		}
 	}
 
@@ -177,6 +179,9 @@ class TreeStructure : MonoBehaviour
 				bisectAxis = Vector3.Cross(Vector3.up, b.skeleton[node].direction).normalized;
 				bisectAngle = Vector3.Angle(Vector3.up, b.skeleton[node].direction) / 2f;
 			}
+
+			// float nodeLoc = b.getNodeLocation(node);
+			// b.skeleton[node].radius = b.branchWidthFunction(nodeLoc) * b.getBranchThickness();
 
 			for (int ringVert = 0; ringVert < res; ringVert++)
 			{

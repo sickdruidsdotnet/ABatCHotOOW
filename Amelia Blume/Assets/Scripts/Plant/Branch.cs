@@ -34,7 +34,6 @@ public class Branch
 	}
 
 	public List<BranchNode> skeleton;
-
 	public Branch parent;
 	public int parentNode;
 	public List<Branch> children;
@@ -43,10 +42,13 @@ public class Branch
 	public Vector3 direction;
 	public float branchMaturity;
 	public float lengthGoal;
+	float widthGoal;
 	private float growthRate = 0.05f;
 	private float growthStart = 0;
+	private float thicknessStart = 0;
 	public bool isGrowing = false;
 	private float initialRadius = 0.02f;
+	private float thickness;
 	public float chanceToBranch = 0.25f;
 	public int randomBranchingFactor = 3;
 	public float randomBranchAngleFactor = 30f;
@@ -68,8 +70,12 @@ public class Branch
 		direction = dir;
 		treeSettings = ts;
 		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
+		thickness = 0;
 
-		skeleton.Add(new BranchNode(treeSettings.branchMinWidth, 0, startPoint, direction));
+		// only do this for the trunk
+		widthGoal = treeSettings.treeMaxWidth;
+
+		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
 	}
 
 	// standard branch constructor
@@ -104,8 +110,9 @@ public class Branch
 		direction = dir;
 		treeSettings = ts;
 		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
+		thickness = treeSettings.branchMaxWidth / (depth + 1);
 
-		skeleton.Add(new BranchNode(treeSettings.branchMinWidth / (depth + 1), 0, startPoint, direction));
+		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
 
 		branchMaturity = Mathf.Clamp01(getLength() / lengthGoal);
 	}
@@ -174,6 +181,27 @@ public class Branch
 			}
 		}
 
+		// Increase the thickness of the branch.
+		// This will be largely dependent on the thickness of the parent branch,
+		// more specifically the parent node this branch protrudes from.
+		if (parent == null)
+		{
+			float thicknessIncrease = (widthGoal - thicknessStart) * treeSettings.branchGrowthRate * Time.deltaTime;
+			
+			if (getBranchThickness() + thicknessIncrease > treeSettings.treeMaxWidth)
+			{
+				thicknessIncrease = treeSettings.treeMaxWidth - getBranchThickness();
+				thicknessStart = treeSettings.treeMaxWidth;
+			}
+
+			thickness += thicknessIncrease;
+		}
+
+		else
+		{
+			thickness = parent.getNodeThickness(parentNode);
+		}
+
 		updateSkeleton(skeleton);
 	}
 
@@ -225,8 +253,9 @@ public class Branch
 		}
 	}
 
-	private void updateSkeleton(List<BranchNode> b)
+	private void updateSkeleton(List<BranchNode> skel)
 	{
+		/*
 		// Iterate through all the nodes and make sure the start points correspond 
 		// to the ends of the previous nodes.
 		b[0].startPoint = startPoint;
@@ -238,8 +267,29 @@ public class Branch
 				b[node].startPoint = b[node - 1].startPoint + b[node - 1].getNodeRay();
 			}
 		}
-		
-		//updateMesh();
+		*/
+
+		// iterate through all nodes in the skeleton
+		for (int n = 0; n < skel.Count; n++)
+		{
+			////////////////////////////////////////////////////////////////////////////
+			// Make sure all start points correspond to the end of the previous nodes //
+			////////////////////////////////////////////////////////////////////////////
+
+			// node 0 starts at the branch's start point
+			if (n == 0) {skel[0].startPoint = startPoint;}
+			else if (skel.Count > 1)
+			{
+				skel[n].startPoint = skel[n-1].getNodeEndPoint();
+			}
+
+			/////////////////////////////////////////////////////////////////////////////
+			//         Update each node's radius to match the branch shape        ///////
+			/////////////////////////////////////////////////////////////////////////////
+
+			skel[n].radius = branchWidthFunction(getNodeLocation(n)) * getBranchThickness();
+
+		}
 	}
 
 	public Branch getParent()
@@ -289,5 +339,49 @@ public class Branch
 
 			return 0f;
 		}
+	}
+
+	public float getNodeLocation(int node)
+	{
+		// returns a value between 0 and 1 to represent the node's loaction along the leaf's length.
+		// 0 is the base, 1 is the tip.
+		// this function is mainly used to determine the node's width.
+		float branchLength = getLength();
+		float location = 0f;
+		float nodeDistance = 0f;
+
+		for (int n = 0; n < node; n++)
+		{
+			nodeDistance += skeleton[n].length;
+		}
+
+		location = nodeDistance / branchLength;
+
+		return location;
+
+	}
+
+	public float branchWidthFunction(float x)
+	{
+		// x is a number between 0 and 1 defining the node's position along the branch
+
+
+		// Function defining the branch's shape
+		float y = -1.0f * Mathf.Sqrt(x) + 1.0f;
+
+		// return the coefficient for the branch's width
+
+		return y;
+	}
+
+	public float getBranchThickness()
+	{
+		// this will be the thickness at the base of the branch
+		return thickness;
+	}
+
+	public float getNodeThickness(int node)
+	{
+		return skeleton[node].radius;
 	}
 }
