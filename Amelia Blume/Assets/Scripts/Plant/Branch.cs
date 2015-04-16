@@ -52,6 +52,8 @@ public class Branch
 	public float chanceToBranch = 0.25f;
 	public int randomBranchingFactor = 3;
 	public float randomBranchAngleFactor = 30f;
+	public float treeMaturityStart = 0f;
+	public float currentTreeMaturity = 0f;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
 
@@ -69,7 +71,7 @@ public class Branch
 		startPoint = start;
 		direction = dir;
 		treeSettings = ts;
-		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
+		lengthGoal = 3;
 		thickness = 0;
 
 		// only do this for the trunk
@@ -79,7 +81,7 @@ public class Branch
 	}
 
 	// standard branch constructor
-	public Branch(TreePlant_Procedural.TreeSettings ts, Branch parentBranch, Vector3 dir, int node = -1)
+	public Branch(TreePlant_Procedural.TreeSettings ts, Branch parentBranch, Vector3 dir, float tms, int node = -1)
 	{
 		// parentBranch determines what branch this branch will... branch... off of.
 		// node determines where along the parent branch this branch will protrude from
@@ -114,11 +116,13 @@ public class Branch
 
 		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
 
-		branchMaturity = Mathf.Clamp01(getLength() / lengthGoal);
+		// branchMaturity = Mathf.Clamp01(getLength() / lengthGoal);
+		treeMaturityStart = tms;
 	}
 
-	public void Update()
+	public void UpdateBranch(float treeMaturity)
 	{
+		currentTreeMaturity = treeMaturity;
 		bool wasGrowing = isGrowing;
 		// update vine skeleton structure (such as adding a new segment)
 		if (getLength() < lengthGoal)
@@ -134,12 +138,25 @@ public class Branch
 
 	private void grow()
 	{
+
+		// Use linear interpolation to determine what length the branch should be,
+		// at this stage in the tree's maturity.
+		// All branches must be done growing at treeMaturity == 1.0.
+		// Therefore, branches spawned later must grow at a faster relative rate.
+
+		// First determine the local branch's maturity.
+		// (Maybe this should be done in update)
+
+		branchMaturity = (currentTreeMaturity - treeMaturityStart) / (1.0f - treeMaturityStart);
+		float newBranchLength = Mathf.Lerp(0, lengthGoal, branchMaturity);
+
+		float newGrowth = newBranchLength - getLength();
+
 		// Extend the length of the branch.
 		// The segment before the tip ring will be extended. If it reaches its max length,
 		// then a new segment will be added, and the overflow growth distance
 		// will be its initial length.
 
-		float newGrowth = (lengthGoal - growthStart) * treeSettings.branchGrowthRate * Time.deltaTime;
 		int growIndex = skeleton.Count - 2;
 
 		// should probably throw an error if newGrowth > treeSettings.branchSegLength
@@ -186,15 +203,7 @@ public class Branch
 		// more specifically the parent node this branch protrudes from.
 		if (parent == null)
 		{
-			float thicknessIncrease = (widthGoal - thicknessStart) * treeSettings.branchGrowthRate * Time.deltaTime;
-			
-			if (getBranchThickness() + thicknessIncrease > treeSettings.treeMaxWidth)
-			{
-				thicknessIncrease = treeSettings.treeMaxWidth - getBranchThickness();
-				thicknessStart = treeSettings.treeMaxWidth;
-			}
-
-			thickness += thicknessIncrease;
+			thickness = Mathf.Lerp(0, treeSettings.treeMaxWidth, branchMaturity);
 		}
 
 		else
@@ -312,7 +321,7 @@ public class Branch
 
 	public void addChild(Vector3 dir, int node = -1)
 	{
-		Branch newChild = new Branch(treeSettings, this, dir, node);
+		Branch newChild = new Branch(treeSettings, this, dir, currentTreeMaturity, node);
 		children.Add(newChild);
 	}
 

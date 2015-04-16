@@ -87,7 +87,7 @@ class TreeStructure : MonoBehaviour
 	// recursively call Update() on all branches. This is not automatic since they are not Script Components
 	private void updateBranches(Branch b, float maturity)
 	{
-		b.Update();
+		b.UpdateBranch(maturity);
 
 		foreach (Branch c in b.getChildren())
 		{
