@@ -71,7 +71,7 @@ public class Seed : MonoBehaviour
 
         // spawn a seed
 
-        Debug.Log(plantType);
+        //Debug.Log(plantType);
 
         Vector3 loc = new Vector3(0, 0, 0);
         loc += transform.position;
@@ -79,7 +79,7 @@ public class Seed : MonoBehaviour
         newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject);
 		newPlant.gameObject.GetComponent<Plant>().SetSoilIndex (soilIndex);
 		//newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject)
-        Debug.Log("called sproutPlant()");
+        //Debug.Log("called sproutPlant()");
 
         // Destroy this Seed entity. The plant will carry on its legacy.
         // Goodnight, sweet seed. You served Amelia well.

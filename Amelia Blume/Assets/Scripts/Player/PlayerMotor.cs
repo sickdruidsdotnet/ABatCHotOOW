@@ -28,7 +28,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
-		public float jumpForce = 23f;
+		public float jumpForce = 20f;
 		public float dashForce = 35f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
