@@ -373,7 +373,8 @@ public class Player : BaseBehavior {
 		transform.GetComponent<PlayerController> ().checkHealth ();
 
 		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
-		controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
+		//controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
+		controller.MoveToPosition (spawner.transform.position.x, spawner.transform.position.y + 4f, true);
 		Instantiate (fruit);
 		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}
