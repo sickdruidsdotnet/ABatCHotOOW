@@ -278,7 +278,7 @@ class TreeStructure : MonoBehaviour
 			if (trunk != null)
 			{
 				// recursively draw tree
-				drawTreeSkeletonGizmos(trunk, mPos);
+				//drawTreeSkeletonGizmos(trunk, mPos);
 			}
 		}
 			

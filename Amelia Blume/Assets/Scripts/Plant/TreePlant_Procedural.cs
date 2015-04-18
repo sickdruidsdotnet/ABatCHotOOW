@@ -13,7 +13,7 @@ public class TreePlant_Procedural : Plant
 	public class TreeSettings {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
 
-		public Vector3 treeDirection = Vector3.up;
+		public Vector3 treeTrajectory = Vector3.up;
 		// random
 		public float treeDirectionWeight = 0.8f;
 		// random
@@ -36,6 +36,9 @@ public class TreePlant_Procedural : Plant
 		public float branchMinWidth = 0.00f;
 		public float branchMaxWidth = 0.04f;
 		public float branchCurviness = 10f;
+		public float branchTrajectoryNoise = 45f;
+		public float branchTrajectoryWeight = 0.5f;
+		public float branchTrajectoryWeightVariation = 0;
 	}
 
 	void Start () {

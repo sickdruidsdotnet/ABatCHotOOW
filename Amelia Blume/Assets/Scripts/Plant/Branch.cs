@@ -40,6 +40,8 @@ public class Branch
 	private int depth;
 	public Vector3 startPoint;
 	public Vector3 direction;
+	public Vector3 trajectory;
+	public float maxNodeAngle;
 	public float branchMaturity;
 	public float lengthGoal;
 	float widthGoal;
@@ -68,9 +70,14 @@ public class Branch
 		parentNode = -1;
 		children = new List<Branch>();
 		depth = 0;
+		treeSettings = ts;
 		startPoint = start;
 		direction = dir;
-		treeSettings = ts;
+		trajectory = treeSettings.treeTrajectory;
+		// determine maxNodeAngle
+		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
+		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
+		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
 		lengthGoal = 3;
 		thickness = 0;
 
@@ -108,10 +115,28 @@ public class Branch
 
 		children = new List<Branch>();
 		depth = parent.getDepth() + 1;
+		treeSettings = ts;
 		startPoint = parent.skeleton[parentNode].startPoint;
 		direction = dir;
-		treeSettings = ts;
-		lengthGoal = treeSettings.branchMaxLength / (depth + 1);
+
+		// determine trajectory
+		Vector3 crossWith = Vector3.up;
+		if (crossWith == treeSettings.treeTrajectory)
+		{
+			crossWith = Vector3.right;
+		}
+		Vector3 axis = Vector3.Cross(treeSettings.treeTrajectory, crossWith);
+		axis = Quaternion.AngleAxis(Random.Range(0, 360f), treeSettings.treeTrajectory) * axis;
+		float rotAmount = Random.Range(0, treeSettings.branchTrajectoryNoise);
+
+		trajectory = Quaternion.AngleAxis(rotAmount, axis) * treeSettings.treeTrajectory;
+
+		// determine maxNodeAngle
+		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
+		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
+		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
+
+		// determine lengthGoal
 		float plr = parent.getLengthRemaining(parentNode);
 		lengthGoal = Random.Range(0.5f * plr, 1.2f * plr);
 		thickness = treeSettings.branchMaxWidth / (depth + 1);
@@ -177,7 +202,7 @@ public class Branch
 		// if the only segment is the tip segment, then we need to start fresh on a new one.
 		if (skeleton.Count == 1)
 		{
-			addSegment(treeSettings.branchMinWidth / (depth + 1), newGrowth, skeleton.Last().direction);
+			addSegment(treeSettings.branchMinWidth / (depth + 1), newGrowth, determineSegDirection(skeleton.Last().direction));
 			//Debug.Log("Creating first non-tip segment");
 		}
 		else
@@ -195,7 +220,7 @@ public class Branch
 			{
 				skeleton[growIndex].length = treeSettings.branchSegLength;
 				float overflow = newSegLength - treeSettings.branchSegLength;
-				addSegment(treeSettings.branchMinWidth / (depth + 1), overflow, skeleton.Last().direction);
+				addSegment(treeSettings.branchMinWidth / (depth + 1), overflow, determineSegDirection(skeleton.Last().direction));
 				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + skeleton[growIndex].length + ", so a new node is created with length " + overflow);
 			}
 		}
@@ -239,6 +264,28 @@ public class Branch
 		}
 
 		//expandMesh();
+	}
+
+	private Vector3 determineSegDirection(Vector3 pDirection)
+	{
+		/*
+
+		Determine the axis of rotation. 
+		This shouldn't always point us directly where we need to go, it should be noisy.
+		Probably based on treeSettings.branchTrajectoryWeightVariation.
+		*/
+
+		Vector3 cDirection;
+
+		Vector3 axis = Vector3.Cross(pDirection, trajectory);
+		float maxAxisVariation = 20;
+		axis = Quaternion.AngleAxis(Random.Range(-maxAxisVariation, maxAxisVariation), pDirection) * axis;
+
+		float rotAmount = Random.Range(0, maxNodeAngle);
+
+		cDirection = Quaternion.AngleAxis(rotAmount, axis) * pDirection;
+
+		return cDirection;
 	}
 
 	private void growRandomChildren(int parentBranchNode)
