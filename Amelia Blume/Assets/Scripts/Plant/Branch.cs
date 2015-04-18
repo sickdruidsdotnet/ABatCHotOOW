@@ -125,7 +125,7 @@ public class Branch
 		{
 			crossWith = Vector3.right;
 		}
-		Vector3 axis = Vector3.Cross(treeSettings.treeTrajectory, crossWith);
+		Vector3 axis = Vector3.Cross(direction, treeSettings.treeTrajectory);
 		axis = Quaternion.AngleAxis(Random.Range(0, 360f), treeSettings.treeTrajectory) * axis;
 		float rotAmount = Random.Range(0, treeSettings.branchTrajectoryNoise);
 
