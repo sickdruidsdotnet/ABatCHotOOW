@@ -154,13 +154,23 @@ public class Branch
 		// update vine skeleton structure (such as adding a new segment)
 		if (getLength() < lengthGoal)
 		{
-			grow();
+			if (currentTreeMaturity < 0.5f || parent != null)
+			{
+				grow();
+			}
+			else
+			{
+				growFromBottom();
+			}
+			
 			isGrowing = true;
 		}
 		else if (wasGrowing)
 		{
 			isGrowing = false;
 		}
+
+		updateSkeleton(skeleton);
 	}
 
 	private void grow()
@@ -238,7 +248,79 @@ public class Branch
 			thickness = parent.getNodeThickness(parentNode);
 		}
 
-		updateSkeleton(skeleton);
+		//updateSkeleton(skeleton);
+	}
+
+	private void growFromBottom()
+	{
+		// Use linear interpolation to determine what length the branch should be,
+		// at this stage in the tree's maturity.
+		// All branches must be done growing at treeMaturity == 1.0.
+		// Therefore, branches spawned later must grow at a faster relative rate.
+
+		// First determine the local branch's maturity.
+		// (Maybe this should be done in update)
+
+		branchMaturity = (currentTreeMaturity - treeMaturityStart) / (1.0f - treeMaturityStart);
+		float newBranchLength = Mathf.Lerp(0, lengthGoal, branchMaturity);
+
+		float newGrowth = newBranchLength - getLength();
+
+		// Extend the length of the branch.
+		// The segment before the tip ring will be extended. If it reaches its max length,
+		// then a new segment will be added, and the overflow growth distance
+		// will be its initial length.
+
+		int growIndex = 1;
+
+		// should probably throw an error if newGrowth > treeSettings.branchSegLength
+		if (newGrowth > treeSettings.branchSegLength)
+		{
+			Debug.Log("Whoops, newGrowth > treeSettings.branchSegLength in growFromBottom(). We should do something to handle this case.");
+		}
+
+		// trim the new growth if our vine is overshooting the total length goal
+		if (getLength() + newGrowth > lengthGoal)
+		{
+			newGrowth = lengthGoal - getLength();
+			growthStart = lengthGoal;
+		}
+
+		float currentLength = skeleton[growIndex].length;
+		float newSegLength = currentLength + newGrowth;
+
+		if (newSegLength < treeSettings.branchSegLength)
+		{
+			skeleton[growIndex].length = newSegLength;
+		}
+		else
+		{
+			skeleton[growIndex].length = treeSettings.branchSegLength;
+			float overflow = newSegLength - treeSettings.branchSegLength;
+			insertSegment(growIndex, treeSettings.branchMinWidth / (depth + 1), overflow, determineSegDirection(skeleton.Last().direction));
+
+			// increment all children's parentNode index
+			foreach (Branch c in children)
+			{
+				c.parentNode++;
+			}
+			//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + skeleton[growIndex].length + ", so a new node is created with length " + overflow);
+		}
+
+		// Increase the thickness of the branch.
+		// This will be largely dependent on the thickness of the parent branch,
+		// more specifically the parent node this branch protrudes from.
+		if (parent == null)
+		{
+			thickness = Mathf.Lerp(0, treeSettings.treeMaxWidth, branchMaturity);
+		}
+
+		else
+		{
+			thickness = parent.getNodeThickness(parentNode);
+		}
+
+		//updateSkeleton(skeleton);
 	}
 
 	private void addSegment(float rad, float magnitude, Vector3 direction)
@@ -264,6 +346,23 @@ public class Branch
 		}
 
 		//expandMesh();
+	}
+
+	private void insertSegment(int index, float rad, float magnitude, Vector3 direction)
+	{
+		// since the tip is always of uniform length, we are actually adding a new tip,
+		// and shrinking the previous end segment. It can now grow to its full length,
+		// and then the process will start again.
+
+		if (magnitude > treeSettings.branchSegLength)
+		{
+			Debug.Log("Whoops, magnitude > treeSettings.branchSegLength in insertSegment(). We should do something to handle this case.");
+		}
+
+		BranchNode newNode = new BranchNode(rad, magnitude, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
+		skeleton.Insert(index, newNode);
+
+		//expandMesh(); 
 	}
 
 	private Vector3 determineSegDirection(Vector3 pDirection)
