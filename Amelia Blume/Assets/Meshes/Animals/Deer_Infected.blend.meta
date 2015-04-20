@@ -11,8 +11,10 @@ ModelImporter:
     400004: Infection
     2300000: Deer
     2300002: Infection
+    2300004: //RootNode
     3300000: Deer
     3300002: Infection
+    3300004: //RootNode
     4300000: Deer
     4300002: Infection
     7400000: Default Take
