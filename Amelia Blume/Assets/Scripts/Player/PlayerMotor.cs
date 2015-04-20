@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerMotor : BaseBehavior {
@@ -19,23 +19,29 @@ public class PlayerMotor : BaseBehavior {
 		public float speed = 0f;
 		public float walkSpeed = 4f;
 		public float runSpeed = 8f;
-		public float airControlRatio = 0.3f;
+		public float airControlRatio = 10f;
 		
 		public float sidestepSpeed = 3f;
+		// I think this part is irrelevant, since we constrain the Z axis.
 		public float sidestepWhileMovingRatio = 0.7f;
 		public bool sidestepAtFullSpeed = false;
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
-		public float jumpForce = 15f;
+		public float jumpForce = 20f;
+		public float dashForce = 35f;
 		public float acceleration = 10f;
+		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
 		public float stoppingPower = 15f;
 				
 		public float fallSpeed = 0f;
 		public float baseFallSpeed = -5f;
 
 		public float jumpForceRemaining = 0f;
-		
+		public float dashForceRemaining = 0f;
+
+		public bool stopJump = false;
+
 		public Vector3 momentum = Vector3.zero;
 	}
 	
@@ -46,6 +52,7 @@ public class PlayerMotor : BaseBehavior {
 		public GameObject ground = null;
 		public bool grounded;
 		public bool wasGrounded;
+		public bool wasWasGrounded;
 		public float altitude = 0f;
 		
 		public float maxCalculatedAltitude = 100f;
@@ -100,12 +107,15 @@ public class PlayerMotor : BaseBehavior {
 		groundTestMask = ~(1 << LayerMask.NameToLayer("Player"));
 	}
 		
+	// this is the only function that actually moves the player. All other functions prepare
+	// information that will be processed here, before applying the work vector.
 	public void UpdateMotor(Vector3 movementInput) {
+		environment.wasWasGrounded = environment.wasGrounded;
 		environment.wasGrounded = environment.grounded;
 		
 		pendingInput = movementInput;
 		
-		RotateTowardCameraDirection();
+		//RotateTowardCameraDirection();
 		UpdateGround();		
 		ProcessMotion();
 		
@@ -134,15 +144,9 @@ public class PlayerMotor : BaseBehavior {
 			} else if (pendingInput.x != 0 || pendingInput.z != 0) {
 				targetSpeed = movement.walkSpeed;
 				acceleration = movement.acceleration;
-			} else if (player.isGrounded) {
+			} else {
 				targetSpeed = 0;
 				acceleration = movement.stoppingPower;
-			}
-			
-			if (player.controller.isSideStepping) {
-				if (!movement.sidestepAtFullSpeed) {
-					targetSpeed = movement.sidestepSpeed;
-				}
 			}
 		}
 				
@@ -159,29 +163,26 @@ public class PlayerMotor : BaseBehavior {
 
 		workVector *= movement.speed;
 
-		if (player.isGrounded) {
-			movement.momentum = workVector;
-		} else {
-			workVector = movement.momentum + workVector * movement.airControlRatio;
-			if (workVector.magnitude > movement.momentum.magnitude) {
-				workVector = workVector.normalized * movement.momentum.magnitude;	
-			}
+		//Enables some degree of movement control while the player is in the air
+		movement.momentum = workVector;
+		if (!player.isGrounded) {
+			workVector = movement.momentum + workVector; //* movement.airControlRatio;
+			workVector = workVector.normalized * movement.airControlRatio;
 		}
-		
 
 		lastAttemptedMovement = workVector;
 		
 		workVector = ApplySlide(workVector);
 		workVector = ApplyGravity(workVector);
 		workVector = ApplyJumpPower(workVector);
+		workVector = ApplyDashPower(workVector);
 		workVector = ApplyGroundMovement(workVector);
-		
+
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
-		
 	}
 	
 	protected Vector3 ApplyJumpPower(Vector3 workVector) {
-		if (player.isCollidingAbove) {
+		if (player.isDashing || player.isCollidingAbove || (player.isGrounded && !environment.wasWasGrounded)) {
 			movement.jumpForceRemaining = 0;
 		}
 		
@@ -193,10 +194,37 @@ public class PlayerMotor : BaseBehavior {
 		return workVector;
 	}
 	
+	protected Vector3 ApplyDashPower(Vector3 workVector) {
+		
+		if(!player.isDashing || player.isCollidingSides){
+			movement.dashForceRemaining = 0;
+		}
+
+		if (movement.dashForceRemaining > 0 && player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+				
+				if(!player.isGrounded)
+					workVector.y = environment.gravity * Time.fixedDeltaTime;
+		}
+
+		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
+				workVector.x += movement.dashForceRemaining;
+
+				if(!player.isGrounded)
+					workVector.y = environment.gravity * Time.fixedDeltaTime;
+		}
+		
+		return workVector;
+	}
+
 	protected Vector3 ApplyGravity(Vector3 workVector) {
+		if((player.isDashing || player.airDashed) && workVector.y > 0) {
+			return workVector;
+		}
+
 		if (environment.grounded) {
 			if (!environment.wasGrounded) {
-				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));		
+				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));
 			}
 			movement.fallSpeed = 0;
 			workVector.y = movement.baseFallSpeed;	
@@ -209,8 +237,6 @@ public class PlayerMotor : BaseBehavior {
 				workVector.y += movement.fallSpeed;
 			}
 		}
-		
-		
 		return workVector;
 	}
 	
@@ -336,23 +362,97 @@ public class PlayerMotor : BaseBehavior {
 		if (player.canJump) {
 			player.Broadcast("OnJump");
 			movement.jumpForceRemaining = movement.jumpForce;
+			movement.stopJump = false;
 		} else {
 			player.Broadcast("OnJumpDenied");
 		}
+	}
+
+	public void StopJump() {
+		if (!player.canJump) {
+			player.Broadcast("OnStopJump");
+			movement.jumpForceRemaining = movement.jumpForceRemaining/2 + 1;
+			movement.stopJump = true;
+		} 
+		else {
+			player.Broadcast("OnStopJumpDenied");
+		}
+	}	
+
+	public void Dash() {
+		if (player.canDash) {
+			player.dashStartX = player.transform.position.x;
+			player.dashedAtTime = Time.time;
+			player.isDashing = true;
+
+			player.Broadcast("OnDash");
+
+			if(player.isFacingRight)
+				movement.dashForceRemaining = movement.dashForce;
+			else
+				movement.dashForceRemaining = movement.dashForce * -1;
+		} 
+		else 
+			player.Broadcast("OnDashDenied");
 	}
 
 	public void ThrowSeed() {
 		if(player.canThrowSeed) {
 			player.Broadcast("OnThrowSeed");
 			// spawn a seed
-			Vector3 loc = new Vector3(1, 1, 0);
+			Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.5f, 1, 0);
 			loc += transform.position;
-			GameObject newSeed = Instantiate(Resources.Load("VineSeed"), loc, Quaternion.identity) as GameObject;
+			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+			GameObject newSeed;
+			Player.SeedType currSeed = player.getCurrentSeedType();
+			switch(currSeed){
+			case Player.SeedType.VineSeed:
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.TreeSeed:
+				newSeed = Instantiate(Resources.Load("Seeds/TreeSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FlowerSeed:
+				newSeed = Instantiate(Resources.Load("Seeds/FlowerSeed")) as GameObject;
+				break;
+				
+			case Player.SeedType.FernSeed:
+				newSeed = Instantiate(Resources.Load("Seeds/FernSeed")) as GameObject;
+				break;
+
+			default:
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
+				break;
+			}
+
+			newSeed.transform.position = loc;
 			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
-			Debug.Log("called ThrowSeed");
 		}
 		else{
 			player.Broadcast("OnThrowSeedDenied");
+		}
+	}
+
+	public void Sun() {
+		if (player.canSun) {
+			player.Broadcast("OnSun");
+			//SunStuff
+			GameObject sun = (GameObject) Resources.Load("Sun");
+			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			Instantiate(sun);
+		}
+	}
+
+	public void Convert(){
+		if (player.canConvert) {
+			player.Broadcast("OnConvert");
+
+			GameObject converter = (GameObject) Resources.Load ("Converter");
+			converter.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			converter.GetComponent<Converter>().target = transform.GetComponent<PlayerController>().conversionTarget;
+			Instantiate(converter);
 		}
 	}
 	

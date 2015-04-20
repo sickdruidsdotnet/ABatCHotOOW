@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fc20c2c03d94344d0865eeedb5679886
+guid: 018ee23a1a68f41039e769ca0b88cdf1
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -48,9 +48,9 @@ ModelImporter:
     400040: Upper_Back_Leg_L
     400042: Upper_Back_Leg_R
     4300000: Deer
-    7400000: Walk State
+    7400000: Walking
     7400002: ArmatureAction
-    7400004: Idle
+    7400004: Default Take
     9500000: //RootNode
     13700000: Deer
   materials:
@@ -70,16 +70,16 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walk State
+      name: Walking
       takeName: Default Take
       firstFrame: 0
-      lastFrame: 40
+      lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -140,79 +140,9 @@ ModelImporter:
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
-      name: ArmatureAction
-      takeName: ArmatureAction
-      firstFrame: 0
-      lastFrame: .100000009
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Armature
-        weight: 1
-      - path: Armature/Back_Knee_L
-        weight: 1
-      - path: Armature/Back_Knee_R
-        weight: 1
-      - path: Armature/Back_Leg_IK_L
-        weight: 1
-      - path: Armature/Back_Leg_IK_R
-        weight: 1
-      - path: Armature/Body
-        weight: 1
-      - path: Armature/Front_Knee_L
-        weight: 1
-      - path: Armature/Front_Knee_R
-        weight: 1
-      - path: Armature/Front_Leg_IK_L
-        weight: 1
-      - path: Armature/Front_Leg_IK_R
-        weight: 1
-      - path: Armature/Front_Leg_L
-        weight: 1
-      - path: Armature/Front_Leg_L/Lower_Front_Leg_L
-        weight: 1
-      - path: Armature/Front_Leg_R
-        weight: 1
-      - path: Armature/Front_Leg_R/Lower_Front_Leg_R
-        weight: 1
-      - path: Armature/Neck
-        weight: 1
-      - path: Armature/Neck/Head
-        weight: 1
-      - path: Armature/Upper_Back_Leg_L
-        weight: 1
-      - path: Armature/Upper_Back_Leg_L/Lower_Back_Leg_L
-        weight: 1
-      - path: Armature/Upper_Back_Leg_R
-        weight: 1
-      - path: Armature/Upper_Back_Leg_R/Lower_Back_Leg_R
-        weight: 1
-      - path: Deer
-        weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
-    - serializedVersion: 16
-      name: Idle
+      name: Default Take
       takeName: Default Take
-      firstFrame: 40
+      firstFrame: 50
       lastFrame: 59
       wrapMode: 0
       orientationOffsetY: 0
@@ -220,7 +150,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0

@@ -2,17 +2,19 @@
 using System.Collections;
 
 public class WaterParticles : MonoBehaviour {
+	public InputHandler playerInput;
+
 	bool rightTrigger;
 	int coolDown;
 	public ParticleSystem water;
 	// Use this for initialization
 	void Start () {
-
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		rightTrigger = Input.GetKey (KeyCode.JoystickButton7);
+		rightTrigger = playerInput.water;
 		if (rightTrigger && coolDown > 10)
 		{
 			StartWater ();
