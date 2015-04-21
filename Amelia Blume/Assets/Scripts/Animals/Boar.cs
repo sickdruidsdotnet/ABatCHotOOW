@@ -161,9 +161,7 @@ public class Boar : Animal
 			lockCounter--;
 			if(lockCounter == 0)
 			{
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | 
-					RigidbodyConstraints.FreezeRotationX |
-					RigidbodyConstraints.FreezeRotationZ;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 			}
 		}
 
@@ -213,9 +211,7 @@ public class Boar : Animal
 				else
 					hitDirection = 1;
 				lockCounter = 60;
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | 
-						RigidbodyConstraints.FreezeRotationX |
-						RigidbodyConstraints.FreezeRotationZ;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
@@ -373,10 +369,8 @@ public class Boar : Animal
 			}
 			rotationCooldown = 60;
 			//freeze the boar to prevent weird player interaction physics
-			rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | 
-					RigidbodyConstraints.FreezeRotationX |
-					RigidbodyConstraints.FreezeRotationZ;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 		}
 	}
 
@@ -407,9 +401,7 @@ public class Boar : Animal
 					faceDirection = -1;
 				}
 				//unfreeze boar 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | 
-					RigidbodyConstraints.FreezeRotationX |
-						RigidbodyConstraints.FreezeRotationZ;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
 				
 			}
@@ -427,7 +419,7 @@ public class Boar : Animal
 		else
 			hitDirection = 1;
 		lockCounter = 60;
-		rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+		rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 		//don't add the impact if player is about to die
 		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
