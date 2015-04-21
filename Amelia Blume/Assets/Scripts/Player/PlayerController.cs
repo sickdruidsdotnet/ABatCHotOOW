@@ -45,6 +45,7 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
+//		Debug.Log (Input.GetJoystickNames()[0]);
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];

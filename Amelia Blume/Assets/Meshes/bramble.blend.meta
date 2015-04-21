@@ -1,0 +1,143 @@
+fileFormatVersion: 2
+guid: 45de7e3a5123c4f2ea5ae8e548ac43e6
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: BezierCircle
+    100002: //RootNode
+    100004: Bramble_1
+    100006: Bramble_1_001
+    100008: Bramble_1_002
+    100010: spike
+    100012: spike_001
+    100014: spike_002
+    100016: spike_003
+    100018: spike_004
+    100020: spike_005
+    100022: spike_006
+    100024: spike_007
+    100026: spike_008
+    100028: spike_009
+    100030: spike_010
+    100032: spike_011
+    400000: BezierCircle
+    400002: //RootNode
+    400004: Bramble_1
+    400006: Bramble_1_001
+    400008: Bramble_1_002
+    400010: spike
+    400012: spike_001
+    400014: spike_002
+    400016: spike_003
+    400018: spike_004
+    400020: spike_005
+    400022: spike_006
+    400024: spike_007
+    400026: spike_008
+    400028: spike_009
+    400030: spike_010
+    400032: spike_011
+    2300000: BezierCircle
+    2300002: Bramble_1
+    2300004: Bramble_1_001
+    2300006: Bramble_1_002
+    2300008: spike
+    2300010: spike_001
+    2300012: spike_002
+    2300014: spike_003
+    2300016: spike_004
+    2300018: spike_005
+    2300020: spike_006
+    2300022: spike_007
+    2300024: spike_008
+    2300026: spike_009
+    2300028: spike_010
+    2300030: spike_011
+    3300000: BezierCircle
+    3300002: Bramble_1
+    3300004: Bramble_1_001
+    3300006: Bramble_1_002
+    3300008: spike
+    3300010: spike_001
+    3300012: spike_002
+    3300014: spike_003
+    3300016: spike_004
+    3300018: spike_005
+    3300020: spike_006
+    3300022: spike_007
+    3300024: spike_008
+    3300026: spike_009
+    3300028: spike_010
+    3300030: spike_011
+    4300000: spike_011
+    4300002: spike_010
+    4300004: spike_009
+    4300006: spike_008
+    4300008: spike_007
+    4300010: spike_006
+    4300012: spike_005
+    4300014: spike_004
+    4300016: spike_003
+    4300018: spike_002
+    4300020: spike_001
+    4300022: spike
+    4300024: Bramble_1
+    4300026: BezierCircle
+    4300028: Bramble_1_002
+    4300030: Bramble_1_001
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

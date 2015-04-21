@@ -9,7 +9,7 @@ public class SignPost : MonoBehaviour {
 	Player amelia;
 	string[] words;
 	bool beingRead = false;
-	TextAsset file;
+	public TextAsset file;
 	string[] lines;
 	int sentenceIndex = 0;
 	string textDisplay = "";
@@ -19,7 +19,7 @@ public class SignPost : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		nextUse = Time.time + delay;
-		file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
+		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
 		words = file.text.Split ('\n');
 		myTextMesh = GetComponentInChildren<TextMesh> ();
 		myTextMesh.text = words[wordsIndex];
@@ -38,7 +38,7 @@ public class SignPost : MonoBehaviour {
 	}
 
 	public void Read(){
-		Debug.Log ("reading");
+	//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
 			beingRead = true;
