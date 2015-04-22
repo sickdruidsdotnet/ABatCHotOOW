@@ -52,7 +52,6 @@ public class Player : BaseBehavior {
 	public bool treeUnlocked = false;
 	public bool fluerUnlocked = false;
 	public bool fernUnlocked = false;
-
 	
 
 	public PlayerController controller {
