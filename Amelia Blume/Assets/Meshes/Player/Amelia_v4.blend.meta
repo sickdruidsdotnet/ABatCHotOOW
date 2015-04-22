@@ -174,6 +174,28 @@ ModelImporter:
     100336: upper_arm_L
     100338: upper_arm_R
     100340: Pouch
+    100342: Plane_001
+    100344: Plane_002
+    100346: Plane_003
+    100348: Plane_004
+    100350: Plane_005
+    100352: Plane_006
+    100354: Plane_007
+    100356: Plane_008
+    100358: Plane_009
+    100360: Plane_010
+    100362: Flower_01
+    100364: Flower_02
+    100366: Flower_03
+    100368: Flower_05
+    100370: Flower_06
+    100372: Flower_07
+    100374: Flower_09
+    100376: Flower_10
+    100378: Flower_4
+    100380: Flower_8
+    100382: Flower_04
+    100384: Flower_08
     400000: ABatCHotOOW
     400002: ABatCHotOOW_Low-Poly
     400004: //RootNode
@@ -345,6 +367,28 @@ ModelImporter:
     400336: upper_arm_L
     400338: upper_arm_R
     400340: Pouch
+    400342: Plane_001
+    400344: Plane_002
+    400346: Plane_003
+    400348: Plane_004
+    400350: Plane_005
+    400352: Plane_006
+    400354: Plane_007
+    400356: Plane_008
+    400358: Plane_009
+    400360: Plane_010
+    400362: Flower_01
+    400364: Flower_02
+    400366: Flower_03
+    400368: Flower_05
+    400370: Flower_06
+    400372: Flower_07
+    400374: Flower_09
+    400376: Flower_10
+    400378: Flower_4
+    400380: Flower_8
+    400382: Flower_04
+    400384: Flower_08
     4300000: Cylinder
     4300002: Tails
     4300004: Reef
@@ -358,6 +402,28 @@ ModelImporter:
     4300020: Hair
     4300022: Plane
     4300024: Pouch
+    4300026: Plane_010
+    4300028: Plane_009
+    4300030: Plane_008
+    4300032: Plane_007
+    4300034: Plane_006
+    4300036: Plane_005
+    4300038: Plane_004
+    4300040: Plane_003
+    4300042: Plane_002
+    4300044: Plane_001
+    4300046: Flower_03
+    4300048: Flower_02
+    4300050: Flower_05
+    4300052: Flower_06
+    4300054: Flower_09
+    4300056: Flower_8
+    4300058: Flower_10
+    4300060: Flower_07
+    4300062: Flower_4
+    4300064: Flower_01
+    4300066: Flower_08
+    4300068: Flower_04
     7400000: Default Take
     7400002: Damage
     7400004: DashForward
@@ -384,6 +450,28 @@ ModelImporter:
     13700020: Skirt
     13700022: Tails
     13700024: Pouch
+    13700026: Plane_001
+    13700028: Plane_002
+    13700030: Plane_003
+    13700032: Plane_004
+    13700034: Plane_005
+    13700036: Plane_006
+    13700038: Plane_007
+    13700040: Plane_008
+    13700042: Plane_009
+    13700044: Plane_010
+    13700046: Flower_01
+    13700048: Flower_02
+    13700050: Flower_03
+    13700052: Flower_05
+    13700054: Flower_06
+    13700056: Flower_07
+    13700058: Flower_09
+    13700060: Flower_10
+    13700062: Flower_4
+    13700064: Flower_8
+    13700066: Flower_04
+    13700068: Flower_08
   materials:
     importMaterials: 1
     materialName: 0
