@@ -3,35 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-class TreeStructure : MonoBehaviour
+class BranchPlatform : MonoBehaviour
 {
-	public Branch trunk;
+	Branch branch;
 
 	public float maturity;
-
-	public int resolution = 6;
-	public static float initialRadius = 0.02f;
-	public float maxRadius = 0.02f;
-	public float initialSegLength = 0f;
-	public float maxSegLength = 0.1f;
-	public float crookedFactor = 10f;
-
-	private float ringRadians;
-
-	public float length;
-
-	public bool isGrowing = false;
-	public bool debugDoneGrowing = false;
-	public float growthRate = 0.1f;
-	public float lengthGoal = 1f;
-	public float growthStart;
 	public bool isMaturing = false;
-
 	public bool skeletonExpanded = false;
 
-	// debug draw values
-	private float debugSphereSize = 0.005f;
-	private Color debugColor = Color.red;
+	private float ringRadians;
 
 	public List<Vector3> vertices;
 	private List<int> triangles;
@@ -58,9 +38,7 @@ class TreeStructure : MonoBehaviour
 
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
-		mesh.name = "TreeStructure";
-
-		createInitialTreeSkeleton();
+		mesh.name = "BranchPlatform";
 	}
 
 	public void loadTreeSettings(TreePlant_Procedural.TreeSettings ts)
@@ -73,8 +51,8 @@ class TreeStructure : MonoBehaviour
 		if (isMaturing)
 		{
 			// update each Branch
-			updateBranches(trunk, maturity);
-			updateTreeSkeleton(trunk);
+			updateBranches(branch, maturity);
+			updateTreeSkeleton(branch);
 		}
 
 		if (skeletonExpanded)
@@ -98,9 +76,9 @@ class TreeStructure : MonoBehaviour
 		}
 	}
 
-	private void createInitialTreeSkeleton()
+	public void createInitialTreeSkeleton()
 	{
-		trunk = new Branch(treeSettings, Vector3.zero, Vector3.up);
+		branch = new Branch(treeSettings, Vector3.zero, Vector3.right, 1);
 
 		createMesh();
 	}
@@ -132,7 +110,7 @@ class TreeStructure : MonoBehaviour
 		uvs.Clear();
 		triangles.Clear();
 
-		addTreeVerts(trunk);
+		addTreeVerts(branch);
 
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = triangles.ToArray();
@@ -253,11 +231,7 @@ class TreeStructure : MonoBehaviour
 			}
 		}
 	}
-	
 	/*
-	public float getTotalLength()
-	{}
-	*/
 
 	void OnDrawGizmos()
 	{
@@ -267,10 +241,10 @@ class TreeStructure : MonoBehaviour
 		{
 			Vector3 mPos = _transform.position;
 
-			if (trunk != null)
+			if (branch != null)
 			{
 				// recursively draw tree
-				//drawTreeSkeletonGizmos(trunk, mPos);
+				//drawTreeSkeletonGizmos(branch, mPos);
 			}
 		}	
 	}
@@ -323,4 +297,5 @@ class TreeStructure : MonoBehaviour
 			drawTreeSkeletonGizmos(childBranch, mPos);
 		}
 	}
+	*/
 }

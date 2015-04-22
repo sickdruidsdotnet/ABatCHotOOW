@@ -56,11 +56,12 @@ public class Branch
 	public float randomBranchAngleFactor = 30f;
 	public float treeMaturityStart = 0f;
 	public float currentTreeMaturity = 0f;
+	public int maxDepth;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
 
 	// "trunk" branch constructor
-	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir)
+	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir, int md = -1)
 	{
 		// since there is no parent branch, we need a start point for this branch
 
@@ -77,6 +78,7 @@ public class Branch
 		maxNodeAngle = 5f;
 		lengthGoal = treeSettings.treeMaxHeight;
 		thickness = 0;
+		if (md == -1) {maxDepth = treeSettings.treeMaxDepth;}
 
 		// only do this for the trunk
 		widthGoal = treeSettings.treeMaxWidth;
@@ -84,8 +86,10 @@ public class Branch
 		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
 	}
 
+	/*
+
 	// Platform Branch constructor
-	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir, Vector3 height, Vector3 length)
+	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir)
 	{
 
 		// since there is no parent branch, we need a start point for this branch
@@ -101,12 +105,12 @@ public class Branch
 		direction = dir;
 		trajectory = treeSettings.treeTrajectory;
 		// determine maxNodeAngle
-		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
-		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
-		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
+		maxNodeAngle = 5f;
 		lengthGoal = treeSettings.treeMaxHeight;
 		thickness = 0;	
 	}
+
+	*/
 
 	// standard branch constructor
 	public Branch(TreePlant_Procedural.TreeSettings ts, Branch parentBranch, Vector3 dir, float tms, int node = -1)
@@ -161,6 +165,7 @@ public class Branch
 		float plr = parent.getLengthRemaining(parentNode);
 		lengthGoal = Random.Range(0.5f * plr, 1.2f * plr);
 		thickness = treeSettings.branchMaxWidth / (depth + 1);
+		maxDepth = treeSettings.treeMaxDepth;
 
 		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
 
