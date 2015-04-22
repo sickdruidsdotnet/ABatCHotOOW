@@ -73,11 +73,8 @@ public class Branch
 		treeSettings = ts;
 		startPoint = start;
 		direction = dir;
-		trajectory = treeSettings.treeTrajectory;
-		// determine maxNodeAngle
-		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
-		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
-		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
+		trajectory = direction;
+		maxNodeAngle = 5f;
 		lengthGoal = treeSettings.treeMaxHeight;
 		thickness = 0;
 
@@ -85,6 +82,30 @@ public class Branch
 		widthGoal = treeSettings.treeMaxWidth;
 
 		skeleton.Add(new BranchNode(thickness, 0, startPoint, direction));
+	}
+
+	// Platform Branch constructor
+	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir, Vector3 height, Vector3 length)
+	{
+
+		// since there is no parent branch, we need a start point for this branch
+
+		skeleton = new List<BranchNode>();
+
+		parent = null;
+		parentNode = -1;
+		children = new List<Branch>();
+		depth = 0;
+		treeSettings = ts;
+		startPoint = start;
+		direction = dir;
+		trajectory = treeSettings.treeTrajectory;
+		// determine maxNodeAngle
+		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
+		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
+		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
+		lengthGoal = treeSettings.treeMaxHeight;
+		thickness = 0;	
 	}
 
 	// standard branch constructor
@@ -323,7 +344,7 @@ public class Branch
 		//updateSkeleton(skeleton);
 	}
 
-	private void addSegment(float rad, float magnitude, Vector3 direction)
+	protected virtual void addSegment(float rad, float magnitude, Vector3 direction)
 	{
 		// since the tip is always of uniform length, we are actually adding a new tip,
 		// and shrinking the previous end segment. It can now grow to its full length,

@@ -9,6 +9,8 @@ public class TreePlant_Procedural : Plant
 	public List<GameObject> leaves;
 	public TreeSettings treeSettings;
 
+	public float zOffset = 1f;
+
 	[System.Serializable]
 	public class TreeSettings {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
@@ -30,7 +32,7 @@ public class TreePlant_Procedural : Plant
 
 		public int branchResolution = 8;
 		public float branchNodeMaxAngle = 40f;
-		public float branchSegLength = 0.1f;
+		public float branchSegLength = 0.3f;
 		public float branchMaxLength = 1f;
 		public float branchGrowthRate = 0.1f;
 		public float branchMinWidth = 0.00f;
@@ -47,7 +49,7 @@ public class TreePlant_Procedural : Plant
 
 		//setRandomValues();
 
-		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position, Quaternion.identity) as GameObject;
+		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position + new Vector3(0, 0, zOffset), Quaternion.identity) as GameObject;
 		treeStructure.transform.parent = gameObject.transform;
 		treeStructure.GetComponent<TreeStructure>().loadTreeSettings(treeSettings);
 	}

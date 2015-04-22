@@ -33,7 +33,7 @@ class TreeStructure : MonoBehaviour
 	private float debugSphereSize = 0.005f;
 	private Color debugColor = Color.red;
 
-	private List<Vector3> vertices;
+	public List<Vector3> vertices;
 	private List<int> triangles;
 	private List<Vector2> uvs;
 
