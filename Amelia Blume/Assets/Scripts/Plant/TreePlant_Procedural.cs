@@ -17,9 +17,9 @@ public class TreePlant_Procedural : Plant
 		// random
 		public float treeDirectionWeight = 0.8f;
 		// random
-		public float treeMaxHeight = 3f;
+		public float treeMaxHeight = 6f;
 		public int treeMaxDepth = 3;
-		public float treeMaxWidth = 0.1f;
+		public float treeMaxWidth = 0.3f;
 		// random
 		public float maxNodeChanceToBranch = 0.35f;
 		// random
@@ -45,7 +45,7 @@ public class TreePlant_Procedural : Plant
 
 		treeSettings = new TreeSettings();
 
-		setRandomValues();
+		//setRandomValues();
 
 		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position, Quaternion.identity) as GameObject;
 		treeStructure.transform.parent = gameObject.transform;

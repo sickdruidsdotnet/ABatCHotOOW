@@ -78,7 +78,7 @@ public class Branch
 		float variedWeight = Random.Range(ts.branchTrajectoryWeight - ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation,
 		                                  ts.branchTrajectoryWeight + ts.branchTrajectoryWeight * ts.branchTrajectoryWeightVariation);
 		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
-		lengthGoal = 3;
+		lengthGoal = treeSettings.treeMaxHeight;
 		thickness = 0;
 
 		// only do this for the trunk
