@@ -46,12 +46,9 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
-<<<<<<< HEAD
 //		Debug.Log (Input.GetJoystickNames()[0]);
-=======
 		//get the input handler and reference that instead
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
->>>>>>> master
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -281,16 +278,11 @@ public class PlayerController : BaseBehavior {
 			return;
 
 		if (!player.isSunning() && !player.isConverting()) {
-<<<<<<< HEAD
-			if (Input.GetButtonDown ("Jump")) {
+			if (playerInput.jumpDown) {
 				if(player.GetReadSign())
 					ReadSign();
 				else
 					Jump ();
-=======
-			if (playerInput.jumpDown) {
-				Jump ();
->>>>>>> master
 			}
 			if (playerInput.throwSeedDown) {
 				ThrowSeed ();
