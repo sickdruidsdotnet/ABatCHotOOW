@@ -96,7 +96,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 		//get all animals that the camera should know about
 		trackables = new List<GameObject> ();
 		tracking = new List<bool>();
-		GameObject[] tempTrackables = GameObject.FindGameObjectsWithTag ("Animal");
+
+		//handle tracking
+		GameObject[] trackedAnimals = GameObject.FindGameObjectsWithTag ("Animal");
+		GameObject[] focusPoints = GameObject.FindGameObjectsWithTag("Focus Point");
+		GameObject[] tempTrackables = new GameObject[trackedAnimals.Count() + focusPoints.Count()] ;
+		trackedAnimals.CopyTo (tempTrackables, 0);
+		focusPoints.CopyTo (tempTrackables, trackedAnimals.Count());
+
 		for (int i = 0; i < tempTrackables.Count(); i++) {
 			trackables.Add (tempTrackables[i]);
 			tracking.Add (false);
