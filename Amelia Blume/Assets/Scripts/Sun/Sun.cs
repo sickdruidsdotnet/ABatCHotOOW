@@ -3,8 +3,10 @@ using System.Collections;
 
 public class Sun : MonoBehaviour {
 	private GameObject player;
+	public InputHandler playerInput;
 	// Use this for initialization
 	void Start () {
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
 		player = GameObject.Find ("Player");
 		this.gameObject.name = "Sun";
 	}
@@ -22,7 +24,7 @@ public class Sun : MonoBehaviour {
 	}
 
 	protected void HandleInput() {
-		if (Input.GetButtonUp ("Sun")) {
+		if (playerInput.sunUp) {
 			player.GetComponent<Player>().SetSunning(false);
 			Destroy (this.gameObject);
 		}

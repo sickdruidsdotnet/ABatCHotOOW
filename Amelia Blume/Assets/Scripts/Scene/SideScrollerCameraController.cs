@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class SideScrollerCameraController : MonoBehaviour {
+
+	public bool manual = false;
+	bool unlockAfterPan = false;
+	Vector3 startPos;
+	float panRate = 80f;
+	Vector3 panLength;
+
 	public Transform target;
 	Vector3 prevTargetPos;
 	Vector3 prevPos;
@@ -38,6 +45,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public float panSpeedX = 0.4f;
 	public float panSpeedY = 0.1f;
 	Vector3 panTo;
+	int panTime;
 
 	//panlimiters for more smooth scrolling
 	List<GameObject>[] panLimiters;
@@ -133,6 +141,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	}
 
+	void Update()
+	{
+		if(Input.GetKeyDown("l"))
+		{
+			MoveToPosition(99f, 1f, false);
+		}
+	}
+
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
@@ -142,7 +158,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 		}
 		prevPos = transform.position;
 
-		trackTargets ();
+		if(!manual)
+			trackTargets ();
+
 		if (zooming) {
 			float newSize = Mathf.SmoothStep(startSize, endSize, ((Time.time - startTime) * zoomRate) / zoomLength);
 			thisCam.orthographicSize = newSize;
@@ -150,14 +168,47 @@ public class SideScrollerCameraController : MonoBehaviour {
 			{
 				zooming = false;
 			}
+
+			//make sure we didn't zoom the player offscreen
+			Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
+			if (targetViewpoint.x < 0.2f) {
+				while(thisCam.WorldToViewportPoint (target.position).x < 0.2f)
+				{
+					transform.position = new Vector3 (transform.position.x - 0.001f, transform.position.y, transform.position.z);
+				}
+			}
+			else if (targetViewpoint.x > 0.8f){
+				while(thisCam.WorldToViewportPoint (target.position).x > 0.8f)
+				{
+					transform.position = new Vector3 (transform.position.x + 0.001f, transform.position.y, transform.position.z);
+				}
+			}
+			if (targetViewpoint.y < 0.2f) {
+				while(thisCam.WorldToViewportPoint (target.position).y < 0.2f)
+				{
+					transform.position = new Vector3 (transform.position.x, transform.position.y - 0.001f, transform.position.z);
+				}
+			}
+			else if (targetViewpoint.y > 0.8f){
+				while(thisCam.WorldToViewportPoint (target.position).y > 0.8f)
+				{
+					transform.position = new Vector3 (transform.position.x, transform.position.y + 0.001f, transform.position.z);
+				}
+			}
+
 			//make sure it hasn't run into a force pan limiter, as that will only update next frame and cause jittery movement
 			for(int i = 0; i < 4; i++)
 			{
 				foreach( GameObject panLimiter in panLimiters[i])
 					panLimiter.GetComponent<PanLimiter>().checkForcePan();
 			}
+
 		}
 
+		//manual takes over the camera movement
+		if (manual) {
+			ManualHandler();
+		} else 
 		//normal camera movement behavior if it's not tracking anything
 		if (!isTracking) {
 			//standard camera behavior when nothing is being tracked
@@ -166,23 +217,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 			//animals are being tracked; need whole new behavior
 			TrackingBehavior();
 		}
-
-		//keep the player within boundaries
-		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
-		/*Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
-		if (targetViewpoint.x < 0.2f) {
-			float xDistance = (thisCam
-			transform.position.Set(transform.position.x - panSpeedX, transform.position.y, transform.position.z);
-		}
-		else if (targetViewpoint.x > 0.8f){
-			transform.position.Set(transform.position.x + panSpeedX, transform.position.y, transform.position.z);
-		}
-		if (targetViewpoint.y < 0.2f) {
-			transform.position.Set(transform.position.x, transform.position.y - panSpeedY, transform.position.z);
-		}
-		else if (targetViewpoint.y > 0.8f){
-			transform.position.Set(transform.position.x, transform.position.y + panSpeedY, transform.position.z);
-		}*/
 
 		//make sure it hasn't run into a force pan limiter, as that will only update next frame and cause jittery movement
 		for(int i = 0; i < 4; i++)
@@ -343,9 +377,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 			panUp = false;
 			panDown = true;
 		}
-		
-		//let's save the current position for later use;
-		Vector3 oldPos = transform.position;
+
 		if (panRight) {
 			if (Mathf.Abs (panTo.x - transform.position.x) <= panSpeedX) {
 				transform.position = new Vector3 (panTo.x, transform.position.y, transform.position.z);
@@ -451,28 +483,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 			return;
 		}
 
-		Vector3 midpoint = target.transform.position * tracked.Count;
+		Vector3 midpoint = target.transform.position * (tracked.Count + 1);
 		foreach (GameObject trackable in tracked) {
 			midpoint += trackable.transform.position;
 		}
 
-		midpoint = new Vector3 (midpoint.x / (tracked.Count * 2f), midpoint.y / (tracked.Count * 2f),
+		midpoint = new Vector3 (midpoint.x / ((tracked.Count * 2f)+1), midpoint.y / ((tracked.Count * 2f)+1),
 		                       transform.position.z);
 		panTo = midpoint;
-		//need to make sure the player isn't leaving the area, as the camera must always keep the player on screen
-		Vector3 targetViewpoint = thisCam.WorldToViewportPoint (target.position);
-		if (targetViewpoint.x < 0.2f) {
-			panTo.Set(panTo.x - panSpeedX, panTo.y, panTo.z);
-		}
-		else if (targetViewpoint.x > 0.8f){
-			panTo.Set(panTo.x + panSpeedX, panTo.y, panTo.z);
-		}
-		if (targetViewpoint.y < 0.2f) {
-			panTo.Set(panTo.x, panTo.y - panSpeedY, panTo.z);
-		}
-		else if (targetViewpoint.y > 0.8f){
-			panTo.Set(panTo.x, panTo.y + panSpeedY, panTo.z);
-		}
 
 		//Now to actually pan
 		if (panTo.x > transform.position.x) {
@@ -506,6 +524,18 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	}
 
+	void ManualHandler(){
+		if (transform.position != panTo) {
+			float newX = Mathf.SmoothStep(startPos.x, panTo.x, ((Time.time - startTime) * panRate) / panLength.x);
+			float newY = Mathf.SmoothStep(startPos.y, panTo.y, ((Time.time - startTime) * panRate) / panLength.y);
+			transform.position = new Vector3(newX, newY, transform.position.z);
+			if(transform.position == panTo && unlockAfterPan)
+			{
+				manual = false;
+			}
+		}
+	}
+
 	void HandleParallax (Vector3 difference)
 	{
 		Vector3 newDest;
@@ -534,5 +564,25 @@ public class SideScrollerCameraController : MonoBehaviour {
 		transform.position = new Vector3(xCoord, yCoord, transform.position.z);
 		Vector3 delta = new Vector3 (xCoord - oldPos.x, yCoord - oldPos.y, transform.position.z);
 		HandleParallax (delta);
+	}
+
+	public void MoveToPosition(Vector3 newPos, bool unlock = false)
+	{
+		startPos = transform.position;
+		manual = true;
+		panTo = new Vector3 (newPos.x, newPos.y, 0f);
+		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		unlockAfterPan = unlock;
+		startTime = Time.time;
+	}
+
+	public void MoveToPosition(float newX, float newY, bool unlock = false)
+	{
+		startPos = transform.position;
+		manual = true;
+		panTo = new Vector3 (newX, newY, transform.position.z);
+		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		unlockAfterPan = unlock;
+		startTime = Time.time;
 	}
 }
