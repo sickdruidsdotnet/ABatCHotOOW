@@ -5,8 +5,8 @@ using System.Collections;
 //also known as the Parent class.
 public class Seed : MonoBehaviour
 {
-    protected int waterCount;
-    protected int hydrationGoal;
+    public int waterCount;
+    public int hydrationGoal;
     protected bool isPlanted;
     public string plantType;
     public Soil soil;
@@ -26,7 +26,7 @@ public class Seed : MonoBehaviour
         // True if the seed is inside of soil object
         isPlanted = false;
         // Default plant type
-        plantType = "Tree";
+        plantType = "None";
         // initialize collection timer and delay
         collectionTimer = 0;
         collectionDelay = 30;
@@ -71,7 +71,9 @@ public class Seed : MonoBehaviour
 
         // spawn a seed
 
-        Debug.Log(plantType);
+        //plantType = plantType + "/" + plantType;
+
+        Debug.Log("Sprouting plant type: " + plantType);
 
         Vector3 loc = new Vector3(0, 0, 0);
         loc += transform.position;
