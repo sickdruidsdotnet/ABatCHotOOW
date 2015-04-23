@@ -3,9 +3,6 @@ using System.Collections;
 
 public class FallingLeaf : MonoBehaviour {
 
-	GameObject mainCameraObject;
-	bool rendered = true;
-
 	float fallrate = 0.01f;
 	float xMoveRate = 0.01f;
 	float amplitude = 0.03f;
@@ -16,30 +13,7 @@ public class FallingLeaf : MonoBehaviour {
 	//edit this on the falling leaf prefab (Resources) in editor to have more colors.
 	public Color[] leafColors;
 
-	// Use this for initialization
-	void Start () {
-		mainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
-		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
-			rendered = false;
-			renderer.enabled = false;
-		}
-	}
-
 	void FixedUpdate () {
-		//rendering optimization
-		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-		if(rendered){
-			if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
-				rendered = false;
-				renderer.enabled = false;
-			}
-		} else {
-			if (camPosition.x > 0 && camPosition.x < 1 && camPosition.y > 0 && camPosition.y < 1) {
-				rendered = true;
-				renderer.enabled = true;
-			}
-		}
 
 		transform.position = new Vector3 (transform.position.x + Mathf.Sin ((Time.time + offset) * frequency) * amplitude, transform.position.y, transform.position.z);
 		transform.position = new Vector3 (transform.position.x + xMoveRate, transform.position.y - fallrate, transform.position.z);
