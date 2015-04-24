@@ -70,6 +70,8 @@ ModelImporter:
     4300000: Deer
     4300002: Infection
     7400000: Default Take
+    7400002: Walk
+    7400004: Walk0
     9500000: //RootNode
     13700000: Deer
   materials:
@@ -87,11 +89,97 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Walk
+      firstFrame: -1
+      lastFrame: 90
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/back
+        weight: 1
+      - path: Armature/back/hip_L
+        weight: 1
+      - path: Armature/back/hip_L/leg_hind_upper_L
+        weight: 1
+      - path: Armature/back/hip_L/leg_hind_upper_L/leg_hind_mid_L
+        weight: 1
+      - path: Armature/back/hip_L/leg_hind_upper_L/leg_hind_mid_L/leg_hind_lower_L
+        weight: 1
+      - path: Armature/back/hip_L/leg_hind_upper_L/leg_hind_mid_L/leg_hind_lower_L/foot_hind_L
+        weight: 1
+      - path: Armature/back/hip_R
+        weight: 1
+      - path: Armature/back/hip_R/leg_hind_upper_R
+        weight: 1
+      - path: Armature/back/hip_R/leg_hind_upper_R/leg_hind_mid_R
+        weight: 1
+      - path: Armature/back/hip_R/leg_hind_upper_R/leg_hind_mid_R/leg_hind_lower_R
+        weight: 1
+      - path: Armature/back/hip_R/leg_hind_upper_R/leg_hind_mid_R/leg_hind_lower_R/foot_hind_R
+        weight: 1
+      - path: Armature/back/tail_base
+        weight: 1
+      - path: Armature/back/tail_base/tail
+        weight: 1
+      - path: Armature/chest
+        weight: 1
+      - path: Armature/chest/neck_lower
+        weight: 1
+      - path: Armature/chest/neck_lower/neck_upper
+        weight: 1
+      - path: Armature/chest/neck_lower/neck_upper/head
+        weight: 1
+      - path: Armature/chest/shoulder_L
+        weight: 1
+      - path: Armature/chest/shoulder_L/leg_front_upper_L
+        weight: 1
+      - path: Armature/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L
+        weight: 1
+      - path: Armature/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L/leg_front_lower_L
+        weight: 1
+      - path: Armature/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L/leg_front_lower_L/foot_front_L
+        weight: 1
+      - path: Armature/chest/shoulder_R
+        weight: 1
+      - path: Armature/chest/shoulder_R/leg_front_upper_R
+        weight: 1
+      - path: Armature/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R
+        weight: 1
+      - path: Armature/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R/leg_front_lower_R
+        weight: 1
+      - path: Armature/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R/leg_front_lower_R/foot_front_R
+        weight: 1
+      - path: Deer
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
