@@ -4,7 +4,8 @@ using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
-	
+
+	public InputHandler playerInput;
 	
 	public float inputDeadZone = 0.05f;
     
@@ -45,6 +46,9 @@ public class PlayerController : BaseBehavior {
 	
     void Start()
     {
+//		Debug.Log (Input.GetJoystickNames()[0]);
+		//get the input handler and reference that instead
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -113,7 +117,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (Input.GetButtonUp ("Jump"))
+		if (playerInput.jumpUp || !canControl)
 			StopJump();
 
 		// these functions should not directly move the player. They only handle input, and 
@@ -168,10 +172,8 @@ public class PlayerController : BaseBehavior {
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
-			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 				
-		horizontal  = Input.GetAxis("Horizontal");
+		horizontal  = playerInput.xMove;
         //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
@@ -238,40 +240,58 @@ public class PlayerController : BaseBehavior {
 		}
 
 	}
-	
+
 	protected void HandleActionInput() {
-
-		float horizontal2 = Input.GetAxis("Horizontal 2");
-		float vertical2 = Input.GetAxis("Vertical 2");
-
-		if (horizontal2 > 0)
-			player.SetCurrentSeed(Player.SeedType.TreeSeed);
-		if (horizontal2 < 0)
-			player.SetCurrentSeed(Player.SeedType.VineSeed);
-		if (vertical2 > 0)
-			player.SetCurrentSeed(Player.SeedType.FernSeed);
-		if (vertical2 < 0)
-			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+		float horizontal2 = playerInput.xSelect;
+		//Debug.Log ("Horizontal 3: " + horizontal2);
+		float vertical2 = playerInput.ySelect;
+		//Debug.Log ("Vertical 3: " + vertical2);
+		if(new Vector2(horizontal2, vertical2).magnitude >= 0.5f)
+		{
+			float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
+			/*if (angle < 0)
+				angle += 360f;*/
+				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
+			if( player.treeUnlocked && angle >= 45 && angle < 135 && horizontal2 > 0){
+				player.SetCurrentSeed(Player.SeedType.TreeSeed);
+				//Debug.Log ("Angle: " + angle + " Direction: Right");
+			}
+			else if( player.fluerUnlocked && angle >= 135 && angle <= 180){
+				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
+				//Debug.Log ("Angle: " + angle + " Direction: Down");
+			}
+			else if( player.fernUnlocked && angle >= 45 && angle < 135 && horizontal2 < 0 ){
+				player.SetCurrentSeed(Player.SeedType.FernSeed);
+				//Debug.Log ("Angle: " + angle + " Direction: Left");
+			}
+			else if(player.vineUnlocked && angle < 45){
+				player.SetCurrentSeed(Player.SeedType.VineSeed);
+				//Debug.Log ("Angle: " + angle + " Direction: Up");
+			}
+		}
 
 
 		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
-		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));*/
 
 		if(!canControl)
 			return;
 
 		if (!player.isSunning() && !player.isConverting()) {
-			if (Input.GetButtonDown ("Jump")) {
-				Jump ();
+			if (playerInput.jumpDown) {
+				if(player.GetReadSign())
+					ReadSign();
+				else
+					Jump ();
 			}
-			if (Input.GetButtonDown ("ThrowSeed")) {
+			if (playerInput.throwSeedDown) {
 				ThrowSeed ();
 			}
-			if (Input.GetButtonDown ("Dash")) {
+			if (playerInput.dashDown) {
 				Dash ();
 			}
 		}
-		if (Input.GetButtonDown ("Sun")) {
+		if (playerInput.sunDown) {
 			if(canConvert){
 				AnimalConvert();
 				player.SetConverting(true);
@@ -317,6 +337,11 @@ public class PlayerController : BaseBehavior {
 		player.Broadcast("OnConvertRequest");
 		player.motor.Convert();
 	}
+
+	public void ReadSign(){
+		player.motor.ReadSign();
+		player.Broadcast ("OnReadSignRequest");
+		}
 
 	public void HandleStun()
 	{
