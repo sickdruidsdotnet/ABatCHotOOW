@@ -20,57 +20,58 @@ ModelImporter:
     100028: head_end
     100030: hip.L
     100032: hip.R
-    100034: leg.front.lower.IK.L
-    100036: leg.front.lower.IK.L_end
-    100038: leg.front.lower.IK.R
-    100040: leg.front.lower.IK.R_end
-    100042: leg.front.lower.L
-    100044: leg.front.lower.pole.L
-    100046: leg.front.lower.pole.L_end
-    100048: leg.front.lower.pole.R
-    100050: leg.front.lower.pole.R_end
-    100052: leg.front.lower.R
-    100054: leg.front.mid.L
-    100056: leg.front.mid.R
-    100058: leg.front.upper.IK.L
-    100060: leg.front.upper.IK.L_end
-    100062: leg.front.upper.IK.R
-    100064: leg.front.upper.IK.R_end
-    100066: leg.front.upper.L
-    100068: leg.front.upper.pole.L
-    100070: leg.front.upper.pole.L_end
-    100072: leg.front.upper.pole.R
-    100074: leg.front.upper.pole.R_end
-    100076: leg.front.upper.R
-    100078: leg.hind.lower.IK.L
-    100080: leg.hind.lower.IK.L_end
-    100082: leg.hind.lower.IK.R
-    100084: leg.hind.lower.IK.R_end
-    100086: leg.hind.lower.L
-    100088: leg.hind.lower.pole.L
-    100090: leg.hind.lower.pole.L_end
-    100092: leg.hind.lower.pole.R
-    100094: leg.hind.lower.pole.R_end
-    100096: leg.hind.lower.R
-    100098: leg.hind.mid.L
-    100100: leg.hind.mid.R
-    100102: leg.hind.upper.IK.L
-    100104: leg.hind.upper.IK.L_end
-    100106: leg.hind.upper.IK.R
-    100108: leg.hind.upper.IK.R_end
-    100110: leg.hind.upper.L
-    100112: leg.hind.upper.pole.L
-    100114: leg.hind.upper.pole.L_end
-    100116: leg.hind.upper.pole.R
-    100118: leg.hind.upper.pole.R_end
-    100120: leg.hind.upper.R
-    100122: neck.lower
-    100124: neck.upper
-    100126: shoulder.L
-    100128: shoulder.R
-    100130: tail
-    100132: tail.base
-    100134: tail_end
+    100034: Infection
+    100036: leg.front.lower.IK.L
+    100038: leg.front.lower.IK.L_end
+    100040: leg.front.lower.IK.R
+    100042: leg.front.lower.IK.R_end
+    100044: leg.front.lower.L
+    100046: leg.front.lower.pole.L
+    100048: leg.front.lower.pole.L_end
+    100050: leg.front.lower.pole.R
+    100052: leg.front.lower.pole.R_end
+    100054: leg.front.lower.R
+    100056: leg.front.mid.L
+    100058: leg.front.mid.R
+    100060: leg.front.upper.IK.L
+    100062: leg.front.upper.IK.L_end
+    100064: leg.front.upper.IK.R
+    100066: leg.front.upper.IK.R_end
+    100068: leg.front.upper.L
+    100070: leg.front.upper.pole.L
+    100072: leg.front.upper.pole.L_end
+    100074: leg.front.upper.pole.R
+    100076: leg.front.upper.pole.R_end
+    100078: leg.front.upper.R
+    100080: leg.hind.lower.IK.L
+    100082: leg.hind.lower.IK.L_end
+    100084: leg.hind.lower.IK.R
+    100086: leg.hind.lower.IK.R_end
+    100088: leg.hind.lower.L
+    100090: leg.hind.lower.pole.L
+    100092: leg.hind.lower.pole.L_end
+    100094: leg.hind.lower.pole.R
+    100096: leg.hind.lower.pole.R_end
+    100098: leg.hind.lower.R
+    100100: leg.hind.mid.L
+    100102: leg.hind.mid.R
+    100104: leg.hind.upper.IK.L
+    100106: leg.hind.upper.IK.L_end
+    100108: leg.hind.upper.IK.R
+    100110: leg.hind.upper.IK.R_end
+    100112: leg.hind.upper.L
+    100114: leg.hind.upper.pole.L
+    100116: leg.hind.upper.pole.L_end
+    100118: leg.hind.upper.pole.R
+    100120: leg.hind.upper.pole.R_end
+    100122: leg.hind.upper.R
+    100124: neck.lower
+    100126: neck.upper
+    100128: shoulder.L
+    100130: shoulder.R
+    100132: tail
+    100134: tail.base
+    100136: tail_end
     400000: Armature
     400002: back
     400004: chest
@@ -88,58 +89,60 @@ ModelImporter:
     400028: head_end
     400030: hip.L
     400032: hip.R
-    400034: leg.front.lower.IK.L
-    400036: leg.front.lower.IK.L_end
-    400038: leg.front.lower.IK.R
-    400040: leg.front.lower.IK.R_end
-    400042: leg.front.lower.L
-    400044: leg.front.lower.pole.L
-    400046: leg.front.lower.pole.L_end
-    400048: leg.front.lower.pole.R
-    400050: leg.front.lower.pole.R_end
-    400052: leg.front.lower.R
-    400054: leg.front.mid.L
-    400056: leg.front.mid.R
-    400058: leg.front.upper.IK.L
-    400060: leg.front.upper.IK.L_end
-    400062: leg.front.upper.IK.R
-    400064: leg.front.upper.IK.R_end
-    400066: leg.front.upper.L
-    400068: leg.front.upper.pole.L
-    400070: leg.front.upper.pole.L_end
-    400072: leg.front.upper.pole.R
-    400074: leg.front.upper.pole.R_end
-    400076: leg.front.upper.R
-    400078: leg.hind.lower.IK.L
-    400080: leg.hind.lower.IK.L_end
-    400082: leg.hind.lower.IK.R
-    400084: leg.hind.lower.IK.R_end
-    400086: leg.hind.lower.L
-    400088: leg.hind.lower.pole.L
-    400090: leg.hind.lower.pole.L_end
-    400092: leg.hind.lower.pole.R
-    400094: leg.hind.lower.pole.R_end
-    400096: leg.hind.lower.R
-    400098: leg.hind.mid.L
-    400100: leg.hind.mid.R
-    400102: leg.hind.upper.IK.L
-    400104: leg.hind.upper.IK.L_end
-    400106: leg.hind.upper.IK.R
-    400108: leg.hind.upper.IK.R_end
-    400110: leg.hind.upper.L
-    400112: leg.hind.upper.pole.L
-    400114: leg.hind.upper.pole.L_end
-    400116: leg.hind.upper.pole.R
-    400118: leg.hind.upper.pole.R_end
-    400120: leg.hind.upper.R
-    400122: neck.lower
-    400124: neck.upper
-    400126: shoulder.L
-    400128: shoulder.R
-    400130: tail
-    400132: tail.base
-    400134: tail_end
-    4300000: Deer
+    400034: Infection
+    400036: leg.front.lower.IK.L
+    400038: leg.front.lower.IK.L_end
+    400040: leg.front.lower.IK.R
+    400042: leg.front.lower.IK.R_end
+    400044: leg.front.lower.L
+    400046: leg.front.lower.pole.L
+    400048: leg.front.lower.pole.L_end
+    400050: leg.front.lower.pole.R
+    400052: leg.front.lower.pole.R_end
+    400054: leg.front.lower.R
+    400056: leg.front.mid.L
+    400058: leg.front.mid.R
+    400060: leg.front.upper.IK.L
+    400062: leg.front.upper.IK.L_end
+    400064: leg.front.upper.IK.R
+    400066: leg.front.upper.IK.R_end
+    400068: leg.front.upper.L
+    400070: leg.front.upper.pole.L
+    400072: leg.front.upper.pole.L_end
+    400074: leg.front.upper.pole.R
+    400076: leg.front.upper.pole.R_end
+    400078: leg.front.upper.R
+    400080: leg.hind.lower.IK.L
+    400082: leg.hind.lower.IK.L_end
+    400084: leg.hind.lower.IK.R
+    400086: leg.hind.lower.IK.R_end
+    400088: leg.hind.lower.L
+    400090: leg.hind.lower.pole.L
+    400092: leg.hind.lower.pole.L_end
+    400094: leg.hind.lower.pole.R
+    400096: leg.hind.lower.pole.R_end
+    400098: leg.hind.lower.R
+    400100: leg.hind.mid.L
+    400102: leg.hind.mid.R
+    400104: leg.hind.upper.IK.L
+    400106: leg.hind.upper.IK.L_end
+    400108: leg.hind.upper.IK.R
+    400110: leg.hind.upper.IK.R_end
+    400112: leg.hind.upper.L
+    400114: leg.hind.upper.pole.L
+    400116: leg.hind.upper.pole.L_end
+    400118: leg.hind.upper.pole.R
+    400120: leg.hind.upper.pole.R_end
+    400122: leg.hind.upper.R
+    400124: neck.lower
+    400126: neck.upper
+    400128: shoulder.L
+    400130: shoulder.R
+    400132: tail
+    400134: tail.base
+    400136: tail_end
+    4300000: Infection
+    4300002: Deer
     7400000: Charge Up
     7400002: Run
     7400004: Walk
@@ -149,8 +152,11 @@ ModelImporter:
     7400012: Armature|Run
     7400014: Armature|T-Pose
     7400016: Armature|Walk
+    7400018: Infection|T-Pose
+    7400020: Deer|T-Pose
     9500000: //RootNode
     13700000: Deer
+    13700002: Infection
   materials:
     importMaterials: 1
     materialName: 0
@@ -327,6 +333,8 @@ ModelImporter:
         weight: 1
       - path: Deer
         weight: 1
+      - path: Infection
+        weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
@@ -488,6 +496,8 @@ ModelImporter:
       - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
         weight: 1
       - path: Deer
+        weight: 1
+      - path: Infection
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
@@ -651,6 +661,8 @@ ModelImporter:
         weight: 1
       - path: Deer
         weight: 1
+      - path: Infection
+        weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
@@ -812,6 +824,8 @@ ModelImporter:
       - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
         weight: 1
       - path: Deer
+        weight: 1
+      - path: Infection
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
@@ -975,6 +989,8 @@ ModelImporter:
         weight: 1
       - path: Deer
         weight: 1
+      - path: Infection
+        weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
@@ -1136,6 +1152,8 @@ ModelImporter:
       - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
         weight: 1
       - path: Deer
+        weight: 1
+      - path: Infection
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
@@ -1299,6 +1317,8 @@ ModelImporter:
         weight: 1
       - path: Deer
         weight: 1
+      - path: Infection
+        weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
@@ -1461,13 +1481,15 @@ ModelImporter:
         weight: 1
       - path: Deer
         weight: 1
+      - path: Infection
+        weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
       name: Armature|Walk
       takeName: Armature|Walk
       firstFrame: 0
-      lastFrame: 90
+      lastFrame: 91
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -1622,6 +1644,336 @@ ModelImporter:
       - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
         weight: 1
       - path: Deer
+        weight: 1
+      - path: Infection
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Infection|T-Pose
+      takeName: Infection|T-Pose
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/back
+        weight: 1
+      - path: Armature/back/hip.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L/foot.hind.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L/foot.hind.L/foot.hind.L_end
+        weight: 1
+      - path: Armature/back/hip.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R/foot.hind.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R/foot.hind.R/foot.hind.R_end
+        weight: 1
+      - path: Armature/back/tail.base
+        weight: 1
+      - path: Armature/back/tail.base/tail
+        weight: 1
+      - path: Armature/back/tail.base/tail/tail_end
+        weight: 1
+      - path: Armature/chest
+        weight: 1
+      - path: Armature/chest/neck.lower
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper/head
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper/head/head_end
+        weight: 1
+      - path: Armature/chest/shoulder.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L/foot.front.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L/foot.front.L/foot.front.L_end
+        weight: 1
+      - path: Armature/chest/shoulder.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R/foot.front.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R/foot.front.R/foot.front.R_end
+        weight: 1
+      - path: Armature/leg.front.lower.IK.L
+        weight: 1
+      - path: Armature/leg.front.lower.IK.L/leg.front.lower.IK.L_end
+        weight: 1
+      - path: Armature/leg.front.lower.IK.R
+        weight: 1
+      - path: Armature/leg.front.lower.IK.R/leg.front.lower.IK.R_end
+        weight: 1
+      - path: Armature/leg.front.lower.pole.L
+        weight: 1
+      - path: Armature/leg.front.lower.pole.L/leg.front.lower.pole.L_end
+        weight: 1
+      - path: Armature/leg.front.lower.pole.R
+        weight: 1
+      - path: Armature/leg.front.lower.pole.R/leg.front.lower.pole.R_end
+        weight: 1
+      - path: Armature/leg.front.upper.IK.L
+        weight: 1
+      - path: Armature/leg.front.upper.IK.L/leg.front.upper.IK.L_end
+        weight: 1
+      - path: Armature/leg.front.upper.IK.R
+        weight: 1
+      - path: Armature/leg.front.upper.IK.R/leg.front.upper.IK.R_end
+        weight: 1
+      - path: Armature/leg.front.upper.pole.L
+        weight: 1
+      - path: Armature/leg.front.upper.pole.L/leg.front.upper.pole.L_end
+        weight: 1
+      - path: Armature/leg.front.upper.pole.R
+        weight: 1
+      - path: Armature/leg.front.upper.pole.R/leg.front.upper.pole.R_end
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.L
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.L/leg.hind.lower.IK.L_end
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.R
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.R/leg.hind.lower.IK.R_end
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.L
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.L/leg.hind.lower.pole.L_end
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.R
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.R/leg.hind.lower.pole.R_end
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.L
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.L/leg.hind.upper.IK.L_end
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.R
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.R/leg.hind.upper.IK.R_end
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.L
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.L/leg.hind.upper.pole.L_end
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.R
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
+        weight: 1
+      - path: Deer
+        weight: 1
+      - path: Infection
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Deer|T-Pose
+      takeName: Deer|T-Pose
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/back
+        weight: 1
+      - path: Armature/back/hip.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L/foot.hind.L
+        weight: 1
+      - path: Armature/back/hip.L/leg.hind.upper.L/leg.hind.mid.L/leg.hind.lower.L/foot.hind.L/foot.hind.L_end
+        weight: 1
+      - path: Armature/back/hip.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R/foot.hind.R
+        weight: 1
+      - path: Armature/back/hip.R/leg.hind.upper.R/leg.hind.mid.R/leg.hind.lower.R/foot.hind.R/foot.hind.R_end
+        weight: 1
+      - path: Armature/back/tail.base
+        weight: 1
+      - path: Armature/back/tail.base/tail
+        weight: 1
+      - path: Armature/back/tail.base/tail/tail_end
+        weight: 1
+      - path: Armature/chest
+        weight: 1
+      - path: Armature/chest/neck.lower
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper/head
+        weight: 1
+      - path: Armature/chest/neck.lower/neck.upper/head/head_end
+        weight: 1
+      - path: Armature/chest/shoulder.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L/foot.front.L
+        weight: 1
+      - path: Armature/chest/shoulder.L/leg.front.upper.L/leg.front.mid.L/leg.front.lower.L/foot.front.L/foot.front.L_end
+        weight: 1
+      - path: Armature/chest/shoulder.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R/foot.front.R
+        weight: 1
+      - path: Armature/chest/shoulder.R/leg.front.upper.R/leg.front.mid.R/leg.front.lower.R/foot.front.R/foot.front.R_end
+        weight: 1
+      - path: Armature/leg.front.lower.IK.L
+        weight: 1
+      - path: Armature/leg.front.lower.IK.L/leg.front.lower.IK.L_end
+        weight: 1
+      - path: Armature/leg.front.lower.IK.R
+        weight: 1
+      - path: Armature/leg.front.lower.IK.R/leg.front.lower.IK.R_end
+        weight: 1
+      - path: Armature/leg.front.lower.pole.L
+        weight: 1
+      - path: Armature/leg.front.lower.pole.L/leg.front.lower.pole.L_end
+        weight: 1
+      - path: Armature/leg.front.lower.pole.R
+        weight: 1
+      - path: Armature/leg.front.lower.pole.R/leg.front.lower.pole.R_end
+        weight: 1
+      - path: Armature/leg.front.upper.IK.L
+        weight: 1
+      - path: Armature/leg.front.upper.IK.L/leg.front.upper.IK.L_end
+        weight: 1
+      - path: Armature/leg.front.upper.IK.R
+        weight: 1
+      - path: Armature/leg.front.upper.IK.R/leg.front.upper.IK.R_end
+        weight: 1
+      - path: Armature/leg.front.upper.pole.L
+        weight: 1
+      - path: Armature/leg.front.upper.pole.L/leg.front.upper.pole.L_end
+        weight: 1
+      - path: Armature/leg.front.upper.pole.R
+        weight: 1
+      - path: Armature/leg.front.upper.pole.R/leg.front.upper.pole.R_end
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.L
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.L/leg.hind.lower.IK.L_end
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.R
+        weight: 1
+      - path: Armature/leg.hind.lower.IK.R/leg.hind.lower.IK.R_end
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.L
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.L/leg.hind.lower.pole.L_end
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.R
+        weight: 1
+      - path: Armature/leg.hind.lower.pole.R/leg.hind.lower.pole.R_end
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.L
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.L/leg.hind.upper.IK.L_end
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.R
+        weight: 1
+      - path: Armature/leg.hind.upper.IK.R/leg.hind.upper.IK.R_end
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.L
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.L/leg.hind.upper.pole.L_end
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.R
+        weight: 1
+      - path: Armature/leg.hind.upper.pole.R/leg.hind.upper.pole.R_end
+        weight: 1
+      - path: Deer
+        weight: 1
+      - path: Infection
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}

@@ -75,6 +75,7 @@ ModelImporter:
     7400006: Run
     9500000: //RootNode
     13700000: Deer
+    13700002: Infection
   materials:
     importMaterials: 1
     materialName: 0
