@@ -41,7 +41,7 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
-		//anim = GetComponentsInChildren<Animator> ()[0];
+		anim = GetComponentsInChildren<Animator> ()[0];
 		animalType = "Deer";
 		strength = 2f;
 		sporeResistance = 10f;
