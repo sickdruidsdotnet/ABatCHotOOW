@@ -242,33 +242,28 @@ public class PlayerController : BaseBehavior {
 	}
 
 	protected void HandleActionInput() {
-		float horizontal2 = playerInput.xSelect;
-		//Debug.Log ("Horizontal 3: " + horizontal2);
-		float vertical2 = playerInput.ySelect;
-		//Debug.Log ("Vertical 3: " + vertical2);
-		if(new Vector2(horizontal2, vertical2).magnitude >= 0.5f)
-		{
-			float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
-			/*if (angle < 0)
-				angle += 360f;*/
-				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
-			if( player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0){
-				player.SetCurrentSeed(Player.SeedType.TreeSeed);
-				//Debug.Log ("Angle: " + angle + " Direction: Right");
-			}
-			else if( player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0 ){
-				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
-				//Debug.Log ("Angle: " + angle + " Direction: Left");
-			}
-			else if(player.vineUnlocked && angle < 60){
-				player.SetCurrentSeed(Player.SeedType.VineSeed);
-				//Debug.Log ("Angle: " + angle + " Direction: Up");
+
+		if (playerInput.primaryInput == "Keyboard") {
+			if(playerInput.firstSeedDown)
+				player.SetCurrentSeed (Player.SeedType.VineSeed);
+			else if(playerInput.secondSeedDown)
+				player.SetCurrentSeed (Player.SeedType.TreeSeed);
+			else if(playerInput.thirdSeedDown)
+				player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+		} else {
+			float horizontal2 = playerInput.xSelect;
+			float vertical2 = playerInput.ySelect;
+			if (new Vector2 (horizontal2, vertical2).magnitude >= 0.5f) {
+				float angle = Vector2.Angle (Vector2.up * -1f, new Vector2 (horizontal2, vertical2));
+				if (player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0) {
+					player.SetCurrentSeed (Player.SeedType.TreeSeed);
+				} else if (player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
+					player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+				} else if (player.vineUnlocked && angle < 60) {
+					player.SetCurrentSeed (Player.SeedType.VineSeed);
+				}
 			}
 		}
-
-
-		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
-		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));*/
 
 		if(!canControl)
 			return;
