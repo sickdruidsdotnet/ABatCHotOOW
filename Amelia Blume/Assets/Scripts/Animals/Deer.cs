@@ -71,6 +71,7 @@ public class Deer : Animal
 		anim.SetBool ("isWalking", true);
 		anim.SetBool ("isRunning", false);
 		anim.SetBool ("chargingUp", false);
+		anim.SetBool ("isRestrained", false);
 
         //get the value where the animal should be locked to
         lockedAxisValue = this.transform.position.z;
@@ -115,10 +116,15 @@ public class Deer : Animal
 			speed = walkSpeed;
 			anim.SetBool ("isRunning", false);
 			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isRestrained", false);
 			anim.SetBool ("isWalking", true);
 		}
 
         if (isRestrained) {
+			anim.SetBool("isWalking", false);
+			anim.SetBool ("isRunning", false);
+			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isRestrained", true);
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
 		}
