@@ -37,20 +37,20 @@ public class Branch
 	public Branch parent;
 	public int parentNode;
 	public List<Branch> children;
-	private int depth;
+	protected int depth;
 	public Vector3 startPoint;
 	public Vector3 direction;
 	public Vector3 trajectory;
 	public float maxNodeAngle;
 	public float branchMaturity;
 	public float lengthGoal;
-	float widthGoal;
-	private float growthRate = 0.05f;
-	private float growthStart = 0;
-	private float thicknessStart = 0;
+	public float widthGoal;
+	protected float growthRate = 0.05f;
+	protected float growthStart = 0;
+	protected float thicknessStart = 0;
 	public bool isGrowing = false;
-	private float initialRadius = 0.02f;
-	private float thickness;
+	protected float initialRadius = 0.02f;
+	protected float thickness;
 	public float chanceToBranch = 0.25f;
 	public int randomBranchingFactor = 3;
 	public float randomBranchAngleFactor = 30f;
@@ -59,6 +59,19 @@ public class Branch
 	public int maxDepth;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
+
+	// parameterless constructor for child classes
+	public Branch()
+	{
+		skeleton = new List<BranchNode>();
+
+		parent = null;
+		parentNode = -1;
+		children = new List<Branch>();
+		depth = 0;
+		maxNodeAngle = 5f;
+		thickness = 0;
+	}
 
 	// "trunk" branch constructor
 	public Branch(TreePlant_Procedural.TreeSettings ts, Vector3 start, Vector3 dir, int md = -1)
@@ -173,7 +186,7 @@ public class Branch
 		treeMaturityStart = tms;
 	}
 
-	public void UpdateBranch(float treeMaturity)
+	public virtual void UpdateBranch(float treeMaturity)
 	{
 		currentTreeMaturity = treeMaturity;
 		bool wasGrowing = isGrowing;
@@ -199,7 +212,7 @@ public class Branch
 		updateSkeleton(skeleton);
 	}
 
-	private void grow()
+	protected void grow()
 	{
 
 		// Use linear interpolation to determine what length the branch should be,
@@ -277,7 +290,7 @@ public class Branch
 		//updateSkeleton(skeleton);
 	}
 
-	private void growFromBottom()
+	protected void growFromBottom()
 	{
 		// Use linear interpolation to determine what length the branch should be,
 		// at this stage in the tree's maturity.
@@ -302,7 +315,7 @@ public class Branch
 		// should probably throw an error if newGrowth > treeSettings.branchSegLength
 		if (newGrowth > treeSettings.branchSegLength)
 		{
-			Debug.Log("Whoops, newGrowth > treeSettings.branchSegLength in growFromBottom(). We should do something to handle this case.");
+			Debug.Log("Whoops, newGrowth > treeSettings.branchSegLength in growFromBottom(). We should do something to handle this case. " + newGrowth + " > " + treeSettings.branchSegLength);
 		}
 
 		// trim the new growth if our vine is overshooting the total length goal
@@ -365,7 +378,7 @@ public class Branch
 		skeleton.Add(newNode);
 
 		if (Random.Range(0, 1f) < treeSettings.maxNodeChanceToBranch
-			&& depth < (treeSettings.treeMaxDepth - 1)
+			&& depth < (maxDepth - 1)
 			&& skeleton.Count > 2)
 		{
 			growRandomChildren(skeleton.Count - 2);
@@ -374,7 +387,7 @@ public class Branch
 		//expandMesh();
 	}
 
-	private void insertSegment(int index, float rad, float magnitude, Vector3 direction)
+	protected void insertSegment(int index, float rad, float magnitude, Vector3 direction)
 	{
 		// since the tip is always of uniform length, we are actually adding a new tip,
 		// and shrinking the previous end segment. It can now grow to its full length,
@@ -391,7 +404,7 @@ public class Branch
 		//expandMesh(); 
 	}
 
-	private Vector3 determineSegDirection(Vector3 pDirection)
+	protected Vector3 determineSegDirection(Vector3 pDirection)
 	{
 		/*
 
@@ -413,7 +426,7 @@ public class Branch
 		return cDirection;
 	}
 
-	private void growRandomChildren(int parentBranchNode)
+	protected virtual void growRandomChildren(int parentBranchNode)
 	{
 		int numChildren = Random.Range(1, treeSettings.maxNumNodeBranches);
 		float angleStart = Random.Range(0, 360);
@@ -436,7 +449,7 @@ public class Branch
 		}
 	}
 
-	private void updateSkeleton(List<BranchNode> skel)
+	protected virtual void updateSkeleton(List<BranchNode> skel)
 	{
 		/*
 		// Iterate through all the nodes and make sure the start points correspond 
@@ -493,7 +506,7 @@ public class Branch
 		return children;
 	}
 
-	public void addChild(Vector3 dir, int node = -1)
+	public virtual void addChild(Vector3 dir, int node = -1)
 	{
 		Branch newChild = new Branch(treeSettings, this, dir, currentTreeMaturity, node);
 		children.Add(newChild);
@@ -579,7 +592,7 @@ public class Branch
 		return y;
 	}
 
-	public float getBranchThickness()
+	public virtual float getBranchThickness()
 	{
 		// this will be the thickness at the base of the branch
 		return thickness;

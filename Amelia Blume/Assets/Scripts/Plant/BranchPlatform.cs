@@ -5,21 +5,21 @@ using System.Linq;
 
 class BranchPlatform : MonoBehaviour
 {
-	Branch branch;
+	PlatformBranch branch;
 
 	public float maturity;
 	public bool isMaturing = false;
 	public bool skeletonExpanded = false;
 
-	private float ringRadians;
+	protected float ringRadians;
 
 	public List<Vector3> vertices;
-	private List<int> triangles;
-	private List<Vector2> uvs;
+	protected List<int> triangles;
+	protected List<Vector2> uvs;
 
-	private Mesh mesh;
-	private Transform _transform; // cached transform to increase speeds
-	private MeshRenderer meshRenderer;
+	protected Mesh mesh;
+	protected Transform _transform; // cached transform to increase speeds
+	protected MeshRenderer meshRenderer;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
 
@@ -39,6 +39,8 @@ class BranchPlatform : MonoBehaviour
 		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
 		mesh.Clear();
 		mesh.name = "BranchPlatform";
+
+		createInitialTreeSkeleton();
 	}
 
 	public void loadTreeSettings(TreePlant_Procedural.TreeSettings ts)
@@ -66,8 +68,10 @@ class BranchPlatform : MonoBehaviour
 	}
 
 	// recursively call Update() on all branches. This is not automatic since they are not Script Components
-	private void updateBranches(Branch b, float maturity)
+	protected void updateBranches(Branch b, float maturity)
 	{
+		Debug.Log("Maturity: " + maturity);
+		
 		b.UpdateBranch(maturity);
 
 		foreach (Branch c in b.getChildren())
@@ -78,12 +82,12 @@ class BranchPlatform : MonoBehaviour
 
 	public void createInitialTreeSkeleton()
 	{
-		branch = new Branch(treeSettings, Vector3.zero, Vector3.right, 1);
+		branch = new PlatformBranch(treeSettings, Vector3.zero, Vector3.right, maturity);
 
 		createMesh();
 	}
 
-	private void updateTreeSkeleton(Branch b)
+	protected void updateTreeSkeleton(Branch b)
 	{
 		if (b.getParent() != null)
 		{
@@ -97,7 +101,7 @@ class BranchPlatform : MonoBehaviour
 			}
 	}
 	
-	private void createMesh()
+	protected void createMesh()
 	{
 
 		// maybe do some error handling here to make sure that there is at least one segment!
@@ -123,7 +127,7 @@ class BranchPlatform : MonoBehaviour
 		mesh.uv = uvs.ToArray();
 	}
 
-	private void addTreeVerts(Branch b)
+	protected void addTreeVerts(Branch b)
 	{
 		int res = treeSettings.branchResolution;
 		int verticesStart = vertices.Count;
@@ -185,7 +189,7 @@ class BranchPlatform : MonoBehaviour
 		}
 	}
 
-	private void addBranchTriangles(Branch b, int startIndex)
+	protected void addBranchTriangles(Branch b, int startIndex)
 	{
 		int res = treeSettings.branchResolution;
 
