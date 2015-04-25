@@ -41,7 +41,7 @@ public class Deer : Animal
     // Use this for initialization
     void Start()
     {
-		anim = GetComponentInChildren<Animator> ();
+		//anim = GetComponentsInChildren<Animator> ()[0];
 		animalType = "Deer";
 		strength = 2f;
 		sporeResistance = 10f;
@@ -113,9 +113,9 @@ public class Deer : Animal
 			isCharging = false;
 			isInChargeUp = false;
 			speed = walkSpeed;
-			anim.SetBool ("isWalking", true);
 			anim.SetBool ("isRunning", false);
 			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isWalking", true);
 		}
 
         if (isRestrained) {
@@ -144,9 +144,8 @@ public class Deer : Animal
                     if (isInChargeUp)
 					{
                         isInChargeUp = false;
-						anim.SetBool ("isWalking", false);
-						anim.SetBool ("isRunning", true);
 						anim.SetBool ("chargingUp", false);
+						anim.SetBool ("isRunning", true);
 					}
 
                     speed = chargeSpeed;
@@ -349,9 +348,9 @@ public class Deer : Animal
 			isCharging = false;
             rotationCooldown = 60;
 			speed = walkSpeed;
-			anim.SetBool ("isWalking", true);
 			anim.SetBool ("isRunning", false);
 			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isWalking", true);
 			//freeze the deer to prevent weird player interaction physics
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
@@ -415,9 +414,9 @@ public class Deer : Animal
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
-		anim.SetBool ("isWalking", true);
 		anim.SetBool ("isRunning", false);
 		anim.SetBool ("chargingUp", false);
+		anim.SetBool ("isWalking", true);
 
 	}
 
