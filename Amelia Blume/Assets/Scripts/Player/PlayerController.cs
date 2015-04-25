@@ -252,19 +252,15 @@ public class PlayerController : BaseBehavior {
 			/*if (angle < 0)
 				angle += 360f;*/
 				//Mathf.Atan2 (horizontal2, vertical2) * Mathf.Rad2Deg;
-			if( player.treeUnlocked && angle >= 45 && angle < 135 && horizontal2 > 0){
+			if( player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0){
 				player.SetCurrentSeed(Player.SeedType.TreeSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Right");
 			}
-			else if( player.fluerUnlocked && angle >= 135 && angle <= 180){
+			else if( player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0 ){
 				player.SetCurrentSeed(Player.SeedType.FlowerSeed);
-				//Debug.Log ("Angle: " + angle + " Direction: Down");
-			}
-			else if( player.fernUnlocked && angle >= 45 && angle < 135 && horizontal2 < 0 ){
-				player.SetCurrentSeed(Player.SeedType.FernSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Left");
 			}
-			else if(player.vineUnlocked && angle < 45){
+			else if(player.vineUnlocked && angle < 60){
 				player.SetCurrentSeed(Player.SeedType.VineSeed);
 				//Debug.Log ("Angle: " + angle + " Direction: Up");
 			}

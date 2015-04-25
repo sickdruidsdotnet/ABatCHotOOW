@@ -49,45 +49,29 @@ public class SeedSelector : MonoBehaviour {
 			if(!playerStats.fluerUnlocked){
 				seeds[2].transform.renderer.enabled = false;
 			}
-			if(!playerStats.fernUnlocked){
-				seeds[3].transform.renderer.enabled = false;
-			}
 
 			float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
-			if( angle >= 45 && angle < 135 && horizontal2 > 0){
+			if( angle >= 60 && angle < 180 && horizontal2 > 0){
 				sections[0].enabled = false;
 				sections[2].enabled = false;
-				sections[3].enabled = false;
 				if(!playerStats.treeUnlocked)
 				{
 					sections[1].enabled = false;
 				}
 				direction = "Right";
 			}
-			else if( angle >= 135 && angle <= 180){
+			else if( angle >= 60 && angle < 180 && horizontal2 < 0 ){
 				sections[0].enabled = false;
 				sections[1].enabled = false;
-				sections[3].enabled = false;
 				if(!playerStats.fluerUnlocked)
 				{
 					sections[2].enabled = false;
-				}
-				direction = "Down";
-			}
-			else if( angle >= 45 && angle < 135 && horizontal2 < 0 ){
-				sections[0].enabled = false;
-				sections[2].enabled = false;
-				sections[1].enabled = false;
-				if(!playerStats.fernUnlocked)
-				{
-					sections[3].enabled = false;
 				}
 				direction = "Left";
 			}
 			else{
 				sections[1].enabled = false;
 				sections[2].enabled = false;
-				sections[3].enabled = false;
 				if(!playerStats.vineUnlocked)
 				{
 					sections[0].enabled = false;
@@ -107,11 +91,8 @@ public class SeedSelector : MonoBehaviour {
 				case "Right":
 					seeds[1].StartEffect();
 					break;
-				case "Down":
-					seeds[2].StartEffect();
-					break;
 				case "Left":
-					seeds[3].StartEffect();
+					seeds[2].StartEffect();
 					break;
 				}
 
@@ -122,11 +103,8 @@ public class SeedSelector : MonoBehaviour {
 				case "Right":
 					seeds[1].EndEffect();
 					break;
-				case "Down":
-					seeds[2].EndEffect();
-					break;
 				case "Left":
-					seeds[3].EndEffect();
+					seeds[2].EndEffect();
 					break;
 				}
 			}
