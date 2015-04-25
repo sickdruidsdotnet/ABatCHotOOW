@@ -51,7 +51,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	List<GameObject>[] panLimiters;
 
 	//tracking stuff
-	List<GameObject> trackables;
+	public List<GameObject> trackables;
 	List<bool> tracking;
 	//this value makes
 	bool isTracking;
@@ -241,7 +241,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
 			//for starters, let's make sure it should be in this list
-			if(trackable.tag == "Animal" && trackable.GetComponent<Animal>().isInfected == false)
+			if(trackable.tag == "Animal" && (trackable.GetComponent<Animal>()== null || trackable.GetComponent<Animal>().isInfected == false))
 			{
 				//remove uninfected animals from the list, they're no longer important enough
 				removeIndices.Add (trackables.IndexOf(trackable));

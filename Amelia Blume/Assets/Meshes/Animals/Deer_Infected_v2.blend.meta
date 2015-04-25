@@ -72,6 +72,7 @@ ModelImporter:
     7400000: Default Take
     7400002: Walk
     7400004: Walk0
+    7400006: Run
     9500000: //RootNode
     13700000: Deer
   materials:
