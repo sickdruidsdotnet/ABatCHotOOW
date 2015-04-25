@@ -45,12 +45,13 @@ public class Player : BaseBehavior {
 	private bool sunning = false;
 	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
+	private bool canReadSign = false;
+	private GameObject currentSign;
 
 	public bool vineUnlocked = false;
 	public bool treeUnlocked = false;
 	public bool fluerUnlocked = false;
 	public bool fernUnlocked = false;
-
 	
 
 	public PlayerController controller {
@@ -347,6 +348,22 @@ public class Player : BaseBehavior {
 	public void SetCurrentSeed(SeedType seed)
 	{
 		currentSeed = seed;
+	}
+
+	public void SetReadSign(bool status){
+		canReadSign = status;
+	}
+
+	public void SetCurrentSign(GameObject sign){
+		currentSign = sign;
+	}
+
+	public GameObject GetCurrentSign(){
+		return currentSign;
+	}
+
+	public bool GetReadSign(){
+		return  canReadSign;
 	}
 
 	//returns direction the player is currently facing as an int. 1=right, -1=left
