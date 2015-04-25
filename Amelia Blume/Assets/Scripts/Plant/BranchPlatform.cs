@@ -20,6 +20,8 @@ class BranchPlatform : MonoBehaviour
 	protected Mesh mesh;
 	protected Transform _transform; // cached transform to increase speeds
 	protected MeshRenderer meshRenderer;
+	public BoxCollider boxCollider;
+	public GameObject trigger;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
 
@@ -40,7 +42,18 @@ class BranchPlatform : MonoBehaviour
 		mesh.Clear();
 		mesh.name = "BranchPlatform";
 
+		boxCollider = GetComponent<BoxCollider>();
+
+		initializeTrigger();
+		
+
 		createInitialTreeSkeleton();
+	}
+
+	public void initializeTrigger()
+	{
+		trigger = Instantiate(Resources.Load("TreePlant/BranchPlatformTrigger"), transform.position, Quaternion.identity) as GameObject;
+		trigger.transform.parent = transform;
 	}
 
 	public void loadTreeSettings(TreePlant_Procedural.TreeSettings ts)
@@ -55,6 +68,7 @@ class BranchPlatform : MonoBehaviour
 			// update each Branch
 			updateBranches(branch, maturity);
 			updateTreeSkeleton(branch);
+			updateCollision();
 		}
 
 		if (skeletonExpanded)
@@ -70,8 +84,6 @@ class BranchPlatform : MonoBehaviour
 	// recursively call Update() on all branches. This is not automatic since they are not Script Components
 	protected void updateBranches(Branch b, float maturity)
 	{
-		Debug.Log("Maturity: " + maturity);
-		
 		b.UpdateBranch(maturity);
 
 		foreach (Branch c in b.getChildren())
@@ -99,6 +111,20 @@ class BranchPlatform : MonoBehaviour
 			{
 				updateTreeSkeleton(c);
 			}
+	}
+
+	protected void updateCollision()
+	{
+		// move collisionBox to center of branch
+		boxCollider.center = new Vector3(branch.getLength() / 2, 0, 0);
+		// move trigger to the same position;
+		trigger.GetComponent<BoxCollider>().center = new Vector3(branch.getLength() / 2, -1.5f, 0);
+
+		// update bounds of collisionBox
+		Vector3 extents = new Vector3(branch.getLength() / 2, branch.getBranchThickness() / 2, branch.getBranchThickness() / 2);
+		boxCollider.extents = extents;
+		// update bounds of trigger's BoxCollider
+		trigger.GetComponent<BoxCollider>().extents = new Vector3(branch.getLength() / 2 + 0.15f, 1.5f, 1.5f);
 	}
 	
 	protected void createMesh()

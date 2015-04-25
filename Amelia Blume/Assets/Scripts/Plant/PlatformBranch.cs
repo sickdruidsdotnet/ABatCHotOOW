@@ -129,13 +129,10 @@ public class PlatformBranch : Branch
 		BranchNode newNode = new BranchNode(rad, tipLength, skeleton.Last().startPoint + skeleton.Last().getNodeRay(), direction);
 		skeleton.Add(newNode);
 
-		Debug.Log("shafdshs");
-
 		if (Random.Range(0, 1f) < treeSettings.maxNodeChanceToBranch
 			&& depth < (maxDepth - 1)
 			&& skeleton.Count > 2)
 		{
-			Debug.Log("chillun");
 			growRandomChildren(skeleton.Count - 2);
 		}
 

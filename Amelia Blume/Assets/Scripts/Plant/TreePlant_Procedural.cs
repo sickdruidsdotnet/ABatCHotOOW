@@ -116,6 +116,7 @@ public class TreePlant_Procedural : Plant
     	GameObject pb = Instantiate(Resources.Load("TreePlant/BranchPlatform"), branchPosition, Quaternion.identity) as GameObject;
     	pb.GetComponent<BranchPlatform>().maturity = maturity;
 		pb.GetComponent<BranchPlatform>().loadTreeSettings(treeSettings);
+		pb.transform.parent = transform;
 		//pb.GetComponent<BranchPlatform>().createInitialTreeSkeleton();
     	branchPlatforms.Add(pb);
     	
