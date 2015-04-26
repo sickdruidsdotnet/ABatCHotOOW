@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ea13a7e6ffdbaca45b03b9b20e16d4bd
+guid: 62e7cefd347493b49aa0a93daccabfca
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -133,72 +133,59 @@ ModelImporter:
     100254: f_ring_01_L
     100256: f_ring_01_R
     100258: f_ring_02_R
-    100260: forearm_L
-    100262: forearm_R
-    100264: Hair
-    100266: hand_ik_L
-    100268: hand_L
-    100270: hand_R
-    100272: head
-    100274: hips
-    100276: jaw
-    100278: leg_hinge_L
-    100280: leg_hinge_R
-    100282: leg_socket_L
-    100284: leg_socket_R
-    100286: master
-    100288: neck
-    100290: palm_index_L
-    100292: palm_index_R
-    100294: palm_middle_L
-    100296: palm_middle_R
-    100298: palm_pinky_R
-    100300: palm_ring_L
-    100302: palm_ring_R
-    100304: Plane
-    100306: Poncho
-    100308: Reef
-    100310: root
-    100312: shin_L
-    100314: shin_R
-    100316: Shoes
-    100318: Skirt
-    100320: spine
-    100322: spine-1
-    100324: staff
-    100326: Tails
-    100328: thigh_L
-    100330: thigh_R
-    100332: thumb_01_L
-    100334: thumb_02_L
-    100336: upper_arm_L
-    100338: upper_arm_R
-    100340: Pouch
-    100342: Plane_001
-    100344: Plane_002
-    100346: Plane_003
-    100348: Plane_004
-    100350: Plane_005
-    100352: Plane_006
-    100354: Plane_007
-    100356: Plane_008
-    100358: Plane_009
-    100360: Plane_010
-    100362: Flower_01
-    100364: Flower_02
-    100366: Flower_03
-    100368: Flower_05
-    100370: Flower_06
-    100372: Flower_07
-    100374: Flower_09
-    100376: Flower_10
-    100378: Flower_4
-    100380: Flower_8
-    100382: Flower_04
-    100384: Flower_08
-    100386: forearm_fk_L
-    100388: hand_fk_L
-    100390: upper_arm_fk_L
+    100260: Flower_01
+    100262: Flower_02
+    100264: Flower_03
+    100266: Flower_04
+    100268: Flower_05
+    100270: Flower_06
+    100272: Flower_07
+    100274: Flower_08
+    100276: Flower_09
+    100278: Flower_10
+    100280: forearm_fk_L
+    100282: forearm_L
+    100284: forearm_R
+    100286: Hair
+    100288: hand_fk_L
+    100290: hand_L
+    100292: hand_R
+    100294: head
+    100296: hips
+    100298: jaw
+    100300: leg_hinge_L
+    100302: leg_hinge_R
+    100304: leg_socket_L
+    100306: leg_socket_R
+    100308: master
+    100310: neck
+    100312: palm_index_L
+    100314: palm_index_R
+    100316: palm_middle_L
+    100318: palm_middle_R
+    100320: palm_pinky_R
+    100322: palm_ring_L
+    100324: palm_ring_R
+    100326: Plane
+    100328: Poncho
+    100330: Pouch
+    100332: Reef
+    100334: root
+    100336: shin_L
+    100338: shin_R
+    100340: Shoes
+    100342: Skirt
+    100344: spine
+    100346: spine-1
+    100348: staff
+    100350: Tails
+    100352: thigh_L
+    100354: thigh_R
+    100356: thumb_01_L
+    100358: thumb_02_L
+    100360: upper_arm_fk_L
+    100362: upper_arm_L
+    100364: upper_arm_R
     400000: ABatCHotOOW
     400002: ABatCHotOOW_Low-Poly
     400004: //RootNode
@@ -329,107 +316,82 @@ ModelImporter:
     400254: f_ring_01_L
     400256: f_ring_01_R
     400258: f_ring_02_R
-    400260: forearm_L
-    400262: forearm_R
-    400264: Hair
-    400266: hand_ik_L
-    400268: hand_L
-    400270: hand_R
-    400272: head
-    400274: hips
-    400276: jaw
-    400278: leg_hinge_L
-    400280: leg_hinge_R
-    400282: leg_socket_L
-    400284: leg_socket_R
-    400286: master
-    400288: neck
-    400290: palm_index_L
-    400292: palm_index_R
-    400294: palm_middle_L
-    400296: palm_middle_R
-    400298: palm_pinky_R
-    400300: palm_ring_L
-    400302: palm_ring_R
-    400304: Plane
-    400306: Poncho
-    400308: Reef
-    400310: root
-    400312: shin_L
-    400314: shin_R
-    400316: Shoes
-    400318: Skirt
-    400320: spine
-    400322: spine-1
-    400324: staff
-    400326: Tails
-    400328: thigh_L
-    400330: thigh_R
-    400332: thumb_01_L
-    400334: thumb_02_L
-    400336: upper_arm_L
-    400338: upper_arm_R
-    400340: Pouch
-    400342: Plane_001
-    400344: Plane_002
-    400346: Plane_003
-    400348: Plane_004
-    400350: Plane_005
-    400352: Plane_006
-    400354: Plane_007
-    400356: Plane_008
-    400358: Plane_009
-    400360: Plane_010
-    400362: Flower_01
-    400364: Flower_02
-    400366: Flower_03
-    400368: Flower_05
-    400370: Flower_06
-    400372: Flower_07
-    400374: Flower_09
-    400376: Flower_10
-    400378: Flower_4
-    400380: Flower_8
-    400382: Flower_04
-    400384: Flower_08
-    400386: forearm_fk_L
-    400388: hand_fk_L
-    400390: upper_arm_fk_L
-    4300000: Cylinder
-    4300002: Tails
-    4300004: Reef
-    4300006: Poncho
-    4300008: Antlers
-    4300010: Shoes
-    4300012: Skirt
-    4300014: Belt
-    4300016: ABatCHotOOW_Low-Poly
-    4300018: AmeliaBody
-    4300020: Hair
-    4300022: Plane
-    4300024: Pouch
-    4300026: Plane_010
-    4300028: Plane_009
-    4300030: Plane_008
-    4300032: Plane_007
-    4300034: Plane_006
-    4300036: Plane_005
-    4300038: Plane_004
-    4300040: Plane_003
-    4300042: Plane_002
-    4300044: Plane_001
-    4300046: Flower_03
-    4300048: Flower_02
-    4300050: Flower_05
-    4300052: Flower_06
-    4300054: Flower_09
-    4300056: Flower_8
-    4300058: Flower_10
-    4300060: Flower_07
-    4300062: Flower_4
-    4300064: Flower_01
-    4300066: Flower_08
-    4300068: Flower_04
+    400260: Flower_01
+    400262: Flower_02
+    400264: Flower_03
+    400266: Flower_04
+    400268: Flower_05
+    400270: Flower_06
+    400272: Flower_07
+    400274: Flower_08
+    400276: Flower_09
+    400278: Flower_10
+    400280: forearm_fk_L
+    400282: forearm_L
+    400284: forearm_R
+    400286: Hair
+    400288: hand_fk_L
+    400290: hand_L
+    400292: hand_R
+    400294: head
+    400296: hips
+    400298: jaw
+    400300: leg_hinge_L
+    400302: leg_hinge_R
+    400304: leg_socket_L
+    400306: leg_socket_R
+    400308: master
+    400310: neck
+    400312: palm_index_L
+    400314: palm_index_R
+    400316: palm_middle_L
+    400318: palm_middle_R
+    400320: palm_pinky_R
+    400322: palm_ring_L
+    400324: palm_ring_R
+    400326: Plane
+    400328: Poncho
+    400330: Pouch
+    400332: Reef
+    400334: root
+    400336: shin_L
+    400338: shin_R
+    400340: Shoes
+    400342: Skirt
+    400344: spine
+    400346: spine-1
+    400348: staff
+    400350: Tails
+    400352: thigh_L
+    400354: thigh_R
+    400356: thumb_01_L
+    400358: thumb_02_L
+    400360: upper_arm_fk_L
+    400362: upper_arm_L
+    400364: upper_arm_R
+    4300000: Flower_03
+    4300002: Flower_02
+    4300004: Flower_05
+    4300006: Flower_06
+    4300008: Flower_09
+    4300010: Flower_08
+    4300012: Flower_10
+    4300014: Flower_07
+    4300016: Flower_04
+    4300018: Flower_01
+    4300020: Pouch
+    4300022: Cylinder
+    4300024: Tails
+    4300026: Reef
+    4300028: Poncho
+    4300030: Antlers
+    4300032: Shoes
+    4300034: Skirt
+    4300036: Belt
+    4300038: ABatCHotOOW_Low-Poly
+    4300040: AmeliaBody
+    4300042: Hair
+    4300044: Plane
     7400000: Default Take
     7400002: Damage
     7400004: DashForward
@@ -437,47 +399,35 @@ ModelImporter:
     7400008: Idle-breath
     7400010: Idle-look
     7400012: Jumping
-    7400014: Running
-    7400016: Sunshine
-    7400018: T-Pose
-    7400020: Water
-    7400022: Planting
+    7400014: Planting
+    7400016: Running
+    7400018: Sunshine
+    7400020: T-Pose
+    7400022: Water
     9500000: //RootNode
     13700000: ABatCHotOOW_Low-Poly
     13700002: AmeliaBody
     13700004: Antlers
     13700006: Belt
     13700008: Cylinder
-    13700010: Hair
-    13700012: Plane
-    13700014: Poncho
-    13700016: Reef
-    13700018: Shoes
-    13700020: Skirt
-    13700022: Tails
-    13700024: Pouch
-    13700026: Plane_001
-    13700028: Plane_002
-    13700030: Plane_003
-    13700032: Plane_004
-    13700034: Plane_005
-    13700036: Plane_006
-    13700038: Plane_007
-    13700040: Plane_008
-    13700042: Plane_009
-    13700044: Plane_010
-    13700046: Flower_01
-    13700048: Flower_02
-    13700050: Flower_03
-    13700052: Flower_05
-    13700054: Flower_06
-    13700056: Flower_07
-    13700058: Flower_09
-    13700060: Flower_10
-    13700062: Flower_4
-    13700064: Flower_8
-    13700066: Flower_04
-    13700068: Flower_08
+    13700010: Flower_01
+    13700012: Flower_02
+    13700014: Flower_03
+    13700016: Flower_04
+    13700018: Flower_05
+    13700020: Flower_06
+    13700022: Flower_07
+    13700024: Flower_08
+    13700026: Flower_09
+    13700028: Flower_10
+    13700030: Hair
+    13700032: Plane
+    13700034: Poncho
+    13700036: Pouch
+    13700038: Reef
+    13700040: Shoes
+    13700042: Skirt
+    13700044: Tails
   materials:
     importMaterials: 1
     materialName: 0
@@ -487,7 +437,7 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
