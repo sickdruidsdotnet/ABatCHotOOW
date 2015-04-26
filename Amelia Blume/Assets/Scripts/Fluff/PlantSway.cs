@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlantSway : MonoBehaviour {
+	public RenderOptimizer optimizer;
 	float progress = 0f;
 	bool swayRight = true;
 	bool inPassingLeft = false;
@@ -24,11 +25,12 @@ public class PlantSway : MonoBehaviour {
 			rendered = false;
 			renderer.enabled = false;
 		}
+		optimizer = gameObject.GetComponent<RenderOptimizer>();
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (rendered) {
+		if (optimizer.rendered) {
 			if (inPassingLeft || inPassingRight) {
 				//handle things moving left passed it
 				if (inPassingLeft) {
@@ -104,18 +106,6 @@ public class PlantSway : MonoBehaviour {
 				this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (1, (float)progress);
 			} else {
 				this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress * -1);
-			}
-
-			Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-			if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
-				rendered = false;
-				renderer.enabled = false;
-			}
-		} else {
-			Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-			if (camPosition.x > 0 && camPosition.x < 1 && camPosition.y > 0 && camPosition.y < 1) {
-				rendered = true;
-				renderer.enabled = true;
 			}
 		}
 
