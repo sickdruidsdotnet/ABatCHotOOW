@@ -31,8 +31,8 @@ public class Seed : MonoBehaviour
         collectionTimer = 0;
         collectionDelay = 30;
 
-        Debug.Log("Seed created");
-        Debug.Log("Default hydrationGoal: " + hydrationGoal);
+        //Debug.Log("Seed created");
+        //Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
 	void Start()
 	{
