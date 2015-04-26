@@ -6,17 +6,76 @@ ModelImporter:
     100000: Deer
     100002: //RootNode
     100004: Infection
+    100006: Armature
+    100008: back
+    100010: chest
+    100012: foot_front_L
+    100014: foot_front_R
+    100016: foot_hind_L
+    100018: foot_hind_R
+    100020: head
+    100022: hip_L
+    100024: hip_R
+    100026: leg_front_lower_L
+    100028: leg_front_lower_R
+    100030: leg_front_mid_L
+    100032: leg_front_mid_R
+    100034: leg_front_upper_L
+    100036: leg_front_upper_R
+    100038: leg_hind_lower_L
+    100040: leg_hind_lower_R
+    100042: leg_hind_mid_L
+    100044: leg_hind_mid_R
+    100046: leg_hind_upper_L
+    100048: leg_hind_upper_R
+    100050: neck_lower
+    100052: neck_upper
+    100054: shoulder_L
+    100056: shoulder_R
+    100058: tail
+    100060: tail_base
     400000: Deer
     400002: //RootNode
     400004: Infection
+    400006: Armature
+    400008: back
+    400010: chest
+    400012: foot_front_L
+    400014: foot_front_R
+    400016: foot_hind_L
+    400018: foot_hind_R
+    400020: head
+    400022: hip_L
+    400024: hip_R
+    400026: leg_front_lower_L
+    400028: leg_front_lower_R
+    400030: leg_front_mid_L
+    400032: leg_front_mid_R
+    400034: leg_front_upper_L
+    400036: leg_front_upper_R
+    400038: leg_hind_lower_L
+    400040: leg_hind_lower_R
+    400042: leg_hind_mid_L
+    400044: leg_hind_mid_R
+    400046: leg_hind_upper_L
+    400048: leg_hind_upper_R
+    400050: neck_lower
+    400052: neck_upper
+    400054: shoulder_L
+    400056: shoulder_R
+    400058: tail
+    400060: tail_base
     2300000: Deer
     2300002: Infection
+    2300004: //RootNode
     3300000: Deer
     3300002: Infection
+    3300004: //RootNode
     4300000: Deer
     4300002: Infection
     7400000: Default Take
     9500000: //RootNode
+    13700000: Deer
   materials:
     importMaterials: 1
     materialName: 0

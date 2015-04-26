@@ -5,7 +5,7 @@ public class Deer : Animal
 {
 
 	Player player;
-	Animator anim;
+	public Animator anim;
 
     //how much damage this will do to the player
     public int damageValue;
@@ -37,10 +37,10 @@ public class Deer : Animal
 
 	public bool isFacingRight = false;
 	
-
     // Use this for initialization
     void Start()
     {
+		anim = GetComponentsInChildren<Animator> ()[0];
 		animalType = "Deer";
 		strength = 2f;
 		sporeResistance = 10f;
@@ -65,6 +65,12 @@ public class Deer : Animal
         isInChargeUp = false;
 		recentlyRotated = false;
 		recentlyChargedUp = false;
+
+		//animations:
+		anim.SetBool ("isWalking", true);
+		anim.SetBool ("isRunning", false);
+		anim.SetBool ("chargingUp", false);
+		anim.SetBool ("isRestrained", false);
 
         //get the value where the animal should be locked to
         lockedAxisValue = this.transform.position.z;
@@ -107,9 +113,19 @@ public class Deer : Animal
 			isCharging = false;
 			isInChargeUp = false;
 			speed = walkSpeed;
+			anim.SetBool ("isRunning", false);
+			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isRestrained", false);
+			anim.SetBool ("isWalking", true);
+			if(optimizer != null && !optimizer.rendered)
+				Destroy(gameObject);
 		}
 
         if (isRestrained) {
+			anim.SetBool("isWalking", false);
+			anim.SetBool ("isRunning", false);
+			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isRestrained", true);
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
 		}
@@ -133,7 +149,11 @@ public class Deer : Animal
                 else
                 {
                     if (isInChargeUp)
+					{
                         isInChargeUp = false;
+						anim.SetBool ("chargingUp", false);
+						anim.SetBool ("isRunning", true);
+					}
 
                     speed = chargeSpeed;
                 }
@@ -169,6 +189,7 @@ public class Deer : Animal
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y,
 		                                    angle, transform.rotation.w);
 		}
+
     }
 
 	//this will bounce the player and cause the deer to look towards them,
@@ -273,6 +294,9 @@ public class Deer : Animal
 							//Debug.Log("found player");
 							isCharging = true;
 							isInChargeUp = true;
+							anim.SetBool ("isWalking", false);
+							anim.SetBool ("isRunning", false);
+							anim.SetBool ("chargingUp", true);
 							chargeUpCooldown = 60;
 							speed = 0f;
 							return;
@@ -293,6 +317,9 @@ public class Deer : Animal
 							//Debug.Log("found player");
 							isCharging = true;
 							isInChargeUp = true;
+							anim.SetBool ("isWalking", false);
+							anim.SetBool ("isRunning", false);
+							anim.SetBool ("chargingUp", true);
 							chargeUpCooldown = 60;
 							speed = 0f;
 							return;
@@ -319,12 +346,6 @@ public class Deer : Animal
 
 
 		transform.Translate (speed *-1 * sporeModifier, 0, 0);
-		//animation["Walking"].enabled = true;
-
-
-		//animation["Walking"].enabled = true;
-
-		anim.SetBool ("isRunning", true);
     }
 	//starts the deer turning around
     public void beginRotate()
@@ -335,6 +356,9 @@ public class Deer : Animal
 			isCharging = false;
             rotationCooldown = 60;
 			speed = walkSpeed;
+			anim.SetBool ("isRunning", false);
+			anim.SetBool ("chargingUp", false);
+			anim.SetBool ("isWalking", true);
 			//freeze the deer to prevent weird player interaction physics
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
@@ -398,6 +422,9 @@ public class Deer : Animal
 		player.GetComponent<PlayerController>().stunTimer = 45;
 		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		isCharging = false;
+		anim.SetBool ("isRunning", false);
+		anim.SetBool ("chargingUp", false);
+		anim.SetBool ("isWalking", true);
 
 	}
 
