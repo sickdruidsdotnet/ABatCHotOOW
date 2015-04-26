@@ -20,6 +20,7 @@ class BranchPlatform : MonoBehaviour
 	protected Mesh mesh;
 	protected Transform _transform; // cached transform to increase speeds
 	protected MeshRenderer meshRenderer;
+	protected Material branchMat;
 	public BoxCollider boxCollider;
 	public GameObject trigger;
 
@@ -28,6 +29,9 @@ class BranchPlatform : MonoBehaviour
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
+		branchMat = Resources.Load("Materials/TreePlant_Branch", typeof(Material)) as Material;
+		meshRenderer.material = branchMat;
+
 
 		_transform = transform;
 

@@ -41,12 +41,15 @@ class TreeStructure : MonoBehaviour
 	private Mesh mesh;
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
+	private Material branchMat;
 
 	public TreePlant_Procedural.TreeSettings treeSettings;
 
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
+		branchMat = Resources.Load("Materials/TreePlant_Branch", typeof(Material)) as Material;
+		meshRenderer.material = branchMat;
 
 		_transform = transform;
 
