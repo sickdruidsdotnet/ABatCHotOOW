@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Boar : Animal
 {
-	
 	Player player;
 	Animator anim;
 	
@@ -25,7 +24,6 @@ public class Boar : Animal
 	public bool hasLeaped;
 
 	public int rampageCount = 3;
-	
 	int lockCounter;
 	
 	[HideInInspector]
@@ -40,11 +38,10 @@ public class Boar : Animal
 	
 	public bool isFacingRight = false;
 	
-	
 	// Use this for initialization
 	void Start()
 	{
-
+		
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
 
@@ -345,7 +342,7 @@ public class Boar : Animal
 			transform.position = Vector3.MoveTowards (transform.position, target, speed*sporeModifier);
 		}
 		//animation["Walking"].enabled = true;
-		anim.SetBool ("isRunning", true);
+		//anim.SetBool ("isRunning", true);
 	}
 	//starts the boar turning around
 	public void beginRotate()

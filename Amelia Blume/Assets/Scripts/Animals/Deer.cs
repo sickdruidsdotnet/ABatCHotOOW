@@ -37,7 +37,6 @@ public class Deer : Animal
 
 	public bool isFacingRight = false;
 	
-
     // Use this for initialization
     void Start()
     {

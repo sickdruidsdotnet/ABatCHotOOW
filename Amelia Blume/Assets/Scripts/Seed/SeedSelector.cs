@@ -22,7 +22,7 @@ public class SeedSelector : MonoBehaviour {
 		playerStats = player.GetComponent<Player> ();
 		transform.position = new Vector3 (player.transform.position.x,
 		                                 player.transform.position.y + 3f,
-		                                 player.transform.position.z);
+		                                 transform.position.z);
 		childRenderers = GetComponentsInChildren<Renderer> ();
 		foreach(Renderer renderer in childRenderers)
 			renderer.enabled = false;
@@ -35,7 +35,7 @@ public class SeedSelector : MonoBehaviour {
 
 		transform.position = new Vector3 (player.transform.position.x,
 		                                  player.transform.position.y + 3f,
-		                                  player.transform.position.z);
+		                                  transform.position.z);
 		//rerender everything real quick
 		foreach(Renderer renderer in childRenderers)
 			renderer.enabled = true;
