@@ -48,7 +48,7 @@ class BranchPlatform : MonoBehaviour
 
 		boxCollider = GetComponent<BoxCollider>();
 
-		initializeTrigger();
+		//initializeTrigger();
 		
 
 		createInitialTreeSkeleton();
@@ -56,7 +56,7 @@ class BranchPlatform : MonoBehaviour
 
 	public void initializeTrigger()
 	{
-		trigger = Instantiate(Resources.Load("TreePlant/BranchPlatformTrigger"), transform.position, Quaternion.identity) as GameObject;
+		trigger = Instantiate(Resources.Load("TreePlant/BranchPlatformTrigger"), transform.position, transform.rotation) as GameObject;
 		trigger.transform.parent = transform;
 	}
 

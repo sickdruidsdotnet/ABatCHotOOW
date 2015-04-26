@@ -97,7 +97,7 @@ public class TreePlant_Procedural : Plant
         }
         if (trunkHeight > 0.75f * treeSettings.treeMaxHeight && branchPlatforms.Count < 2)
         {
-        	spawnPlatformBranch(0.333f * treeSettings.treeMaxHeight);
+        	spawnPlatformBranch(0.333f * treeSettings.treeMaxHeight, 180f);
         }
         if (trunkHeight > 0.95f * treeSettings.treeMaxHeight && branchPlatforms.Count < 3)
         {
@@ -108,12 +108,14 @@ public class TreePlant_Procedural : Plant
 
     }
 
-    void spawnPlatformBranch(float height)
+    void spawnPlatformBranch(float height, float rotation = 0)
     {
     	
     	// position based on TreeStructure and maturity
-    	Vector3 branchPosition = transform.position + new Vector3(0,height,0); 
+    	Vector3 branchPosition = transform.position + new Vector3(0,height,0);
     	GameObject pb = Instantiate(Resources.Load("TreePlant/BranchPlatform"), branchPosition, Quaternion.identity) as GameObject;
+    	pb.transform.Rotate(0, rotation, 0);
+    	pb.GetComponent<BranchPlatform>().initializeTrigger();
     	pb.GetComponent<BranchPlatform>().maturity = maturity;
 		pb.GetComponent<BranchPlatform>().loadTreeSettings(treeSettings);
 		pb.transform.parent = transform;

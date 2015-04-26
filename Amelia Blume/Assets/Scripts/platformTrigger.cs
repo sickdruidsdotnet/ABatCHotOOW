@@ -25,7 +25,6 @@ public class platformTrigger : MonoBehaviour {
 	void Update () {
 		if (platParent == null)
 		{
-			Debug.Log("platParent null");
 			platParent = transform.parent;
 		}
 		if (amelia == null)
