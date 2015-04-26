@@ -56,6 +56,16 @@ public class InputHandler : MonoBehaviour {
 	public bool selectUp;
 	#endregion
 
+	//keyboard only seed selection
+	#region
+	public bool firstSeedDown;
+	public bool firstSeed;
+	public bool secondSeedDown;
+	public bool secondSeed;
+	public bool thirdSeedDown;
+	public bool thirdSeed;
+	#endregion
+
 	// Use this for initialization
 	void Start () {
 		connectedJoysticks = Input.GetJoystickNames ();
@@ -101,7 +111,13 @@ public class InputHandler : MonoBehaviour {
 	void KeyBoard(){
 		xMove = Input.GetAxis("Horizontal");
 		yMove = Input.GetAxis ("Vertical");
-		//need keyboard seed selection input
+
+		firstSeedDown = Input.GetKeyDown (KeyCode.Alpha1);
+		firstSeed = Input.GetKey (KeyCode.Alpha1);
+		secondSeedDown = Input.GetKeyDown (KeyCode.Alpha2);
+		secondSeed = Input.GetKey (KeyCode.Alpha2);
+		thirdSeedDown = Input.GetKeyDown (KeyCode.Alpha3);
+		thirdSeed = Input.GetKey (KeyCode.Alpha3);
 
 		jumpDown = Input.GetButtonDown ("Jump");
 		jump = Input.GetButton ("Jump");
