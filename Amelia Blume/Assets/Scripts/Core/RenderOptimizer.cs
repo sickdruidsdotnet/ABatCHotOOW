@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RenderOptimizer : MonoBehaviour {
 
-	public MeshRenderer[] allRenderers;
+	public Renderer[] allRenderers;
 	public bool shouldRender = true;
 	public bool rendered = true;
 	GameObject mainCameraObject;
@@ -12,10 +12,10 @@ public class RenderOptimizer : MonoBehaviour {
 	void Start () {
 		//get the camera to check position
 		mainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
-		MeshRenderer[] childRenderers = gameObject.GetComponentsInChildren<MeshRenderer> ();
-		MeshRenderer currentRenderer = gameObject.GetComponent<MeshRenderer> ();
+		Renderer[] childRenderers = gameObject.GetComponentsInChildren<Renderer> ();
+		Renderer currentRenderer = gameObject.GetComponent<Renderer> ();
 		if (currentRenderer != null && childRenderers[0] != null) {
-			allRenderers = new MeshRenderer[childRenderers.Length + 1];
+			allRenderers = new Renderer[childRenderers.Length + 1];
 			childRenderers.CopyTo (allRenderers, 0);
 			allRenderers [childRenderers.Length - 1] = currentRenderer;
 		} else if(currentRenderer == null) {
@@ -23,7 +23,7 @@ public class RenderOptimizer : MonoBehaviour {
 		}
 		else
 		{
-			allRenderers = new MeshRenderer[1];
+			allRenderers = new Renderer[1];
 			allRenderers[0] = currentRenderer;
 		}
 		rendered = true;
@@ -33,7 +33,7 @@ public class RenderOptimizer : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		shouldRender = false;
-		foreach (MeshRenderer rend in allRenderers) {
+		foreach (Renderer rend in allRenderers) {
 			if(rend == null)
 				break;
 			Bounds thisBounds = rend.bounds;
@@ -71,14 +71,14 @@ public class RenderOptimizer : MonoBehaviour {
 		}
 
 		if (shouldRender && !rendered) {
-			foreach (MeshRenderer rend in allRenderers) {
+			foreach (Renderer rend in allRenderers) {
 				if(rend == null)
 					break;
 				rend.enabled = true;
 			}
 			rendered = true;
 		} else if (!shouldRender && rendered) {
-			foreach (MeshRenderer rend in allRenderers) {
+			foreach (Renderer rend in allRenderers) {
 				if(rend == null)
 					break;
 				rend.enabled = false;

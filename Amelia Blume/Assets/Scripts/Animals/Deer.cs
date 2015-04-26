@@ -117,6 +117,8 @@ public class Deer : Animal
 			anim.SetBool ("chargingUp", false);
 			anim.SetBool ("isRestrained", false);
 			anim.SetBool ("isWalking", true);
+			if(optimizer != null && !optimizer.rendered)
+				Destroy(gameObject);
 		}
 
         if (isRestrained) {
@@ -187,6 +189,7 @@ public class Deer : Animal
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y,
 		                                    angle, transform.rotation.w);
 		}
+
     }
 
 	//this will bounce the player and cause the deer to look towards them,
