@@ -1,10 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Animals/EdgeCheckerScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Seed\Seed.cs">
     <Files>
-      <File FileName="Assets/Scripts/Animals/EdgeCheckerScript.cs" Line="34" Column="35" />
-      <File FileName="Assets/Scripts/Player/Player.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/SignPost.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Seed\Seed.cs" Line="91" Column="2" />
+      <File FileName="Assets\Scripts\Bramble.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Seed\SeedSelector.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Fluff\PlantSway.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Seed\VineSeed.cs" Line="7" Column="2" />
+      <File FileName="Assets\Scripts\Seed\TreeSeed.cs" Line="20" Column="1" />
+      <File FileName="Assets\Scripts\Plant\Vine.cs" Line="264" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

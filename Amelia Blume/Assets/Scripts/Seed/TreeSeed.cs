@@ -12,8 +12,8 @@ public class TreeSeed : Seed{
 		
 		plantType = "TreePlant/TreePlant";
 		
-		Debug.Log("TreeSeed created");
-		Debug.Log("TreeSeed plant type is " + plantType);
-		Debug.Log("TreeSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("TreeSeed created");
+		//Debug.Log("TreeSeed plant type is " + plantType);
+		//Debug.Log("TreeSeed hydrationGoal: " + hydrationGoal);
 	}
 }
