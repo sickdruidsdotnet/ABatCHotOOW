@@ -1,9 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/LevelTransition.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Bramble.cs">
     <Files>
-      <File FileName="Assets/Scripts/SignPost.cs" Line="70" Column="4" />
-      <File FileName="Assets/LevelTransition.cs" Line="15" Column="35" />
+      <File FileName="Assets/Bramble.cs" Line="26" Column="7" />
+      <File FileName="Assets/Scripts/Player/Player.cs" Line="297" Column="26" />
+      <File FileName="Assets/Scripts/SignPost.cs" Line="67" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
