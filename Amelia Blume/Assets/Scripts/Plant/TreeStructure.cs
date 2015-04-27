@@ -18,21 +18,17 @@ class TreeStructure : MonoBehaviour
 
 	private float ringRadians;
 
-	public float length;
-
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
 	public float growthRate = 0.1f;
 	
 	public float lengthGoal = 1f;
-	public float growthStart;
 	public bool isMaturing = false;
 
 	public bool skeletonExpanded = false;
 
 	// debug draw values
 	private float debugSphereSize = 0.005f;
-	private Color debugColor = Color.red;
 
 	public List<Vector3> vertices;
 	private List<int> triangles;
@@ -128,8 +124,6 @@ class TreeStructure : MonoBehaviour
 
 		// maybe do some error handling here to make sure that there is at least one segment!
 
-		int res = treeSettings.branchResolution;
-
 		// just in case, clear things that should already be empty
 		mesh.Clear();
 		vertices.Clear();
@@ -202,7 +196,6 @@ class TreeStructure : MonoBehaviour
 				vertices.Add(b.skeleton[node].startPoint + relativeVec);
 			}
 		}
-		int numChildren = b.getChildren().Count;
 		addBranchTriangles(b, verticesStart);
 
 		foreach (Branch c in b.getChildren())
@@ -269,8 +262,6 @@ class TreeStructure : MonoBehaviour
 		// (and therefore the object hasn't been initialized).
 		if (_transform)
 		{
-			Vector3 mPos = _transform.position;
-
 			if (trunk != null)
 			{
 				// recursively draw tree

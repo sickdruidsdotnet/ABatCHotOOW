@@ -49,7 +49,7 @@ public class VinePlant : Plant
         }
     }
 
-    void Update()
+    public override void Update()
     {
         base.Update();
 

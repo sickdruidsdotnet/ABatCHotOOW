@@ -84,7 +84,6 @@ public class PlatformBranch : Branch
 		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
 
 		// determine lengthGoal
-		float plr = parent.getLengthRemaining(parentNode);
 		lengthGoal = Random.Range(0.5f * treeSettings.platformMaxChildLength, 1.2f * treeSettings.platformMaxChildLength);
 		thickness = treeSettings.branchMaxWidth / (depth + 1);
 		maxDepth = treeSettings.platformMaxDepth;

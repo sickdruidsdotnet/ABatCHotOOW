@@ -70,7 +70,7 @@ public class TreePlant_Procedural : Plant
 		//spawnPlatformBranch(0);
 	}
 
-	void Update()
+	public override void Update()
     {
         base.Update();
 
@@ -121,7 +121,6 @@ public class TreePlant_Procedural : Plant
 		pb.transform.parent = transform;
 		//pb.GetComponent<BranchPlatform>().createInitialTreeSkeleton();
     	branchPlatforms.Add(pb);
-    	
 
     	/*
     	GameObject plat = Instantiate(Resources.Load("JumpThroughPlatform"), transform.position + new Vector3(0, height, 0), Quaternion.identity) as GameObject;

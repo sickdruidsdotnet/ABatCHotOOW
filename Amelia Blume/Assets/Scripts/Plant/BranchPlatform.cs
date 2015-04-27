@@ -125,18 +125,14 @@ class BranchPlatform : MonoBehaviour
 		trigger.GetComponent<BoxCollider>().center = new Vector3(branch.getLength() / 2, -1.5f, 0);
 
 		// update bounds of collisionBox
-		Vector3 extents = new Vector3(branch.getLength() / 2, branch.getBranchThickness() / 2, branch.getBranchThickness() / 2);
-		boxCollider.extents = extents;
+		Vector3 size = new Vector3(branch.getLength(), branch.getBranchThickness(), branch.getBranchThickness());
+		boxCollider.size = size;
 		// update bounds of trigger's BoxCollider
-		trigger.GetComponent<BoxCollider>().extents = new Vector3(branch.getLength() / 2 + 0.15f, 1.5f, 1.5f);
+		trigger.GetComponent<BoxCollider>().size = new Vector3(branch.getLength() + 0.3f, 3f, 3f);
 	}
 	
 	protected void createMesh()
 	{
-
-		// maybe do some error handling here to make sure that there is at least one segment!
-
-		int res = treeSettings.branchResolution;
 
 		// just in case, clear things that should already be empty
 		mesh.Clear();
@@ -210,7 +206,6 @@ class BranchPlatform : MonoBehaviour
 				vertices.Add(b.skeleton[node].startPoint + relativeVec);
 			}
 		}
-		int numChildren = b.getChildren().Count;
 		addBranchTriangles(b, verticesStart);
 
 		foreach (Branch c in b.getChildren())
