@@ -30,7 +30,7 @@ public class PlantSway : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (optimizer.rendered) {
+		if (optimizer == null || optimizer.rendered) {
 			if (inPassingLeft || inPassingRight) {
 				//handle things moving left passed it
 				if (inPassingLeft) {
