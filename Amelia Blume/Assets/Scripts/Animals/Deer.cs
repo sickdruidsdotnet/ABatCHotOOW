@@ -37,9 +37,16 @@ public class Deer : Animal
 
 	public bool isFacingRight = false;
 	
+	//audio variables
+	public AudioClip spotPlayer1;
+	private AudioSource source;
+
+
     // Use this for initialization
     void Start()
     {
+    	source = GetComponent<AudioSource>();
+
 		anim = GetComponentsInChildren<Animator> ()[0];
 		animalType = "Deer";
 		strength = 2f;
@@ -292,6 +299,9 @@ public class Deer : Animal
 						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 3F);
+
 							isCharging = true;
 							isInChargeUp = true;
 							anim.SetBool ("isWalking", false);
@@ -315,6 +325,9 @@ public class Deer : Animal
 						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 3F);
+
 							isCharging = true;
 							isInChargeUp = true;
 							anim.SetBool ("isWalking", false);

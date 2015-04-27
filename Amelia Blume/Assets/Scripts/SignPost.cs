@@ -1,31 +1,64 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
 	int wordsIndex = 0;
-	//public int INDEX = 100;
-	TextMesh myTextMesh;
 	GameObject player;
 	Player amelia;
-	string[] words;
+	public string[] words; //Lines of txt file
 	bool beingRead = false;
 	public TextAsset file;
-	string[] lines;
+	//string[] lines;
 	int sentenceIndex = 0;
 	string textDisplay = "";
-	string sentence = "";
-	float delay = 0.05f;
+	public string sentence = ""; //current line being printed
+	public string[] sentenceWords; //words in current Sentence
+	float delay = 0.03f;
 	float nextUse;
+
+
+	public GameObject uiTextObj;
+
+	public GameObject buttonObj;
+	Image uiButtonSprite;
+
+	public GameObject textBoxObj;
+	Image uiTextBoxSprite;
+
+	public GameObject portraitObj;
+	Image uiPortraitSprite;
+
+	public GameObject nameObj;
+
+	Text uiText;
+	Text nameText;
+
+
+	public int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
 		nextUse = Time.time + delay;
 		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
 		words = file.text.Split ('\n');
-		myTextMesh = GetComponentInChildren<TextMesh> ();
-		myTextMesh.text = words[wordsIndex];
-		myTextMesh.renderer.enabled = false;
 		player = GameObject.FindGameObjectWithTag ("Player");
 		amelia = player.GetComponent<Player> ();
+
+		uiText = uiTextObj.GetComponent<Text>();
+		uiText.text = words[wordsIndex];
+		uiText.enabled = false;
+
+		uiTextBoxSprite = textBoxObj.GetComponent<Image>();
+		uiTextBoxSprite.enabled = false;
+
+		uiPortraitSprite = portraitObj.GetComponent<Image>();
+		uiPortraitSprite.enabled = false;
+
+		uiButtonSprite = buttonObj.GetComponent<Image>();
+		uiButtonSprite.enabled = false;
+
+		nameText = nameObj.GetComponent<Text> ();
+		nameText.enabled = false;
 
 	}
 	
@@ -35,6 +68,11 @@ public class SignPost : MonoBehaviour {
 			DisplayWords ();
 			nextUse = Time.time + delay;
 		}
+
+		uiButtonSprite.enabled = uiText.enabled;
+		uiTextBoxSprite.enabled = uiText.enabled;
+		nameText.enabled = uiText.enabled;
+		uiPortraitSprite.enabled = uiText.enabled;
 	}
 
 	public void Read(){
@@ -42,7 +80,8 @@ public class SignPost : MonoBehaviour {
 		if (!beingRead) {
 			wordsIndex = -1;
 			beingRead = true;
-			myTextMesh.renderer.enabled = true;
+			//myTextMesh.renderer.enabled = true;
+			uiText.enabled = true;
 		}
 		NextSentence ();
 
@@ -53,10 +92,22 @@ public class SignPost : MonoBehaviour {
 		if (beingRead) {
 			if (sentenceIndex < sentence.Length) {
 				textDisplay += sentence [sentenceIndex];
+				newLineIndex--;
+				if(newLineIndex <= 0){
+					if(sentence [sentenceIndex] == ' '){
+						//Debug.Log ("Space Key in if");
+						//sentence.Insert(sentenceIndex," sdf ");
+						//textDisplay += "\n";
+						newLineIndex = 30;
+					}
+					//Debug.Log(sentence [sentenceIndex]);
+					//New Line IF current char is "space"
+				}
 				sentenceIndex++;
 			}
 		}
-		myTextMesh.text = textDisplay;
+		//myTextMesh.text = textDisplay;
+		uiText.text = textDisplay;
 	}
 
 	void NextSentence(){
@@ -66,10 +117,20 @@ public class SignPost : MonoBehaviour {
 		if (wordsIndex >= words.Length) {
 			wordsIndex = 0;
 			beingRead = false;
-			myTextMesh.renderer.enabled = false;
+			//myTextMesh.renderer.enabled = false;
+			uiText.enabled = false;
 			sentenceIndex = 0;
 		}
+		//if(wordsIndex > 0)
+		//	wordsIndex--;
 		sentence = words [wordsIndex];
+		sentenceWords = sentence.Split (' ');
+		//wordsIndex++;
+		//while (sentence[sentence.Length-1] != '.') {
+		//	sentence += words [wordsIndex];
+		//	wordsIndex++;
+		//}
+		//Debug.Log (sentence [sentence.Length - 1]);
 	}
 
 	void OnTriggerStay(Collider other)
@@ -90,7 +151,8 @@ public class SignPost : MonoBehaviour {
 			beingRead = false;
 			textDisplay = "";
 			wordsIndex = 0;
-			myTextMesh.renderer.enabled = false;
+			//myTextMesh.renderer.enabled = false;
+			uiText.enabled = false;
 		}
 	}
 
