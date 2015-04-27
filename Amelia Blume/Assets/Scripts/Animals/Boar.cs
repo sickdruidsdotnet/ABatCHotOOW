@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Boar : Animal
 {
-	
 	Player player;
 	Animator anim;
 	
@@ -25,7 +24,6 @@ public class Boar : Animal
 	public bool hasLeaped;
 
 	public int rampageCount = 3;
-	
 	int lockCounter;
 	
 	[HideInInspector]
@@ -40,10 +38,14 @@ public class Boar : Animal
 	
 	public bool isFacingRight = false;
 	
-	
+	//audio variables
+	public AudioClip spotPlayer1;
+	private AudioSource source;
+
 	// Use this for initialization
 	void Start()
 	{
+		source = GetComponent<AudioSource>();
 
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
@@ -295,6 +297,9 @@ public class Boar : Animal
 						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 1F);
+
 							isCharging = true;
 							isInChargeUp = true;
 							chargeUpCooldown = 60;
@@ -315,6 +320,9 @@ public class Boar : Animal
 						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 1F);
+							
 							isCharging = true;
 							isInChargeUp = true;
 							chargeUpCooldown = 60;
@@ -345,7 +353,7 @@ public class Boar : Animal
 			transform.position = Vector3.MoveTowards (transform.position, target, speed*sporeModifier);
 		}
 		//animation["Walking"].enabled = true;
-		anim.SetBool ("isRunning", true);
+		//anim.SetBool ("isRunning", true);
 	}
 	//starts the boar turning around
 	public void beginRotate()
