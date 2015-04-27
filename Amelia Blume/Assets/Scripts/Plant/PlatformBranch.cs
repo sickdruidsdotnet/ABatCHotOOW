@@ -139,7 +139,7 @@ public class PlatformBranch : Branch
 		//expandMesh();
 	}
 
-	protected virtual void growRandomChildren(int parentBranchNode)
+	protected override void growRandomChildren(int parentBranchNode)
 	{
 		int numChildren = Random.Range(1, treeSettings.maxNumNodeBranches);
 		float angleStart = Random.Range(0, 360);
