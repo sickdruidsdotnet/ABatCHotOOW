@@ -96,7 +96,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 		//get all animals that the camera should know about
 		trackables = new List<GameObject> ();
 		tracking = new List<bool>();
-		GameObject[] tempTrackables = GameObject.FindGameObjectsWithTag ("Animal");
+
+		//handle tracking
+		GameObject[] trackedAnimals = GameObject.FindGameObjectsWithTag ("Animal");
+		GameObject[] focusPoints = GameObject.FindGameObjectsWithTag("Focus Point");
+		GameObject[] tempTrackables = new GameObject[trackedAnimals.Count() + focusPoints.Count()] ;
+		trackedAnimals.CopyTo (tempTrackables, 0);
+		focusPoints.CopyTo (tempTrackables, trackedAnimals.Count());
+
 		for (int i = 0; i < tempTrackables.Count(); i++) {
 			trackables.Add (tempTrackables[i]);
 			tracking.Add (false);
@@ -241,7 +248,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
 			//for starters, let's make sure it should be in this list
-			if(trackable.tag == "Animal" && trackable.GetComponent<Animal>().isInfected == false)
+			if(trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false))
 			{
 				//remove uninfected animals from the list, they're no longer important enough
 				removeIndices.Add (trackables.IndexOf(trackable));

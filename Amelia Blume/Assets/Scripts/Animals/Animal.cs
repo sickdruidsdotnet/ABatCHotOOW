@@ -24,6 +24,7 @@ public class Animal : MonoBehaviour
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 
+	public RenderOptimizer optimizer;
 
 	//this will store the location on each animal where the spore effect should spawn
 	protected Vector3 sporeLoc;
