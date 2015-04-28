@@ -69,23 +69,15 @@ public class ManualVine : MonoBehaviour
 	public VineSettings vineSettings = new VineSettings();
 
 	// number of segments, not including the tip.
-	private int numSegments = 1;
 	private float initialRadius = 0.1f;
 	private float initialSegLength = 0.4f;
-	private float tipLength = 0.4f;
-	private float maxSegLength = 0.3f;
 
 	public float length;
 	
-	private int numRings;
-	private int numFaces;
-	private int numTriangles;
-	private int numTriVerts;
 	private float ringRadians;
 
 	// debug draw values
 	private float debugSphereSize = 0.01f;
-	private Color debugColor = Color.red;
 
 	private Mesh mesh;
 
@@ -96,16 +88,12 @@ public class ManualVine : MonoBehaviour
 	private List<int> triangles;
 
 	private Transform _transform; // cached transform to increase speeds
-	private MeshRenderer meshRenderer;
 
 	public bool pressedVineButton = false;
-
-	int debugCount = 0;
 
 
 	void Start()
 	{
-		meshRenderer = GetComponent<MeshRenderer>();
 
 		// cache the transform so we don't have to do expensive lookups
 		// idk why, but it's a thing
@@ -114,10 +102,6 @@ public class ManualVine : MonoBehaviour
 		_transform = transform;
 
 		// some helpful calculations based on vineSettings
-		numRings = numSegments + 1;
-		numFaces = vineSettings.resolution * numSegments;
-		numTriangles = 2 * vineSettings.resolution * numSegments;
-		numTriVerts = 3 * numTriangles;
 		ringRadians = 2 * Mathf.PI / vineSettings.resolution;
 
 		// initialize our mesh's data structures
@@ -559,6 +543,6 @@ public class ManualVine : MonoBehaviour
 			nodeInfo += "\tEnd: " + vineSkeleton[node].getNodeEndPoint() + "\n";
 		}
 
-		//Debug.Log(vineInfo + "\n" + nodeInfo);
+		Debug.Log(vineInfo + "\n" + nodeInfo);
 	}
 }

@@ -84,7 +84,6 @@ public class PlatformBranch : Branch
 		maxNodeAngle = ts.branchNodeMaxAngle * variedWeight;
 
 		// determine lengthGoal
-		float plr = parent.getLengthRemaining(parentNode);
 		lengthGoal = Random.Range(0.5f * treeSettings.platformMaxChildLength, 1.2f * treeSettings.platformMaxChildLength);
 		thickness = treeSettings.branchMaxWidth / (depth + 1);
 		maxDepth = treeSettings.platformMaxDepth;
@@ -139,7 +138,7 @@ public class PlatformBranch : Branch
 		//expandMesh();
 	}
 
-	protected virtual void growRandomChildren(int parentBranchNode)
+	protected override void growRandomChildren(int parentBranchNode)
 	{
 		int numChildren = Random.Range(1, treeSettings.maxNumNodeBranches);
 		float angleStart = Random.Range(0, 360);

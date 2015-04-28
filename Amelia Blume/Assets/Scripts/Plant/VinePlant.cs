@@ -49,7 +49,7 @@ public class VinePlant : Plant
         }
     }
 
-    void Update()
+    public override void Update()
     {
         base.Update();
 
@@ -57,8 +57,7 @@ public class VinePlant : Plant
 
         if (wasGrowing && !isGrowing)
         {
-            Debug.Log("Vines maturity: " + this.maturity);
-            vines[0].GetComponent<Vine>().printSkeletonInfo();
+            //vines[0].GetComponent<Vine>().printSkeletonInfo();
         }
 
         wasGrowing = isGrowing;

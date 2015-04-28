@@ -11,11 +11,9 @@ public class Plant : MonoBehaviour
     public Soil soil;
     public int collectionTimer;
     public int collectionDelay;
-    private Vector3 baseScale;
     private float scaleFactor;
 	private float Sunfactor;
 	private int soilIndex;
-	private GameObject amelia;
     public float matureRate = 0.05f;
     public float maturityGoal;
     public bool isMaturing = false;
@@ -44,8 +42,6 @@ public class Plant : MonoBehaviour
     void Start()
     {
         // this can't be in the constructor or Unity complains
-        baseScale = transform.localScale;
-		amelia = GameObject.Find ("Player");
     }
 
     public virtual void Update()
@@ -53,7 +49,7 @@ public class Plant : MonoBehaviour
         // maturity is value between 0 and 1. Used for linearly interpolating growth goals.
         maturityGoal = Mathf.Clamp01((float)waterCount / (float)hydrationGoal);
 
-        bool wasMaturing = isMaturing;
+        //bool wasMaturing = isMaturing;
 
         if (maturity < maturityGoal)
         {

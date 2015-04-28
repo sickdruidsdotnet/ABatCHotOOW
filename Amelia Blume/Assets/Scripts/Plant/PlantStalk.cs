@@ -80,8 +80,6 @@ public class PlantStalk : MonoBehaviour
 		GetComponent<ColorConverter>().HsvToRgb(colorHue, colorSat, colorVal, out r, out g, out b);
 		meshRenderer.material.color = new Color(r,g,b);
 
-		_transform = transform;
-
 		ringRadians = 2 * Mathf.PI / resolution;
 
 		growthStart = initialSegLength;

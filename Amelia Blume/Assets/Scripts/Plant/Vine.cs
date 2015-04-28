@@ -62,14 +62,11 @@ public class Vine : MonoBehaviour
 
 	public VineSettings vineSettings = new VineSettings();
 
-	// number of segments, not including the tip.
-	private int numSegments = 1;
+	// number of segments, not including the tip.\
 	private float initialRadius = 0.05f;
 	private float initialSegLength = 0.3f;
 	private float tipLength = 0.3f;
 	private float maxSegLength = 0.3f;
-
-	private Color vineColor = Color.green;
 
 	private float growthRate = 0.05f;
 	public float lengthGoal = 0;
@@ -77,17 +74,11 @@ public class Vine : MonoBehaviour
 
 	public float length;
 	
-	private int numRings;
-	private int numFaces;
-	private int numTriangles;
-	private int numTriVerts;
 	private float ringRadians;
 
 	public GameObject vineTarget;
 
 	// debug draw values
-	private float debugSphereSize = 0.01f;
-	private Color debugColor = Color.red;
 
 	private Mesh mesh;
 
@@ -105,9 +96,6 @@ public class Vine : MonoBehaviour
 	public bool pressedVineButton = false;
 	public bool isGrowing = false;
 
-	int debugCount = 0;
-
-
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
@@ -121,10 +109,6 @@ public class Vine : MonoBehaviour
 		_transform = transform;
 
 		// some helpful calculations based on vineSettings
-		numRings = numSegments + 1;
-		numFaces = vineSettings.resolution * numSegments;
-		numTriangles = 2 * vineSettings.resolution * numSegments;
-		numTriVerts = 3 * numTriangles;
 		ringRadians = 2 * Mathf.PI / vineSettings.resolution;
 
 		growthStart = initialSegLength;
@@ -350,7 +334,6 @@ public class Vine : MonoBehaviour
 
 	private float vineDistToGoal(List<VineNode> v)
 	{
-		float dist = 0;
 		Vector3 vineTip = _transform.position + v.Last().getNodeEndPoint();
 		Vector3 target = vineTarget.transform.position;
 
@@ -360,14 +343,12 @@ public class Vine : MonoBehaviour
 	private void moveTowardsTarget()
 	{
 		
-		float rotAmount = 1f;
-
 		string debugOutput = "Initial distance to target: " + vineDistToGoal(vineSkeleton);
 
 		// find the gradient for each node, and rotate by that amount.
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
-			debugOutput += "\n\tNode " + node + ":";
+			//debugOutput += "\n\tNode " + node + ":";
 
 			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - _transform.position).normalized;
 
@@ -380,6 +361,7 @@ public class Vine : MonoBehaviour
 			float gradient = Vector3.Dot(movementVector, toTarget);
 			Vector3 rotGrad = Quaternion.AngleAxis(-gradient, rotAxis) * vineSkeleton[node].direction;
 
+			/*
 			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
 			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
 			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
@@ -387,6 +369,7 @@ public class Vine : MonoBehaviour
 			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
 			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
 			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
+			*/
 
 
 			// apply the rotation to the node
