@@ -21,7 +21,7 @@ public class Converter : MonoBehaviour {
 		HandleInput ();
 		life--; 
 		if (life < 0) {
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 		}
 
 		if (player.GetComponent<Player> ().isConverting () || conversionSuccess) {

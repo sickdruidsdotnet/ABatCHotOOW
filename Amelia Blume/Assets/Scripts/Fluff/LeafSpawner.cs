@@ -16,7 +16,7 @@ public class LeafSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		width = gameObject.GetComponent<BoxCollider> ().size.x;
-		float lastSpawnTime = Time.time;
+		lastSpawnTime = Time.time;
 	}
 	
 	// Update is called once per frame

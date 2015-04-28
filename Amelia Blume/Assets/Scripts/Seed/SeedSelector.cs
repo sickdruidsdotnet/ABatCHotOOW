@@ -56,7 +56,8 @@ public class SeedSelector : MonoBehaviour {
 			if (new Vector2 (horizontal2, vertical2).magnitude >= 0.3f) {
 
 				float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
-				if( angle >= 60 && angle < 180 && horizontal2 > 0){
+				//Debug.Log("H: " + horizontal2 + " V: " + vertical2 + " A: " + angle);
+				if( angle >= 60 && angle <= 180 && horizontal2 >= 0){
 					sections[0].enabled = false;
 					sections[2].enabled = false;
 					if(!playerStats.treeUnlocked)

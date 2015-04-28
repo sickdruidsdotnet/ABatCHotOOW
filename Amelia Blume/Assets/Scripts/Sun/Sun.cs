@@ -8,7 +8,7 @@ public class Sun : MonoBehaviour {
 	void Start () {
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
 		player = GameObject.Find ("Player");
-		this.gameObject.name = "Sun";
+		gameObject.name = "Sun";
 	}
 	
 	// Update is called once per frame
@@ -26,7 +26,7 @@ public class Sun : MonoBehaviour {
 	protected void HandleInput() {
 		if (playerInput.sunUp) {
 			player.GetComponent<Player>().SetSunning(false);
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 		}
 	}
 }

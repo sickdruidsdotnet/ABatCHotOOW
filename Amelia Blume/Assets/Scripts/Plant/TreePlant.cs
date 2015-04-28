@@ -42,7 +42,7 @@ public class TreePlant : Plant {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	new void Update () {
 		if (!isPermanent && fading) {
 			for(int i = 0; i < childrenWithMesh.Count; i++)
 			{
