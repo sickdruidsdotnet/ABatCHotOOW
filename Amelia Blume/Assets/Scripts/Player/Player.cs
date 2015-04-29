@@ -379,7 +379,7 @@ public class Player : BaseBehavior {
 
 	void Kill()
 	{
-		Debug.Log ("Killed Called");
+		//Debug.Log ("Killed Called");
 		spawner = GameObject.FindGameObjectWithTag ("Spawner");
 		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");

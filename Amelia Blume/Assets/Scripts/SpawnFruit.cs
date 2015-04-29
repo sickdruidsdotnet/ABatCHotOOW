@@ -20,7 +20,7 @@ public class SpawnFruit : MonoBehaviour {
 			GameObject amelia = GameObject.Find ("Player");
 			Player script = amelia.GetComponent<Player> ();
 			script.SetCanGrow (true);
-			Debug.Log ("Destroy fruit");
+			//Debug.Log ("Destroy fruit");
 			Destroy (this.gameObject);
 		}
 	}

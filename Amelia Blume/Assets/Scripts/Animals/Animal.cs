@@ -59,7 +59,7 @@ public class Animal : MonoBehaviour
 
 	public void LurePlant(Transform plantPosition)
 	{
-		Debug.Log ("LurePlant called: " + gameObject.name);
+		//Debug.Log ("LurePlant called: " + gameObject.name);
 		//NavMeshAgentController agentController = this.GetComponent<NavMeshAgentController> ();
 		//agentController.EnableAgent (plantPosition);
 		if (plantPosition.position.x > this.transform.position.x)
