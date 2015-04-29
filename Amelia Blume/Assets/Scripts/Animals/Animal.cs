@@ -144,6 +144,7 @@ public class Animal : MonoBehaviour
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
 			isRestrained = false;
+			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 

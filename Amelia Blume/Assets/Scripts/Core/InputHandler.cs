@@ -3,6 +3,8 @@ using System.Collections;
 
 public class InputHandler : MonoBehaviour {
 
+	public bool paused = false;
+
 	public string[] connectedJoysticks;
 	public string primaryInput;
 
@@ -106,6 +108,20 @@ public class InputHandler : MonoBehaviour {
 			Playstation4Controller();
 			break;
 		}
+
+		if(startDown)
+		{
+			if(!paused){
+				paused = true;
+				Time.timeScale = 0;
+			}
+			else
+			{
+				paused = false;
+				Time.timeScale = 1.0f;
+			}
+		}
+
 	}
 
 	void KeyBoard(){
@@ -138,6 +154,10 @@ public class InputHandler : MonoBehaviour {
 		waterDown = Input.GetButtonDown ("Water");
 		water = Input.GetButton ("Water");
 		waterUp = Input.GetButtonUp ("Water");
+
+		startDown = Input.GetKeyDown (KeyCode.Return);
+		start = Input.GetKey (KeyCode.Return);
+		startUp = Input.GetKeyUp (KeyCode.Return);
 	}
 
 	void Xbox360Controller(){
