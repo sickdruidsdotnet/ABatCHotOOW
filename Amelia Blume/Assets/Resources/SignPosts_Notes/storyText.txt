@@ -1,0 +1,88 @@
+﻿:: StoryTitle [meta]
+ABatCHotOOW storyText
+
+
+:: StoryAuthor [meta]
+sickdruids.net
+
+
+:: Start [meta]
+<<print tale.printPassages()>>
+
+
+:: printPassages [meta script]
+Tale.prototype.printPassages = function() {
+	
+	var output = "";
+	for(var i in tale.passages){
+		if(tale.passages[i].tags.indexOf("meta") > -1) continue;
+		output += "::  [[" + tale.passages[i].title + "]] ";
+		output += "[" + tale.passages[i].tags + "]\n";
+		output += "{{{" + tale.passages[i].text + "}}}\n\n";
+	}
+
+	return output;
+};
+
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
+
+:: StoryStyle [meta stylesheet]
+/* Your story will use the CSS in this passage to style the page.
+Give this passage more tags, and it will only affect passages with those tags.
+Example selectors: */
+
+body {
+	/* This affects the entire page */
+	
+	
+}
+.passage {
+	/* This only affects passages */
+	font-size: 16px
+	
+	
+}
+.passage a {
+	/* This affects passage links */
+	
+	
+}
+.passage a:hover {
+	/* This affects links while the cursor is over them */
+	
+	
+}
+
+
+:: 1-1 examination a [Amelia]
+There's some kind of black mold growing on this tree.
+[[1-1 examination b]]
+
+
+:: 1-1 fakeConvo a [Amelia]
+When I say "hey," you say "ho!"
+
+Hey![[1-1 fakeConvo b]]
+
+
+:: 1-1 narration
+You notice that this text box is narrated, not spoken.
+
+
+:: 1-1 examination b [Amelia]
+Strange. Mold shouldn't be able to grow in these conditions.
+
+
+:: 1-1 fakeConvo b [Ig]
+Ho![[1-1 fakeConvo c]]
+
+
+:: 1-1 fakeConvo c [Amelia]
+Heeyyyy![[1-1 fakeConvo d]]
+
+
+:: 1-1 fakeConvo d [Ig]
+Hooooo!
+
+
