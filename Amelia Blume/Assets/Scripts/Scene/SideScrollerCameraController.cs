@@ -148,14 +148,6 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	}
 
-	void Update()
-	{
-		if(Input.GetKeyDown("l"))
-		{
-			MoveToPosition(99f, 1f, false);
-		}
-	}
-
 	// Update is called once per frame
 	void FixedUpdate () 
 	{

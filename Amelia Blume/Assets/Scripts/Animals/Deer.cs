@@ -441,5 +441,16 @@ public class Deer : Animal
 
 	}
 
+	public void BrokeFree()
+	{
+		anim.SetBool ("isRestrained", false);
+		if(isCharging)
+			anim.SetBool("isRunning", true);
+		else if(isInChargeUp)
+			anim.SetBool("chargingUp", true);
+		else
+			anim.SetBool ("isWalking", true);
+	}
+
 
 }

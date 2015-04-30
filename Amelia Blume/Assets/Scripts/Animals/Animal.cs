@@ -59,7 +59,7 @@ public class Animal : MonoBehaviour
 
 	public void LurePlant(Transform plantPosition)
 	{
-		Debug.Log ("LurePlant called: " + gameObject.name);
+		//Debug.Log ("LurePlant called: " + gameObject.name);
 		//NavMeshAgentController agentController = this.GetComponent<NavMeshAgentController> ();
 		//agentController.EnableAgent (plantPosition);
 		if (plantPosition.position.x > this.transform.position.x)
@@ -144,6 +144,7 @@ public class Animal : MonoBehaviour
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
 			isRestrained = false;
+			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 

@@ -244,11 +244,11 @@ public class PlayerController : BaseBehavior {
 	protected void HandleActionInput() {
 
 		if (playerInput.primaryInput == "Keyboard") {
-			if(playerInput.firstSeedDown)
+			if(playerInput.firstSeedDown && player.vineUnlocked)
 				player.SetCurrentSeed (Player.SeedType.VineSeed);
-			else if(playerInput.secondSeedDown)
+			else if(playerInput.secondSeedDown && player.treeUnlocked)
 				player.SetCurrentSeed (Player.SeedType.TreeSeed);
-			else if(playerInput.thirdSeedDown)
+			else if(playerInput.thirdSeedDown && player.fluerUnlocked)
 				player.SetCurrentSeed (Player.SeedType.FlowerSeed);
 		} else {
 			float horizontal2 = playerInput.xSelect;

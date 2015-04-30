@@ -11,20 +11,11 @@ public class PlantSway : MonoBehaviour {
 	bool hitGoal = false;
 	bool moveBack = false;
 
-	GameObject mainCameraObject;
-	bool rendered = false;
-
 	float offsetValue;
 	
 	void Start()
 	{
 		offsetValue = transform.position.x / 2f;
-		mainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
-		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
-		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
-			rendered = false;
-			renderer.enabled = false;
-		}
 		optimizer = gameObject.GetComponent<RenderOptimizer>();
 	}
 

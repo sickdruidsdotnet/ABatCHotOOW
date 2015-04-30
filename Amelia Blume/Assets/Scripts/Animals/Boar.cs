@@ -4,7 +4,7 @@ using System.Collections;
 public class Boar : Animal
 {
 	Player player;
-	Animator anim;
+	//Animator anim;
 	
 	//how much damage this will do to the player
 	public int damageValue;
@@ -82,7 +82,7 @@ public class Boar : Animal
 		
 		//lock the axis to where it's been placed in the editor
 		lockedAxisValue = this.transform.position.z;
-		anim = this.GetComponent<Animator>();
+		//anim = this.GetComponent<Animator>();
 		speed = walkSpeed;
 		
 		lockCounter = -1;
