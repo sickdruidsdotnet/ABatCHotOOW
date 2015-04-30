@@ -9,54 +9,66 @@ public class SignPost : MonoBehaviour {
 	public string[] words; //Lines of txt file
 	bool beingRead = false;
 	public TextAsset file;
-	//string[] lines;
 	int sentenceIndex = 0;
 	string textDisplay = "";
 	public string sentence = ""; //current line being printed
 	public string[] sentenceWords; //words in current Sentence
 	float delay = 0.03f;
 	float nextUse;
+	public string startingPassage;
+	public string nextPassage;
+	public string currentPassage;
+	public string speaker;
+	public string[] connection;
+
+	char[] charsToTrim = { '[' ,']'};
 
 
-	public GameObject uiTextObj;
+ 	GameObject uiTextObj;
 
-	public GameObject buttonObj;
+	GameObject buttonObj;
 	Image uiButtonSprite;
 
-	public GameObject textBoxObj;
+	GameObject textBoxObj;
 	Image uiTextBoxSprite;
 
-	public GameObject portraitObj;
+	GameObject portraitObj;
 	Image uiPortraitSprite;
 
-	public GameObject nameObj;
+	GameObject nameObj;
 
 	Text uiText;
 	Text nameText;
 
 
-	public int newLineIndex = 75;
+	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
+		nextPassage = startingPassage;
 		nextUse = Time.time + delay;
 		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
 		words = file.text.Split ('\n');
 		player = GameObject.FindGameObjectWithTag ("Player");
 		amelia = player.GetComponent<Player> ();
 
+		uiTextObj = GameObject.Find ("Words");
 		uiText = uiTextObj.GetComponent<Text>();
 		uiText.text = words[wordsIndex];
 		uiText.enabled = false;
 
+		textBoxObj = GameObject.Find ("TextBox");
 		uiTextBoxSprite = textBoxObj.GetComponent<Image>();
 		uiTextBoxSprite.enabled = false;
 
+		portraitObj = GameObject.Find ("Portrait");
 		uiPortraitSprite = portraitObj.GetComponent<Image>();
 		uiPortraitSprite.enabled = false;
 
+		buttonObj = GameObject.Find ("Button");
 		uiButtonSprite = buttonObj.GetComponent<Image>();
 		uiButtonSprite.enabled = false;
 
+		nameObj = GameObject.Find ("Name");
 		nameText = nameObj.GetComponent<Text> ();
 		nameText.enabled = false;
 
@@ -76,6 +88,13 @@ public class SignPost : MonoBehaviour {
 	}
 
 	public void Read(){
+		if (currentPassage == nextPassage) {
+			beingRead = false;
+			uiText.enabled = false;
+			nextPassage = startingPassage;
+			currentPassage = "";
+			return;
+		}
 	//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
@@ -84,13 +103,29 @@ public class SignPost : MonoBehaviour {
 			uiText.enabled = true;
 		}
 		NextSentence ();
+		//CheckFlags ();
+		
+	}
 
+	void CheckFlags(){
+		//Debug.Log (words [0]);
+		if (sentenceWords[0] == "::") {
+			currentPassage = sentenceWords[1];
+			speaker = sentenceWords[2];
+			Debug.Log ("Title is next");
+		}		
 	}
 
 	void DisplayWords()
 	{
 		if (beingRead) {
+//			if(sentenceWords[0] == "::"){
+//				NextSentence();
+//			}
 			if (sentenceIndex < sentence.Length) {
+				//if(sentence[sentenceIndex] == '['){
+				//	Debug.Log ("Found Bracket");
+				//}
 				textDisplay += sentence [sentenceIndex];
 				newLineIndex--;
 				if(newLineIndex <= 0){
@@ -108,10 +143,33 @@ public class SignPost : MonoBehaviour {
 		}
 		//myTextMesh.text = textDisplay;
 		uiText.text = textDisplay;
+		//speaker.Trim(charsToTrim);
+		nameText.text = speaker;
 	}
 
 	void NextSentence(){
+		bool lookingForPassage = true;
+		int currentIndex = 0;
 		textDisplay = "";
+		sentence = "";
+		while (lookingForPassage) {
+			if(words[currentIndex].StartsWith("::")){
+				sentenceWords = words[currentIndex].Split (' ');
+				if(sentenceWords[1] == nextPassage){
+					lookingForPassage = false;
+					currentPassage = nextPassage;
+					wordsIndex = currentIndex;
+					speaker = sentenceWords[2];
+					speaker = speaker.Trim(charsToTrim);
+					//speaker[0] = ' ';
+					//speaker[speaker.Length-1] = ' ';
+				}
+			}
+			currentIndex++;
+			if(currentIndex >= words.Length){
+				lookingForPassage = false;
+			}
+		}
 		wordsIndex+=1;
 		sentenceIndex = 0;
 		if (wordsIndex >= words.Length) {
@@ -123,8 +181,20 @@ public class SignPost : MonoBehaviour {
 		}
 		//if(wordsIndex > 0)
 		//	wordsIndex--;
-		sentence = words [wordsIndex];
-		sentenceWords = sentence.Split (' ');
+		//Debug.Log (words [wordsIndex]);
+		//sentence = words [wordsIndex];
+		sentenceWords = words[wordsIndex].Split (' ');
+		for (int i = 0; i < sentenceWords.Length; i++) {
+			if(!sentenceWords[i].StartsWith("[[")){
+				sentence+=sentenceWords[i];
+				sentence+=" ";
+			}
+		}
+		if (sentenceWords [sentenceWords.Length - 1].Contains ("[[")) {
+			connection = sentenceWords [sentenceWords.Length - 1].Split('~');
+			nextPassage = connection[1];
+			//Debug.Log ("Next Passage");
+		}
 		//wordsIndex++;
 		//while (sentence[sentence.Length-1] != '.') {
 		//	sentence += words [wordsIndex];
@@ -153,6 +223,8 @@ public class SignPost : MonoBehaviour {
 			wordsIndex = 0;
 			//myTextMesh.renderer.enabled = false;
 			uiText.enabled = false;
+			nextPassage = startingPassage;
+			currentPassage = "";
 		}
 	}
 
