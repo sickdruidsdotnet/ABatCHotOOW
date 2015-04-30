@@ -1,0 +1,22 @@
+:: Start [Amelia]
+Hello, stranger! [[|~Part2~]]
+
+
+:: Part2 [Ig]
+Hi, back [[|~Part3~]]
+
+:: Part4 [Amelia]
+This Shouldn't be read
+
+:: Part3 [ ]
+Narration is cool here maybe
+
+
+:: StoryTitle
+Untitled Story
+
+
+:: StoryAuthor
+Anonymous
+
+
