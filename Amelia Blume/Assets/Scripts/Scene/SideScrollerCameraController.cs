@@ -8,7 +8,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool manual = false;
 	bool unlockAfterPan = false;
 	Vector3 startPos;
-	float panRate = 80f;
+	float panRate = 40f;
 	Vector3 panLength;
 
 	public Transform target;
@@ -45,7 +45,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 	float zoomLength;
 
 	public float panSpeedX = 0.4f;
-	public float panSpeedY = 0.1f;
+	public float panSpeedY = 0.2f;
 	Vector3 panTo;
 	int panTime;
 

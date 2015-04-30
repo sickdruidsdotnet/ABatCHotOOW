@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class dissapearer : MonoBehaviour {
+public class disappearer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
