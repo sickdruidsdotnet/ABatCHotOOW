@@ -71,6 +71,7 @@ public class Vine : MonoBehaviour
 	private float growthRate = 0.05f;
 	public float lengthGoal = 0;
 	private float growthStart;
+	private bool meshNeedsUpdate = false;
 
 	public float length;
 	
@@ -128,6 +129,7 @@ public class Vine : MonoBehaviour
 		// initialize vine target
 		vineTarget = new GameObject("VineTarget");
 		vineTarget.transform.position = new Vector3(getTotalLength() / 2, getTotalLength() / 2, 0) + _transform.position;
+		vineTarget.transform.parent = transform;
 
 		// initialize random vine target movement properties
 		vineSettings.targetTrackRadius = UnityEngine.Random.Range(2f, 10f);
@@ -299,7 +301,7 @@ public class Vine : MonoBehaviour
 		updateSkeleton(vineSkeleton);
 	}
 
-	private void updateSkeleton(List<VineNode> v)
+	private void updateSkeleton(List<VineNode> v, bool um = true)
 	{
 		// Iterate through all the nodes and make sure the start points correspond 
 		// to the ends of the previous nodes.
@@ -311,7 +313,11 @@ public class Vine : MonoBehaviour
 			}
 		}
 		
-		updateMesh();
+		if (um)
+		{
+			updateMesh();
+		}
+		
 	}
 
 	private void addSegment(float rad, float magnitude, Vector3 direction)
@@ -374,7 +380,7 @@ public class Vine : MonoBehaviour
 
 			// apply the rotation to the node
 			vineSkeleton[node].direction = rotGrad;
-			updateSkeleton(vineSkeleton);
+			updateSkeleton(vineSkeleton, false);
 
 		}
 
