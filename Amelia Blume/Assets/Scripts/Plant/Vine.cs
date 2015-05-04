@@ -68,10 +68,11 @@ public class Vine : MonoBehaviour
 	private float tipLength = 0.3f;
 	private float maxSegLength = 0.3f;
 
+	public float maxSegAngle = 5f;
+
 	private float growthRate = 0.05f;
 	public float lengthGoal = 0;
 	private float growthStart;
-	private bool meshNeedsUpdate = false;
 
 	public float length;
 	
@@ -356,17 +357,40 @@ public class Vine : MonoBehaviour
 		{
 			//debugOutput += "\n\tNode " + node + ":";
 
-			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - _transform.position).normalized;
+			// define rotation axis so that the node rotates towards the target.
+			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - vineSkeleton[node].getNodeEndPoint()).normalized;
 
+			// position of the vine’s tip
 			Vector3 tipPoint = vineSkeleton.Last().getNodeEndPoint();
+			// vector pointing from the vine’s base to the vine’s tip
 			Vector3 toTip = tipPoint - vineSkeleton[node].startPoint;
+			// vector pointing from the vine’s tip to the target
 			Vector3 toTarget = (vineTarget.transform.position - _transform.position) - tipPoint;
 
+			// calculate new node rotation
 			Vector3 movementVector = Vector3.Cross(toTip, rotAxis);
-
 			float gradient = Vector3.Dot(movementVector, toTarget);
 			Vector3 rotGrad = Quaternion.AngleAxis(-gradient, rotAxis) * vineSkeleton[node].direction;
 
+			// now, check to see if the angle between this node and it's parent exceeds the maxAngle
+			Vector3 prevSegDir;
+			if (node > 0)
+			{
+				prevSegDir = vineSkeleton[node - 1].direction;
+			}
+			else
+			{
+				prevSegDir = Vector3.up;
+			}
+
+			float angle = Vector3.Angle(rotGrad, prevSegDir);
+
+			// if it breaks the constraint, scale the rotation back so it satisfies the constraint
+
+			if (angle > maxSegAngle)
+			{
+				rotGrad = Quaternion.AngleAxis(maxSegAngle - angle, rotAxis) * rotGrad;
+			}
 			/*
 			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
 			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
@@ -380,11 +404,12 @@ public class Vine : MonoBehaviour
 
 			// apply the rotation to the node
 			vineSkeleton[node].direction = rotGrad;
+			// update skeleton without updating mesh, since we'll do this many times in a single frame.
 			updateSkeleton(vineSkeleton, false);
 
 		}
 
-		debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
+		//debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
 		//Debug.Log(debugOutput);
 
 		updateMesh();
