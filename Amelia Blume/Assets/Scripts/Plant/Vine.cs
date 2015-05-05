@@ -80,6 +80,8 @@ public class Vine : MonoBehaviour
 
 	public GameObject vineTarget;
 
+	public bool frameByFrame = false;
+
 	// debug draw values
 
 	private Mesh mesh;
@@ -355,10 +357,11 @@ public class Vine : MonoBehaviour
 		// find the gradient for each node, and rotate by that amount.
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
-			//debugOutput += "\n\tNode " + node + ":";
+			debugOutput += "\n\tNode " + node + ":";
 
 			// define rotation axis so that the node rotates towards the target.
-			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - vineSkeleton[node].getNodeEndPoint()).normalized;
+			Vector3 rotAxis = Vector3.Cross(_transform.position + vineSkeleton[node].getNodeEndPoint(),
+				vineTarget.transform.position - (_transform.position + vineSkeleton[node].getNodeEndPoint())).normalized;
 
 			// position of the vine’s tip
 			Vector3 tipPoint = vineSkeleton.Last().getNodeEndPoint();
@@ -389,9 +392,15 @@ public class Vine : MonoBehaviour
 
 			if (angle > maxSegAngle)
 			{
-				rotGrad = Quaternion.AngleAxis(maxSegAngle - angle, rotAxis) * rotGrad;
+				Vector3 undoAxis = Vector3.Cross(prevSegDir, rotGrad);
+				rotGrad = Quaternion.AngleAxis(maxSegAngle - angle, undoAxis) * rotGrad;
 			}
-			/*
+
+			//Debug.DrawLine(_transform.position + vineSkeleton[node].startPoint, _transform.position + vineSkeleton[node].startPoint +rotAxis);
+
+
+
+			
 			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
 			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
 			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
@@ -399,8 +408,7 @@ public class Vine : MonoBehaviour
 			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
 			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
 			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
-			*/
-
+			
 
 			// apply the rotation to the node
 			vineSkeleton[node].direction = rotGrad;
@@ -409,10 +417,12 @@ public class Vine : MonoBehaviour
 
 		}
 
-		//debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
+		debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
 		//Debug.Log(debugOutput);
 
 		updateMesh();
+
+		if (frameByFrame) {Debug.Break();}
 	}
 
 	//move the target for the vine
