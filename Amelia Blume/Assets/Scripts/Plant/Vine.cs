@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 /*
-This class is gonna be chill as fuck.
+This class is gonna be sooooo chill.
 
 The vine mesh will be procedurally generated.
 We will have a data structires that hold information about the tip of the vine and each ring.
@@ -68,7 +68,7 @@ public class Vine : MonoBehaviour
 	private float tipLength = 0.3f;
 	private float maxSegLength = 0.3f;
 
-	public float maxSegAngle = 5f;
+	public float maxSegAngle = 10f;
 
 	private float growthRate = 0.05f;
 	public float lengthGoal = 0;
@@ -79,6 +79,7 @@ public class Vine : MonoBehaviour
 	private float ringRadians;
 
 	public GameObject vineTarget;
+	public GameObject animalTarget;
 
 	public bool frameByFrame = false;
 
@@ -177,7 +178,15 @@ public class Vine : MonoBehaviour
 		}
 		*/
 
-		moveTarget();
+		if (animalTarget != null)
+		{
+			moveTargetToAnimal();
+		}
+		else
+		{
+			moveTargetOrbit();
+		}
+
 		moveTowardsTarget();
 
 	}
@@ -426,7 +435,7 @@ public class Vine : MonoBehaviour
 	}
 
 	//move the target for the vine
-	private void moveTarget()
+	private void moveTargetOrbit()
 	{
 		//target should orbit above the vine's base
 		vineSettings.targetAngle += (vineSettings.targetSpeed * Time.deltaTime) % 360f;
@@ -435,6 +444,21 @@ public class Vine : MonoBehaviour
 		float t_y = vineSettings.targetHeight;
 
 		vineTarget.transform.position = new Vector3(t_x, t_y, t_z) + _transform.position;
+	}
+
+	private void moveTargetToAnimal()
+	{
+		vineTarget.transform.position = animalTarget.transform.position;
+	}
+
+	public void setAnimalTarget(GameObject animalObject)
+	{
+		animalTarget = animalObject;
+	}
+
+	public void removeAnimalTarget()
+	{
+		animalTarget = null;
 	}
 
 	/*
@@ -720,6 +744,7 @@ public class Vine : MonoBehaviour
 
 	These functions should never directly manipulate the mesh or vertices.
 	*/
+
 	public void setGrowthInfo(float goal, float rate)
 	{
 		lengthGoal = goal;
@@ -744,8 +769,7 @@ public class Vine : MonoBehaviour
 			Debug.Log("Can not get length of vine before it's been created!");
 
 			return 0f;
-		}
-			
+		}		
 	}
 
 	public void printSkeletonInfo()

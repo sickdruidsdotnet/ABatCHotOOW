@@ -9,10 +9,15 @@ public class VinePlant : Plant
 	private List<GameObject> vines;
 	private float vineSpawnRadians;
 	private float vineSpawnRadius = 0.2f;
-    public float maxVineLength = 3f;
+    public float maxVineLength = 5f;
     public float growthRate = 0.35f;
+    public float range = 0f;
 
     public bool wasGrowing = false;
+
+    public GameObject[] animals;
+
+    public GameObject targetedAnimal;
 
 	public Animal[] restrainedAnimals;
 	
@@ -47,6 +52,10 @@ public class VinePlant : Plant
 
             vines.Add(newVine);
         }
+
+        animals = GameObject.FindGameObjectsWithTag("Animal");
+
+
     }
 
     public override void Update()
@@ -61,15 +70,64 @@ public class VinePlant : Plant
         }
 
         wasGrowing = isGrowing;
+
+        // update range based on vine length
+        float range = 1.5f * vines[0].GetComponent<Vine>().length;
+
+        // check if we have a target
+        if (targetedAnimal != null)
+        {
+            // if we do, then make sure it's still in range
+            if (Vector3.Distance(transform.position, targetedAnimal.transform.position) < range)
+            {
+                // cool, no need to do anything
+            }
+            else
+            {
+                Debug.Log("No longer targeting " + targetedAnimal.name);
+                targetedAnimal = null;
+                // call off our vines, they can't reach this target.
+                foreach (GameObject vineObject in vines)
+                {
+                    vineObject.GetComponent<Vine>().removeAnimalTarget();
+                }
+            }
+        }
+        else
+        {
+            // if we don't have a target, let's see if any animals are in range
+            {
+                foreach (GameObject animalObject in animals)
+                {
+                    if (Vector3.Distance(transform.position, animalObject.transform.position) < range)
+                    {
+                        // oh cool, we found a viable target
+                        targetedAnimal = animalObject;
+
+                        Debug.Log("Now targeting " + targetedAnimal.name);
+                        
+                        // now let's pass this target along to the vines
+                        foreach (GameObject vineObject in vines)
+                        {
+                            vineObject.GetComponent<Vine>().setAnimalTarget(targetedAnimal);
+                        }
+
+                        // no need to continue searching for animals
+                        break;
+                    }
+                }
+            }
+        }
+        
     }
 
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.tag == "Animal" && other.collider.isTrigger == false)
-		{
-			restrain (other.transform.GetComponent<Animal>());
-		}
-	}
+	// void OnTriggerEnter(Collider other)
+	// {
+	// 	if (other.gameObject.tag == "Animal" && other.collider.isTrigger == false)
+	// 	{
+	// 		restrain (other.transform.GetComponent<Animal>());
+	// 	}
+	// }
 
     // restrain enemy
     public void restrain(Animal other)
