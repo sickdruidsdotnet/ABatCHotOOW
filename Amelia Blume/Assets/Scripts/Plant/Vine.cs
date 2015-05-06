@@ -81,6 +81,8 @@ public class Vine : MonoBehaviour
 	public GameObject vineTarget;
 	public GameObject animalTarget;
 
+	public BoxCollider restrainTrigger;
+
 	public bool frameByFrame = false;
 
 	// debug draw values
@@ -178,6 +180,15 @@ public class Vine : MonoBehaviour
 		}
 		*/
 
+		// once we've reached a certain length, create the restraint trigger
+		if (length > 1.5f && restrainTrigger == null)
+		{
+			restrainTrigger = gameObject.AddComponent<BoxCollider>();
+			restrainTrigger.size = new Vector3(0.1f, 0.1f, 0.1f);
+			restrainTrigger.isTrigger = true;
+
+		}
+
 		if (animalTarget != null)
 		{
 			moveTargetToAnimal();
@@ -188,6 +199,10 @@ public class Vine : MonoBehaviour
 		}
 
 		moveTowardsTarget();
+		if (restrainTrigger != null)
+		{
+			updateTriggerPosition();
+		}
 
 	}
 
@@ -459,6 +474,19 @@ public class Vine : MonoBehaviour
 	public void removeAnimalTarget()
 	{
 		animalTarget = null;
+	}
+
+	private void updateTriggerPosition()
+	{
+		restrainTrigger.center = vineSkeleton[vineSkeleton.Count - 3].startPoint;
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject == animalTarget && other.collider.isTrigger == false)
+		{
+			transform.parent.GetComponent<VinePlant>().restrain(other.transform.GetComponent<Animal>());
+		}
 	}
 
 	/*

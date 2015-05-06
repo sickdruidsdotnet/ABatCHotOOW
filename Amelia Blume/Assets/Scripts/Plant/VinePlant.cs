@@ -95,11 +95,12 @@ public class VinePlant : Plant
         }
         else
         {
-            // if we don't have a target, let's see if any animals are in range
+            // if we don't have a target, let's see if any infected animals are in range
             {
                 foreach (GameObject animalObject in animals)
                 {
-                    if (Vector3.Distance(transform.position, animalObject.transform.position) < range)
+                    if (Vector3.Distance(transform.position, animalObject.transform.position) < range
+                        && animalObject.GetComponent<Animal>().isInfected)
                     {
                         // oh cool, we found a viable target
                         targetedAnimal = animalObject;
@@ -121,13 +122,15 @@ public class VinePlant : Plant
         
     }
 
-	// void OnTriggerEnter(Collider other)
-	// {
-	// 	if (other.gameObject.tag == "Animal" && other.collider.isTrigger == false)
-	// 	{
-	// 		restrain (other.transform.GetComponent<Animal>());
-	// 	}
-	// }
+    /*
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "Animal" && other.collider.isTrigger == false)
+		{
+			restrain (other.transform.GetComponent<Animal>());
+		}
+	}
+    */
 
     // restrain enemy
     public void restrain(Animal other)
