@@ -11,6 +11,9 @@ This Shouldn't be read
 :: Part3 [ ]
 Narration is cool here maybe
 
+:: Seed [ ]
+Seed planting and tree growing explination
+
 
 :: StoryTitle
 Untitled Story
