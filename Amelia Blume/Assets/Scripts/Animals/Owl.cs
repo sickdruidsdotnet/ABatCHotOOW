@@ -7,23 +7,25 @@ public class Owl : Animal {
 	private Vector3 to;
 	private Vector3 from;
 	private float angle;
-	private float fieldOfView = 45;
+	private float fieldOfView = 13;
 	private float speed;
 	public Transform perch;
+	private float distance;
 	// Use this for initialization
 	void Start () {
 		playerObject = GameObject.FindGameObjectWithTag ("Player");
 		player = playerObject.GetComponent <Player>();
-		to = -this.transform.up;
+		//to = -this.transform.up;
 		speed = 0.05f;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		from = player.transform.position - this.transform.position;
-		angle = (Vector3.Angle(to, from));
+	void FixedUpdate () {
+		//from = player.transform.position - this.transform.position;
+		//angle = (Vector3.Angle(to, from));
+		distance = (Vector3.Distance(player.transform.position, this.transform.position));
 		//Debug.DrawLine(to, from, Color.red,100f,false);
-		if (angle < fieldOfView)
+		if (distance < fieldOfView)
 			ChasePlayer ();
 		else 
 			ReturnToPerch ();
@@ -31,12 +33,13 @@ public class Owl : Animal {
 
 	void ChasePlayer()
 	{
-		Debug.Log ("In pursuit");
+		//Debug.Log ("In pursuit");
 		transform.position = Vector3.MoveTowards (transform.position, player.transform.position, speed);
 	}
 
 	void ReturnToPerch()
 	{
+		//Debug.Log ("Back to Perch");
 		transform.position = Vector3.MoveTowards (transform.position, perch.position, speed);
 	}
 
