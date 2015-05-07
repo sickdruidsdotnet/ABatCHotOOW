@@ -1,12 +1,11 @@
 :: Start [Amelia]
 Hello, stranger! [[|~Part2~]]
 
-
 :: Part2 [Ig]
 Hi, back [[|~Part3~]]
 
-:: Part4 [Amelia]
-This Shouldn't be read
+:: Seed []
+Press A to plant seeds
 
 :: Part3 [ ]
 Narration is cool here maybe
