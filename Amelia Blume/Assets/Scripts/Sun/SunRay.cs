@@ -46,6 +46,9 @@ public class SunRay : MonoBehaviour {
 			rotationSpeed = Random.Range (1, 3);
 			if (Random.Range (0, 5) > 2)
 				rotationSpeed *= -1;
+
+			//change the length for more variety
+			transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, Random.Range(0.1f, 0.5f));
 		} else if (life > startLife - lifeThirds) {
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,

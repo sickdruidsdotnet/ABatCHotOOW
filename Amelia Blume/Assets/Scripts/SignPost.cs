@@ -85,6 +85,7 @@ public class SignPost : MonoBehaviour {
 		uiTextBoxSprite.enabled = uiText.enabled;
 		nameText.enabled = uiText.enabled;
 		uiPortraitSprite.enabled = uiText.enabled;
+		//Debug.Log(uiText.enabled);
 	}
 
 	public void Read(){
