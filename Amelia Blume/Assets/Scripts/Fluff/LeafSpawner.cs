@@ -17,6 +17,10 @@ public class LeafSpawner : MonoBehaviour {
 	void Start () {
 		width = gameObject.GetComponent<BoxCollider> ().size.x;
 		lastSpawnTime = Time.time;
+		if(spawnRate == 0)
+		{
+			Destroy(gameObject);
+		}
 	}
 	
 	// Update is called once per frame

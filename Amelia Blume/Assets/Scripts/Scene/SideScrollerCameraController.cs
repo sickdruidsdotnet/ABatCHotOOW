@@ -36,14 +36,16 @@ public class SideScrollerCameraController : MonoBehaviour {
 	bool panDown;
 
 	bool zooming;
-	float zoomRate = 4f;
+	bool zoomingIn;
+	bool zoomingOut;
+	float zoomRate = 3f;
 	float startTime;
 	float startSize;
 	float endSize;
 	float zoomLength;
 
 	public float panSpeedX = 0.4f;
-	public float panSpeedY = 0.1f;
+	public float panSpeedY = 0.2f;
 	Vector3 panTo;
 	int panTime;
 
@@ -115,7 +117,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		gameObject.GetComponent<Camera> ().orthographicSize = maxSize;
 		Vector3 point1 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.5f, 0f, 0f));
 		Vector3 point2 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.9f, 0f, 0f));
-		maxScreenDist = point2.x - point1.x;
+		maxScreenDist = Mathf.Abs( point2.x - point1.x);
 		gameObject.GetComponent<Camera> ().orthographicSize = minSize;
 		point1 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.5f, 0f, 0f));
 		point2 = GetComponent<Camera> ().ViewportToWorldPoint (new Vector3(0.9f, 0f, 0f));
@@ -166,6 +168,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 			if(thisCam.orthographicSize == endSize)
 			{
 				zooming = false;
+				zoomingIn = false;
+				zoomingOut = false;
 			}
 
 			//make sure we didn't zoom the player offscreen
@@ -246,10 +250,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 				removeIndices.Add (trackables.IndexOf(trackable));
 			}
 			else {
-				Vector3 centerCamPoint = GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+				Vector3 centerCamPoint = new Vector3( GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)).x,
+													GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)).y, 0);
 				float distFromCenter = Mathf.Abs(centerCamPoint.x - trackable.transform.position.x);
 				index = trackables.IndexOf(trackable);
 				//let's check if it should be being tracked
+				//Debug.DrawLine(centerCamPoint, trackable.transform.position);
 				if(distFromCenter <= maxScreenDist)
 				{
 					
@@ -285,19 +291,23 @@ public class SideScrollerCameraController : MonoBehaviour {
 			}
 		}
 
-		if (!trackCheck && thisCam.orthographicSize == maxSize && !zooming) {
+		if (!trackCheck && thisCam.orthographicSize != minSize && !zoomingIn) {
 			isTracking = false;
 			startSize = thisCam.orthographicSize;
 			endSize = minSize;
 			zoomLength = Mathf.Abs(startSize - endSize);
 			zooming = true;
+			zoomingIn = true;
+			zoomingOut = false;
 			startTime = Time.time;
-		} else if (isTracking && thisCam.orthographicSize == minSize && !zooming) {
+		} else if (isTracking && thisCam.orthographicSize != maxSize && !zoomingOut) {
 			isTracking = true;
 			startSize = thisCam.orthographicSize;
 			endSize = maxSize;
 			zoomLength = Mathf.Abs(startSize - endSize);
 			zooming = true;
+			zoomingIn = false;
+			zoomingOut = true;
 			startTime = Time.time;
 		}
 

@@ -80,11 +80,12 @@ public class SignPost : MonoBehaviour {
 			DisplayWords ();
 			nextUse = Time.time + delay;
 		}
-
+		//Debug.Log(amelia.GetReadSign());
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
 		nameText.enabled = uiText.enabled;
 		uiPortraitSprite.enabled = uiText.enabled;
+		//Debug.Log(uiText.enabled);
 	}
 
 	public void Read(){
@@ -140,11 +141,13 @@ public class SignPost : MonoBehaviour {
 				}
 				sentenceIndex++;
 			}
+			uiText.text = textDisplay;
+			nameText.text = speaker;
 		}
-		//myTextMesh.text = textDisplay;
-		uiText.text = textDisplay;
+		//Debug.Log (textDisplay);
+
 		//speaker.Trim(charsToTrim);
-		nameText.text = speaker;
+		//nameText.text = speaker;
 	}
 
 	void NextSentence(){
@@ -213,13 +216,22 @@ public class SignPost : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "Player") {
+			Debug.Log ("enter");
+			textDisplay = "";
+		}
+	}
+
 	void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
+			Debug.Log ("Exit");
 			amelia.SetReadSign(false);
 			//Debug.Log ("stop reading");
-			beingRead = false;
 			textDisplay = "";
+			beingRead = false;
 			wordsIndex = 0;
 			//myTextMesh.renderer.enabled = false;
 			uiText.enabled = false;

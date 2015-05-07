@@ -135,6 +135,9 @@ public class Animal : MonoBehaviour
 	{
 		yield return new WaitForSeconds (10f - (strength * sporeModifier));
 		if (isRestrained && isInfected) {
+			// destrov the vines that this animal has broken
+			Destroy(vineCollider.gameObject);
+			/*
 			//ignore that vine's collider from now on, it's broken free from it
 			Collider[] animalColliders = transform.GetComponents<Collider>();
 			foreach (Collider animalCollider in animalColliders)
@@ -143,6 +146,7 @@ public class Animal : MonoBehaviour
 			}
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
+			*/
 			isRestrained = false;
 			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
 		}

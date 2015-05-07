@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 /*
-This class is gonna be chill as fuck.
+This class is gonna be sooooo chill.
 
 The vine mesh will be procedurally generated.
 We will have a data structires that hold information about the tip of the vine and each ring.
@@ -68,6 +68,8 @@ public class Vine : MonoBehaviour
 	private float tipLength = 0.3f;
 	private float maxSegLength = 0.3f;
 
+	public float maxSegAngle = 10f;
+
 	private float growthRate = 0.05f;
 	public float lengthGoal = 0;
 	private float growthStart;
@@ -77,6 +79,11 @@ public class Vine : MonoBehaviour
 	private float ringRadians;
 
 	public GameObject vineTarget;
+	public GameObject animalTarget;
+
+	public BoxCollider restrainTrigger;
+
+	public bool frameByFrame = false;
 
 	// debug draw values
 
@@ -128,6 +135,7 @@ public class Vine : MonoBehaviour
 		// initialize vine target
 		vineTarget = new GameObject("VineTarget");
 		vineTarget.transform.position = new Vector3(getTotalLength() / 2, getTotalLength() / 2, 0) + _transform.position;
+		vineTarget.transform.parent = transform;
 
 		// initialize random vine target movement properties
 		vineSettings.targetTrackRadius = UnityEngine.Random.Range(2f, 10f);
@@ -172,8 +180,29 @@ public class Vine : MonoBehaviour
 		}
 		*/
 
-		moveTarget();
+		// once we've reached a certain length, create the restraint trigger
+		if (length > 1.5f && restrainTrigger == null)
+		{
+			restrainTrigger = gameObject.AddComponent<BoxCollider>();
+			restrainTrigger.size = new Vector3(0.1f, 0.1f, 0.1f);
+			restrainTrigger.isTrigger = true;
+
+		}
+
+		if (animalTarget != null)
+		{
+			moveTargetToAnimal();
+		}
+		else
+		{
+			moveTargetOrbit();
+		}
+
 		moveTowardsTarget();
+		if (restrainTrigger != null)
+		{
+			updateTriggerPosition();
+		}
 
 	}
 
@@ -299,7 +328,7 @@ public class Vine : MonoBehaviour
 		updateSkeleton(vineSkeleton);
 	}
 
-	private void updateSkeleton(List<VineNode> v)
+	private void updateSkeleton(List<VineNode> v, bool um = true)
 	{
 		// Iterate through all the nodes and make sure the start points correspond 
 		// to the ends of the previous nodes.
@@ -311,7 +340,11 @@ public class Vine : MonoBehaviour
 			}
 		}
 		
-		updateMesh();
+		if (um)
+		{
+			updateMesh();
+		}
+		
 	}
 
 	private void addSegment(float rad, float magnitude, Vector3 direction)
@@ -348,20 +381,50 @@ public class Vine : MonoBehaviour
 		// find the gradient for each node, and rotate by that amount.
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
-			//debugOutput += "\n\tNode " + node + ":";
+			debugOutput += "\n\tNode " + node + ":";
 
-			Vector3 rotAxis = Vector3.Cross(vineSkeleton[node].getNodeEndPoint(), vineTarget.transform.position - _transform.position).normalized;
+			// define rotation axis so that the node rotates towards the target.
+			Vector3 rotAxis = Vector3.Cross(_transform.position + vineSkeleton[node].getNodeEndPoint(),
+				vineTarget.transform.position - (_transform.position + vineSkeleton[node].getNodeEndPoint())).normalized;
 
+			// position of the vine’s tip
 			Vector3 tipPoint = vineSkeleton.Last().getNodeEndPoint();
+			// vector pointing from the vine’s base to the vine’s tip
 			Vector3 toTip = tipPoint - vineSkeleton[node].startPoint;
+			// vector pointing from the vine’s tip to the target
 			Vector3 toTarget = (vineTarget.transform.position - _transform.position) - tipPoint;
 
+			// calculate new node rotation
 			Vector3 movementVector = Vector3.Cross(toTip, rotAxis);
-
 			float gradient = Vector3.Dot(movementVector, toTarget);
 			Vector3 rotGrad = Quaternion.AngleAxis(-gradient, rotAxis) * vineSkeleton[node].direction;
 
-			/*
+			// now, check to see if the angle between this node and it's parent exceeds the maxAngle
+			Vector3 prevSegDir;
+			if (node > 0)
+			{
+				prevSegDir = vineSkeleton[node - 1].direction;
+			}
+			else
+			{
+				prevSegDir = Vector3.up;
+			}
+
+			float angle = Vector3.Angle(rotGrad, prevSegDir);
+
+			// if it breaks the constraint, scale the rotation back so it satisfies the constraint
+
+			if (angle > maxSegAngle)
+			{
+				Vector3 undoAxis = Vector3.Cross(prevSegDir, rotGrad);
+				rotGrad = Quaternion.AngleAxis(maxSegAngle - angle, undoAxis) * rotGrad;
+			}
+
+			//Debug.DrawLine(_transform.position + vineSkeleton[node].startPoint, _transform.position + vineSkeleton[node].startPoint +rotAxis);
+
+
+
+			
 			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
 			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
 			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
@@ -369,12 +432,12 @@ public class Vine : MonoBehaviour
 			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
 			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
 			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
-			*/
-
+			
 
 			// apply the rotation to the node
 			vineSkeleton[node].direction = rotGrad;
-			updateSkeleton(vineSkeleton);
+			// update skeleton without updating mesh, since we'll do this many times in a single frame.
+			updateSkeleton(vineSkeleton, false);
 
 		}
 
@@ -382,10 +445,12 @@ public class Vine : MonoBehaviour
 		//Debug.Log(debugOutput);
 
 		updateMesh();
+
+		if (frameByFrame) {Debug.Break();}
 	}
 
 	//move the target for the vine
-	private void moveTarget()
+	private void moveTargetOrbit()
 	{
 		//target should orbit above the vine's base
 		vineSettings.targetAngle += (vineSettings.targetSpeed * Time.deltaTime) % 360f;
@@ -394,6 +459,34 @@ public class Vine : MonoBehaviour
 		float t_y = vineSettings.targetHeight;
 
 		vineTarget.transform.position = new Vector3(t_x, t_y, t_z) + _transform.position;
+	}
+
+	private void moveTargetToAnimal()
+	{
+		vineTarget.transform.position = animalTarget.transform.position;
+	}
+
+	public void setAnimalTarget(GameObject animalObject)
+	{
+		animalTarget = animalObject;
+	}
+
+	public void removeAnimalTarget()
+	{
+		animalTarget = null;
+	}
+
+	private void updateTriggerPosition()
+	{
+		restrainTrigger.center = vineSkeleton[vineSkeleton.Count - 3].startPoint;
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject == animalTarget && other.collider.isTrigger == false)
+		{
+			transform.parent.GetComponent<VinePlant>().restrain(other.transform.GetComponent<Animal>());
+		}
 	}
 
 	/*
@@ -679,6 +772,7 @@ public class Vine : MonoBehaviour
 
 	These functions should never directly manipulate the mesh or vertices.
 	*/
+
 	public void setGrowthInfo(float goal, float rate)
 	{
 		lengthGoal = goal;
@@ -703,8 +797,7 @@ public class Vine : MonoBehaviour
 			Debug.Log("Can not get length of vine before it's been created!");
 
 			return 0f;
-		}
-			
+		}		
 	}
 
 	public void printSkeletonInfo()
