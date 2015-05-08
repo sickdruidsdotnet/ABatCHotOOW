@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
+	bool stillWritingCurrentPassage = false;
 	private int maxCharCount = 150;
 	public bool continueCurrentPassage = false;
 	int wordsIndex = 0;
@@ -24,6 +25,7 @@ public class SignPost : MonoBehaviour {
 	public string connection;
 
 	char[] charsToTrim = { '[' ,']'};
+	char[] titleSplit = { '[', ']' , ':'};
 
 
  	GameObject uiTextObj;
@@ -92,10 +94,14 @@ public class SignPost : MonoBehaviour {
 
 	public void Read(){
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
+			if(beingRead && stillWritingCurrentPassage){
+				DisplayFullText();
+			}else{
 			beingRead = false;
 			uiText.enabled = false;
 			nextPassage = startingPassage;
 			currentPassage = "";
+			}
 			return;
 		}
 	//	Debug.Log ("reading");
@@ -107,6 +113,36 @@ public class SignPost : MonoBehaviour {
 		}
 		NextSentence ();
 		//CheckFlags ();
+		
+	}
+
+	void DisplayFullText(){
+		if (beingRead) {
+			bool keepWriting = true;
+				while(keepWriting){
+					textDisplay += sentence [sentenceIndex];
+					if(textDisplay.Length > maxCharCount){
+						if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
+							Debug.Log ("Stop Here");
+							continueCurrentPassage = true;
+							keepWriting = false;
+					}
+				}
+
+				if(sentenceIndex < sentence.Length - 1){
+					sentenceIndex++;
+				}else{
+					keepWriting = false;
+				}
+				//if(!continueCurrentPassage){
+				//	sentenceIndex++;
+				//}
+			}
+			uiText.text = textDisplay;
+			//Debug.Log (uiText.text.Length);
+			//Debug.Log ("Line Count: " + uiText.cachedTextGenerator.lineCount);
+			nameText.text = speaker;
+		}
 		
 	}
 
@@ -124,11 +160,11 @@ public class SignPost : MonoBehaviour {
 		if (beingRead) {
 
 			if (sentenceIndex < sentence.Length && !continueCurrentPassage) {
-
+				stillWritingCurrentPassage = true;
 				textDisplay += sentence [sentenceIndex];
 				newLineIndex--;
 				//if(uiText.cachedTextGenerator.lineCount % 3 == 0){
-				Debug.Log(textDisplay.Length);
+				//Debug.Log(textDisplay.Length);
 				if(textDisplay.Length > maxCharCount){
 					if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
 						Debug.Log ("Stop Here");
@@ -139,6 +175,8 @@ public class SignPost : MonoBehaviour {
 				if(!continueCurrentPassage){
 					sentenceIndex++;
 				}
+			}else{
+				stillWritingCurrentPassage = false;
 			}
 			uiText.text = textDisplay;
 			//Debug.Log (uiText.text.Length);
@@ -156,14 +194,17 @@ public class SignPost : MonoBehaviour {
 			sentence = "";
 			while (lookingForPassage) {
 				if (words [currentIndex].StartsWith ("::")) {
-					sentenceWords = words [currentIndex].Split (' ');
-
-					if (sentenceWords [1] == nextPassage) {
+					sentenceWords = words [currentIndex].Split (titleSplit);
+					sentenceWords[2].Trim(' ');
+					for(int i = 0 ; i < sentenceWords.Length; i++){
+						Debug.Log (sentenceWords[i] + "  " + i);
+					}
+					if (sentenceWords [2].Contains(nextPassage)) {
 						lookingForPassage = false;
 						currentPassage = nextPassage;
 						wordsIndex = currentIndex;
-						if (sentenceWords.Length > 2) {
-							speaker = sentenceWords [2];
+						if (sentenceWords.Length > 3) {
+							speaker = sentenceWords [3];
 							speaker = speaker.Trim (charsToTrim);
 						} else {
 							speaker = "";
@@ -186,15 +227,18 @@ public class SignPost : MonoBehaviour {
 				sentenceIndex = 0;
 			}
 
-			sentenceWords = words [wordsIndex].Split (' ');
-			for (int i = 0; i < sentenceWords.Length; i++) {
-				if (!sentenceWords [i].StartsWith ("[[")) {
-					sentence += sentenceWords [i];
-					sentence += " ";
-				}
-			}
-			if (sentenceWords [sentenceWords.Length - 1].Contains ("[[")) {
-				connection = sentenceWords [sentenceWords.Length - 1];
+			sentenceWords = words [wordsIndex].Split (titleSplit);
+			sentence+= sentenceWords[0];
+			//for (int i = 0; i < sentenceWords.Length; i++) {
+			//	if (!sentenceWords [i].StartsWith ("[[")) {
+			//		sentence += sentenceWords [i];
+			//		sentence += " ";
+			//	}
+			//}
+			if(sentenceWords.Length > 2){
+			//if (sentenceWords [sentenceWords.Length - 3].Contains ("[[")) {
+				connection = sentenceWords[2];
+				//connection = sentenceWords [sentenceWords.Length - 1];
 				connection = connection.Trim (charsToTrim);
 
 				nextPassage = connection;
