@@ -4,15 +4,15 @@ using System.Collections;
 public class Bramble : MonoBehaviour {
 	GameObject player;
 	Player amelia;
-	float delay = 0.5f;
-	float nextUse;
+	//float delay = 0.5f;
+	//float nextUse;
 	int invulCounter;
 
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
 		amelia = player.GetComponent<Player> ();
-		nextUse = Time.time + delay;
+		//nextUse = Time.time + delay;
 		invulCounter = 0;
 	}
 	
