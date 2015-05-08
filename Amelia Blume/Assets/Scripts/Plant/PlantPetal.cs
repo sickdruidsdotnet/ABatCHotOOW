@@ -619,7 +619,7 @@ public class PlantPetal : MonoBehaviour
 
 	}
 
-	private float petalWidthFunction(float x)
+	public float petalWidthFunction(float x)
 	{
 
 		// x is a number between 0 and 1 defining it's position along the petal
