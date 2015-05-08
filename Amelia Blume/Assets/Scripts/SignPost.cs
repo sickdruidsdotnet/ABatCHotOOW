@@ -19,7 +19,7 @@ public class SignPost : MonoBehaviour {
 	public string nextPassage;
 	public string currentPassage;
 	public string speaker;
-	public string[] connection;
+	public string connection;
 
 	char[] charsToTrim = { '[' ,']'};
 
@@ -194,9 +194,11 @@ public class SignPost : MonoBehaviour {
 			}
 		}
 		if (sentenceWords [sentenceWords.Length - 1].Contains ("[[")) {
-			connection = sentenceWords [sentenceWords.Length - 1].Split('~');
-			nextPassage = connection[1];
-			//Debug.Log ("Next Passage");
+			connection = sentenceWords [sentenceWords.Length - 1];
+			connection = connection.Trim(charsToTrim);
+			//nextPassage = connection[1];
+			nextPassage = connection;
+			Debug.Log (nextPassage);
 		}
 		//wordsIndex++;
 		//while (sentence[sentence.Length-1] != '.') {
