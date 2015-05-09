@@ -1,8 +1,8 @@
 :: Start [Amelia]
-Hello, stranger! [[|~Part2~]]
+Hello, stranger! [[Part2]]
 
 :: Part2 [Ig]
-Hi, back [[|~Part3~]]
+Hi, back [[Part3]]
 
 :: Seed []
 Press A to plant seeds
