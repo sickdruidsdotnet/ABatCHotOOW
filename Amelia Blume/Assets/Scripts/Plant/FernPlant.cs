@@ -9,8 +9,8 @@ public class FernPlant : Plant
 		
 		// set hydrationGoal to match VineSeed requirements
 		this.hydrationGoal = 200;
-		Debug.Log("FernPlant created");
-		Debug.Log("FernPlant hydrationGoal: " + hydrationGoal);
+		//Debug.Log("FernPlant created");
+		//Debug.Log("FernPlant hydrationGoal: " + hydrationGoal);
 	}
 	
 	void OnTriggerEnter(Collider other)

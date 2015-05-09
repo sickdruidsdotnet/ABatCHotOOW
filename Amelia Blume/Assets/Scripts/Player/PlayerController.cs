@@ -4,7 +4,8 @@ using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
-	
+
+	public InputHandler playerInput;
 	
 	public float inputDeadZone = 0.05f;
     
@@ -40,11 +41,16 @@ public class PlayerController : BaseBehavior {
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
 
+	public GameObject[] activeSeeds;
+
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
     void Start()
     {
+//		Debug.Log (Input.GetJoystickNames()[0]);
+		//get the input handler and reference that instead
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -91,7 +97,7 @@ public class PlayerController : BaseBehavior {
 
 		canControl = true;
 		stunTimer = 0;
-
+		activeSeeds = new GameObject[3];
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -113,7 +119,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (Input.GetButtonUp ("Jump"))
+		if (playerInput.jumpUp || !canControl)
 			StopJump();
 
 		// these functions should not directly move the player. They only handle input, and 
@@ -168,10 +174,8 @@ public class PlayerController : BaseBehavior {
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
-			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 				
-		horizontal  = Input.GetAxis("Horizontal");
+		horizontal  = playerInput.xMove;
         //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
@@ -238,40 +242,49 @@ public class PlayerController : BaseBehavior {
 		}
 
 	}
-	
+
 	protected void HandleActionInput() {
 
-		float horizontal2 = Input.GetAxis("Horizontal 2");
-		float vertical2 = Input.GetAxis("Vertical 2");
-
-		if (horizontal2 > 0)
-			player.SetCurrentSeed(Player.SeedType.TreeSeed);
-		if (horizontal2 < 0)
-			player.SetCurrentSeed(Player.SeedType.VineSeed);
-		if (vertical2 > 0)
-			player.SetCurrentSeed(Player.SeedType.FernSeed);
-		if (vertical2 < 0)
-			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
-
-
-		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
-		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+		if (playerInput.primaryInput == "Keyboard") {
+			if(playerInput.firstSeedDown && player.vineUnlocked)
+				player.SetCurrentSeed (Player.SeedType.VineSeed);
+			else if(playerInput.secondSeedDown && player.treeUnlocked)
+				player.SetCurrentSeed (Player.SeedType.TreeSeed);
+			else if(playerInput.thirdSeedDown && player.fluerUnlocked)
+				player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+		} else {
+			float horizontal2 = playerInput.xSelect;
+			float vertical2 = playerInput.ySelect;
+			if (new Vector2 (horizontal2, vertical2).magnitude >= 0.5f) {
+				float angle = Vector2.Angle (Vector2.up * -1f, new Vector2 (horizontal2, vertical2));
+				if (player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0) {
+					player.SetCurrentSeed (Player.SeedType.TreeSeed);
+				} else if (player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
+					player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+				} else if (player.vineUnlocked && angle < 60) {
+					player.SetCurrentSeed (Player.SeedType.VineSeed);
+				}
+			}
+		}
 
 		if(!canControl)
 			return;
 
 		if (!player.isSunning() && !player.isConverting()) {
-			if (Input.GetButtonDown ("Jump")) {
-				Jump ();
+			if (playerInput.jumpDown) {
+				if(player.GetReadSign())
+					ReadSign();
+				else
+					Jump ();
 			}
-			if (Input.GetButtonDown ("ThrowSeed")) {
+			if (playerInput.throwSeedDown) {
 				ThrowSeed ();
 			}
-			if (Input.GetButtonDown ("Dash")) {
+			if (playerInput.dashDown) {
 				Dash ();
 			}
 		}
-		if (Input.GetButtonDown ("Sun")) {
+		if (playerInput.sunDown) {
 			if(canConvert){
 				AnimalConvert();
 				player.SetConverting(true);
@@ -317,6 +330,11 @@ public class PlayerController : BaseBehavior {
 		player.Broadcast("OnConvertRequest");
 		player.motor.Convert();
 	}
+
+	public void ReadSign(){
+		player.motor.ReadSign();
+		player.Broadcast ("OnReadSignRequest");
+		}
 
 	public void HandleStun()
 	{
@@ -366,5 +384,14 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
+	}
+
+	public void updateActiveSeeds(int slot, GameObject seed)
+	{
+		if (activeSeeds [slot] != null) {
+			Destroy (activeSeeds [slot]);
+		}
+		activeSeeds [slot] = seed;
+
 	}
 }

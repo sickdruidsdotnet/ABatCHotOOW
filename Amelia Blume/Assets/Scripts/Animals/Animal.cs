@@ -14,6 +14,8 @@ public class Animal : MonoBehaviour
 	public Vector3 target;
 	public float targetOffset;
 
+	Collider vines;
+
 	//on a scale oof 0-10, how powerful is this animal. the more strenght, the easier it
 	//breaks free from vines
 	public float strength;
@@ -24,6 +26,7 @@ public class Animal : MonoBehaviour
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 
+	public RenderOptimizer optimizer;
 
 	//this will store the location on each animal where the spore effect should spawn
 	protected Vector3 sporeLoc;
@@ -53,12 +56,14 @@ public class Animal : MonoBehaviour
 		BroadcastMessage ("clearInfection");
 		//quit spawning spores unecessarily
 		isSpored = false;
+		//destroy the vines
+		Destroy(vines.gameObject);
     }
 
 
 	public void LurePlant(Transform plantPosition)
 	{
-		Debug.Log ("LurePlant called: " + gameObject.name);
+		//Debug.Log ("LurePlant called: " + gameObject.name);
 		//NavMeshAgentController agentController = this.GetComponent<NavMeshAgentController> ();
 		//agentController.EnableAgent (plantPosition);
 		if (plantPosition.position.x > this.transform.position.x)
@@ -132,8 +137,12 @@ public class Animal : MonoBehaviour
 
 	IEnumerator breakFree(Collider vineCollider)
 	{
+		vines = vineCollider;
 		yield return new WaitForSeconds (10f - (strength * sporeModifier));
 		if (isRestrained && isInfected) {
+			// destrov the vines that this animal has broken
+			Destroy(vineCollider.gameObject);
+			/*
 			//ignore that vine's collider from now on, it's broken free from it
 			Collider[] animalColliders = transform.GetComponents<Collider>();
 			foreach (Collider animalCollider in animalColliders)
@@ -142,7 +151,9 @@ public class Animal : MonoBehaviour
 			}
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, false);
 			//Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, false);
+			*/
 			isRestrained = false;
+			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 

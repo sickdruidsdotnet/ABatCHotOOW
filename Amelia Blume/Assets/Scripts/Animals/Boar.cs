@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Boar : Animal
 {
-	
 	Player player;
-	Animator anim;
+	//Animator anim;
 	
 	//how much damage this will do to the player
 	public int damageValue;
@@ -25,7 +24,6 @@ public class Boar : Animal
 	public bool hasLeaped;
 
 	public int rampageCount = 3;
-	
 	int lockCounter;
 	
 	[HideInInspector]
@@ -40,10 +38,14 @@ public class Boar : Animal
 	
 	public bool isFacingRight = false;
 	
-	
+	//audio variables
+	public AudioClip spotPlayer1;
+	private AudioSource source;
+
 	// Use this for initialization
 	void Start()
 	{
+		source = GetComponent<AudioSource>();
 
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
@@ -80,7 +82,7 @@ public class Boar : Animal
 		
 		//lock the axis to where it's been placed in the editor
 		lockedAxisValue = this.transform.position.z;
-		anim = this.GetComponent<Animator>();
+		//anim = this.GetComponent<Animator>();
 		speed = walkSpeed;
 		
 		lockCounter = -1;
@@ -161,7 +163,7 @@ public class Boar : Animal
 			lockCounter--;
 			if(lockCounter == 0)
 			{
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 			}
 		}
 
@@ -211,7 +213,7 @@ public class Boar : Animal
 				else
 					hitDirection = 1;
 				lockCounter = 60;
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
@@ -295,6 +297,9 @@ public class Boar : Animal
 						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 1F);
+
 							isCharging = true;
 							isInChargeUp = true;
 							chargeUpCooldown = 60;
@@ -315,6 +320,9 @@ public class Boar : Animal
 						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 1F);
+							
 							isCharging = true;
 							isInChargeUp = true;
 							chargeUpCooldown = 60;
@@ -345,7 +353,7 @@ public class Boar : Animal
 			transform.position = Vector3.MoveTowards (transform.position, target, speed*sporeModifier);
 		}
 		//animation["Walking"].enabled = true;
-		anim.SetBool ("isRunning", true);
+		//anim.SetBool ("isRunning", true);
 	}
 	//starts the boar turning around
 	public void beginRotate()
@@ -369,8 +377,8 @@ public class Boar : Animal
 			}
 			rotationCooldown = 60;
 			//freeze the boar to prevent weird player interaction physics
-			rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 		}
 	}
 
@@ -401,7 +409,7 @@ public class Boar : Animal
 					faceDirection = -1;
 				}
 				//unfreeze boar 
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 				rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
 				
 			}
@@ -419,7 +427,7 @@ public class Boar : Animal
 		else
 			hitDirection = 1;
 		lockCounter = 60;
-		rigidbody.constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+		rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 		//don't add the impact if player is about to die
 		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
 			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);

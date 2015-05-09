@@ -45,7 +45,13 @@ public class Player : BaseBehavior {
 	private bool sunning = false;
 	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
+	private bool canReadSign = false;
+	private GameObject currentSign;
 
+	public bool vineUnlocked = false;
+	public bool treeUnlocked = false;
+	public bool fluerUnlocked = false;
+	public bool fernUnlocked = false;
 	
 
 	public PlayerController controller {
@@ -198,6 +204,11 @@ public class Player : BaseBehavior {
 
 	public bool canThrowSeed {
 		get {
+			//need to make sure they have seeds unlocked
+			//player will always get vine first
+			if(!vineUnlocked)
+				return false;
+
 			return true;
 		}
 	}
@@ -339,6 +350,22 @@ public class Player : BaseBehavior {
 		currentSeed = seed;
 	}
 
+	public void SetReadSign(bool status){
+		canReadSign = status;
+	}
+
+	public void SetCurrentSign(GameObject sign){
+		currentSign = sign;
+	}
+
+	public GameObject GetCurrentSign(){
+		return currentSign;
+	}
+
+	public bool GetReadSign(){
+		return  canReadSign;
+	}
+
 	//returns direction the player is currently facing as an int. 1=right, -1=left
 	//we don't call it derkrection
 	public int GetDirection()
@@ -352,8 +379,8 @@ public class Player : BaseBehavior {
 
 	void Kill()
 	{
-		Debug.Log ("Killed Called");
-		spawner = GameObject.Find ("Spawner");
+		//Debug.Log ("Killed Called");
+		spawner = GameObject.FindGameObjectWithTag ("Spawner");
 		Vector3 fruitPosition = new Vector3(spawner.transform.position.x,spawner.transform.position.y+4f, 0);
 		fruit = (GameObject)Resources.Load ("RespawnFruit");
 		fruit.transform.position = fruitPosition;
@@ -363,7 +390,8 @@ public class Player : BaseBehavior {
 		transform.GetComponent<PlayerController> ().checkHealth ();
 
 		SideScrollerCameraController controller = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<SideScrollerCameraController>();
-		controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
+		//controller.MoveToPlayer(spawner.transform.position.x, spawner.transform.position.y + 4f);
+		controller.MoveToPosition (spawner.transform.position.x, spawner.transform.position.y + 4f, true);
 		Instantiate (fruit);
 		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
 	}
