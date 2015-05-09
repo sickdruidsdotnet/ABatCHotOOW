@@ -15,7 +15,7 @@ public class SunPulser : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (counter <= 0) {
 			transform.rotation = startRot;
 			counter = pulseTime;

@@ -10,9 +10,9 @@ public class FernSeed : Seed {
 		// set hydrationGoal to match VineSeed requirements
 		this.hydrationGoal = 20;
 		
-		this.plantType = "FernPlant";
+		this.plantType = "FernPlant/FernPlant";
 		
-		Debug.Log("FernSeed created");
-		Debug.Log("FernSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("FernSeed created");
+		//Debug.Log("FernSeed hydrationGoal: " + hydrationGoal);
 	}
 }

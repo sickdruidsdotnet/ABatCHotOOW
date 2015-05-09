@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
-	
+
+	public InputHandler playerInput;
 	
 	public float inputDeadZone = 0.05f;
     
@@ -11,6 +13,12 @@ public class PlayerController : BaseBehavior {
 		
 	public bool running = false;
 	public bool alwaysRun = false;
+	public bool isRunning = false;
+
+	public bool isDashing = false;
+	public bool isJumping = false;
+	public bool isAirDashing = false;
+	public bool isStunned = false;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -22,6 +30,9 @@ public class PlayerController : BaseBehavior {
 	public bool canControl;
 	public int stunTimer;
 
+	public bool canConvert = false;
+	public GameObject conversionTarget;
+
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
@@ -30,11 +41,16 @@ public class PlayerController : BaseBehavior {
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
 
+	public GameObject[] activeSeeds;
+
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
     void Start()
     {
+//		Debug.Log (Input.GetJoystickNames()[0]);
+		//get the input handler and reference that instead
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -81,7 +97,7 @@ public class PlayerController : BaseBehavior {
 
 		canControl = true;
 		stunTimer = 0;
-
+		activeSeeds = new GameObject[3];
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -92,7 +108,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//check to see if blossoms are up-to-date
-		checkHealth ();
+		//checkHealth ();
 
 		//debug, remove this when we get it properly detaching via health drops
 		if (Input.GetKey ("1")) {
@@ -102,6 +118,9 @@ public class PlayerController : BaseBehavior {
 					blossoms[i].GetComponent<blossomMover>().detach ();
 			}
 		}
+
+		if (playerInput.jumpUp || !canControl)
+			StopJump();
 
 		// these functions should not directly move the player. They only handle input, and 
 		// send information to the motor, which will move the player in UpdateMotor().
@@ -117,8 +136,16 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
-		if (player.isGrounded && player.dashed)
-			player.dashed = false;
+		if (player.isGrounded && player.airDashed)
+			player.airDashed = false;
+		if (!player.isGrounded && player.isDashing)
+			isAirDashing = true;
+
+		if (player.isDashing && (Math.Abs (Convert.ToDouble (player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides)) {
+			isDashing = false;
+			player.isDashing = false;
+			isAirDashing = false;
+		}
 
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
@@ -147,16 +174,15 @@ public class PlayerController : BaseBehavior {
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
-			
-		running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 				
-		horizontal  = Input.GetAxis("Horizontal");
+		horizontal  = playerInput.xMove;
         //Debug.Log("Horizontal input is: " + horizontal);
         if (Mathf.Abs(horizontal) < inputDeadZone)
         {
             horizontal = 0f;
 		}
 		else{
+			isRunning = true;
 			//now we do some checks and corrections depending on how the player is facing
 			if (horizontal < 0 && isFacingRight) //facing right, pushing left
 			{
@@ -190,12 +216,13 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning()) {
+		if (!canControl || player.isSunning() || player.isConverting()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
 		if (pendingMovementInput.magnitude == 0) {
 			running = false;
+			isRunning = false;
 			if (wasRunning) {
 				player.Broadcast("OnStopRunning");	
 			}
@@ -215,48 +242,71 @@ public class PlayerController : BaseBehavior {
 		}
 
 	}
-	
+
 	protected void HandleActionInput() {
 
-		float horizontal2 = Input.GetAxis("Horizontal 2");
-		float vertical2 = Input.GetAxis("Vertical 2");
-
-		if (horizontal2 > 0)
-			player.SetCurrentSeed(Player.SeedType.TreeSeed);
-		if (horizontal2 < 0)
-			player.SetCurrentSeed(Player.SeedType.VineSeed);
-		if (vertical2 > 0)
-			player.SetCurrentSeed(Player.SeedType.FernSeed);
-		if (vertical2 < 0)
-			player.SetCurrentSeed(Player.SeedType.FlowerSeed);
-
-
-		//Debug.Log ("X-Axis: " + Input.GetAxis ("Horizontal 2"));
-		//Debug.Log ("Y-Axis: " + Input.GetAxis ("Vertical 2"));
+		if (playerInput.primaryInput == "Keyboard") {
+			if(playerInput.firstSeedDown && player.vineUnlocked)
+				player.SetCurrentSeed (Player.SeedType.VineSeed);
+			else if(playerInput.secondSeedDown && player.treeUnlocked)
+				player.SetCurrentSeed (Player.SeedType.TreeSeed);
+			else if(playerInput.thirdSeedDown && player.fluerUnlocked)
+				player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+		} else {
+			float horizontal2 = playerInput.xSelect;
+			float vertical2 = playerInput.ySelect;
+			if (new Vector2 (horizontal2, vertical2).magnitude >= 0.5f) {
+				float angle = Vector2.Angle (Vector2.up * -1f, new Vector2 (horizontal2, vertical2));
+				if (player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0) {
+					player.SetCurrentSeed (Player.SeedType.TreeSeed);
+				} else if (player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
+					player.SetCurrentSeed (Player.SeedType.FlowerSeed);
+				} else if (player.vineUnlocked && angle < 60) {
+					player.SetCurrentSeed (Player.SeedType.VineSeed);
+				}
+			}
+		}
 
 		if(!canControl)
 			return;
 
-		if (!player.isSunning()) {
-			if (Input.GetButtonDown ("Jump")) {
-				Jump ();
+		if (!player.isSunning() && !player.isConverting()) {
+			if (playerInput.jumpDown) {
+				if(player.GetReadSign())
+					ReadSign();
+				else
+					Jump ();
 			}
-			if (Input.GetButtonDown ("ThrowSeed")) {
+			if (playerInput.throwSeedDown) {
 				ThrowSeed ();
 			}
-			if (Input.GetButtonDown ("Dash")) {
+			if (playerInput.dashDown) {
 				Dash ();
 			}
 		}
-		if (Input.GetButtonDown ("Sun")) {
-			Sun();
-			player.SetSunning(true);
+		if (playerInput.sunDown) {
+			if(canConvert){
+				AnimalConvert();
+				player.SetConverting(true);
+			}
+			else{
+				Sun();
+				player.SetSunning(true);
+			}
 		}
 	}
 	
 	protected void Jump() {
 		player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
+		isJumping = true;
+		isRunning = false;
+	}
+
+	protected void StopJump() {
+		player.Broadcast("OnStopJumpRequest");
+		player.motor.StopJump();
+		isJumping = false;
 	}
 
 	protected void ThrowSeed() {
@@ -267,6 +317,8 @@ public class PlayerController : BaseBehavior {
 	protected void Dash() {
 		player.Broadcast("OnDashRequest");
 		player.motor.Dash();
+		isDashing = true;
+		isRunning = false;
 	}
 
 	protected void Sun() {
@@ -274,12 +326,23 @@ public class PlayerController : BaseBehavior {
 		player.motor.Sun();
 	}
 
+	protected void AnimalConvert() {
+		player.Broadcast("OnConvertRequest");
+		player.motor.Convert();
+	}
+
+	public void ReadSign(){
+		player.motor.ReadSign();
+		player.Broadcast ("OnReadSignRequest");
+		}
+
 	public void HandleStun()
 	{
 		if (!canControl) {
 			if(stunTimer <= 0)
 			{
 				canControl = true;
+				isStunned = false;
 			}
 			else
 			{
@@ -321,5 +384,14 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
+	}
+
+	public void updateActiveSeeds(int slot, GameObject seed)
+	{
+		if (activeSeeds [slot] != null) {
+			Destroy (activeSeeds [slot]);
+		}
+		activeSeeds [slot] = seed;
+
 	}
 }
