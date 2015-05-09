@@ -12,7 +12,7 @@ public class Seed : MonoBehaviour
     public Soil soil;
     private int collectionTimer;
     private int collectionDelay;
-	private int soilIndex;
+	public int soilIndex;
 
     public int testInt;
     
@@ -38,6 +38,7 @@ public class Seed : MonoBehaviour
 	{
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+		gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = false;
 	}
 
 
@@ -45,6 +46,7 @@ public class Seed : MonoBehaviour
     {
         if(isPlanted)
         {
+			gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = true;
             if(soil != null)
             {
                 if(soil.GetHydrationLevel() > 0)
