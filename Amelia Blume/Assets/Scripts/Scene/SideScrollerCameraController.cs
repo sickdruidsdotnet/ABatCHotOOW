@@ -252,11 +252,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 			else {
 				Vector3 centerCamPoint = new Vector3( GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)).x,
 													GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)).y, 0);
-				float distFromCenter = Mathf.Abs(centerCamPoint.x - trackable.transform.position.x);
+				float distFromCenterx = Mathf.Abs(centerCamPoint.x - trackable.transform.position.x);
+				float distFromCentery = Mathf.Abs(centerCamPoint.y - trackable.transform.position.y);
 				index = trackables.IndexOf(trackable);
 				//let's check if it should be being tracked
 				//Debug.DrawLine(centerCamPoint, trackable.transform.position);
-				if(distFromCenter <= maxScreenDist)
+				if(distFromCenterx <= maxScreenDist && distFromCentery <= maxScreenDist )
 				{
 					
 					isTracking = true;

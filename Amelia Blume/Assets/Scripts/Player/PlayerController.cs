@@ -41,6 +41,8 @@ public class PlayerController : BaseBehavior {
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
 
+	public GameObject[] activeSeeds;
+
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
 	
@@ -95,7 +97,7 @@ public class PlayerController : BaseBehavior {
 
 		canControl = true;
 		stunTimer = 0;
-
+		activeSeeds = new GameObject[3];
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -382,5 +384,14 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
+	}
+
+	public void updateActiveSeeds(int slot, GameObject seed)
+	{
+		if (activeSeeds [slot] != null) {
+			Destroy (activeSeeds [slot]);
+		}
+		activeSeeds [slot] = seed;
+
 	}
 }

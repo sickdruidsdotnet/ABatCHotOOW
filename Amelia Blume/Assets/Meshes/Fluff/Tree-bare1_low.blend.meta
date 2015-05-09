@@ -1,55 +1,13 @@
 fileFormatVersion: 2
-guid: 66a96454115d24d8f909f2144a321842
+guid: bf569549aed86d041b02ea1744795ad3
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: flower_001_007
-    100002: flower_001_008
-    100004: flower_001_013
-    100006: flower_001_026
-    100008: flower_001_028
-    100010: flower_001_029
-    100012: flower_001_030
-    100014: flower_star_long2
-    100016: flower_star_long2_001
-    100018: //RootNode
-    400000: flower_001_007
-    400002: flower_001_008
-    400004: flower_001_013
-    400006: flower_001_026
-    400008: flower_001_028
-    400010: flower_001_029
-    400012: flower_001_030
-    400014: flower_star_long2
-    400016: flower_star_long2_001
-    400018: //RootNode
-    2300000: flower_001_007
-    2300002: flower_001_008
-    2300004: flower_001_013
-    2300006: flower_001_026
-    2300008: flower_001_028
-    2300010: flower_001_029
-    2300012: flower_001_030
-    2300014: flower_star_long2
-    2300016: flower_star_long2_001
-    3300000: flower_001_007
-    3300002: flower_001_008
-    3300004: flower_001_013
-    3300006: flower_001_026
-    3300008: flower_001_028
-    3300010: flower_001_029
-    3300012: flower_001_030
-    3300014: flower_star_long2
-    3300016: flower_star_long2_001
-    4300000: flower_001_028
-    4300002: flower_001_029
-    4300004: flower_001_030
-    4300006: flower_001_008
-    4300008: flower_001_013
-    4300010: flower_001_007
-    4300012: flower_001_026
-    4300014: flower_star_long2_001
-    4300016: flower_star_long2
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: 1_tree
     7400000: Default Take
     9500000: //RootNode
   materials:

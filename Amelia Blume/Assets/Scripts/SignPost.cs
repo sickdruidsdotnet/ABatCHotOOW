@@ -259,7 +259,11 @@ public class SignPost : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
+<<<<<<< HEAD
 
+=======
+			//Debug.Log ("enter");
+>>>>>>> master
 			textDisplay = "";
 		}
 	}
@@ -267,7 +271,11 @@ public class SignPost : MonoBehaviour {
 	void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
+<<<<<<< HEAD
 
+=======
+			//Debug.Log ("Exit");
+>>>>>>> master
 			amelia.SetReadSign(false);
 
 			textDisplay = "";
