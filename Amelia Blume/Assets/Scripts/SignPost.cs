@@ -126,21 +126,17 @@ public class SignPost : MonoBehaviour {
 							Debug.Log ("Stop Here");
 							continueCurrentPassage = true;
 							keepWriting = false;
+						}
 					}
-				}
 
-				if(sentenceIndex < sentence.Length - 1){
-					sentenceIndex++;
-				}else{
-					keepWriting = false;
+					if(sentenceIndex < sentence.Length - 1){
+						sentenceIndex++;
+					}else{
+						keepWriting = false;
+					}
+
 				}
-				//if(!continueCurrentPassage){
-				//	sentenceIndex++;
-				//}
-			}
 			uiText.text = textDisplay;
-			//Debug.Log (uiText.text.Length);
-			//Debug.Log ("Line Count: " + uiText.cachedTextGenerator.lineCount);
 			nameText.text = speaker;
 		}
 		
@@ -277,7 +273,8 @@ public class SignPost : MonoBehaviour {
 			textDisplay = "";
 			beingRead = false;
 			wordsIndex = 0;
-
+			continueCurrentPassage = false;
+			stillWritingCurrentPassage = false;
 			uiText.enabled = false;
 			nextPassage = startingPassage;
 			currentPassage = "";
