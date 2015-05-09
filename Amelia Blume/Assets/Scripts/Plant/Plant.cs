@@ -17,6 +17,9 @@ public class Plant : MonoBehaviour
     public float matureRate = 0.05f;
     public float maturityGoal;
     public bool isMaturing = false;
+
+	public float startTime;
+	public float lifeTime = 180f;
     
     // Constructor
     public Plant()
@@ -42,6 +45,7 @@ public class Plant : MonoBehaviour
     void Start()
     {
         // this can't be in the constructor or Unity complains
+		startTime = Time.time;
     }
 
     public virtual void Update()
@@ -90,6 +94,8 @@ public class Plant : MonoBehaviour
         collectionTimer++;
 
         grow();
+		if (Time.time - startTime >= lifeTime)
+			Destroy (gameObject);
     }
 
     // Grows the plant.
