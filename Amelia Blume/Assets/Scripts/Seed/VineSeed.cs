@@ -13,9 +13,10 @@ public class VineSeed : Seed
         // set hydrationGoal to match VineSeed requirements
         this.hydrationGoal = 20;
 
-        this.plantType = "VinePlant_Procedural";
+        this.plantType = "VinePlant/VinePlant_Procedural";
 
-        Debug.Log("VineSeed created");
-        Debug.Log("VineSeed hydrationGoal: " + hydrationGoal);
+        //Debug.Log("VineSeed created");
+		//Debug.Log("VineSeed plant type is " + plantType);
+        //Debug.Log("VineSeed hydrationGoal: " + hydrationGoal);
     }
 }

@@ -46,7 +46,7 @@ public class ConverterRay : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (isMainRay) {
 			HandleMainRay();
 			return;

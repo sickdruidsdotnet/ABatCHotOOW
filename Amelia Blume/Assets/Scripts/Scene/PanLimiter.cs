@@ -12,9 +12,16 @@ public class PanLimiter : MonoBehaviour {
 	public bool totalVerticalLimiter;
 	public bool totalHorizontalLimiter;
 
+	//forces the camera to pan until this is just barely in sight. Prevent zooming from looking at 
+	//normally out of sight geometry
+	public bool forcePan;
+
+	bool isVisible;
+
 	GameObject mainCameraObject;
-	//Camera mainCamera;
+	Camera mainCamera;
 	SideScrollerCameraController cameraScript;
+
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +31,7 @@ public class PanLimiter : MonoBehaviour {
 		if (mainCameraObject == null) {
 			Debug.LogError ("No Main Camera in scene");
 		} else {
-			//mainCamera = mainCameraObject.GetComponent<Camera>();
+			mainCamera = mainCameraObject.GetComponent<Camera>();
 			cameraScript = mainCameraObject.GetComponent<SideScrollerCameraController>();
 		}
 	}
@@ -42,9 +49,15 @@ public class PanLimiter : MonoBehaviour {
 			                                 transform.position.z);
 		}
 
+		//handling force pan movement stuff
+		if (isVisible && forcePan) {
+			checkForcePan();
+		}
+
 		//ignoring the editor camera when unrendering is more difficult than it should be
 		Vector2 camPosition = mainCameraObject.camera.WorldToViewportPoint (transform.position);
 		if (camPosition.x < 0 || camPosition.x > 1 || camPosition.y < 0 || camPosition.y > 1) {
+			isVisible = false;
 			if (limitLeft) {
 				cameraScript.canPanLeft = true;
 			}
@@ -63,8 +76,56 @@ public class PanLimiter : MonoBehaviour {
 		}
 	}
 
+	//returns true it if moved the camera
+	public bool checkForcePan()
+	{
+		if (!forcePan)
+			return false;
+
+		bool moved = false;
+		Vector3 viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+		if (limitLeft) {
+			while(viewPoint.x > 0.000001f && viewPoint.x <= 1)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0.001f, 0f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}			
+		
+		if (limitRight) {
+			while(viewPoint.x < 0.999999f && viewPoint.x >= 0f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(-0.001f, 0f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		
+		if (limitUp) {
+			while(viewPoint.y < 0.999999f && viewPoint.y >= 0f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0f, -0.001f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		
+		if (limitDown) {
+			//reposition camera until it is at 0.01f
+			while(viewPoint.y > 0.000001f && viewPoint.y <= 1f)
+			{
+				mainCameraObject.transform.Translate(new Vector3(0f, 0.001f, 0f));
+				viewPoint  = mainCamera.WorldToViewportPoint(transform.position);
+				moved = true;
+			}
+		}
+		return moved;
+	}
+
 	void OnWillRenderObject()
 	{
+		isVisible = true;
 		if (Camera.current.tag == "MainCamera") {
 			if (limitLeft) {
 				cameraScript.canPanLeft = false;

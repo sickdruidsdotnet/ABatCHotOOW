@@ -11,11 +11,15 @@ public class Plant : MonoBehaviour
     public Soil soil;
     public int collectionTimer;
     public int collectionDelay;
-    private Vector3 baseScale;
     private float scaleFactor;
 	private float Sunfactor;
 	private int soilIndex;
-	private GameObject amelia;
+    public float matureRate = 0.05f;
+    public float maturityGoal;
+    public bool isMaturing = false;
+
+	public float startTime;
+	public float lifeTime = 180f;
     
     // Constructor
     public Plant()
@@ -24,7 +28,7 @@ public class Plant : MonoBehaviour
         waterCount = 0;
         // waterCount threshold. once reached, sproutPlant() will be called
         hydrationGoal = 100;
-        // True if the seed is inside of soil object
+
         maturity = 0.0f;
 
         // initialize collection timer and delay
@@ -41,14 +45,30 @@ public class Plant : MonoBehaviour
     void Start()
     {
         // this can't be in the constructor or Unity complains
-        baseScale = transform.localScale;
-		amelia = GameObject.Find ("Player");
+		startTime = Time.time;
     }
 
-    void Update()
+    public virtual void Update()
     {
+        // maturity is value between 0 and 1. Used for linearly interpolating growth goals.
+        maturityGoal = Mathf.Clamp01((float)waterCount / (float)hydrationGoal);
 
-        maturity = (float)waterCount / (float)hydrationGoal;
+        //bool wasMaturing = isMaturing;
+
+        if (maturity < maturityGoal)
+        {
+            isMaturing = true;
+            maturity += matureRate * Time.deltaTime;
+
+            if (maturity > maturityGoal)
+            {
+                maturity = maturityGoal;
+            }
+        }
+        else
+        {
+            isMaturing = false;
+        }
 
         if(soil != null)
         {
@@ -57,14 +77,13 @@ public class Plant : MonoBehaviour
                 if (collectionTimer > collectionDelay)
                 {
                     collectWater();
-                    grow();
                     collectionTimer = 0;
                 }
             }
         }
         else
         {
-            Debug.Log("Plant has no soil!");
+            //Debug.Log("Plant has no soil!");
         }
         /*
         if (amelia.GetComponent<Player>().isSunning()){
@@ -73,6 +92,10 @@ public class Plant : MonoBehaviour
         }
         */
         collectionTimer++;
+
+        grow();
+		if (Time.time - startTime >= lifeTime)
+			Destroy (gameObject);
     }
 
     // Grows the plant.
@@ -80,9 +103,11 @@ public class Plant : MonoBehaviour
     {
         // do something with procedural growth.
 
+        /*
         maturity = (float)waterCount / (float)hydrationGoal;
         scaleFactor = 2.0f * maturity * Sunfactor;
         transform.localScale = new Vector3(baseScale.x + scaleFactor, baseScale.y + scaleFactor, baseScale.z + scaleFactor);
+        */
     }
 
     public void collectWater()

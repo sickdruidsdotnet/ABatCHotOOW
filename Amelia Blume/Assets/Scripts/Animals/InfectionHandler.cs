@@ -21,16 +21,16 @@ public class InfectionHandler : MonoBehaviour {
 				}
 			}
 		}
-		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (GetComponentInChildren<MeshRenderer> ().material.color);
+		Vector3 hsv = RGBandHSVconverter.RGBtoHSV (GetComponentInChildren<Renderer> ().material.color);
 		hsv = new Vector3 (hsv.x, hsv.y - saturationDif, hsv.z);
 		infectColor = RGBandHSVconverter.HSVtoRGB (hsv.x, hsv.y, hsv.z);
 
-		originalColor = GetComponentInChildren<MeshRenderer> ().material.color;
-		GetComponentInChildren<MeshRenderer> ().material.color = infectColor;
+		originalColor = GetComponentInChildren<Renderer> ().material.color;
+		GetComponentInChildren<Renderer> ().material.color = infectColor;
 	}
 	
 	public void clearInfection(){
-		GetComponentInChildren<MeshRenderer> ().material.color = originalColor;
+		GetComponentInChildren<Renderer> ().material.color = originalColor;
 		Destroy (infectionObject);
 	}
 }

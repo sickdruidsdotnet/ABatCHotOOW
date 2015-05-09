@@ -3,23 +3,25 @@ using System.Collections;
 
 public class Converter : MonoBehaviour {
 
+	public InputHandler playerInput;
+
 	public float life = 200;
 	float scaleValue;
 	private GameObject player;
-	bool fading = true;
 	bool conversionSuccess = false;
 	public GameObject target;
 	void Start()
 	{
+		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
 		player = GameObject.Find ("Player");
 		scaleValue = transform.localScale.x / 11f;
 	}
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		HandleInput ();
 		life--; 
 		if (life < 0) {
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 		}
 
 		if (player.GetComponent<Player> ().isConverting () || conversionSuccess) {
@@ -57,7 +59,7 @@ public class Converter : MonoBehaviour {
 	}
 
 	protected void HandleInput() {
-		if (Input.GetButtonUp ("Sun")) {
+		if (playerInput.sunUp) {
 			player.GetComponent<Player>().SetConverting(false);
 			life = 60;
 		}
