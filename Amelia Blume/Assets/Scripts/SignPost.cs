@@ -3,26 +3,26 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
-	bool stillWritingCurrentPassage = false;
+	public bool stillWritingCurrentPassage = false;
 	private int maxCharCount = 150;
 	public bool continueCurrentPassage = false;
 	int wordsIndex = 0;
 	GameObject player;
 	Player amelia;
-	public string[] words; //Lines of txt file
+	string[] words; //Lines of txt file
 	bool beingRead = false;
 	public TextAsset file;
 	int sentenceIndex = 0;
 	string textDisplay = "";
-	public string sentence = ""; //current line being printed
-	public string[] sentenceWords; //words in current Sentence
+	string sentence = ""; //current line being printed
+	string[] sentenceWords; //words in current Sentence
 	float delay = 0.03f;
 	float nextUse;
 	public string startingPassage;
-	public string nextPassage;
-	public string currentPassage;
-	public string speaker;
-	public string connection;
+	string nextPassage;
+	string currentPassage;
+	string speaker;
+	string connection;
 
 	char[] charsToTrim = { '[' ,']'};
 	char[] titleSplit = { '[', ']' , ':'};
@@ -120,6 +120,10 @@ public class SignPost : MonoBehaviour {
 		if (beingRead) {
 			bool keepWriting = true;
 				while(keepWriting){
+					if(sentenceIndex > sentence.Length-1){
+						keepWriting = false;
+						return;
+					}
 					textDisplay += sentence [sentenceIndex];
 					if(textDisplay.Length > maxCharCount){
 						if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
@@ -129,7 +133,7 @@ public class SignPost : MonoBehaviour {
 						}
 					}
 
-					if(sentenceIndex < sentence.Length - 1){
+					if(sentenceIndex <= sentence.Length - 1){
 						sentenceIndex++;
 					}else{
 						keepWriting = false;
@@ -193,7 +197,7 @@ public class SignPost : MonoBehaviour {
 					sentenceWords = words [currentIndex].Split (titleSplit);
 					sentenceWords[2].Trim(' ');
 					for(int i = 0 ; i < sentenceWords.Length; i++){
-						Debug.Log (sentenceWords[i] + "  " + i);
+//						Debug.Log (sentenceWords[i] + "  " + i);
 					}
 					if (sentenceWords [2].Contains(nextPassage)) {
 						lookingForPassage = false;
@@ -225,16 +229,9 @@ public class SignPost : MonoBehaviour {
 
 			sentenceWords = words [wordsIndex].Split (titleSplit);
 			sentence+= sentenceWords[0];
-			//for (int i = 0; i < sentenceWords.Length; i++) {
-			//	if (!sentenceWords [i].StartsWith ("[[")) {
-			//		sentence += sentenceWords [i];
-			//		sentence += " ";
-			//	}
-			//}
+
 			if(sentenceWords.Length > 2){
-			//if (sentenceWords [sentenceWords.Length - 3].Contains ("[[")) {
 				connection = sentenceWords[2];
-				//connection = sentenceWords [sentenceWords.Length - 1];
 				connection = connection.Trim (charsToTrim);
 
 				nextPassage = connection;
@@ -259,11 +256,7 @@ public class SignPost : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
-<<<<<<< HEAD
 
-=======
-			//Debug.Log ("enter");
->>>>>>> master
 			textDisplay = "";
 		}
 	}
@@ -271,11 +264,7 @@ public class SignPost : MonoBehaviour {
 	void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
-<<<<<<< HEAD
 
-=======
-			//Debug.Log ("Exit");
->>>>>>> master
 			amelia.SetReadSign(false);
 
 			textDisplay = "";
