@@ -12,7 +12,7 @@ public class Seed : MonoBehaviour
     public Soil soil;
     private int collectionTimer;
     private int collectionDelay;
-	private int soilIndex;
+	public int soilIndex;
 
     public int testInt;
     
