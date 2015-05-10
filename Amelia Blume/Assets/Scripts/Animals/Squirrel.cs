@@ -45,6 +45,12 @@ public class Squirrel : Animal {
 	void FixedUpdate () {
 
 		CheckRotation ();
+		if (targetSeed == null) {
+			GetTargetSeed();
+			lookingForSeed = true;
+		} else {
+			lookingForSeed = false;
+		}
 
 		if (!lookingForSeed) 
 		{
@@ -53,7 +59,7 @@ public class Squirrel : Animal {
 
 
 		if (lookingForSeed) {
-			FindSeeds ();
+			GetTargetSeed ();
 			if(!chasingPlayer)
 				moveToBush();
 			else
@@ -138,6 +144,7 @@ public class Squirrel : Animal {
 
 	void DigSeeds()
 	{
+		//Debug.Log ("Dig Seeds");
 		if (targetSeed != null) {
 			if (lookingForBush) {
 				moveToBush ();
@@ -150,20 +157,23 @@ public class Squirrel : Animal {
 				transform.position = Vector3.MoveTowards (transform.position, targetSeed.transform.position, speed);
 			}
 		} else {
-			lookingForSeed = true;
+			GetTargetSeed();
 		}
 	}
 
 	void GetTargetSeed()
 	{
+//		Debug.Log ("Get Target Seed");
 		FindSeeds ();
 		if (seeds.Length > 0) {
 			int randomSeed = Random.Range (0, seeds.Length);
 			targetSeed = seeds [randomSeed];
 			currentSeed = targetSeed.GetComponent<Seed> ();
 			chasingPlayer = false;
+			lookingForSeed = false;
 		} else {
 			chasingPlayer = true;
+			lookingForSeed = true;
 		}
 	}
 
@@ -225,10 +235,10 @@ public class Squirrel : Animal {
 			if(other.gameObject == targetSeed){
 				if(currentSeed.getHealth() <= 0){
 					Destroy (other.gameObject);
-					lookingForSeed = true;
+					//lookingForSeed = true;
 				}else{
 					currentSeed.setHealth(1);
-					Debug.Log (currentSeed.getHealth());
+					//Debug.Log (currentSeed.getHealth());
 				}
 			}
 			//GetTargetSeed();
@@ -242,7 +252,7 @@ public class Squirrel : Animal {
 		//Debug.Log ("trigger");
 		if (other.gameObject.tag == "Bush") {
 			if(other.gameObject == targetBush){
-				Debug.Log ("Hit Target Bush");
+				//Debug.Log ("Hit Target Bush");
 				if(lookingForBush)
 					TeleportToBush();
 			}
