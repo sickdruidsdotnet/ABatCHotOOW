@@ -6,8 +6,8 @@ public class Squirrel : Animal {
 	GameObject[] bushes;
 	Seed currentSeed;
 	public GameObject targetSeed;
-	public GameObject targetBush;
-	public GameObject nextBush;
+	public GameObject targetBush; //From Bush
+	public GameObject nextBush; //To Bush
 	GameObject player;
 	public bool lookingForSeed = true;
 	public bool lookingForBush = false;
@@ -38,6 +38,7 @@ public class Squirrel : Animal {
 		seeds = GameObject.FindGameObjectsWithTag ("Seed");
 		speed = walkSpeed;
 		bushes = GameObject.FindGameObjectsWithTag ("Bush");
+		FindBush ();
 	}
 	
 	// Update is called once per frame
@@ -62,42 +63,67 @@ public class Squirrel : Animal {
 			GetTargetSeed();
 		}
 
-			if (Mathf.Abs (player.transform.position.y - this.transform.position.y) > 1)
+		if (chasingPlayer) {
+			if (Mathf.Abs (player.transform.position.y - this.transform.position.y) > 3) {
 				lookingForBush = true;
-			else
+			} else {
 				lookingForBush = false;
+			}
+		} else {
+			if (Mathf.Abs (targetSeed.transform.position.y - this.transform.position.y) > 3) {
+				lookingForBush = true;
+			} else {
+				lookingForBush = false;
+			}
+		}
 
+		if (lookingForBush) {
+			//Debug.Log (Mathf.Abs (player.transform.position.y - this.transform.position.y));
+			if(chasingPlayer)
+				findNextBush(player.transform.position);
+			else
+				findNextBush(targetSeed.transform.position);
+		}
 
 	}
 
 	void moveToBush()
 	{
 		//Do Stuff
+		FindBush ();
+		if (targetBush.transform.position.x > this.transform.position.x) {
+			isFacingRight = true;
+		} else {
+			isFacingRight = false;
+		}
 		transform.position = Vector3.MoveTowards (transform.position, targetBush.transform.position, speed);
 	}
 
 	void moveToPlayer()
 	{
-		//Do Stuff
-		if (player.transform.position.x > this.transform.position.x) {
-			isFacingRight = true;
-		} else{
-			isFacingRight = false;
+		if (lookingForBush) {
+			moveToBush();
+		} else {
+			if (player.transform.position.x > this.transform.position.x) {
+				isFacingRight = true;
+			} else {
+				isFacingRight = false;
+			}
+			Vector3 playerPos = new Vector3 (player.transform.position.x, this.transform.position.y, this.transform.position.z);
+			transform.position = Vector3.MoveTowards (transform.position, playerPos, speed);
 		}
-		Vector3 playerPos = new Vector3 (player.transform.position.x, this.transform.position.y, this.transform.position.z);
-		transform.position = Vector3.MoveTowards (transform.position, playerPos, speed);
 	}
 
 	void FindBush()
 	{
-		int randomBush = Random.Range (0, bushes.Length);
-		while (nextBush == bushes[randomBush]) {
-			randomBush++;
-			if(randomBush == bushes.Length)
-				randomBush = 0;
+		int closestBush = 0;
+		for (int i = 0; i < bushes.Length; i++) {
+			if(Vector3.Distance(this.transform.position, bushes[i].transform.position) 
+			   < Vector3.Distance(this.transform.position, bushes[closestBush].transform.position)){
+				closestBush = i;
+			}
 		}
-		nextBush = bushes [randomBush];
-		//lookingForBush = false;
+		targetBush = bushes[closestBush];
 	}
 
 	void FindSeeds()
@@ -112,22 +138,44 @@ public class Squirrel : Animal {
 
 	void DigSeeds()
 	{
-		if(targetSeed != null)
-			transform.position = Vector3.MoveTowards (transform.position, targetSeed.transform.position, speed);
+		if (targetSeed != null) {
+			if (lookingForBush) {
+				moveToBush ();
+			} else {
+				if (targetSeed.transform.position.x > this.transform.position.x) {
+					isFacingRight = true;
+				} else {
+					isFacingRight = false;
+				}
+				transform.position = Vector3.MoveTowards (transform.position, targetSeed.transform.position, speed);
+			}
+		} else {
+			lookingForSeed = true;
+		}
 	}
 
 	void GetTargetSeed()
 	{
-		int randomSeed = Random.Range (0, seeds.Length);
-		targetSeed = seeds [randomSeed];
-		currentSeed = targetSeed.GetComponent<Seed>();
-		chasingPlayer = false;
+		FindSeeds ();
+		if (seeds.Length > 0) {
+			int randomSeed = Random.Range (0, seeds.Length);
+			targetSeed = seeds [randomSeed];
+			currentSeed = targetSeed.GetComponent<Seed> ();
+			chasingPlayer = false;
+		} else {
+			chasingPlayer = true;
+		}
 	}
 
 	void findNextBush(Vector3 targetPosition)
 	{
-		//if chasing player find bush closest to her
-		//else find bush closest to target seed
+		int closestBush = 0;
+		for (int i = 0; i < bushes.Length; i++) {
+			if(Vector3.Distance(targetPosition, bushes[i].transform.position) < Vector3.Distance(targetPosition, bushes[closestBush].transform.position)){
+				closestBush = i;
+			}
+		}
+		nextBush = bushes[closestBush];
 	}
 
 	void TeleportToBush()
