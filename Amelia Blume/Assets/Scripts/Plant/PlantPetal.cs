@@ -158,9 +158,6 @@ public class PlantPetal : MonoBehaviour
 				//printSkeletonInfo();
 			}
 		}
-
-			
-
 	}
 
 	private void createInitialPetalSkeleton()
