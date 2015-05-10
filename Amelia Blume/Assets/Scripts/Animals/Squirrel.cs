@@ -4,6 +4,7 @@ using System.Collections;
 public class Squirrel : Animal {
 	GameObject[] seeds;
 	GameObject[] bushes;
+	Seed currentSeed;
 	public GameObject targetSeed;
 	public GameObject targetBush;
 	public GameObject nextBush;
@@ -14,11 +15,14 @@ public class Squirrel : Animal {
 	public float walkSpeed = 0.05f;
 
 	public bool chasingPlayer = true;
+	//int seedHealth = 120;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public int faceDirection;
 	int rotationCooldown;
 	int chargeUpCooldown;
+	int hitCoolDown = -1;
+	int damageValue = 1;
 	
 	//locking character to axis
 	public float lockedAxisValue;
@@ -37,14 +41,9 @@ public class Squirrel : Animal {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (transform.rotation.eulerAngles.y >= 90 && transform.rotation.eulerAngles.y <= 270) {
-			faceDirection = 1;
-			isFacingRight = true;
-		} else {
-			faceDirection = -1;
-			isFacingRight = false;
-		}
+	void FixedUpdate () {
+
+		CheckRotation ();
 
 		if (!lookingForSeed) 
 		{
@@ -63,19 +62,11 @@ public class Squirrel : Animal {
 			GetTargetSeed();
 		}
 
-		if (chasingPlayer) {
-			if (player.transform.position.y - this.transform.position.y > 1 ||
-				player.transform.position.y - this.transform.position.y < -1)
+			if (Mathf.Abs (player.transform.position.y - this.transform.position.y) > 1)
 				lookingForBush = true;
 			else
 				lookingForBush = false;
-		} else {
-			if (targetSeed.transform.position.y - this.transform.position.y > 1 ||
-			    targetSeed.transform.position.y - this.transform.position.y < -1)
-				lookingForBush = true;
-			else
-				lookingForBush = false;
-		}
+
 
 	}
 
@@ -88,7 +79,13 @@ public class Squirrel : Animal {
 	void moveToPlayer()
 	{
 		//Do Stuff
-		transform.position = Vector3.MoveTowards (transform.position, player.transform.position, speed);
+		if (player.transform.position.x > this.transform.position.x) {
+			isFacingRight = true;
+		} else{
+			isFacingRight = false;
+		}
+		Vector3 playerPos = new Vector3 (player.transform.position.x, this.transform.position.y, this.transform.position.z);
+		transform.position = Vector3.MoveTowards (transform.position, playerPos, speed);
 	}
 
 	void FindBush()
@@ -123,10 +120,11 @@ public class Squirrel : Animal {
 	{
 		int randomSeed = Random.Range (0, seeds.Length);
 		targetSeed = seeds [randomSeed];
+		currentSeed = targetSeed.GetComponent<Seed>();
 		chasingPlayer = false;
 	}
 
-	void findNextBush(Vector3 bushPosition)
+	void findNextBush(Vector3 targetPosition)
 	{
 		//if chasing player find bush closest to her
 		//else find bush closest to target seed
@@ -145,12 +143,46 @@ public class Squirrel : Animal {
 //		findNextBush ();
 	}
 
-	void OnCollisionEnter(Collision other)
+	void CheckRotation(){ 
+
+		Vector3 rotation = this.transform.eulerAngles;
+		//Debug.Log ("Y :" + rotation.y);
+
+
+		if (isFacingRight && rotation.y != 90) {
+			//Debug.Log("Difference from 90:" + "" +  (90 - rotation.y));
+			if(Mathf.Abs(90 - rotation.y) < 5){
+				this.transform.rotation = Quaternion.Euler(0,90,0);
+			}else{
+				//Debug.Log(rotation.y - 270f);
+				this.transform.Rotate (0, -5f, 0);
+			}
+		} else if (!isFacingRight && rotation.y != 270) {
+			//Debug.Log("Difference from 270: " + "" + (270 - rotation.y));
+			if(Mathf.Abs(270 - rotation.y) < 5){
+				this.transform.rotation = Quaternion.Euler(0,270,0);
+			}else{
+				//Debug.Log(this.transform.rotation.y - 90f);
+				this.transform.Rotate (0, 5f, 0);
+			}
+		}
+
+
+	}
+
+	void OnCollisionStay(Collision other)
 	{
 		//Debug.Log ("collision");
 		if (other.gameObject.tag == "Seed") {
-			Destroy (other.gameObject);
-			lookingForSeed = true;
+			if(other.gameObject == targetSeed){
+				if(currentSeed.getHealth() <= 0){
+					Destroy (other.gameObject);
+					lookingForSeed = true;
+				}else{
+					currentSeed.setHealth(1);
+					Debug.Log (currentSeed.getHealth());
+				}
+			}
 			//GetTargetSeed();
 		}
 
@@ -168,4 +200,31 @@ public class Squirrel : Animal {
 			}
 		}
 	}
+
+	void OnTriggerStay(Collider other){
+		if (other.gameObject.tag == "Player") {
+			//Debug.Log ("HIT");
+			if (hitCoolDown <= 0 && !isRestrained) {
+				if ((other.GetComponent<PlayerController> ().stunTimer <= 0 || other.GetComponent<PlayerController> ().canControl == true)) {	
+					int hitDirection;
+					
+					if (transform.position.x - other.transform.position.x >= 0) {
+						hitDirection = -1;
+					} else {
+						hitDirection = 1;
+					}
+					player.GetComponent<Player> ().ReduceHealth (damageValue);
+					//other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
+					if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
+						player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 8, 8f, 0f), 100f);
+					}
+					other.GetComponent<PlayerController> ().canControl = false;
+					other.GetComponent<PlayerController> ().stunTimer = 30;
+					//Debug.Log (player.GetComponent<Player> ().GetHealth ());
+					//hitCoolDown = 60;
+				}
+			}
+		}
+	}
+
 }
