@@ -636,7 +636,7 @@ public class PlantStalk : MonoBehaviour
 		petal.transform.localPosition += skeleton[node].startPoint;
 	}
 
-	public void repositionBud(List<GameObject> petals)
+	public void repositionBud(List<GameObject> petals, GameObject pollenGenerator = null)
 	{
 		// always make sure the bud is at the top node.
 		// since the top node changes, we'll need to fix this often.
@@ -647,6 +647,11 @@ public class PlantStalk : MonoBehaviour
 		{
 			petals[p].GetComponent<PlantPetal>().stalkNode = lastStalkNode;
 			repositionPetal(petals[p]);
+		}
+
+		if (pollenGenerator != null)
+		{
+			pollenGenerator.transform.position = transform.position + skeleton[lastStalkNode].startPoint;
 		}
 	}
 

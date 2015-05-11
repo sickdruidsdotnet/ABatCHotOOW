@@ -6,10 +6,12 @@ public class Flower : Plant {
 	public GameObject stalk;
 	public List<GameObject> leaves;
 	public List<GameObject> petals;
+	public GameObject pollenGenerator;
 	private GameObject[] animals;
 	public int health;
 	private Animal animalCon;
 	public PlantSettings plantSettings;
+	public ParticleSystem pollenSystem;
 
 	[System.Serializable]
 	public class PlantSettings {
@@ -17,7 +19,7 @@ public class Flower : Plant {
 		public int stalkRingResolution = 5;
 		public float stalkSegLength = 0.1f;
 		public float stalkMaxHeight = 3.5f;
-		public float stalkGrowthRate = 0.2f;
+		public float stalkGrowthRate = 0.5f;
 		public float stalkMinWidth = 0.02f;
 		public float stalkCrookedFactor = 10f;
 		public int stalkColorHue = 120;
@@ -92,7 +94,7 @@ public class Flower : Plant {
 
 	private void setRandomValues()
     {
-    	plantSettings.stalkMaxHeight = Random.Range(1.5f, 2.0f);
+    	plantSettings.stalkMaxHeight = Random.Range(1f, 1.5f);
     	//plantSettings.stalkGrowthRate = Random.Range(0.05f, 0.2f);
     	plantSettings.stalkMinWidth = Random.Range(0.01f, 0.05f);
     	plantSettings.stalkCrookedFactor = Random.Range(1f, 20f);
@@ -102,7 +104,7 @@ public class Flower : Plant {
     	plantSettings.stalkColorVal = Random.Range(0.25f, 0.65f);
 
     	plantSettings.leafGrowthRate = Random.Range(plantSettings.stalkGrowthRate * 2f, plantSettings.stalkGrowthRate * 4f);
-    	plantSettings.leafDensity = Random.Range(0.2f, 0.8f);
+    	plantSettings.leafDensity = Random.Range(0.5f, 0.8f);
     	plantSettings.leafMaxLength = Random.Range(0.1f, 0.4f);
     	plantSettings.leafLengthVariation = Random.Range(0f, 0.15f);
     	plantSettings.leafWidth = Random.Range(0.04f, 0.12f);
@@ -183,7 +185,7 @@ public class Flower : Plant {
 
 		if (petals.Count > 0)
 		{
-			stalk.GetComponent<PlantStalk>().repositionBud(petals);
+			stalk.GetComponent<PlantStalk>().repositionBud(petals, pollenGenerator);
 		}
 
 		if (stalk.GetComponent<PlantStalk>().debugDoneGrowing)
@@ -194,6 +196,11 @@ public class Flower : Plant {
 		if (this.maturity > plantSettings.bloomMaturity)
 		{
 			bloomFlower();
+		}
+
+		if (pollenSystem != null)
+		{
+			Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
 		}
 	}
 
@@ -268,6 +275,12 @@ public class Flower : Plant {
 
     		spawnPetal(lastNodeIndex, petalAngle * (p+1), cStart, cBloom, bloomRate, len, wid, thick);
     	}
+
+    	// now spawn the pollen generator
+    	pollenGenerator = Instantiate(Resources.Load("FlowerPlant/PollenGenerator"), transform.position, Quaternion.LookRotation(Vector3.up, Vector3.forward)) as GameObject;
+    	pollenGenerator.transform.parent = transform;
+
+    	pollenSystem = pollenGenerator.GetComponent<ParticleSystem>();
     }
 
     private void bloomFlower()
@@ -276,6 +289,11 @@ public class Flower : Plant {
     	{
     		petals[p].GetComponent<PlantPetal>().bloomTrigger = true;
     	}
+
+    	if (pollenSystem.isPlaying == false) {
+    		pollenSystem.Play();
+    	}
+    	Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
     }
 
     public override void grow()
