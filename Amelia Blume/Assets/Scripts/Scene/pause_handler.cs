@@ -7,6 +7,7 @@ public class pause_handler : MonoBehaviour {
 	public Text pauseText;
 	public Text[] children;
 	public Button[] childButtons;
+	public Image controllerMap;
 	ColorBlock[] cbs;
 
 	bool controllerControlled;
@@ -39,6 +40,8 @@ public class pause_handler : MonoBehaviour {
 		for (int i = 0; i < 3; i++) {
 			cbs [i] = childButtons [i].colors;
 		}
+
+		controllerMap.enabled = false;
 
 	}
 	
@@ -79,6 +82,7 @@ public class pause_handler : MonoBehaviour {
 		children [0].text = "Continue";
 		children [1].text = "Main Menu";
 		children [2].text = "Exit Game";
+		controllerMap.enabled = true;
 		foreach (Button thing in childButtons) {
 			thing.enabled = true;
 		}
@@ -110,6 +114,7 @@ public class pause_handler : MonoBehaviour {
 		for (int i = 0; i < 3; i++) {
 			childButtons[i].colors = cbs[i];
 		}
+		controllerMap.enabled = false;
 	}
 
 	public void GoToMain(){
