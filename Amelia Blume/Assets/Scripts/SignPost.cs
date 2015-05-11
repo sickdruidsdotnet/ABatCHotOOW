@@ -3,25 +3,29 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
+	public bool stillWritingCurrentPassage = false;
+	private int maxCharCount = 150;
+	public bool continueCurrentPassage = false;
 	int wordsIndex = 0;
 	GameObject player;
 	Player amelia;
-	public string[] words; //Lines of txt file
+	string[] words; //Lines of txt file
 	bool beingRead = false;
 	public TextAsset file;
 	int sentenceIndex = 0;
 	string textDisplay = "";
-	public string sentence = ""; //current line being printed
-	public string[] sentenceWords; //words in current Sentence
+	string sentence = ""; //current line being printed
+	string[] sentenceWords; //words in current Sentence
 	float delay = 0.03f;
 	float nextUse;
 	public string startingPassage;
-	public string nextPassage;
-	public string currentPassage;
-	public string speaker;
-	public string[] connection;
+	string nextPassage;
+	string currentPassage;
+	string speaker;
+	string connection;
 
 	char[] charsToTrim = { '[' ,']'};
+	char[] titleSplit = { '[', ']' , ':'};
 
 
  	GameObject uiTextObj;
@@ -80,31 +84,65 @@ public class SignPost : MonoBehaviour {
 			DisplayWords ();
 			nextUse = Time.time + delay;
 		}
-		//Debug.Log(amelia.GetReadSign());
+
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
 		nameText.enabled = uiText.enabled;
 		uiPortraitSprite.enabled = uiText.enabled;
-		//Debug.Log(uiText.enabled);
+
 	}
 
 	public void Read(){
-		if (currentPassage == nextPassage) {
+		if (currentPassage == nextPassage && !continueCurrentPassage) {
+			if(beingRead && stillWritingCurrentPassage){
+				DisplayFullText();
+			}else{
 			beingRead = false;
 			uiText.enabled = false;
 			nextPassage = startingPassage;
 			currentPassage = "";
+			}
 			return;
 		}
 	//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
 			beingRead = true;
-			//myTextMesh.renderer.enabled = true;
+
 			uiText.enabled = true;
 		}
 		NextSentence ();
 		//CheckFlags ();
+		
+	}
+
+	void DisplayFullText(){
+		if (beingRead) {
+			bool keepWriting = true;
+				while(keepWriting){
+					if(sentenceIndex > sentence.Length-1){
+						keepWriting = false;
+						return;
+					}
+					textDisplay += sentence [sentenceIndex];
+					if(textDisplay.Length > maxCharCount){
+						if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
+							Debug.Log ("Stop Here");
+							continueCurrentPassage = true;
+							keepWriting = false;
+						}
+					}
+
+					if(sentenceIndex <= sentence.Length - 1){
+						sentenceIndex++;
+					}else{
+						keepWriting = false;
+					}
+
+				}
+			uiText.text = textDisplay;
+			nameText.text = speaker;
+		}
 		
 	}
 
@@ -113,97 +151,97 @@ public class SignPost : MonoBehaviour {
 		if (sentenceWords[0] == "::") {
 			currentPassage = sentenceWords[1];
 			speaker = sentenceWords[2];
-			Debug.Log ("Title is next");
+			//Debug.Log ("Title is next");
 		}		
 	}
 
 	void DisplayWords()
 	{
 		if (beingRead) {
-//			if(sentenceWords[0] == "::"){
-//				NextSentence();
-//			}
-			if (sentenceIndex < sentence.Length) {
-				//if(sentence[sentenceIndex] == '['){
-				//	Debug.Log ("Found Bracket");
-				//}
+
+			if (sentenceIndex < sentence.Length && !continueCurrentPassage) {
+				stillWritingCurrentPassage = true;
 				textDisplay += sentence [sentenceIndex];
 				newLineIndex--;
-				if(newLineIndex <= 0){
-					if(sentence [sentenceIndex] == ' '){
-						//Debug.Log ("Space Key in if");
-						//sentence.Insert(sentenceIndex," sdf ");
-						//textDisplay += "\n";
-						newLineIndex = 30;
+				//if(uiText.cachedTextGenerator.lineCount % 3 == 0){
+				//Debug.Log(textDisplay.Length);
+				if(textDisplay.Length > maxCharCount){
+					if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
+						Debug.Log ("Stop Here");
+						continueCurrentPassage = true;
 					}
-					//Debug.Log(sentence [sentenceIndex]);
-					//New Line IF current char is "space"
 				}
-				sentenceIndex++;
+
+				if(!continueCurrentPassage){
+					sentenceIndex++;
+				}
+			}else{
+				stillWritingCurrentPassage = false;
 			}
 			uiText.text = textDisplay;
+			//Debug.Log (uiText.text.Length);
+			//Debug.Log ("Line Count: " + uiText.cachedTextGenerator.lineCount);
 			nameText.text = speaker;
 		}
-		//Debug.Log (textDisplay);
 
-		//speaker.Trim(charsToTrim);
-		//nameText.text = speaker;
 	}
 
 	void NextSentence(){
-		bool lookingForPassage = true;
-		int currentIndex = 0;
-		textDisplay = "";
-		sentence = "";
-		while (lookingForPassage) {
-			if(words[currentIndex].StartsWith("::")){
-				sentenceWords = words[currentIndex].Split (' ');
-				if(sentenceWords[1] == nextPassage){
+		if (!continueCurrentPassage) {
+			bool lookingForPassage = true;
+			int currentIndex = 0;
+			textDisplay = "";
+			sentence = "";
+			while (lookingForPassage) {
+				if (words [currentIndex].StartsWith ("::")) {
+					sentenceWords = words [currentIndex].Split (titleSplit);
+					sentenceWords[2].Trim(' ');
+					for(int i = 0 ; i < sentenceWords.Length; i++){
+//						Debug.Log (sentenceWords[i] + "  " + i);
+					}
+					if (sentenceWords [2].Contains(nextPassage)) {
+						lookingForPassage = false;
+						currentPassage = nextPassage;
+						wordsIndex = currentIndex;
+						if (sentenceWords.Length > 3) {
+							speaker = sentenceWords [3];
+							speaker = speaker.Trim (charsToTrim);
+						} else {
+							speaker = "";
+						}
+
+					}
+				}
+				currentIndex++;
+				if (currentIndex >= words.Length) {
 					lookingForPassage = false;
-					currentPassage = nextPassage;
-					wordsIndex = currentIndex;
-					speaker = sentenceWords[2];
-					speaker = speaker.Trim(charsToTrim);
-					//speaker[0] = ' ';
-					//speaker[speaker.Length-1] = ' ';
 				}
 			}
-			currentIndex++;
-			if(currentIndex >= words.Length){
-				lookingForPassage = false;
-			}
-		}
-		wordsIndex+=1;
-		sentenceIndex = 0;
-		if (wordsIndex >= words.Length) {
-			wordsIndex = 0;
-			beingRead = false;
-			//myTextMesh.renderer.enabled = false;
-			uiText.enabled = false;
+			wordsIndex += 1;
 			sentenceIndex = 0;
-		}
-		//if(wordsIndex > 0)
-		//	wordsIndex--;
-		//Debug.Log (words [wordsIndex]);
-		//sentence = words [wordsIndex];
-		sentenceWords = words[wordsIndex].Split (' ');
-		for (int i = 0; i < sentenceWords.Length; i++) {
-			if(!sentenceWords[i].StartsWith("[[")){
-				sentence+=sentenceWords[i];
-				sentence+=" ";
+			if (wordsIndex >= words.Length) {
+				wordsIndex = 0;
+				beingRead = false;
+
+				uiText.enabled = false;
+				sentenceIndex = 0;
 			}
+
+			sentenceWords = words [wordsIndex].Split (titleSplit);
+			sentence+= sentenceWords[0];
+
+			if(sentenceWords.Length > 2){
+				connection = sentenceWords[2];
+				connection = connection.Trim (charsToTrim);
+
+				nextPassage = connection;
+
+			}
+		} else {
+			continueCurrentPassage = false;
+			textDisplay = "";
 		}
-		if (sentenceWords [sentenceWords.Length - 1].Contains ("[[")) {
-			connection = sentenceWords [sentenceWords.Length - 1].Split('~');
-			nextPassage = connection[1];
-			//Debug.Log ("Next Passage");
-		}
-		//wordsIndex++;
-		//while (sentence[sentence.Length-1] != '.') {
-		//	sentence += words [wordsIndex];
-		//	wordsIndex++;
-		//}
-		//Debug.Log (sentence [sentence.Length - 1]);
+
 	}
 
 	void OnTriggerStay(Collider other)
@@ -211,15 +249,14 @@ public class SignPost : MonoBehaviour {
 		if (other.gameObject.tag == "Player") {
 			amelia.SetReadSign(true);
 			amelia.SetCurrentSign(this.gameObject); 
-			//Debug.Log ("read now");
-			//beingRead = true;
+
 		}
 	}
 
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
-			//Debug.Log ("enter");
+
 			textDisplay = "";
 		}
 	}
@@ -227,13 +264,14 @@ public class SignPost : MonoBehaviour {
 	void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.tag == "Player") {
-			//Debug.Log ("Exit");
+
 			amelia.SetReadSign(false);
-			//Debug.Log ("stop reading");
+
 			textDisplay = "";
 			beingRead = false;
 			wordsIndex = 0;
-			//myTextMesh.renderer.enabled = false;
+			continueCurrentPassage = false;
+			stillWritingCurrentPassage = false;
 			uiText.enabled = false;
 			nextPassage = startingPassage;
 			currentPassage = "";
