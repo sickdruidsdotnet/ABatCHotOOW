@@ -316,8 +316,8 @@ public class Boar : Animal
 					//Vector3 rayVector = vision.direction;
 					float angle = Vector3.Angle(visionHead.direction, Vector3.right * faceDirection);
 					if(Mathf.Abs(angle) <= 45){
-						if(visionHit.transform != null && visionHit.transform.tag != null && 
-						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
+						if(visionHeadHit.transform != null && visionHeadHit.transform.tag != null && 
+						   (visionHeadHit.transform.tag == "Player" || visionHeadHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
 							//play audio
