@@ -8,6 +8,7 @@ public class pause_handler : MonoBehaviour {
 	public Text[] children;
 	public Button[] childButtons;
 	public Image controllerMap;
+	Canvas myCanvas;
 	ColorBlock[] cbs;
 
 	bool controllerControlled;
@@ -19,6 +20,9 @@ public class pause_handler : MonoBehaviour {
 		//grab the camera
 		this.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 
+		//get the canvas
+		myCanvas = this.GetComponent<Canvas> ();
+		myCanvas.planeDistance = -1;
 		pauseText = this.GetComponent<Text> ();
 		pauseText.text = "";
 
@@ -77,6 +81,7 @@ public class pause_handler : MonoBehaviour {
 
 	public void Pause(){
 		Time.timeScale = 0;
+		myCanvas.planeDistance = 1;
 
 		pauseText.text = "Paused";
 		children [0].text = "Continue";
@@ -99,6 +104,7 @@ public class pause_handler : MonoBehaviour {
 	}
 
 	public void UnPause(){
+		myCanvas.planeDistance = -1;
 		Time.timeScale = 1.0f;
 		pauseText.text = "";
 
