@@ -186,6 +186,49 @@ ModelImporter:
     100360: upper_arm_fk_L
     100362: upper_arm_L
     100364: upper_arm_R
+    100366: f_index_01_R
+    100368: f_index_02_R
+    100370: f_index_03_L
+    100372: f_index_03_R
+    100374: f_middle_01_L
+    100376: f_middle_02_L
+    100378: f_middle_03_L
+    100380: f_middle_03_R
+    100382: f_pinky_01_L
+    100384: f_pinky_02_L
+    100386: f_pinky_03_L
+    100388: f_pinky_03_R
+    100390: f_ring_02_L
+    100392: f_ring_03_L
+    100394: f_ring_03_R
+    100396: foot_L
+    100398: foot_R
+    100400: hand_L_001
+    100402: heel_02_L
+    100404: heel_02_R
+    100406: heel_L
+    100408: heel_R
+    100410: metarig
+    100412: palm_01_L
+    100414: palm_01_R
+    100416: palm_02_L
+    100418: palm_02_R
+    100420: palm_03_L
+    100422: palm_03_R
+    100424: palm_04_L
+    100426: palm_04_R
+    100428: shoulder_L
+    100430: shoulder_R
+    100432: thumb_01_R
+    100434: thumb_02_R
+    100436: thumb_03_L
+    100438: thumb_03_R
+    100440: toe_L
+    100442: toe_R
+    100444: foot_IK_L
+    100446: foot_IK_R
+    100448: knee_pole_L
+    100450: knee_pole_R
     400000: ABatCHotOOW
     400002: ABatCHotOOW_Low-Poly
     400004: //RootNode
@@ -369,6 +412,51 @@ ModelImporter:
     400360: upper_arm_fk_L
     400362: upper_arm_L
     400364: upper_arm_R
+    400366: f_index_01_R
+    400368: f_index_02_R
+    400370: f_index_03_L
+    400372: f_index_03_R
+    400374: f_middle_01_L
+    400376: f_middle_02_L
+    400378: f_middle_03_L
+    400380: f_middle_03_R
+    400382: f_pinky_01_L
+    400384: f_pinky_02_L
+    400386: f_pinky_03_L
+    400388: f_pinky_03_R
+    400390: f_ring_02_L
+    400392: f_ring_03_L
+    400394: f_ring_03_R
+    400396: foot_L
+    400398: foot_R
+    400400: hand_L_001
+    400402: heel_02_L
+    400404: heel_02_R
+    400406: heel_L
+    400408: heel_R
+    400410: metarig
+    400412: palm_01_L
+    400414: palm_01_R
+    400416: palm_02_L
+    400418: palm_02_R
+    400420: palm_03_L
+    400422: palm_03_R
+    400424: palm_04_L
+    400426: palm_04_R
+    400428: shoulder_L
+    400430: shoulder_R
+    400432: thumb_01_R
+    400434: thumb_02_R
+    400436: thumb_03_L
+    400438: thumb_03_R
+    400440: toe_L
+    400442: toe_R
+    400444: foot_IK_L
+    400446: foot_IK_R
+    400448: knee_pole_L
+    400450: knee_pole_R
+    2300000: ABatCHotOOW_Low-Poly
+    3300000: ABatCHotOOW_Low-Poly
     4300000: Flower_03
     4300002: Flower_02
     4300004: Flower_05
@@ -404,6 +492,8 @@ ModelImporter:
     7400018: Sunshine
     7400020: T-Pose
     7400022: Water
+    7400024: metarigAction
+    7400026: Run
     9500000: //RootNode
     13700000: ABatCHotOOW_Low-Poly
     13700002: AmeliaBody
@@ -437,7 +527,7 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
