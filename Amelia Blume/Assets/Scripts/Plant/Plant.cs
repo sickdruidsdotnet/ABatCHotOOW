@@ -19,7 +19,7 @@ public class Plant : MonoBehaviour
     public bool isMaturing = false;
 
 	public float startTime;
-	public float lifeTime = 180f;
+	public float lifeTime = 9999999f;
     
     // Constructor
     public Plant()
