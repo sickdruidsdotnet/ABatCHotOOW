@@ -19,6 +19,10 @@ public class PlayerController : BaseBehavior {
 	public bool isJumping = false;
 	public bool isAirDashing = false;
 	public bool isStunned = false;
+	public bool isPlanting = false;
+	public bool isSunLighting = false;
+
+	public float watering = 0.0f;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
