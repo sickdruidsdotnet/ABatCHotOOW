@@ -11,7 +11,6 @@ public class pause_handler : MonoBehaviour {
 	Canvas myCanvas;
 	ColorBlock[] cbs;
 
-	bool controllerControlled;
 	public bool recentDirection = false;
 	public int activeButton = 0;
 		// Use this for initialization
@@ -36,9 +35,6 @@ public class pause_handler : MonoBehaviour {
 			thing.enabled = false;
 		}
 
-		if (input.primaryInput != "Keyboard") {
-			controllerControlled = true;
-		}
 		cbs = new ColorBlock[childButtons.Length];
 
 		for (int i = 0; i < 3; i++) {
@@ -51,14 +47,14 @@ public class pause_handler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (controllerControlled && input.paused) {
+		if (input.paused) {
 			//if they selected an action
 			if(input.jumpDown)
 			{
 				PushedSelectable();
 			}
-			else
-			{
+			else if (input.primaryInput != "Keyboard")
+			{	//only for controllers
 				//if they pressed down and hadn't previously
 				if(!recentDirection)
 				{
@@ -74,6 +70,25 @@ public class pause_handler : MonoBehaviour {
 					}
 				}
 				else if(Mathf.Abs(input.yMove) < 0.5f)
+					recentDirection = false;
+			}
+			else
+			{
+				//keyboards
+				if(!recentDirection)
+				{
+					if(Input.GetKeyDown(KeyCode.S))
+					{
+						MoveSelectionDown();
+						recentDirection = true;
+					}
+					else if(Input.GetKeyDown(KeyCode.W))
+					{
+						MoveSelectionUp();
+						recentDirection = true;
+					}
+				}
+				else if(!Input.GetKey(KeyCode.W) && !Input.GetKeyUp(KeyCode.S))
 					recentDirection = false;
 			}
 		}
@@ -94,13 +109,11 @@ public class pause_handler : MonoBehaviour {
 		input.paused = true;
 
 		//if it's not keyboard make sure these actions are doable via controller input
-		if (input.primaryInput != "Keyboard") {
-			Color tempColor = childButtons[0].colors.highlightedColor;
-			ColorBlock cb = childButtons[0].colors;
-			cb.normalColor = tempColor;
+		Color tempColor = childButtons[0].colors.highlightedColor;
+		ColorBlock cb = childButtons[0].colors;
+		cb.normalColor = tempColor;
 
-			childButtons[0].colors = cb;
-		}
+		childButtons[0].colors = cb;
 	}
 
 	public void UnPause(){
