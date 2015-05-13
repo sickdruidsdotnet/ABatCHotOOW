@@ -1,0 +1,32 @@
+:: Start [Amelia]
+Hello, stranger! [[Part2]]
+
+:: Part2 [Ig]
+Hi, back [[Part3]]
+
+:: Seed []
+Press A to plant seeds
+
+:: Part3 [ ]
+Narration is cool here maybe
+
+:: Seed [ ]
+Seed planting and tree growing explination
+
+:: Reset []
+This will reset all progress in the game. Walk away to not do that [[|~Reset2~]]
+
+:: Reset2 []
+Are you sure you want to delete eveything and start from scratch? [[|~Reset3~]]
+
+:: Reset3 []
+Pressing (Jump) again will delete everything. Final warning.
+
+:: StoryTitle
+Untitled Story
+
+
+:: StoryAuthor
+Anonymous
+
+

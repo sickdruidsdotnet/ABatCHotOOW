@@ -25,13 +25,16 @@ public class EdgeCheckerScript : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter()
+	void OnTriggerEnter(Collider other)
 	{
+		if(other.gameObject.tag != "Bramble")
 		count++;
 	}
 
-	void OnTriggerExit()
+	void OnTriggerExit(Collider other)
 	{
+		if(other.gameObject.tag != "Bramble")
+
 		count--;
 	}
 }

@@ -28,7 +28,7 @@ public class PlayerMotor : BaseBehavior {
 		
 		public float turnToFaceCameraSpeed = 8f;
 		
-		public float jumpForce = 30f;
+		public float jumpForce = 20f;
 		public float dashForce = 35f;
 		public float acceleration = 10f;
 		// determines how quickly you accelerate towards 0 when trying to stop. Low number = sliding.
@@ -42,6 +42,7 @@ public class PlayerMotor : BaseBehavior {
 
 		public bool stopJump = false;
 
+
 		public Vector3 momentum = Vector3.zero;
 	}
 	
@@ -52,6 +53,7 @@ public class PlayerMotor : BaseBehavior {
 		public GameObject ground = null;
 		public bool grounded;
 		public bool wasGrounded;
+		public bool wasWasGrounded;
 		public float altitude = 0f;
 		
 		public float maxCalculatedAltitude = 100f;
@@ -109,6 +111,7 @@ public class PlayerMotor : BaseBehavior {
 	// this is the only function that actually moves the player. All other functions prepare
 	// information that will be processed here, before applying the work vector.
 	public void UpdateMotor(Vector3 movementInput) {
+		environment.wasWasGrounded = environment.wasGrounded;
 		environment.wasGrounded = environment.grounded;
 		
 		pendingInput = movementInput;
@@ -146,12 +149,6 @@ public class PlayerMotor : BaseBehavior {
 				targetSpeed = 0;
 				acceleration = movement.stoppingPower;
 			}
-			
-			/*if (player.controller.isSideStepping) {
-				if (!movement.sidestepAtFullSpeed) {
-					targetSpeed = movement.sidestepSpeed;
-				}
-			}*/
 		}
 				
 		movement.speed = Mathf.Lerp(movement.speed, targetSpeed, acceleration * Time.deltaTime);
@@ -167,19 +164,11 @@ public class PlayerMotor : BaseBehavior {
 
 		workVector *= movement.speed;
 
+		//Enables some degree of movement control while the player is in the air
 		movement.momentum = workVector;
-
-		if (player.isGrounded) {
-			movement.momentum = workVector;
-		} else {
+		if (!player.isGrounded) {
 			workVector = movement.momentum + workVector; //* movement.airControlRatio;
 			workVector = workVector.normalized * movement.airControlRatio;
-//			if (workVector.magnitude > movement.momentum.magnitude) {
-//				if (movement.momentum.magnitude > 0)
-//					workVector = workVector.normalized * movement.momentum.magnitude;
-//				else 
-//					workVector = workVector.normalized;
-//			}
 		}
 
 		lastAttemptedMovement = workVector;
@@ -189,18 +178,12 @@ public class PlayerMotor : BaseBehavior {
 		workVector = ApplyJumpPower(workVector);
 		workVector = ApplyDashPower(workVector);
 		workVector = ApplyGroundMovement(workVector);
-		
-//		if(movement.stopJump){
-//			workVector.y /= 2;
-//			if(player.isGrounded)
-//				movement.stopJump = false;
-//		}
 
 		player.controller.CommitMove(workVector * Time.fixedDeltaTime);
 	}
 	
 	protected Vector3 ApplyJumpPower(Vector3 workVector) {
-		if (player.isDashing || player.isCollidingAbove) {
+		if (player.isDashing || player.isCollidingAbove || (player.isGrounded && !environment.wasWasGrounded)) {
 			movement.jumpForceRemaining = 0;
 		}
 		
@@ -223,8 +206,6 @@ public class PlayerMotor : BaseBehavior {
 				
 				if(!player.isGrounded)
 					workVector.y = environment.gravity * Time.fixedDeltaTime;
-				//movement.dashForceRemaining -= environment.gravity * Time.fixedDeltaTime;
-				//movement.dashForceRemaining -= 100 * Time.fixedDeltaTime;
 		}
 
 		if (movement.dashForceRemaining < 0 && !player.isFacingRight) {
@@ -232,8 +213,6 @@ public class PlayerMotor : BaseBehavior {
 
 				if(!player.isGrounded)
 					workVector.y = environment.gravity * Time.fixedDeltaTime;
-				//movement.dashForceRemaining += environment.gravity * Time.fixedDeltaTime;
-				//movement.dashForceRemaining += 100 * Time.fixedDeltaTime;
 		}
 		
 		return workVector;
@@ -241,13 +220,12 @@ public class PlayerMotor : BaseBehavior {
 
 	protected Vector3 ApplyGravity(Vector3 workVector) {
 		if((player.isDashing || player.airDashed) && workVector.y > 0) {
-			
 			return workVector;
 		}
 
 		if (environment.grounded) {
 			if (!environment.wasGrounded) {
-				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));		
+				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));
 			}
 			movement.fallSpeed = 0;
 			workVector.y = movement.baseFallSpeed;	
@@ -430,23 +408,27 @@ public class PlayerMotor : BaseBehavior {
 			Player.SeedType currSeed = player.getCurrentSeedType();
 			switch(currSeed){
 			case Player.SeedType.VineSeed:
-				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
+				player.controller.updateActiveSeeds(1, newSeed);
 				break;
 				
 			case Player.SeedType.TreeSeed:
-				newSeed = Instantiate(Resources.Load("TreeSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/TreeSeed")) as GameObject;
+				player.controller.updateActiveSeeds(2, newSeed);
 				break;
 				
 			case Player.SeedType.FlowerSeed:
-				newSeed = Instantiate(Resources.Load("FlowerSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/FlowerSeed")) as GameObject;
+				player.controller.updateActiveSeeds(3, newSeed);
 				break;
 				
 			case Player.SeedType.FernSeed:
-				newSeed = Instantiate(Resources.Load("FernSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/FernSeed")) as GameObject;
 				break;
 
 			default:
-				newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
+				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
+				player.controller.updateActiveSeeds(1, newSeed);
 				break;
 			}
 
@@ -466,6 +448,12 @@ public class PlayerMotor : BaseBehavior {
 			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
 			Instantiate(sun);
 		}
+	}
+
+	public void ReadSign(){
+		//Debug.Log ("Reading Sign Now");
+		GameObject sign = player.GetCurrentSign ();
+		sign.GetComponent<SignPost>().Read ();
 	}
 
 	public void Convert(){

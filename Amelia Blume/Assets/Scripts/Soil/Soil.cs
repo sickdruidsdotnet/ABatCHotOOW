@@ -88,8 +88,8 @@ public class Soil : MonoBehaviour {
 	void OnParticleCollision(GameObject other) {
 		if (other.tag == "Water" && GetHydrationLevel() < MaxWater) {
 			ChangeHydrationLevel (3);
-			Debug.Log("Soil water:" + GetHydrationLevel());
-			Debug.Log ("Position = " + other.transform.position.x);
+			//Debug.Log("Soil water:" + GetHydrationLevel());
+			//Debug.Log ("Position = " + other.transform.position.x);
 			int index;
 			if(other.transform.rotation.y > 0)
 				index = (int)((other.transform.position.x+2f - start)/slotSize);
@@ -107,9 +107,13 @@ public class Soil : MonoBehaviour {
 		if (other.gameObject.tag == "Seed") {
 			plantedSeed = other.gameObject.GetComponent<Seed>();
 			int index = (int)((other.transform.position.x - start)/slotSize);
+			if(index == 10){
+				index = 9;
+				//Debug.Log ("Too big");
+			}
 			other.gameObject.GetComponent<Seed>().setSoil(this.gameObject);
 			plantedSeed.setSoilIndex(index);
-			//Debug.Log ("Planted");
+			//Debug.Log ("Planted: " + index);
 
 			if(!plantedSeed.checkIfPlanted()){
 				plantedSeed.setPlanted(true);

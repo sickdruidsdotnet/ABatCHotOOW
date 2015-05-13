@@ -10,9 +10,9 @@ public class FlowerSeed : Seed {
 		// set hydrationGoal to match VineSeed requirements
 		this.hydrationGoal = 20;
 		
-		this.plantType = "FlowerPlant";
+		this.plantType = "FlowerPlant/Flower";
 		
-		Debug.Log("FlowerSeed created");
-		Debug.Log("FlowerSeed hydrationGoal: " + hydrationGoal);
+		//Debug.Log("FlowerSeed created");
+		//Debug.Log("FlowerSeed hydrationGoal: " + hydrationGoal);
 	}
 }

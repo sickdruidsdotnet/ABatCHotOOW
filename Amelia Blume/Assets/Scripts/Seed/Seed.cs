@@ -5,16 +5,18 @@ using System.Collections;
 //also known as the Parent class.
 public class Seed : MonoBehaviour
 {
-    protected int waterCount;
-    protected int hydrationGoal;
+    public int waterCount;
+    public int hydrationGoal;
     protected bool isPlanted;
     public string plantType;
     public Soil soil;
     private int collectionTimer;
     private int collectionDelay;
-	private int soilIndex;
+	public int soilIndex;
 
     public int testInt;
+
+	public int seedHealth;
     
     // Constructor
     public Seed()
@@ -26,18 +28,20 @@ public class Seed : MonoBehaviour
         // True if the seed is inside of soil object
         isPlanted = false;
         // Default plant type
-        plantType = "Tree";
+        plantType = "None";
         // initialize collection timer and delay
         collectionTimer = 0;
         collectionDelay = 30;
 
-        Debug.Log("Seed created");
-        Debug.Log("Default hydrationGoal: " + hydrationGoal);
+        //Debug.Log("Seed created");
+        //Debug.Log("Default hydrationGoal: " + hydrationGoal);
     }
 	void Start()
 	{
+		seedHealth = 120;
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+		gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = false;
 	}
 
 
@@ -45,6 +49,7 @@ public class Seed : MonoBehaviour
     {
         if(isPlanted)
         {
+			gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = true;
             if(soil != null)
             {
                 if(soil.GetHydrationLevel() > 0)
@@ -71,6 +76,9 @@ public class Seed : MonoBehaviour
 
         // spawn a seed
 
+        //plantType = plantType + "/" + plantType;
+
+        //Debug.Log("Sprouting plant type: " + plantType);
 
         Vector3 loc = new Vector3(0, 0, 0);
         loc += transform.position;
@@ -78,7 +86,7 @@ public class Seed : MonoBehaviour
         newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject);
 		newPlant.gameObject.GetComponent<Plant>().SetSoilIndex (soilIndex);
 		//newPlant.gameObject.GetComponent<Plant>().setSoil(soil.gameObject)
-        Debug.Log("called sproutPlant()");
+        //Debug.Log("called sproutPlant()");
 
         // Destroy this Seed entity. The plant will carry on its legacy.
         // Goodnight, sweet seed. You served Amelia well.
@@ -204,6 +212,15 @@ public class Seed : MonoBehaviour
 		} else if (collision.transform.tag == "Player") {
 			Physics.IgnoreCollision(collision.collider, collider, true);
 		}
+	}
+
+	public void setHealth(int damage)
+	{
+		seedHealth -= damage;
+	}
+
+	public int getHealth(){
+		return seedHealth;
 	}
 
 }
