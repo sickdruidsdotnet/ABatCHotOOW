@@ -57,7 +57,7 @@ public class PlantStalk : MonoBehaviour
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
 	public float growthRate = 0.1f;
-	public float lengthGoal = 1f;
+	public float lengthGoal = 0;
 	public float growthStart;
 
 
@@ -581,7 +581,62 @@ public class PlantStalk : MonoBehaviour
 		leaf.transform.localPosition += skeleton[node].startPoint;
 	}
 
-	public void repositionBud(List<GameObject> petals)
+	public void repositionPetal(GameObject petal)
+	{
+		int node = 0;
+		float angle = 0f;
+
+		if (petal.GetComponent<PlantLeaf>() != null)
+		{
+			node = petal.GetComponent<PlantLeaf>().stalkNode;
+			angle = petal.GetComponent<PlantLeaf>().growthAngle;
+		}
+		else if (petal.GetComponent<PlantPetal>() != null)
+		{
+			node = petal.GetComponent<PlantPetal>().stalkNode;
+			angle = petal.GetComponent<PlantPetal>().growthAngle;
+		}
+		else
+		{
+			Debug.Log("in repositionPetal(), petal is neither a leaf or a petal");
+			Debug.Break();
+		}
+		
+		if (node == 0)
+		{
+			Debug.Log("Error, petal attempting to grow on base node");
+			Debug.Break();
+		}
+		// use leaf.stalkNode and leaf.growthAngle to determine the leaf's transform
+		// remember that the tranform is already relative to the transform of the stalk (skeleton[0].startPoint)
+
+		// translate leaf to base of the stalk
+		petal.transform.localPosition = Vector3.zero;
+
+		// translate leaf to edge of target node's stalk radius
+		petal.transform.localPosition += new Vector3(skeleton[node].radius * .9f, 0, 0);
+
+		// rotate leaf around the stalk by growthAngle
+		petal.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.up) * petal.transform.localPosition;
+		petal.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up);
+
+		// rotate petal similarly to the ring axis it is on.
+		Vector3 rotationAxis = Vector3.left;
+		float rotationAngle = 45f;
+		float bottomAngle = Vector3.Angle(skeleton[node-1].direction, Vector3.up);
+		Vector3 prevSegAxis = Vector3.Cross(skeleton[node-1].direction, Vector3.up);
+
+		petal.transform.localPosition = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * petal.transform.localPosition;
+		petal.transform.localPosition = Quaternion.AngleAxis(rotationAngle, rotationAxis) * petal.transform.localPosition;
+
+		petal.transform.localRotation = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * petal.transform.localRotation; // try swapping these if it looks wrong
+		petal.transform.localRotation = Quaternion.AngleAxis(rotationAngle, rotationAxis) * petal.transform.localRotation; // try swapping these if it looks wrong
+
+		// add node's position to the petal position to move it into place
+		petal.transform.localPosition += skeleton[node].startPoint;
+	}
+
+	public void repositionBud(List<GameObject> petals, GameObject pollenGenerator = null)
 	{
 		// always make sure the bud is at the top node.
 		// since the top node changes, we'll need to fix this often.
@@ -591,7 +646,12 @@ public class PlantStalk : MonoBehaviour
 		for (int p = 0; p < petals.Count; p++)
 		{
 			petals[p].GetComponent<PlantPetal>().stalkNode = lastStalkNode;
-			repositionLeaf(petals[p]);
+			repositionPetal(petals[p]);
+		}
+
+		if (pollenGenerator != null)
+		{
+			pollenGenerator.transform.position = transform.position + skeleton[lastStalkNode].startPoint;
 		}
 	}
 

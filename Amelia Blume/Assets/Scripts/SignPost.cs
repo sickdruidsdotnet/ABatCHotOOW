@@ -44,6 +44,9 @@ public class SignPost : MonoBehaviour {
 	Text uiText;
 	Text nameText;
 
+	//get the canvas we'll be working with
+	Canvas uiCanvas;
+
 
 	int newLineIndex = 75;
 	// Use this for initialization
@@ -76,6 +79,11 @@ public class SignPost : MonoBehaviour {
 		nameText = nameObj.GetComponent<Text> ();
 		nameText.enabled = false;
 
+		//load/put the canvas behind the camera for easier editor experience
+		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
+		if (uiCanvas != null) {
+			uiCanvas.planeDistance = -1;
+		}
 	}
 	
 	// Update is called once per frame
@@ -89,6 +97,11 @@ public class SignPost : MonoBehaviour {
 		uiTextBoxSprite.enabled = uiText.enabled;
 		nameText.enabled = uiText.enabled;
 		uiPortraitSprite.enabled = uiText.enabled;
+		if (uiButtonSprite.enabled) {
+			if (uiCanvas != null) {
+				uiCanvas.planeDistance = 2;
+			}
+		}
 
 	}
 

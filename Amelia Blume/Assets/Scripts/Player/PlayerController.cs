@@ -50,7 +50,10 @@ public class PlayerController : BaseBehavior {
     {
 //		Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
-		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
+		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
+		if (playerInputObj != null) {
+			playerInput = playerInputObj.GetComponent<InputHandler> ();
+		}
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -102,6 +105,9 @@ public class PlayerController : BaseBehavior {
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
 	protected void Update() {
+		if (playerInput == null) {
+			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
+		}
 
 		if (Camera.main == null) {
 			return;		
