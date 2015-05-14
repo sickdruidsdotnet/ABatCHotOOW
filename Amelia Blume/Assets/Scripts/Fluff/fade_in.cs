@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class fade_in : MonoBehaviour {
 
 	public SpriteRenderer button;
+	Text prompt;
 
 	public bool overwrite = false;
 	bool exited = false;
@@ -21,7 +23,10 @@ public class fade_in : MonoBehaviour {
 			Destroy (gameObject);
 		}
 
+		prompt = gameObject.GetComponentInChildren<Text> ();
+
 		button.color = new Color (button.color.r, button.color.g, button.color.b, 0f);
+		prompt.color = new Color (prompt.color.r, prompt.color.g, prompt.color.b, 0f);
 	}
 	
 	// Update is called once per frame
@@ -34,6 +39,7 @@ public class fade_in : MonoBehaviour {
 				exited = false;
 			}
 			button.color = new Color (button.color.r, button.color.g, button.color.b, alph);
+			prompt.color = new Color (prompt.color.r, prompt.color.g, prompt.color.b, alph);
 		}
 		else if (overwrite) {
 			if(showup && button.color.a != 1)
@@ -44,6 +50,7 @@ public class fade_in : MonoBehaviour {
 					showup = false;
 				}
 				button.color = new Color (button.color.r, button.color.g, button.color.b, alph);
+				prompt.color = new Color (prompt.color.r, prompt.color.g, prompt.color.b, alph);
 			}
 			else if (disappear && button.color.a != 0){
 				float alph = button.color.a - 0.05f;
@@ -52,6 +59,7 @@ public class fade_in : MonoBehaviour {
 					disappear = false;
 				}
 				button.color = new Color (button.color.r, button.color.g, button.color.b, alph);
+				prompt.color = new Color (prompt.color.r, prompt.color.g, prompt.color.b, alph);
 			}
 
 		}
@@ -74,6 +82,7 @@ public class fade_in : MonoBehaviour {
 			if(button.color.a >= 1)
 				alph = 1;
 			button.color = new Color (button.color.r, button.color.g, button.color.b, alph);
+			prompt.color = new Color (prompt.color.r, prompt.color.g, prompt.color.b, alph);
 		}
 	}
 
