@@ -48,6 +48,7 @@ ModelImporter:
     100084: tail_upper
     100086: Tusk_Left
     100088: Tusk_Right
+    100090: Eyes
     400000: Armature
     400002: //RootNode
     400004: Boar_Model
@@ -93,6 +94,7 @@ ModelImporter:
     400084: tail_upper
     400086: Tusk_Left
     400088: Tusk_Right
+    400090: Eyes
     2300000: Infection
     2300002: Tusk_Left
     2300004: Tusk_Right
@@ -103,9 +105,16 @@ ModelImporter:
     4300002: Tusk_Right
     4300004: Tusk_Left
     4300006: Infection
+    4300008: Eyes
     7400000: Default Take
+    7400002: charge
+    7400004: walk
     9500000: //RootNode
     13700000: Boar_Model
+    13700002: Eyes
+    13700004: Infection
+    13700006: Tusk_Left
+    13700008: Tusk_Right
   materials:
     importMaterials: 1
     materialName: 0
