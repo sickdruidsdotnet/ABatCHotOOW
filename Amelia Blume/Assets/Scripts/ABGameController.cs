@@ -4,15 +4,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-//TODO:
-/* Carry the player's state between scenes
- * 		-Saving the entire player gameobject, then overwrite the player in the next scene with the one in the previous\
- * 		- or save aspects of character (unlocked seeds, current then 
- * 	Transitioning between scenes
- * 		- Delete any GameController in the next scene and replace it with the older one on transitions
- * 		- fade in/out
- * */
-
 public class ABGameController : MonoBehaviour {
 	
 	public GameObject pauseCanvas;
@@ -35,6 +26,10 @@ public class ABGameController : MonoBehaviour {
 	int transitionType = 0; //1 for number, 2 for name
 	int transitionNum;
 	string transitionName;
+
+	bool[] unlockedSeeds; //use once we get seed unlocking in properly. We may not even need this.
+	Player.SeedType activeSeed;
+
 	
 	// Use this for initialization
 	void Start () {
@@ -116,6 +111,8 @@ public class ABGameController : MonoBehaviour {
 		activeUI.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		activeSS.BroadcastMessage("UpdatePlayer");
 		amelia = GameObject.FindGameObjectWithTag("Player");
+		//apply saved information from previous scene
+		amelia.GetComponent<Player> ().SetCurrentSeed (activeSeed);
 
 	}
 	
@@ -183,6 +180,8 @@ public class ABGameController : MonoBehaviour {
 	public void BeginSceneTransition(int sceneNum)
 	{
 		amelia.GetComponent<PlayerController> ().canControl = false;
+		//here's where we get all relevent info on the player and save it for next scene
+		activeSeed = amelia.GetComponent<Player> ().getCurrentSeedType ();
 		if (!transitioning) {
 			fading = true;
 			transitioning = true;
@@ -195,6 +194,8 @@ public class ABGameController : MonoBehaviour {
 	public void BeginSceneTransition(string sceneName)
 	{
 		amelia.GetComponent<PlayerController> ().canControl = false;
+		//here's where we get all relevent info on the player and save it for next scene
+		activeSeed = amelia.GetComponent<Player> ().getCurrentSeedType ();
 		if (!transitioning) {
 			fading = true;
 			transitioning = true;
