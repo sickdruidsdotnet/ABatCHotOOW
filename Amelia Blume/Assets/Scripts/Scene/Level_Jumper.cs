@@ -6,9 +6,11 @@ public class Level_Jumper : MonoBehaviour {
 
 	public int levelNum;
 	public string levelName;
+
+	GameObject gameController;
 	// Use this for initialization
 	void Start () {
-	
+		gameController = GameObject.FindGameObjectWithTag ("GameController");
 	}
 	
 	void OnTriggerStay(Collider other)
@@ -17,9 +19,9 @@ public class Level_Jumper : MonoBehaviour {
 			if(GameObject.Find("Input Handler").GetComponent<InputHandler>().jumpDown)
 			{
 				if(levelName != null)
-					Application.LoadLevel(levelName);
+					gameController.GetComponent<ABGameController>().BeginSceneTransition(levelName);
 				else
-					Application.LoadLevel(levelNum);
+					gameController.GetComponent<ABGameController>().BeginSceneTransition(levelNum);
 			}
 		}
 	}
