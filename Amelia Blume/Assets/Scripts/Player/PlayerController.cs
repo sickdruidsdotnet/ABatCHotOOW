@@ -344,7 +344,7 @@ public class PlayerController : BaseBehavior {
 
 	public void HandleStun()
 	{
-		if (!canControl) {
+		if (isStunned) {
 			if(stunTimer <= 0)
 			{
 				canControl = true;
