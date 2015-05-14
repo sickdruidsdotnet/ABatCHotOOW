@@ -25,6 +25,8 @@ public class ABGameController : MonoBehaviour {
 	GameObject activeUI;
 	public GameObject Fader;
 	GameObject activeFD;
+	public GameObject TransistionText;
+	GameObject activeTT;
 
 	GameObject amelia;
 
@@ -72,13 +74,20 @@ public class ABGameController : MonoBehaviour {
 		activeFD.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 		                                                 activeFD.GetComponent<Image> ().color.b, 0);
+
+
+		//Text UI for Act transitions
+		activeTT = Instantiate (TransistionText, TransistionText.transform.position, Quaternion.identity) as GameObject;
+		activeTT.name = "Fader";
+		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);
+		activeTT.transform.SetParent (transform);
+		activeFD.transform.SetParent (transform);
 		activePC.transform.SetParent (transform);
 		activeSS.transform.SetParent (transform);
 		activeUI.transform.SetParent (transform);
-		activeFD.transform.SetParent (transform);
 
 		//load amelia for some direct influence
 		amelia = GameObject.FindGameObjectWithTag("Player");
@@ -107,6 +116,7 @@ public class ABGameController : MonoBehaviour {
 		activeUI.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		activeSS.BroadcastMessage("UpdatePlayer");
 		amelia = GameObject.FindGameObjectWithTag("Player");
+
 	}
 	
 	public IEnumerator FadeOut()
@@ -114,33 +124,56 @@ public class ABGameController : MonoBehaviour {
 		float startTime = Time.time;
 		while (activeFD.GetComponent<Image>().color.a < 1) {
 			yield return new WaitForSeconds (0.01f);
-			float t = (Time.time - startTime)/1.5f;
+			float t = (Time.time - startTime)/0.5f;//(timepassed/duration)
 			activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 			                                                   activeFD.GetComponent<Image> ().color.b, Mathf.SmoothStep(0,1, t));
 		}
 		fading = false;
 		if (transitioning) {
+			float delay = 0;
 			if(transitionType == 1)
 			{
+				switch(transitionNum)
+				{
+				case 1:
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					delay = 2f;
+					break;
+				default:
+					delay = 0;
+					break;
+				}
 				Application.LoadLevel(transitionNum);
 			}
 			else if (transitionType == 2)
 			{
 				Application.LoadLevel(transitionName);
+				//new act handling
+				switch(transitionName)
+				{
+				case "ActII-1_Encounter":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					delay = 2f;
+					break;
+				default:
+					break;
+				}
 			}
 			transitioning = false;
 			fading = true;
 			transitionType = 0;
-			StartCoroutine (FadeIn ());
+
+			StartCoroutine (FadeIn (delay));
 		}
 	}
 
-	public IEnumerator FadeIn()
+	public IEnumerator FadeIn(float delay = 0)
 	{
+		yield return new WaitForSeconds (delay);
 		float startTime = Time.time;
 		while (activeFD.GetComponent<Image>().color.a > 0) {
 			yield return new WaitForSeconds (0.01f);
-			float t = (Time.time - startTime)/1.5f;
+			float t = (Time.time - startTime)/1f; //(timepassed/duration)
 			activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 			                                                   activeFD.GetComponent<Image> ().color.b, 1 - Mathf.SmoothStep(0,1, t));
 		}
