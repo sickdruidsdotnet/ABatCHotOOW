@@ -409,17 +409,17 @@ public class PlayerMotor : BaseBehavior {
 			switch(currSeed){
 			case Player.SeedType.VineSeed:
 				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
-				player.controller.updateActiveSeeds(1, newSeed);
+				player.controller.updateActiveSeeds(0, newSeed);
 				break;
 				
 			case Player.SeedType.TreeSeed:
 				newSeed = Instantiate(Resources.Load("Seeds/TreeSeed")) as GameObject;
-				player.controller.updateActiveSeeds(2, newSeed);
+				player.controller.updateActiveSeeds(1, newSeed);
 				break;
 				
 			case Player.SeedType.FlowerSeed:
 				newSeed = Instantiate(Resources.Load("Seeds/FlowerSeed")) as GameObject;
-				player.controller.updateActiveSeeds(3, newSeed);
+				player.controller.updateActiveSeeds(2, newSeed);
 				break;
 				
 			case Player.SeedType.FernSeed:

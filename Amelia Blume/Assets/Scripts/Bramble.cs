@@ -45,6 +45,7 @@ public class Bramble : MonoBehaviour {
 				int hitDirection = other.GetComponent<PlayerController> ().faceDirection;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * -4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController> ().canControl = false;
+				other.GetComponent<PlayerController> ().isStunned = true;
 				other.GetComponent<PlayerController> ().stunTimer = 25;
 				invulCounter = 60;
 				amelia.ReduceHealth(10);
