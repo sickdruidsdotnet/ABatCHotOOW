@@ -12,9 +12,11 @@ public class Seed : MonoBehaviour
     public Soil soil;
     private int collectionTimer;
     private int collectionDelay;
-	private int soilIndex;
+	public int soilIndex;
 
     public int testInt;
+
+	public int seedHealth;
     
     // Constructor
     public Seed()
@@ -36,6 +38,7 @@ public class Seed : MonoBehaviour
     }
 	void Start()
 	{
+		seedHealth = 120;
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
 		gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = false;
@@ -209,6 +212,15 @@ public class Seed : MonoBehaviour
 		} else if (collision.transform.tag == "Player") {
 			Physics.IgnoreCollision(collision.collider, collider, true);
 		}
+	}
+
+	public void setHealth(int damage)
+	{
+		seedHealth -= damage;
+	}
+
+	public int getHealth(){
+		return seedHealth;
 	}
 
 }

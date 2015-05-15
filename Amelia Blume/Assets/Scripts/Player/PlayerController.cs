@@ -50,7 +50,10 @@ public class PlayerController : BaseBehavior {
     {
 //		Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
-		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
+		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
+		if (playerInputObj != null) {
+			playerInput = playerInputObj.GetComponent<InputHandler> ();
+		}
     	// initialize Amelia's health blossoms
 		blossoms = new GameObject[10];
 		blossomPositions = new Vector3[10];
@@ -102,6 +105,9 @@ public class PlayerController : BaseBehavior {
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
 	protected void Update() {
+		if (playerInput == null) {
+			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
+		}
 
 		if (Camera.main == null) {
 			return;		
@@ -259,7 +265,7 @@ public class PlayerController : BaseBehavior {
 				float angle = Vector2.Angle (Vector2.up * -1f, new Vector2 (horizontal2, vertical2));
 				if (player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0) {
 					player.SetCurrentSeed (Player.SeedType.TreeSeed);
-				} else if (player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
+				} else if (player.fluerUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
 					player.SetCurrentSeed (Player.SeedType.FlowerSeed);
 				} else if (player.vineUnlocked && angle < 60) {
 					player.SetCurrentSeed (Player.SeedType.VineSeed);
@@ -338,7 +344,7 @@ public class PlayerController : BaseBehavior {
 
 	public void HandleStun()
 	{
-		if (!canControl) {
+		if (isStunned) {
 			if(stunTimer <= 0)
 			{
 				canControl = true;

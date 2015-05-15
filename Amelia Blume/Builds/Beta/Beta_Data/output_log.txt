@@ -1,0 +1,38 @@
+Initialize engine version: 4.6.4f1 (99f88340878d)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: AMD Radeon HD 6800 Series (ID=0x6739)
+    Vendor:   ATI
+    VRAM:     1010 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.042 seconds
+desktop: 1920x1080 60Hz; virtual: 3280x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+Platform assembly: C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Chris\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\System.dll (this message is harmless)
+UnloadTime: 2.796407 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 2633.
+Total: 1.088474 ms (FindLiveObjects: 0.078169 ms CreateObjectMapping: 0.018921 ms MarkObjects: 0.252808 ms  DeleteObjects: 0.303370 ms)
+
+UnloadTime: 3.172053 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 2633.
+Total: 1.374163 ms (FindLiveObjects: 0.144861 ms CreateObjectMapping: 0.042806 ms MarkObjects: 0.473357 ms  DeleteObjects: 0.011167 ms)
+
+UnloadTime: 6.188079 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 610 unused Assets to reduce memory usage. Loaded Objects now: 1250.
+Total: 2.402770 ms (FindLiveObjects: 0.059867 ms CreateObjectMapping: 0.063900 ms MarkObjects: 0.285999 ms  DeleteObjects: 1.519024 ms)
+

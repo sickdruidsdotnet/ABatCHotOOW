@@ -5,6 +5,8 @@ public class InputHandler : MonoBehaviour {
 
 	public bool paused = false;
 
+	public GameObject pauseCanvas;
+
 	public string[] connectedJoysticks;
 	public string primaryInput;
 
@@ -76,6 +78,8 @@ public class InputHandler : MonoBehaviour {
 		else {
 			primaryInput = connectedJoysticks[0];
 		}
+
+		pauseCanvas = GameObject.FindGameObjectWithTag ("Pause Canvas");
 	}
 	
 	// Update is called once per frame
@@ -113,12 +117,12 @@ public class InputHandler : MonoBehaviour {
 		{
 			if(!paused){
 				paused = true;
-				Time.timeScale = 0;
+				pauseCanvas.BroadcastMessage("Pause");
 			}
 			else
 			{
 				paused = false;
-				Time.timeScale = 1.0f;
+				pauseCanvas.BroadcastMessage("UnPause");
 			}
 		}
 
