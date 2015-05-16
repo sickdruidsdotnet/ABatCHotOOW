@@ -73,7 +73,7 @@ public class ABGameController : MonoBehaviour {
 
 		//Text UI for Act transitions
 		activeTT = Instantiate (TransistionText, TransistionText.transform.position, Quaternion.identity) as GameObject;
-		activeTT.name = "Fader";
+		activeTT.name = "Transition Text";
 		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		
 		//set as children so they aren't destroyed
@@ -107,8 +107,11 @@ public class ABGameController : MonoBehaviour {
 		if (activePC == null) {
 			return;
 		}
+		//make sure all the stuff updates with the new scene's camera/player
 		activePC.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		activeUI.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+		activeFD.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		activeSS.BroadcastMessage("UpdatePlayer");
 		amelia = GameObject.FindGameObjectWithTag("Player");
 		//apply saved information from previous scene

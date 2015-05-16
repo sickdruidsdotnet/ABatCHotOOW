@@ -11,6 +11,8 @@ public class pause_handler : MonoBehaviour {
 	Canvas myCanvas;
 	ColorBlock[] cbs;
 
+	GameObject gameController;
+
 	public bool recentDirection = false;
 	public int activeButton = 0;
 		// Use this for initialization
@@ -18,6 +20,9 @@ public class pause_handler : MonoBehaviour {
 
 		//grab the camera
 		this.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+
+		//get the gamecontroller
+		gameController = GameObject.FindGameObjectWithTag ("GameController");
 
 		//get the canvas
 		myCanvas = this.GetComponent<Canvas> ();
@@ -134,11 +139,12 @@ public class pause_handler : MonoBehaviour {
 			childButtons[i].colors = cbs[i];
 		}
 		controllerMap.enabled = false;
+		activeButton = 0;
 	}
 
 	public void GoToMain(){
 		UnPause ();
-		Application.LoadLevel (0);
+		gameController.GetComponent<ABGameController>().BeginSceneTransition(0);
 	}
 
 	public void ExitGame(){
