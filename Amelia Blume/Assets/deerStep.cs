@@ -20,7 +20,7 @@ public class deerStep : MonoBehaviour {
 	public bool goingUp = true;
 	private AudioSource source;
 	private List<AudioClip> stepList;
-	public GameObject Grandestparent;
+	//public GameObject Grandestparent;
 
 
 	// Use this for initialization
@@ -47,9 +47,9 @@ public class deerStep : MonoBehaviour {
 			goingUp = false;
 		}
 
-		prevY = currY;
-		parentY = Grandestparent.transform.position.y;
-		float diff = parentY - currY;
+		//prevY = currY;
+		//parentY = Grandestparent.transform.position.y;
+		//float diff = parentY - currY;
 
 		//Debug.Log("Current diff: " + diff);
 
