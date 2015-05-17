@@ -3,10 +3,12 @@ using System.Collections;
 
 public class LevelTransition : MonoBehaviour {
 	GameObject player;
+	GameObject gameController;
 	public int nextLevel;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
+		gameController = GameObject.FindGameObjectWithTag ("GameController");
 	}
 	
 	// Update is called once per frame
@@ -17,7 +19,8 @@ public class LevelTransition : MonoBehaviour {
 			{
 				PlayerPrefs.SetInt("Highest Stage", nextLevel);
 			}
-			Application.LoadLevel(nextLevel);
+			gameController.GetComponent<ABGameController>().BeginSceneTransition(nextLevel);
+			//Application.LoadLevel(nextLevel);
 		}
 	}
 }

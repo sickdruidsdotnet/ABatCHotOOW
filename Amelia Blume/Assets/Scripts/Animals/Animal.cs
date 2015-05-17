@@ -14,6 +14,9 @@ public class Animal : MonoBehaviour
 	public Vector3 target;
 	public float targetOffset;
 
+	public GameObject conversionPrompt;
+	GameObject activePrompt;
+
 	Collider vines;
 
 	//on a scale oof 0-10, how powerful is this animal. the more strenght, the easier it
@@ -45,6 +48,14 @@ public class Animal : MonoBehaviour
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
 		StartCoroutine (breakFree (vineCollider));
+		if (conversionPrompt != null) {
+			activePrompt = Instantiate (conversionPrompt, transform.position, Quaternion.identity) as GameObject;
+			if(activePrompt != null)
+			{
+				activePrompt.GetComponent<fade_in>().FadeIn();
+			}
+		}
+
     }
 
     public void changeInfection()
@@ -58,6 +69,12 @@ public class Animal : MonoBehaviour
 		isSpored = false;
 		//destroy the vines
 		Destroy(vines.gameObject);
+		if (conversionPrompt != null) {
+			if(activePrompt != null)
+			{
+				activePrompt.GetComponent<fade_in>().FadeOut();
+			}
+		}
     }
 
 
@@ -154,6 +171,12 @@ public class Animal : MonoBehaviour
 			*/
 			isRestrained = false;
 			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
+			if (conversionPrompt != null) {
+				if(activePrompt != null)
+				{
+					activePrompt.GetComponent<fade_in>().FadeOut();
+				}
+			}
 		}
 	}
 

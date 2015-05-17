@@ -5,9 +5,9 @@ public class SunRay : MonoBehaviour {
 	float transparencyMax = 0.5f;
 	float rotationSpeed;
 	Vector3 pivot;
-	public int startLife;
-	public int life = 60;
-	public int lifeThirds;
+	public float startLife;
+	public float life;
+	public float lifeThirds;
 	public float transparencySpeed;
 
 	// Use this for initialization
@@ -18,11 +18,11 @@ public class SunRay : MonoBehaviour {
 		                           0f);
 		renderer.material.SetColor ("_Color", newColor);
 		pivot = transform.parent.transform.position;
-		life = Random.Range(40, 180);
+		life = Random.Range(0.66f, 3f);
 		startLife = life;
 		lifeThirds = life/3;
 		transform.RotateAround (pivot, Vector3.back, Random.Range(0, 360));
-		rotationSpeed = Random.Range (1, 3);
+		rotationSpeed = Random.Range (30, 90);
 		if (Random.Range (0, 5) > 2)
 			rotationSpeed *= -1;
 		transparencySpeed = (float)transparencyMax / (float)lifeThirds;
@@ -31,7 +31,7 @@ public class SunRay : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		pivot = transform.parent.transform.position;
-		life--;
+		life = life - Time.deltaTime;
 		if (life <= 0) {
 			Color newColor = new Color (renderer.material.color.r, 
 			                           renderer.material.color.g,
@@ -39,11 +39,11 @@ public class SunRay : MonoBehaviour {
 			                           0f);
 			renderer.material.SetColor ("_Color", newColor);
 			transform.RotateAround (pivot, Vector3.back, Random.Range (0, 360));
-			life = Random.Range (40, 180);
+			life = Random.Range (0.66f, 3f);
 			startLife = life;
 			lifeThirds = life / 3;
 			transparencySpeed = (float)transparencyMax / (float)lifeThirds;
-			rotationSpeed = Random.Range (1, 3);
+			rotationSpeed = Random.Range (30, 90);
 			if (Random.Range (0, 5) > 2)
 				rotationSpeed *= -1;
 
@@ -53,19 +53,19 @@ public class SunRay : MonoBehaviour {
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,
 			                            renderer.material.color.b,
-			                            renderer.material.color.a + transparencySpeed);
+			                            renderer.material.color.a + (transparencySpeed * Time.deltaTime));
 			renderer.material.SetColor ("_Color", newColor);
-			transform.RotateAround (pivot, Vector3.back, rotationSpeed);
+			transform.RotateAround (pivot, Vector3.back, (rotationSpeed * Time.deltaTime));
 		} else if (life < startLife - (2 * lifeThirds) ) {
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,
 			                            renderer.material.color.b,
-			                            renderer.material.color.a - transparencySpeed);
+			                            renderer.material.color.a - (transparencySpeed * Time.deltaTime));
 			renderer.material.SetColor ("_Color", newColor);
-			transform.RotateAround (pivot, Vector3.back, rotationSpeed);
+			transform.RotateAround (pivot, Vector3.back, (rotationSpeed * Time.deltaTime));
 		} else {
 			//rotate as normal;
-			transform.RotateAround (pivot, Vector3.back, rotationSpeed);
+			transform.RotateAround (pivot, Vector3.back, (rotationSpeed * Time.deltaTime));
 		}
 	}
 }
