@@ -12,6 +12,7 @@ public class Boar : Animal
 	//make some variables editable in the editor for debugging
 	public float baseSpeed;
 	public float speed;
+	float idealDistance = 10f;
 
 	public bool hasLeaped;
 
@@ -82,7 +83,7 @@ public class Boar : Animal
 		if (isInfected) {
 			//standard charging behavior
 		} else {
-			//walk away from amelia stuff
+			//walk away from amelia stuff, probably to the left
 		}
 
 		if (isRestrained) {
@@ -155,6 +156,7 @@ public class Boar : Animal
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().isStunned = true;
 				other.GetComponent<PlayerController>().stunTimer = 30;
 			}
 
@@ -166,7 +168,16 @@ public class Boar : Animal
 
 	void MoveRight()
 	{
-		//special charging stuf would go here, specifically for altering speed
+		//special charging stuff would go here
+		//move slightly slower when closer to the player for more tension
+		float xDistance = Mathf.Abs (player.transform.position.x - transform.position.x);
+		// ideal distance is ~10 units away. This should be tweaked as needed, but that's basically a whole boar
+		// away from the boar's outer hitbox
+		float dif = xDistance - idealDistance;
+		//if xdif is negative, then the player is too close, else the player is too far away
+		//this is a magic number --v change as needed. 0.2 will cause a full stop before it reaches the player
+		speed = baseSpeed + (dif * 0.013f);
+
 		transform.Translate ((speed * -1 * sporeModifier), 0, 0);
 		//animation["Walking"].enabled = true;
 		//anim.SetBool ("isRunning", true);

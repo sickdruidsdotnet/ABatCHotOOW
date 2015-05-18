@@ -31,8 +31,8 @@ public class ABGameController : MonoBehaviour {
 	Player.SeedType activeSeed;
 
 	
-	// Use this for initialization
-	void Start () {
+	// Use this for initialization, Awake ensures that it happens first
+	void Awake () {
 		//first check to make sure another gamecontroller does not already exist
 		GameObject[] gcs = GameObject.FindGameObjectsWithTag ("GameController");
 		if (gcs.Count () > 1) {
