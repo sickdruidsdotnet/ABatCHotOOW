@@ -90,14 +90,6 @@ public class ABGameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.F) && !fading) {
-			fading = true;
-			StartCoroutine (FadeOut ());
-		}
-		if (Input.GetKeyDown (KeyCode.I) && !fading) {
-			fading = true;
-			StartCoroutine (FadeIn());
-		}
 	}
 	
 	void OnLevelWasLoaded(int level)
