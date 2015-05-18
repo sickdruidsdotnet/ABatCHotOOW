@@ -221,6 +221,7 @@ public class Deer : Animal
 				rigidbody.freezeRotation = true;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().isStunned = true;
 				other.GetComponent<PlayerController>().stunTimer = 30;
 			}
 			//rotate the deer to face the player if that's not already the case
@@ -261,7 +262,7 @@ public class Deer : Animal
 				}
 			}
 			//ignore itself. this is also where you would ignore other objects
-			else if(!hit.transform != transform && !hit.collider.isTrigger)
+			else if(hit.transform != transform && !hit.collider.isTrigger)
 				beginRotate();
 		
 		}
@@ -418,10 +419,12 @@ public class Deer : Animal
 	{
 		if (rotationCooldown > 0)
 		{
+			speed = 0;
 			rotationCooldown--;
 			transform.Rotate(0f, 3f, 0f);
 			if(rotationCooldown <= 0){
 				recentlyRotated = false;
+				speed = walkSpeed;
 				//make sure it's perfectly in profile
 				//set the angle to face the proper directions, then assign isFacingRight
 				if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
