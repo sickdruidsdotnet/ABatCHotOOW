@@ -243,8 +243,12 @@ public class SideScrollerCameraController : MonoBehaviour {
 		int index = 0;
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
+			if(trackable == null){
+				recalculateTrackables();
+				return;
+			}
 			//for starters, let's make sure it should be in this list
-			if(trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false))
+			if( trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false))
 			{
 				//remove uninfected animals from the list, they're no longer important enough
 				removeIndices.Add (trackables.IndexOf(trackable));
@@ -594,5 +598,19 @@ public class SideScrollerCameraController : MonoBehaviour {
 		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
 		unlockAfterPan = unlock;
 		startTime = Time.time;
+	}
+
+	public void recalculateTrackables()
+	{
+		GameObject[] trackedAnimals = GameObject.FindGameObjectsWithTag ("Animal");
+		GameObject[] focusPoints = GameObject.FindGameObjectsWithTag("Focus Point");
+		GameObject[] tempTrackables = new GameObject[trackedAnimals.Count() + focusPoints.Count()] ;
+		trackedAnimals.CopyTo (tempTrackables, 0);
+		focusPoints.CopyTo (tempTrackables, trackedAnimals.Count());
+		
+		for (int i = 0; i < tempTrackables.Count(); i++) {
+			trackables.Add (tempTrackables[i]);
+			tracking.Add (false);
+		}
 	}
 }

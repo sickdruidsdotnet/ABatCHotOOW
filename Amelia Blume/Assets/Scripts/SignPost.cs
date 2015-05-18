@@ -24,6 +24,10 @@ public class SignPost : MonoBehaviour {
 	string speaker;
 	string connection;
 
+	bool personSpeaking = false;
+
+	public Sprite[] portraits = new Sprite[2];
+
 	char[] charsToTrim = { '[' ,']'};
 	char[] titleSplit = { '[', ']' , ':'};
 
@@ -44,10 +48,18 @@ public class SignPost : MonoBehaviour {
 	Text uiText;
 	Text nameText;
 
+	RectTransform portraitRect;
+	RectTransform nameRect;
+
+	//get the canvas we'll be working with
+	Canvas uiCanvas;
+
 
 	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
+
+
 		nextPassage = startingPassage;
 		nextUse = Time.time + delay;
 		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
@@ -67,6 +79,7 @@ public class SignPost : MonoBehaviour {
 		portraitObj = GameObject.Find ("Portrait");
 		uiPortraitSprite = portraitObj.GetComponent<Image>();
 		uiPortraitSprite.enabled = false;
+		portraitRect = portraitObj.GetComponent<RectTransform> ();
 
 		buttonObj = GameObject.Find ("Button");
 		uiButtonSprite = buttonObj.GetComponent<Image>();
@@ -75,7 +88,13 @@ public class SignPost : MonoBehaviour {
 		nameObj = GameObject.Find ("Name");
 		nameText = nameObj.GetComponent<Text> ();
 		nameText.enabled = false;
+		nameRect = nameObj.GetComponent<RectTransform> ();
 
+		//load/put the canvas behind the camera for easier editor experience
+		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
+		if (uiCanvas != null) {
+			uiCanvas.planeDistance = -1;
+		}
 	}
 	
 	// Update is called once per frame
@@ -88,7 +107,28 @@ public class SignPost : MonoBehaviour {
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
 		nameText.enabled = uiText.enabled;
-		uiPortraitSprite.enabled = uiText.enabled;
+		uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+		if (uiButtonSprite.enabled) {
+			if (uiCanvas != null) {
+				uiCanvas.planeDistance = 2;
+			}
+		}
+
+		if (speaker == "Amelia") {
+			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
+			personSpeaking = true;
+			uiPortraitSprite.sprite = portraits[0];
+			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
+			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
+		} else if (speaker == "Ig") {
+			uiPortraitSprite.sprite = portraits[0];
+			personSpeaking = true;
+			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
+			nameRect.anchoredPosition = new Vector2(307f, -53.7f);
+		} else {
+			nameText.enabled = false;
+			personSpeaking = false;
+		}
 
 	}
 

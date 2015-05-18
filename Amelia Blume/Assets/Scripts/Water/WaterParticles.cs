@@ -9,11 +9,17 @@ public class WaterParticles : MonoBehaviour {
 	public ParticleSystem water;
 	// Use this for initialization
 	void Start () {
-		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
+		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
+		if (playerInputObj != null) {
+			playerInput = playerInputObj.GetComponent<InputHandler> ();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (playerInput == null) {
+			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
+		}
 		rightTrigger = playerInput.water;
 		if (rightTrigger && coolDown > 10)
 		{

@@ -221,6 +221,7 @@ public class Deer : Animal
 				rigidbody.freezeRotation = true;
 				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
 				other.GetComponent<PlayerController>().canControl = false;
+				other.GetComponent<PlayerController>().isStunned = true;
 				other.GetComponent<PlayerController>().stunTimer = 30;
 			}
 			//rotate the deer to face the player if that's not already the case
@@ -232,6 +233,7 @@ public class Deer : Animal
 			else if(isCharging && !isInChargeUp)
 			{
 				HitPlayer(other.transform.gameObject);
+				beginRotate();
 			}
 		}
 	}
@@ -260,7 +262,7 @@ public class Deer : Animal
 				}
 			}
 			//ignore itself. this is also where you would ignore other objects
-			else if(!hit.transform != transform && !hit.collider.isTrigger)
+			else if(hit.transform != transform && !hit.collider.isTrigger)
 				beginRotate();
 		
 		}
@@ -284,18 +286,25 @@ public class Deer : Animal
 				Vector3 playerHead = new Vector3(player.transform.position.x,
 				                                 player.transform.position.y + 1.5f,
 				                                 player.transform.position.z);
+				//let's check the middle too, just to be sure
+				Vector3 playerCore = new Vector3(( player.transform.position.x + playerHead.x)/2,
+				                                 ( player.transform.position.y + playerHead.y)/2,
+				                                 ( player.transform.position.z + playerHead.z)/2);
+
 				Ray visionFeet = new Ray(sightPos, player.transform.position - sightPos);
 				Ray visionHead = new Ray(sightPos, playerHead - sightPos);
+				Ray visionCore = new Ray(sightPos, playerCore - sightPos);
 
 				RaycastHit visionHit;
 				RaycastHit visionHeadHit;
+				RaycastHit visionCoreHit;
 				if (Physics.Raycast (visionFeet, out visionHit, 2f * deerXSight)) {
 					//draws the vision ray in editor
 					Debug.DrawRay(sightPos, player.transform.position - sightPos, Color.green);
 					//check to make sure angle isn't too great to see
 					//Vector3 rayVector = vision.direction;
 					float angle = Vector3.Angle(visionFeet.direction, Vector3.right * faceDirection);
-					if(Mathf.Abs(angle) <= 45){
+					if(Mathf.Abs(angle) <= 35){
 						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 						{
 							//Debug.Log("found player");
@@ -320,14 +329,40 @@ public class Deer : Animal
 					//check to make sure angle isn't too great to see
 					//Vector3 rayVector = vision.direction;
 					float angle = Vector3.Angle(visionHead.direction, Vector3.right * faceDirection);
-					if(Mathf.Abs(angle) <= 45){
-						if(visionHit.transform != null && visionHit.transform.tag != null && 
-						   (visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom"))
+					if(Mathf.Abs(angle) <= 35){
+						if(visionHeadHit.transform != null && visionHeadHit.transform.tag != null && 
+						   (visionHeadHit.transform.tag == "Player" || visionHeadHit.transform.tag == "Blossom"))
 						{
 							//Debug.Log("found player");
 							//play audio
 							source.PlayOneShot(spotPlayer1, 3F);
 
+							isCharging = true;
+							isInChargeUp = true;
+							anim.SetBool ("isWalking", false);
+							anim.SetBool ("isRunning", false);
+							anim.SetBool ("chargingUp", true);
+							chargeUpCooldown = 60;
+							speed = 0f;
+							return;
+						}
+					}
+				}
+				//check the core
+				if (Physics.Raycast (visionCore, out visionCoreHit, 2f * deerXSight)) {
+					//draws the vision ray in editor
+					Debug.DrawRay(sightPos, playerCore - sightPos, Color.green);
+					//check to make sure angle isn't too great to see
+					//Vector3 rayVector = vision.direction;
+					float angle = Vector3.Angle(visionCore.direction, Vector3.right * faceDirection);
+					if(Mathf.Abs(angle) <= 35){
+						if(visionCoreHit.transform != null && visionCoreHit.transform.tag != null && 
+						   (visionCoreHit.transform.tag == "Player" || visionCoreHit.transform.tag == "Blossom"))
+						{
+							//Debug.Log("found player");
+							//play audio
+							source.PlayOneShot(spotPlayer1, 3F);
+							
 							isCharging = true;
 							isInChargeUp = true;
 							anim.SetBool ("isWalking", false);
@@ -384,10 +419,12 @@ public class Deer : Animal
 	{
 		if (rotationCooldown > 0)
 		{
+			speed = 0;
 			rotationCooldown--;
 			transform.Rotate(0f, 3f, 0f);
 			if(rotationCooldown <= 0){
 				recentlyRotated = false;
+				speed = walkSpeed;
 				//make sure it's perfectly in profile
 				//set the angle to face the proper directions, then assign isFacingRight
 				if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)

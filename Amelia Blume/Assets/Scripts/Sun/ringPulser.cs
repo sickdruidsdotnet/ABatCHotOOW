@@ -2,14 +2,13 @@
 using System.Collections;
 
 public class ringPulser : MonoBehaviour {
-	public int offset = 0;
-	float progress = 120;
+	public float offset = 0;
+	float progress = 3;
 	float transparency = 1f;
-	
-	// Update is called once per frame
-	void Update () {
+
+	void FixedUpdate () {
 		if (offset > 0){
-			offset--;
+			offset-= Time.deltaTime;
 			if(offset == 0)	{
 				Color newColor = new Color(renderer.material.color.r, 
 				                           renderer.material.color.g,
@@ -27,7 +26,7 @@ public class ringPulser : MonoBehaviour {
 			return;
 		}
 
-		if (progress >=120 ) {
+		if (progress >= 3 ) {
 			progress = 0;
 			transparency = 1f;
 			Color newColor = new Color(renderer.material.color.r, 
@@ -35,18 +34,18 @@ public class ringPulser : MonoBehaviour {
 			                           renderer.material.color.b,
 			                           transparency);
 			renderer.material.SetColor("_Color", newColor);
-			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress);
+			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)(progress * 60f));
 			//transform.localScale = startScale;
 		} else {
-			progress += 1f;
-			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)progress);
+			progress += Time.deltaTime;
+			this.GetComponent<SkinnedMeshRenderer> ().SetBlendShapeWeight (0, (float)(progress * 60f));
 			/*tempScale = new Vector3(transform.localScale.x + 0.1f, 
                                    transform.localScale.y + 0.1f, 
                                    transform.localScale.z + 0.1f);
 			transform.localScale = tempScale;*/
-			if(progress >=50)
+			if(progress >=0.83f)
 			{
-				transparency -=0.08f;
+				transparency -= (4.8f * Time.deltaTime);
 				if(transparency < 0)
 					transparency = 0;
 				Color newColor = new Color(renderer.material.color.r, 

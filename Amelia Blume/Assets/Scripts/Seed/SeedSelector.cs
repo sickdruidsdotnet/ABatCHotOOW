@@ -168,4 +168,10 @@ public class SeedSelector : MonoBehaviour {
 				renderer.enabled = false;
 		}
 	}
+
+	public void UpdatePlayer()
+	{
+		player = GameObject.FindGameObjectWithTag ("Player");
+		playerStats = player.GetComponent<Player> ();
+	}
 }
