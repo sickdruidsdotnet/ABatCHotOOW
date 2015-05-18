@@ -115,7 +115,7 @@ public class SignPost : MonoBehaviour {
 		}
 
 		if (speaker == "Amelia") {
-			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
+//			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
 			uiPortraitSprite.sprite = portraits[0];
 			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
