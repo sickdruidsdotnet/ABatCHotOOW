@@ -18,7 +18,8 @@ public class Soil : MonoBehaviour {
 	private float start;
 	private float slotSize;
 	int waterDropCount = 0;  
-	public List<GameObject>[] waterDrops; 
+	public GameObject[][] waterDrops; 
+	public GameObject[] drops;
 	// Use this for initialization
 	void Start () {
 		HydrationLevel = 0;
@@ -27,15 +28,15 @@ public class Soil : MonoBehaviour {
 //		timer = 0;
 		height = renderer.bounds.size.y;
 		size = renderer.bounds.size.x;
-		waterDrops = new List<GameObject>[10];
 		//Debug.Log (waterDrops.Length);
-		for (int i = 0; i < waterDrops.Length; i++) {
-			waterDrops[i] = new List<GameObject>();
-		}
 		water = new int[10];
 		start = this.transform.position.x - size / 2;
 		startHeight = this.transform.position.y - height / 2;
 		slotSize = size / water.Length;
+		waterDrops = new GameObject[10][];
+		for (int i = 0; i < waterDrops.Length; i++) {
+			waterDrops[i] = new GameObject[30];
+		}
 		/*
 		for (int i = 0; i < water.Length; i++) {
 			float x = start+slotSize*i;
@@ -91,10 +92,10 @@ public class Soil : MonoBehaviour {
 		//Debug.Log ("Change Water Count");
 		water [index] += changeAmount;
 		if (changeAmount > 0) {
-			while(changeAmount > 0){
-				AddWater(index);
+			//while(changeAmount > 0){
+				//AddWater(index);
 				changeAmount-=1;
-			}
+			//}
 		} else if (changeAmount < 0) {
 			while(changeAmount < 0){
 				RemoveWater(index);
@@ -106,6 +107,7 @@ public class Soil : MonoBehaviour {
 	}
 
 	void AddWater(int index){
+		int nextIndex = 0;
 		waterDropCount += 1;
 		float posX;
 		float posY;
@@ -114,29 +116,58 @@ public class Soil : MonoBehaviour {
 		if (index < water.Length) {
 			posX = Random.Range (start + slotSize * index, start + slotSize * (index + 1));
 		} else {
-			posX = Random.Range (start + slotSize * index, start + slotSize * (index + 1));
+			posX = Random.Range (start + slotSize * index, start + slotSize * (index - 1));
 		}
-
 		posY = Random.Range(startHeight, startHeight + height);
 		newDrop.transform.position = new Vector3 (posX, posY, -5);
 		Instantiate (newDrop);
-		//waterDrops[index].Add(newDrop);
-		Debug.Log (newDrop.name);
-		for (int i = 0; i < waterDrops.Length; i++) {
-			//Debug.Log (waterDrops[i]);
+		while (waterDrops[index][nextIndex] != null) {
+			nextIndex++;
+			if(nextIndex >= waterDrops[index].Length-1){
+				GameObject[] tmp = new GameObject[waterDrops[index].Length];
+				waterDrops[index] = tmp;
+			}
 		}
-		//Debug.Log (waterDrops [index]);
+		waterDrops [index] [nextIndex] = newDrop;
+		Debug.Log (waterDrops [index]);
 	
 	}
 
 	void RemoveWater(int index){
-		if (water [index] > 0 && index > 0 && index < water.Length) {
-			int randomIndex = Mathf.FloorToInt(Random.Range(0,waterDrops[index].Count));
-			GameObject newDrop = waterDrops[index][randomIndex];
-			waterDrops[index].RemoveAt(randomIndex);
-			//Debug.Log (newDrop.name);
-			Destroy(GameObject.Find(newDrop.name));
+		float posY;
+		float posX;
+		float xUBound;
+		float xLBound = start + slotSize * index;
+		int newIndex = 0;
+		if (index < water.Length) {
+			xUBound = start + slotSize * (index + 1);
+		} else {
+			xUBound = start + slotSize * (index - 1);
 		}
+
+		/*
+		if (water [index] > 0 && index > 0 && index < water.Length) {
+			int randomIndex = Random.Range(0, waterDrops[index].Length);
+			while(waterDrops[index][randomIndex] == null){
+				randomIndex = Random.Range(0, waterDrops[index].Length);
+			}
+			//Destroy(waterDrops[index][randomIndex].gameObject);
+			GameObject newDrop = waterDrops[index][randomIndex];
+			WaterDrop drop = newDrop.GetComponent<WaterDrop>();
+			drop.Kill();
+			//Object.DestroyObject(newDrop);
+		}
+		*/
+		drops = GameObject.FindGameObjectsWithTag ("waterDrop"); 
+		for (int i = 0; i < drops.Length; i++) {
+			posY = drops[i].transform.position.y;
+			posX = drops[i].transform.position.x;
+			if(posY > startHeight && posY < startHeight+height && posX > xLBound && posX < xUBound){
+				newIndex = i;
+				i = drops.Length+1;
+			}
+		}
+		Destroy (drops [newIndex]);
 	}
 
 	public int getWaterLength()
