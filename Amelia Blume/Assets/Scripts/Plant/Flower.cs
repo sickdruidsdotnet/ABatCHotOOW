@@ -13,6 +13,8 @@ public class Flower : Plant {
 	public PlantSettings plantSettings;
 	public ParticleSystem pollenSystem;
 
+	public bool bloomed = false;
+
 	[System.Serializable]
 	public class PlantSettings {
 		// how many faces does each vine segment have? 4 = square, 6 = hexagonal, etc.
@@ -193,14 +195,14 @@ public class Flower : Plant {
 			stalk.GetComponent<PlantStalk>().debugDoneGrowing = false;
 		}
 
-		if (this.maturity > plantSettings.bloomMaturity)
+		if (this.maturity > plantSettings.bloomMaturity && !bloomed)
 		{
 			bloomFlower();
 		}
 
 		if (pollenSystem != null)
 		{
-			Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
+			//Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
 		}
 	}
 
@@ -293,7 +295,8 @@ public class Flower : Plant {
     	if (pollenSystem.isPlaying == false) {
     		pollenSystem.Play();
     	}
-    	Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
+    	bloomed = true;
+    	//Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
     }
 
     public override void grow()
