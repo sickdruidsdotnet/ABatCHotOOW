@@ -381,8 +381,6 @@ public class Vine : MonoBehaviour
 		// find the gradient for each node, and rotate by that amount.
 		for (int node = 0; node < vineSkeleton.Count; node++)
 		{
-			debugOutput += "\n\tNode " + node + ":";
-
 			// define rotation axis so that the node rotates towards the target.
 			Vector3 rotAxis = Vector3.Cross(_transform.position + vineSkeleton[node].getNodeEndPoint(),
 				vineTarget.transform.position - (_transform.position + vineSkeleton[node].getNodeEndPoint())).normalized;
@@ -422,26 +420,12 @@ public class Vine : MonoBehaviour
 
 			//Debug.DrawLine(_transform.position + vineSkeleton[node].startPoint, _transform.position + vineSkeleton[node].startPoint +rotAxis);
 
-
-
-			
-			debugOutput += "\n\t\trotAxis: " + rotAxis.ToString("F8");
-			debugOutput += "\n\t\ttipPoint: " + tipPoint.ToString("F8");
-			debugOutput += "\n\t\ttoTip: " + toTip.ToString("F8");
-			debugOutput += "\n\t\ttoTarget: " + toTarget.ToString("F8");
-			debugOutput += "\n\t\tmovementVector: " + movementVector.ToString("F8");
-			debugOutput += "\n\t\tgradient: " + gradient.ToString("F8");
-			debugOutput += "\n\t\trotGrad: " + rotGrad.ToString("F8");
-			
-
 			// apply the rotation to the node
 			vineSkeleton[node].direction = rotGrad;
 			// update skeleton without updating mesh, since we'll do this many times in a single frame.
 			updateSkeleton(vineSkeleton, false);
 
 		}
-
-		debugOutput += "\nFinal distance to target: " + vineDistToGoal(vineSkeleton);
 		//Debug.Log(debugOutput);
 
 		updateMesh();
@@ -695,8 +679,6 @@ public class Vine : MonoBehaviour
 		// it's easier just to clear it and start from scratch.
 		vertices.Clear();
 
-		string debugString = "Node rotation info";
-
 		// push the tip vertex
 		vertices.Add(vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay());
 
@@ -706,9 +688,6 @@ public class Vine : MonoBehaviour
 		{
 			// determine ring rotation based on the angle between the nodes it connects.
 			// but skip the first ring, it should fall on the local Vector3.up plane
-
-			debugString += "\n\tNode " + node;
-
 			Vector3 bisectAxis = Vector3.up;
 			Vector3 prevSegAxis = Vector3.up;
 			float bottomAngle = 0f;
@@ -720,13 +699,9 @@ public class Vine : MonoBehaviour
 				bisectAngle = Vector3.Angle(vineSkeleton[node-1].direction, vineSkeleton[node].direction) / 2f;
 				bottomAngle = Vector3.Angle(vineSkeleton[node-1].direction, Vector3.up);
 				prevSegAxis = Vector3.Cross(vineSkeleton[node-1].direction, Vector3.up);
-
-				// debugString += "\n\t\taVec: " + vineSkeleton[node-1].direction.ToString("F8");
-				// debugString += "\n\t\tbVec: " + vineSkeleton[node].direction.ToString("F8");
 			}
 
-			// debugString += "\n\t\trotAxis: " + bisectAxis.ToString("F8");
-			// debugString += "\n\t\tnodeAngle: " + bisectAngle;
+			
 
 			
 
@@ -742,11 +717,7 @@ public class Vine : MonoBehaviour
 
 				Vector3 relativeVec = new Vector3(v_x, v_y, v_z);
 
-				// debugString += "\n\t\t\tringVert before rotation: " + relativeVec.ToString("F8");
-
 				relativeVec = Quaternion.AngleAxis(-bottomAngle, prevSegAxis) * relativeVec;
-
-				// debugString += "\n\t\t\tringVert after rotation: " + relativeVec.ToString("F8");
 
 				// from here, we want to rotate the ring halfway to the vineSkeleton[node].direction plane
 
@@ -757,7 +728,6 @@ public class Vine : MonoBehaviour
 		}
 
 		mesh.vertices = vertices.ToArray();
-		//Debug.Log(debugString);
 		//Debug.Break();
 	}
 
