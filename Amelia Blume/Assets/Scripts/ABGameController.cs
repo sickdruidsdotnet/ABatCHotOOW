@@ -129,6 +129,10 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionNum)
 				{
 				case 1:
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "Branching out");
+					delay = 2f;
+					break;
+				case 2:
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
 					delay = 2f;
 					break;
@@ -144,6 +148,10 @@ public class ABGameController : MonoBehaviour {
 				//new act handling
 				switch(transitionName)
 				{
+				case "ActI-1":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "Branching out");
+					delay = 2f;
+					break;
 				case "ActII-1_Encounter":
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
 					delay = 2f;

@@ -83,20 +83,18 @@ public class Boar : Animal
 		
 		//function to check if the player is in sight
 		if (isInfected) {
-			//standard charging behavior
+			if (isRestrained) {
+				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
+				rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+			}
+			else
+			{
+				MoveRight();
+				//special behaviors like jumping should be here
+				
+			}
 		} else {
 			//walk away from amelia stuff, probably to the left
-		}
-
-		if (isRestrained) {
-			rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
-			rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
-		}
-		else
-		{
-			MoveRight();
-			//special behaviors like jumping should be here
-
 		}
 		
 		//prevent the player's force from affecting boar after ramming
