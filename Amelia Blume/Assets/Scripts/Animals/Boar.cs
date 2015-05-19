@@ -60,6 +60,8 @@ public class Boar : Animal
 		
 		//this will change to check to see how it's positioned in the editor later
 		faceDirection = -1;
+
+		source.PlayOneShot (spotPlayer1, 3F);
 	}
 	
 	// Update is called once per frame
@@ -175,8 +177,8 @@ public class Boar : Animal
 		// away from the boar's outer hitbox
 		float dif = xDistance - idealDistance;
 		//if xdif is negative, then the player is too close, else the player is too far away
-		//this is a magic number --v change as needed. 0.2 will cause a full stop before it reaches the player
-		speed = baseSpeed + (dif * 0.013f);
+		//these are magic numbers, adjust as needed. Clamping so it never hits speed of 0 or supersonic
+		speed = Mathf.Clamp( baseSpeed + (dif * 0.013f), 0.07f, 0.25f) ;
 
 		transform.Translate ((speed * -1 * sporeModifier), 0, 0);
 		//animation["Walking"].enabled = true;

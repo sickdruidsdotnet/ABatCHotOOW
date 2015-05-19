@@ -120,7 +120,8 @@ public class ABGameController : MonoBehaviour {
 			activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 			                                                   activeFD.GetComponent<Image> ().color.b, Mathf.SmoothStep(0,1, t));
 		}
-		fading = false;
+		if( fading)
+			fading = false;
 		if (transitioning) {
 			float delay = 0;
 			if(transitionType == 1)
@@ -145,6 +146,10 @@ public class ABGameController : MonoBehaviour {
 				{
 				case "ActII-1_Encounter":
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					delay = 2f;
+					break;
+				case "ActIII-2_Boar_Encounter":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "Over the river and through the woods");
 					delay = 2f;
 					break;
 				default:
