@@ -96,8 +96,8 @@ public class Flower : Plant {
     {
     	plantSettings.stalkMaxHeight = Random.Range(1f, 1.5f);
     	//plantSettings.stalkGrowthRate = Random.Range(0.05f, 0.2f);
-    	plantSettings.stalkMinWidth = Random.Range(0.01f, 0.05f);
-    	plantSettings.stalkCrookedFactor = Random.Range(1f, 20f);
+    	plantSettings.stalkMinWidth = Random.Range(0.03f, 0.04f);
+    	plantSettings.stalkCrookedFactor = Random.Range(1f, 10f);
 
     	plantSettings.stalkColorHue = Random.Range(100, 130);
     	plantSettings.stalkColorSat = Random.Range(0.5f, 0.75f);
@@ -105,17 +105,17 @@ public class Flower : Plant {
 
     	plantSettings.leafGrowthRate = Random.Range(plantSettings.stalkGrowthRate * 2f, plantSettings.stalkGrowthRate * 4f);
     	plantSettings.leafDensity = Random.Range(0.5f, 0.8f);
-    	plantSettings.leafMaxLength = Random.Range(0.1f, 0.4f);
+    	plantSettings.leafMaxLength = Random.Range(0.3f, 0.5f);
     	plantSettings.leafLengthVariation = Random.Range(0f, 0.15f);
-    	plantSettings.leafWidth = Random.Range(0.04f, 0.12f);
+    	plantSettings.leafWidth = Random.Range(0.09f, 0.15f);
     	plantSettings.leafWidthVariation = Random.Range(0f, 0.04f);
     	plantSettings.leafThickness = Random.Range(0.005f, 0.015f);
     	plantSettings.leafThicknessVariation = Random.Range(0f, 0.0025f);
     	plantSettings.leafCurlStart = Random.Range(-30f, 10f);
-    	plantSettings.leafCurlVariation = Random.Range(0f, 15f);
+    	plantSettings.leafCurlVariation = Random.Range(5f, 15f);
 
     	plantSettings.petalGrowthRate = Random.Range(plantSettings.stalkGrowthRate * 2f, plantSettings.stalkGrowthRate * 4f);
-    	plantSettings.petalLength = Random.Range(0.1f, 0.4f);
+    	plantSettings.petalLength = Random.Range(0.2f, 0.4f);
     	plantSettings.petalLengthVariation = Random.Range(0f, 0.15f);
     	plantSettings.petalWidth = Random.Range(0.04f, 0.12f);
     	plantSettings.petalCount = Random.Range(4,10);
@@ -133,10 +133,10 @@ public class Flower : Plant {
     	plantSettings.petalWidthVariation = Random.Range(0f, 0.01f);
     	plantSettings.petalThickness = Random.Range(0.005f, 0.015f);
     	plantSettings.petalThicknessVariation = Random.Range(0f, 0.0025f);
-    	plantSettings.petalCurlStart = Random.Range(25f, 40f);
-    	plantSettings.petalCurlBloom = Random.Range(-15f, 5f);
-    	plantSettings.petalCurlVariation = Random.Range(0f, 5f);
-    	plantSettings.petalColorHue = Random.Range(-30, 30);
+    	plantSettings.petalCurlStart = Random.Range(40f, 60f);
+    	plantSettings.petalCurlBloom = Random.Range(-10f, 0f);
+    	plantSettings.petalCurlVariation = Random.Range(0f, 2f);
+    	plantSettings.petalColorHue = Random.Range(-10, 10);
     	// if (plantSettings.petalColorHue > 70)
     	// {
     	// 	// skip any green hues
@@ -145,8 +145,8 @@ public class Flower : Plant {
     	plantSettings.petalColorSat = Random.Range(0.7f, 1f);
     	plantSettings.petalColorVal = Random.Range(0.85f, 1f);
 
-    	plantSettings.bloomRate = Random.Range(0.1f, 0.8f);
-		plantSettings.bloomMaturity = Random.Range(0.75f, 0.99f);
+    	plantSettings.bloomRate = Random.Range(0.3f, 0.5f);
+		plantSettings.bloomMaturity = 0.99f;
     }
 
     public override void Update()
