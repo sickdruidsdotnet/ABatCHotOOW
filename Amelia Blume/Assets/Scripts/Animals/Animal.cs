@@ -133,6 +133,18 @@ public class Animal : MonoBehaviour
 		}
 	}
 
+	void OnParticleCollision(GameObject other) 
+    {
+    	if (other.tag == "Pollen")
+    	{
+    		if (!isSpored)
+    		{
+    			becomeSpored();
+    			Debug.Log(gameObject.name + " is spored");
+    		}
+    	}
+    }
+
 	IEnumerator sporeTimer()
 	{
 		yield return new WaitForSeconds (sporeResistance);
