@@ -98,7 +98,8 @@ public class Vine : MonoBehaviour
 
 	private Transform _transform; // cached transform to increase speeds
 	private MeshRenderer meshRenderer;
-	private Material vineMat;
+	private Material youngVineMat;
+	private Material matureVineMat;
 
 	public bool pressedVineButton = false;
 	public bool isGrowing = false;
@@ -106,8 +107,9 @@ public class Vine : MonoBehaviour
 	void Start()
 	{
 		meshRenderer = GetComponent<MeshRenderer>();
-		vineMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
-		meshRenderer.material = vineMat;
+		youngVineMat = Resources.Load("Materials/VineGreen", typeof(Material)) as Material;
+		matureVineMat = Resources.Load("Materials/VineGreen_Dark", typeof(Material)) as Material;
+		meshRenderer.material = youngVineMat;
 
 		// cache the transform so we don't have to do expensive lookups
 		// idk why, but it's a thing
@@ -187,6 +189,8 @@ public class Vine : MonoBehaviour
 			restrainTrigger.size = new Vector3(0.1f, 0.1f, 0.1f);
 			restrainTrigger.isTrigger = true;
 
+			meshRenderer.material = matureVineMat;
+
 		}
 
 		if (animalTarget != null)
@@ -250,8 +254,7 @@ public class Vine : MonoBehaviour
 				Gizmos.color = Color.red;
 				Gizmos.DrawSphere(mPos + vineSkeleton.Last().startPoint + vineSkeleton.Last().getNodeRay(), debugSphereSize);
 			}
-		}
-			
+		}	
 	}
 	*/
 
@@ -270,7 +273,6 @@ public class Vine : MonoBehaviour
 
 
 		createMesh();
-
 	}
 
 	private void growVine()
@@ -344,7 +346,6 @@ public class Vine : MonoBehaviour
 		{
 			updateMesh();
 		}
-		
 	}
 
 	private void addSegment(float rad, float magnitude, Vector3 direction)
