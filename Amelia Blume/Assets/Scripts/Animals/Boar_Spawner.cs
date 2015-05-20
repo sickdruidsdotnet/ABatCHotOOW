@@ -25,12 +25,13 @@ public class Boar_Spawner : MonoBehaviour {
 				if(!boarSpawned)
 				{
 					boarSpawned = true;
-					activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 8f, transform.position.y, 0), 
-					                         new Quaternion(0f, 0.5f, 0f, 1f)) as GameObject;
+					activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 18f, transform.position.y, 0), 
+					                         boarPrefab.transform.rotation) as GameObject;
 					activeBoar = GameObject.Find ("Boar(Clone)");
 					despawner.GetComponent<Boar_Spawner>().LoadBoar();
 					//update the camera
 					mainCamera.BroadcastMessage("recalculateTrackables");
+
 				}
 			}
 			else{

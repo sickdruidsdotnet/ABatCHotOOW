@@ -243,14 +243,10 @@ public class SideScrollerCameraController : MonoBehaviour {
 		int index = 0;
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
-			if(trackable == null){
-				recalculateTrackables();
-				return;
-			}
 			//for starters, let's make sure it should be in this list
-			if( trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false))
+			if( trackable == null || (trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false)))
 			{
-				//remove uninfected animals from the list, they're no longer important enough
+				//remove uninfected animals from the list or bugged trackpoints, they're no longer important enough
 				removeIndices.Add (trackables.IndexOf(trackable));
 			}
 			else {

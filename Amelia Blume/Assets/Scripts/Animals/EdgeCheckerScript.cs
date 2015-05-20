@@ -16,7 +16,6 @@ public class EdgeCheckerScript : MonoBehaviour {
 	void Start () {
 		lc = new List<Collider> ();
 		deerScript = transform.parent.GetComponent<Deer> ();
-		boarScript = transform.parent.GetComponent<Boar> ();
 		count = 0;
 	
 	}
@@ -26,9 +25,7 @@ public class EdgeCheckerScript : MonoBehaviour {
 		if (count == 0) {
 			if (deerScript != null) {
 				deerScript.beginRotate ();
-			} else if (boarScript != null) {
-				boarScript.beginRotate ();
-			}
+			} 
 		}
 
 		for(int i = 0; i < lc.Count; i++)
