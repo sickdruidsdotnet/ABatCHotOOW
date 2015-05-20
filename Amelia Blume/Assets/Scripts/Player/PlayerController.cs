@@ -298,6 +298,9 @@ public class PlayerController : BaseBehavior {
 				player.SetSunning(true);
 			}
 		}
+		if (playerInput.sunUp) {
+			isSunLighting = false;
+		}
 	}
 	
 	protected void Jump() {
@@ -316,6 +319,8 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+		isPlanting = true;
+		
 	}
 
 	protected void Dash() {
@@ -328,6 +333,7 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
