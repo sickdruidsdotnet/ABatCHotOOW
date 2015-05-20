@@ -68,6 +68,7 @@ public class Owl : Animal {
 						player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 8, 8f, 0f), 100f);
 					}
 					other.GetComponent<PlayerController> ().canControl = false;
+					other.GetComponent<PlayerController> ().isStunned = true;
 					other.GetComponent<PlayerController> ().stunTimer = 30;
 					//Debug.Log (player.GetComponent<Player> ().GetHealth ());
 					hitCoolDown = 60;
