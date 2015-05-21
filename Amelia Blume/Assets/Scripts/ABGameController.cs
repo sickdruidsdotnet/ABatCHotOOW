@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ public class ABGameController : MonoBehaviour {
 	GameObject activeFD;
 	public GameObject TransistionText;
 	GameObject activeTT;
+	public GameObject musicController;
+	GameObject activeMC;
 
 	GameObject amelia;
 
@@ -70,11 +73,14 @@ public class ABGameController : MonoBehaviour {
 		activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 		                                                 activeFD.GetComponent<Image> ().color.b, 0);
 
-
 		//Text UI for Act transitions
 		activeTT = Instantiate (TransistionText, TransistionText.transform.position, Quaternion.identity) as GameObject;
 		activeTT.name = "Transition Text";
 		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+
+		//Music Controller for controlling music
+		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as GameObject;
+		activeMC.name = "Music Controller";
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);
@@ -83,6 +89,7 @@ public class ABGameController : MonoBehaviour {
 		activePC.transform.SetParent (transform);
 		activeSS.transform.SetParent (transform);
 		activeUI.transform.SetParent (transform);
+		activeMC.transform.SetParent (transform);
 
 		//load amelia for some direct influence
 		amelia = GameObject.FindGameObjectWithTag("Player");
