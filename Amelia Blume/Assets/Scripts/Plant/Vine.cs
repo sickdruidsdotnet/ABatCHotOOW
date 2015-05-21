@@ -91,7 +91,8 @@ public class Vine : MonoBehaviour
 
 	/* vertices has the following format:
 	Vertex 0 is the tip.
-	Vertices (VineNodeNum, resolution * VineNodeNum) correspond to the ring for each VineNode */
+	Vertices (VineNodeNum, resolution * VineNodeNum) correspond to the ring for each VineNode 
+	*/
 	private List<Vector3> vertices;
 	private List<int> triangles;
 	private List<Vector2> uvs;
@@ -730,6 +731,140 @@ public class Vine : MonoBehaviour
 
 		mesh.vertices = vertices.ToArray();
 		//Debug.Break();
+	}
+
+	//////////////////////////////////////////////////////////
+	//////////////////// DESTROY VINE ////////////////////////
+	//////////////////////////////////////////////////////////
+
+	/*
+	When a vine is destroyed, it should break into at least two pieces.
+	These pieces will move away from each other in a way that indicates that 
+	they have been forcefully separated. They will fall to the ground and fade
+	away after a couple of seconds.
+
+	Each vine shred will be its own GaemObject, inheriting a portion of this
+	vine's mesh. This GameObject will be killed in the same frame, and hopefully
+	the sleight of hand will go unnoticed. In order to simulate physics on the 
+	falling vine shreds, they will need colliders. It will probably be fine to
+	give each of them a mesh collider, given their simple geometry
+	*/
+
+	public void shredVine()
+	{
+		// determine where along the vine to split the mesh apart.
+		int halfway = vineSkeleton.Count / 2;
+		List<int> splitIndices = new List<int>();
+		splitIndices.Add(halfway);
+		splitIndices.Add(vineSkeleton.Count - 1);
+
+		// loop through each new segment
+		int prevIndex = 0;
+		foreach (int splitIndex in splitIndices)
+		{
+			// instantiate the VineShred GameObject in the correct position.
+			Vector3 shredPos = vineSkeleton[prevIndex].startPoint;
+			GameObject newVine = Instantiate(Resources.Load("VinePlant/VineShredPrefab"), shredPos, Quaternion.identity) as GameObject;
+
+			// create the Mesh.
+			Mesh shredMesh = new Mesh();
+			List<Vector3> shredMeshVertices = new List<Vector3>();
+			List<int> shredMeshTriangles = new List<int>();
+			List<Vector2> shredMeshUvs = new List<Vector2>();
+
+			// loop through the relevant section of the vineSkeleton and push appropriate vertices.
+			int res = vineSettings.resolution;
+
+			// push the bottom cap vertex.
+			shredMeshVertices.Add(vineSkeleton[prevIndex].startPoint);
+			shredMeshUvs.Add(new Vector2(0,0));
+
+			// push vertices for each ring
+			for (int node = prevIndex; node < splitIndex; node++)
+			{
+				// no need to calculate the verts, just steal them from the vineSkeleton
+				for (int ringVert = 0; ringVert < res; ringVert++)
+				{
+					int vineIndex = node * res + ringVert;
+					shredMeshVertices.Add(vertices[vineIndex]);
+					shredMeshUvs.Add(new Vector2(0,0));
+				}
+			}
+
+			// push the end cap vertex
+			if (vineSkeleton[splitIndex] == vineSkeleton.Last())
+			{
+				// this is the tip, so push the point instead of a flat cap
+				shredMeshVertices.Add(vertices[0]);
+				shredMeshUvs.Add(new Vector2(0,0));
+			}
+			else
+			{
+				shredMeshVertices.Add(vineSkeleton[splitIndex].startPoint);
+				shredMeshUvs.Add(new Vector2(0,0));
+			}
+
+			shredMesh.vertices = shredMeshVertices.ToArray();
+
+			// now push the triangles
+			for (int node = prevIndex; node < splitIndex; node++)
+			{
+				for (int faceNum = 0; faceNum < res; faceNum++)
+				{
+					// if it's the first segment in this VineShred
+					if (node == prevIndex)
+					{
+						// make the bottom cap
+						int left = (node * res) + faceNum + 1;
+						int right = (node * res) + ((faceNum + 1) % res + 1);
+						int center = 0;
+
+						// add the triangle's vertices
+						shredMeshTriangles.Add(left);
+						shredMeshTriangles.Add(right);
+						shredMeshTriangles.Add(center);
+					}
+					
+					// always draw the side faces.
+					// we will draw two shredMeshTriangles for each rectangular face created between this ring and the next ring
+
+					int bottomLeft = (node * res) + faceNum + 1;
+					int bottomRight = (node * res) + ((faceNum + 1) % res) + 1;
+					int topLeft = bottomLeft + res;
+					int topRight = bottomRight + res;
+
+					// add first triangle's vertices
+					shredMeshTriangles.Add(bottomLeft);
+					shredMeshTriangles.Add(topRight);
+					shredMeshTriangles.Add(topLeft);
+
+					// add second triangle's vertices
+					shredMeshTriangles.Add(bottomLeft);
+					shredMeshTriangles.Add(bottomRight);
+					shredMeshTriangles.Add(topRight);
+
+					// if it't the last segment in this VineShred
+					if (node == splitIndex - 1)
+					{
+						// make the end cap or point.
+						int left = (node * res) + faceNum + 1;
+						int right = (node * res) + ((faceNum + 1) % res + 1);
+						int centerOrTip = shredMeshVertices.Count - 1;
+
+						// add the triangle's vertices
+						shredMeshTriangles.Add(left);
+						shredMeshTriangles.Add(right);
+						shredMeshTriangles.Add(centerOrTip);
+					}
+					
+				}
+			}
+			shredMesh.triangles = shredMeshTriangles.ToArray();
+		}
+		// add that mesh to a new VineShred GameObject
+		
+		// parent the VineShreds to the VinePlant object
+		// finally, destroy this Vine. Its day of judgement has arrived.
 	}
 
 	/*
