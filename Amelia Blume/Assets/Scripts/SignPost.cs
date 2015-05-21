@@ -193,6 +193,30 @@ public class SignPost : MonoBehaviour {
 		
 	}
 
+	public void Read(string passage){
+		if (passage == nextPassage && !continueCurrentPassage) {
+			if(beingRead && stillWritingCurrentPassage){
+				DisplayFullText();
+			}else{
+				beingRead = false;
+				uiText.enabled = false;
+				nextPassage = passage;
+				currentPassage = "";
+			}
+			return;
+		}
+		//	Debug.Log ("reading");
+		if (!beingRead) {
+			wordsIndex = -1;
+			beingRead = true;
+			
+			uiText.enabled = true;
+		}
+		NextSentence ();
+		//CheckFlags ();
+		
+	}
+
 	void DisplayFullText(){
 		if (beingRead) {
 			bool keepWriting = true;

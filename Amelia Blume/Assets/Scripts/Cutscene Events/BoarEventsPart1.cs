@@ -50,6 +50,12 @@ public class BoarEventsPart1 : MonoBehaviour {
 		panPos = panLimiter.transform.position;
 	}
 
+	/*void Update(){
+		if (Input.GetKeyDown (KeyCode.T)) {
+			GameObject.Find ("Sign_Post").GetComponent<SignPost>().Read("tutorial dash");
+		}
+	}*/
+
 	void FixedUpdate()
 	{
 		if (waitingForBreakout) {
@@ -61,6 +67,8 @@ public class BoarEventsPart1 : MonoBehaviour {
 					Event3();
 			}
 		}
+
+	
 	}
 
 	public void Event1()
@@ -69,7 +77,7 @@ public class BoarEventsPart1 : MonoBehaviour {
 		player.gameObject.GetComponent<PlayerController> ().canControl = false;
 		//rumble camera
 		if (mainCamera != null) {
-			//mainCamera.Rumble(2f);
+			mainCamera.Rumble(2f);
 		}
 		WaitForABit (2f);
 	}
