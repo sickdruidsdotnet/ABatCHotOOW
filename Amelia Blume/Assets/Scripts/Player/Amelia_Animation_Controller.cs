@@ -59,8 +59,10 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 		else
 			anim.SetBool ("isStunned", false);
 
-		if (planting)
+		if (planting){
 			anim.SetBool ("isPlanting", true);
+			amelia.isPlanting = false;
+		}
 		else
 			anim.SetBool ("isPlanting", false);
 
