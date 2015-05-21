@@ -34,8 +34,8 @@ public class ABGameController : MonoBehaviour {
 	Player.SeedType activeSeed;
 
 	
-	// Use this for initialization
-	void Start () {
+	// Use this for initialization, Awake ensures that it happens first
+	void Awake () {
 		//first check to make sure another gamecontroller does not already exist
 		GameObject[] gcs = GameObject.FindGameObjectsWithTag ("GameController");
 		if (gcs.Count () > 1) {
@@ -97,14 +97,6 @@ public class ABGameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.F) && !fading) {
-			fading = true;
-			StartCoroutine (FadeOut ());
-		}
-		if (Input.GetKeyDown (KeyCode.I) && !fading) {
-			fading = true;
-			StartCoroutine (FadeIn());
-		}
 	}
 	
 	void OnLevelWasLoaded(int level)
@@ -135,7 +127,8 @@ public class ABGameController : MonoBehaviour {
 			activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 			                                                   activeFD.GetComponent<Image> ().color.b, Mathf.SmoothStep(0,1, t));
 		}
-		fading = false;
+		if( fading)
+			fading = false;
 		if (transitioning) {
 			float delay = 0;
 			if(transitionType == 1)
@@ -143,7 +136,11 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionNum)
 				{
 				case 1:
-					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
+					delay = 2f;
+					break;
+				case 2:
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
 				default:
@@ -158,8 +155,16 @@ public class ABGameController : MonoBehaviour {
 				//new act handling
 				switch(transitionName)
 				{
+				case "ActI-1":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
+					delay = 2f;
+					break;
 				case "ActII-1_Encounter":
-					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
+					delay = 2f;
+					break;
+				case "ActIII-2_Boar_Encounter":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
 					delay = 2f;
 					break;
 				default:

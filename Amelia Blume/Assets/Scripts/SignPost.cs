@@ -96,9 +96,46 @@ public class SignPost : MonoBehaviour {
 			uiCanvas.planeDistance = -1;
 		}
 	}
-	
+
+	//sorry to jam this in here but it's running into issues with the gamecontroller;
+	void ReloadResources()
+	{
+		uiTextObj = GameObject.Find ("Words");
+		uiText = uiTextObj.GetComponent<Text>();
+		uiText.text = words[wordsIndex];
+		uiText.enabled = false;
+		
+		textBoxObj = GameObject.Find ("TextBox");
+		uiTextBoxSprite = textBoxObj.GetComponent<Image>();
+		uiTextBoxSprite.enabled = false;
+		
+		portraitObj = GameObject.Find ("Portrait");
+		uiPortraitSprite = portraitObj.GetComponent<Image>();
+		uiPortraitSprite.enabled = false;
+		portraitRect = portraitObj.GetComponent<RectTransform> ();
+		
+		buttonObj = GameObject.Find ("Button");
+		uiButtonSprite = buttonObj.GetComponent<Image>();
+		uiButtonSprite.enabled = false;
+		
+		nameObj = GameObject.Find ("Name");
+		nameText = nameObj.GetComponent<Text> ();
+		nameText.enabled = false;
+		nameRect = nameObj.GetComponent<RectTransform> ();
+		
+		//load/put the canvas behind the camera for easier editor experience
+		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
+		if (uiCanvas != null) {
+			uiCanvas.planeDistance = -1;
+		}
+	}
+
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (uiCanvas == null || uiButtonSprite == null) {
+			ReloadResources();
+			return;
+		}
 		if (Time.time > nextUse) {
 			DisplayWords ();
 			nextUse = Time.time + delay;
@@ -149,6 +186,30 @@ public class SignPost : MonoBehaviour {
 			wordsIndex = -1;
 			beingRead = true;
 
+			uiText.enabled = true;
+		}
+		NextSentence ();
+		//CheckFlags ();
+		
+	}
+
+	public void Read(string passage){
+		if (passage == nextPassage && !continueCurrentPassage) {
+			if(beingRead && stillWritingCurrentPassage){
+				DisplayFullText();
+			}else{
+				beingRead = false;
+				uiText.enabled = false;
+				nextPassage = passage;
+				currentPassage = "";
+			}
+			return;
+		}
+		//	Debug.Log ("reading");
+		if (!beingRead) {
+			wordsIndex = -1;
+			beingRead = true;
+			
 			uiText.enabled = true;
 		}
 		NextSentence ();
