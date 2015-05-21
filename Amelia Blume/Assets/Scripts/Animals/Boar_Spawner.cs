@@ -21,17 +21,7 @@ public class Boar_Spawner : MonoBehaviour {
 		if (other.gameObject.tag == "Player") {
 			//check if it's the trigger for spawning the boar
 			if(isSpawner){
-				//check if it's been spawned already
-				if(!boarSpawned)
-				{
-					boarSpawned = true;
-					activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 8f, transform.position.y, 0), 
-					                         new Quaternion(0f, 0.5f, 0f, 1f)) as GameObject;
-					activeBoar = GameObject.Find ("Boar(Clone)");
-					despawner.GetComponent<Boar_Spawner>().LoadBoar();
-					//update the camera
-					mainCamera.BroadcastMessage("recalculateTrackables");
-				}
+				SpawnBoar();
 			}
 			else{
 				if(activeBoar != null){
@@ -39,10 +29,27 @@ public class Boar_Spawner : MonoBehaviour {
 					boarSpawned = false;
 					spawner.GetComponent<Boar_Spawner> ().boarSpawned = false;
 					mainCamera.BroadcastMessage("recalculateTrackables");
+					GameObject.Find ("Boar Event Spawner").BroadcastMessage("Reset");
 
 				}
 			}
 		}
+	}
+
+	public GameObject SpawnBoar (){
+		//check if it's been spawned already
+		if(!boarSpawned)
+		{
+			boarSpawned = true;
+			activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 18f, transform.position.y, 0), 
+			                         boarPrefab.transform.rotation) as GameObject;
+			activeBoar = GameObject.Find ("Boar(Clone)");
+			despawner.GetComponent<Boar_Spawner>().LoadBoar();
+			//update the camera
+			mainCamera.BroadcastMessage("recalculateTrackables");
+			return activeBoar;	
+		}
+		return null;
 	}
 
 	public void LoadBoar(){

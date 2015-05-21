@@ -48,7 +48,7 @@ There's some kind of black mold growing on this tree.
 
 
 :: 1-1 tutorial acorn [Amelia]
-That cliff is too steep to climb... But if I planted an acorn (X button) and watered it (B button), I could climb the tree that it would grow instead.
+That cliff is too steep to climb... But if I planted an acorn (Right Stick to select, X button to plant) and watered it, I could climb the tree that it would grow instead.
 
 
 :: 1-1 fakeConvo a [Amelia]
@@ -72,6 +72,8 @@ Strange. Mold shouldn't be able to grow in these conditions.
 :: 1-1 tutorial dash [Amelia]
 This gap is too wide to jump over without falling into that bramble patch. I can dash (right bumper) on the ground or midair to get across, though.
 
+:: 1-1 tutorial water [Amelia]
+I can water this seed (B button) to have it grow into a tree, sun it (Y Button) to make it grow faster, and use it to climb this cliff
 
 :: 1-1 fakeConvo b [Ig]
 Ho![[1-1 fakeConvo c]]

@@ -8,9 +8,11 @@ public class pause_handler : MonoBehaviour {
 	public Text[] children;
 	public Button[] childButtons;
 	public Image controllerMap;
+	Canvas myCanvas;
 	ColorBlock[] cbs;
 
-	bool controllerControlled;
+	GameObject gameController;
+
 	public bool recentDirection = false;
 	public int activeButton = 0;
 		// Use this for initialization
@@ -19,6 +21,12 @@ public class pause_handler : MonoBehaviour {
 		//grab the camera
 		this.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 
+		//get the gamecontroller
+		gameController = GameObject.FindGameObjectWithTag ("GameController");
+
+		//get the canvas
+		myCanvas = this.GetComponent<Canvas> ();
+		myCanvas.planeDistance = -1;
 		pauseText = this.GetComponent<Text> ();
 		pauseText.text = "";
 
@@ -32,9 +40,6 @@ public class pause_handler : MonoBehaviour {
 			thing.enabled = false;
 		}
 
-		if (input.primaryInput != "Keyboard") {
-			controllerControlled = true;
-		}
 		cbs = new ColorBlock[childButtons.Length];
 
 		for (int i = 0; i < 3; i++) {
@@ -47,14 +52,14 @@ public class pause_handler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (controllerControlled && input.paused) {
+		if (input.paused) {
 			//if they selected an action
 			if(input.jumpDown)
 			{
 				PushedSelectable();
 			}
-			else
-			{
+			else if (input.primaryInput != "Keyboard")
+			{	//only for controllers
 				//if they pressed down and hadn't previously
 				if(!recentDirection)
 				{
@@ -72,11 +77,31 @@ public class pause_handler : MonoBehaviour {
 				else if(Mathf.Abs(input.yMove) < 0.5f)
 					recentDirection = false;
 			}
+			else
+			{
+				//keyboards
+				if(!recentDirection)
+				{
+					if(Input.GetKeyDown(KeyCode.S))
+					{
+						MoveSelectionDown();
+						recentDirection = true;
+					}
+					else if(Input.GetKeyDown(KeyCode.W))
+					{
+						MoveSelectionUp();
+						recentDirection = true;
+					}
+				}
+				else if(!Input.GetKey(KeyCode.W) && !Input.GetKeyUp(KeyCode.S))
+					recentDirection = false;
+			}
 		}
 	}
 
 	public void Pause(){
 		Time.timeScale = 0;
+		myCanvas.planeDistance = 1;
 
 		pauseText.text = "Paused";
 		children [0].text = "Continue";
@@ -89,16 +114,15 @@ public class pause_handler : MonoBehaviour {
 		input.paused = true;
 
 		//if it's not keyboard make sure these actions are doable via controller input
-		if (input.primaryInput != "Keyboard") {
-			Color tempColor = childButtons[0].colors.highlightedColor;
-			ColorBlock cb = childButtons[0].colors;
-			cb.normalColor = tempColor;
+		Color tempColor = childButtons[0].colors.highlightedColor;
+		ColorBlock cb = childButtons[0].colors;
+		cb.normalColor = tempColor;
 
-			childButtons[0].colors = cb;
-		}
+		childButtons[0].colors = cb;
 	}
 
 	public void UnPause(){
+		myCanvas.planeDistance = -1;
 		Time.timeScale = 1.0f;
 		pauseText.text = "";
 
@@ -115,11 +139,12 @@ public class pause_handler : MonoBehaviour {
 			childButtons[i].colors = cbs[i];
 		}
 		controllerMap.enabled = false;
+		activeButton = 0;
 	}
 
 	public void GoToMain(){
 		UnPause ();
-		Application.LoadLevel (0);
+		gameController.GetComponent<ABGameController>().BeginSceneTransition(0);
 	}
 
 	public void ExitGame(){

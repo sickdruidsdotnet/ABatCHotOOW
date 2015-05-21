@@ -3,11 +3,14 @@ using System.Collections;
 
 public class Reset_script : MonoBehaviour {
 
+	GameObject gameController;
+
 	void Start()
 	{
 		if (PlayerPrefs.GetInt ("Highest Stage", 0) == 0) {
 			Destroy (gameObject);
 		}
+		gameController = GameObject.FindGameObjectWithTag ("GameController");
 	}
 
 	// Update is called once per frame
@@ -22,7 +25,7 @@ public class Reset_script : MonoBehaviour {
 			{
 				PlayerPrefs.SetInt("Highest Stage", 0);
 				//reload level
-				Application.LoadLevel(Application.loadedLevel);
+				gameController.GetComponent<ABGameController>().BeginSceneTransition("Main Menu");
 			}
 		}
 	}

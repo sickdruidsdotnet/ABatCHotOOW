@@ -208,7 +208,7 @@ public class Deer : Animal
 
 		if (other.tag == "Player") {
 			//make sure the player isn't in stun before bouncing to prevent exponential force addition
-			if(!isCharging && (other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true))
+			if(!isCharging && (other.GetComponent<PlayerController>().isStunned == false && other.GetComponent<PlayerController>().invulnerable == false))
 			{	
 				int hitDirection;
 				
@@ -219,9 +219,7 @@ public class Deer : Animal
 				lockCounter = 60;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.freezeRotation = true;
-				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
-				other.GetComponent<PlayerController>().canControl = false;
-				other.GetComponent<PlayerController>().stunTimer = 30;
+				player.GetComponent<PlayerController>().damagePlayer(0, hitDirection);
 			}
 			//rotate the deer to face the player if that's not already the case
 			if(((transform.position.x - other.transform.position.x >= 0) && isFacingRight) ||
@@ -261,7 +259,7 @@ public class Deer : Animal
 				}
 			}
 			//ignore itself. this is also where you would ignore other objects
-			else if(!hit.transform != transform && !hit.collider.isTrigger)
+			else if(hit.transform != transform && !hit.collider.isTrigger)
 				beginRotate();
 		
 		}
@@ -418,10 +416,12 @@ public class Deer : Animal
 	{
 		if (rotationCooldown > 0)
 		{
+			speed = 0;
 			rotationCooldown--;
 			transform.Rotate(0f, 3f, 0f);
 			if(rotationCooldown <= 0){
 				recentlyRotated = false;
+				speed = walkSpeed;
 				//make sure it's perfectly in profile
 				//set the angle to face the proper directions, then assign isFacingRight
 				if (transform.rotation.eulerAngles.y > 90 && transform.rotation.eulerAngles.y <= 270)
@@ -460,14 +460,7 @@ public class Deer : Animal
 		lockCounter = 60;
 		rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 		rigidbody.freezeRotation = true;
-		//don't add the impact if player is about to die
-		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
-			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
-		}
-		player.GetComponent<PlayerController>().canControl = false;
-		player.GetComponent<PlayerController> ().isStunned = true;
-		player.GetComponent<PlayerController>().stunTimer = 45;
-		player.GetComponent<Player> ().ReduceHealth (damageValue);
+		player.GetComponent<PlayerController> ().damagePlayer (damageValue, hitDirection);
 		isCharging = false;
 		anim.SetBool ("isRunning", false);
 		anim.SetBool ("chargingUp", false);
