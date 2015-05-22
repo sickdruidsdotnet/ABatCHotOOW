@@ -752,9 +752,13 @@ public class Vine : MonoBehaviour
 	public void shredVine()
 	{
 		// determine where along the vine to split the mesh apart.
-		int halfway = vineSkeleton.Count / 2;
+		int quarter = vineSkeleton.Count / 4;
+		int half = quarter * 2;
+		int threeQuarters = quarter * 3;
 		List<int> splitIndices = new List<int>();
-		splitIndices.Add(halfway);
+		splitIndices.Add(quarter);
+		splitIndices.Add(half);
+		splitIndices.Add(threeQuarters);
 		splitIndices.Add(vineSkeleton.Count - 1);
 
 		// loop through each new segment
@@ -897,6 +901,8 @@ public class Vine : MonoBehaviour
 			// add that mesh to a new VineShred GameObject
 			vineShredScript.setMesh(shredMesh);
 			vineShredScript.setMaterial(meshRenderer.material);
+			vineShredScript.ignore(animalTarget);
+			vineShredScript.ignore(GameObject.FindWithTag("Player"));
 
 			prevIndex = splitIndex;
 		}
