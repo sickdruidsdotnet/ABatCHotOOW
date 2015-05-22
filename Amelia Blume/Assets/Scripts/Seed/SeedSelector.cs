@@ -15,6 +15,8 @@ public class SeedSelector : MonoBehaviour {
 	public SelectionEffect[] seeds;
 	string prevDirection;
 	string direction;
+	float horizontal2;
+	float vertical2;
 
 	void Start(){
 		player = GameObject.FindGameObjectWithTag ("Player");
@@ -51,8 +53,13 @@ public class SeedSelector : MonoBehaviour {
 		}
 
 		if(playerInput.primaryInput != "KeyBoard"){
-			float horizontal2 = Input.GetAxis("Horizontal 3");
-			float vertical2 = Input.GetAxis ("Vertical 3");
+			if(playerInput.primaryInput == "©Microsoft Corporation Xbox 360 Wired Controller"){
+				horizontal2 = Input.GetAxis("Horizontal 4");
+				vertical2 = Input.GetAxis ("Vertical 4");
+			}else{
+				horizontal2 = Input.GetAxis("Horizontal 3");
+				vertical2 = Input.GetAxis ("Vertical 3");
+			}
 			if (new Vector2 (horizontal2, vertical2).magnitude >= 0.3f) {
 
 				float angle = Vector2.Angle(Vector2.up * -1f, new Vector2(horizontal2, vertical2));
@@ -167,5 +174,11 @@ public class SeedSelector : MonoBehaviour {
 			foreach(Renderer renderer in childRenderers)
 				renderer.enabled = false;
 		}
+	}
+
+	public void UpdatePlayer()
+	{
+		player = GameObject.FindGameObjectWithTag ("Player");
+		playerStats = player.GetComponent<Player> ();
 	}
 }

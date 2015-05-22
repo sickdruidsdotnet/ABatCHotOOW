@@ -40,15 +40,8 @@ public class Bramble : MonoBehaviour {
 
 	void OnTriggerStay(Collider other)
 	{
-		if (other.tag == "Player" && invulCounter <= 0) {
-			if (other.GetComponent<PlayerController> ().stunTimer <= 0 || other.GetComponent<PlayerController> ().canControl == true) {	
-				int hitDirection = other.GetComponent<PlayerController> ().faceDirection;
-				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * -4, 8f, 0f), 100f);
-				other.GetComponent<PlayerController> ().canControl = false;
-				other.GetComponent<PlayerController> ().stunTimer = 25;
-				invulCounter = 60;
-				amelia.ReduceHealth(10);
-			}
+		if (other.tag == "Player") {
+			player.GetComponent<PlayerController>().damagePlayer(10);
 		}
 	}	
 }

@@ -54,7 +54,7 @@ public class Owl : Animal {
 		if (other.gameObject.tag == "Player") {
 //			Debug.Log ("HIT");
 			if (hitCoolDown <= 0 && !isRestrained) {
-				if ((other.GetComponent<PlayerController> ().stunTimer <= 0 || other.GetComponent<PlayerController> ().canControl == true)) {	
+				if ((other.GetComponent<PlayerController> ().isStunned == false && other.GetComponent<PlayerController> ().invulnerable == false)) {	
 					int hitDirection;
 			
 					if (transform.position.x - other.transform.position.x >= 0) {
@@ -62,14 +62,7 @@ public class Owl : Animal {
 					} else {
 						hitDirection = 1;
 					}
-					player.GetComponent<Player> ().ReduceHealth (damageValue);
-					//other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
-					if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
-						player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 8, 8f, 0f), 100f);
-					}
-					other.GetComponent<PlayerController> ().canControl = false;
-					other.GetComponent<PlayerController> ().stunTimer = 30;
-					//Debug.Log (player.GetComponent<Player> ().GetHealth ());
+					player.GetComponent<PlayerController>().damagePlayer(damageValue, hitDirection);
 					hitCoolDown = 60;
 				}
 			}

@@ -5,33 +5,34 @@ public class SunPulser : MonoBehaviour {
 
 	Quaternion startRot;
 	Vector3 startScale;
-	int counter;
-	int pulseTime = 40;
+	float counter;
+	float pulseTime = 0.66666f;
 	bool growing;
+	float growthRate = 0.06f;
 	// Use this for initialization
 	void Start () {
 		startRot = transform.rotation;
 		growing = true;
 	}
 	
-	// Update is called once per frame
+
 	void FixedUpdate () {
 		if (counter <= 0) {
 			transform.rotation = startRot;
 			counter = pulseTime;
 			growing = !growing;
 		} else {
-			counter--;
+			counter-= Time.deltaTime;
 			if(growing){
-				transform.localScale = new Vector3(transform.localScale.x + 0.001f, 
-			                                   transform.localScale.y + 0.001f, 
-			                                   transform.localScale.z + 0.001f);
+				transform.localScale = new Vector3(transform.localScale.x + (growthRate * Time.deltaTime), 
+			                                   transform.localScale.y + (growthRate * Time.deltaTime), 
+			                                   transform.localScale.z + (growthRate * Time.deltaTime));
 			}
 			else
 			{
-				transform.localScale = new Vector3(transform.localScale.x - 0.001f, 
-				                                   transform.localScale.y - 0.001f, 
-				                                   transform.localScale.z - 0.001f);
+				transform.localScale = new Vector3(transform.localScale.x - (growthRate * Time.deltaTime), 
+				                                   transform.localScale.y - (growthRate * Time.deltaTime), 
+				                                   transform.localScale.z - (growthRate * Time.deltaTime));
 			}
 			
 		}
