@@ -16,7 +16,7 @@ public class WaterParticles : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (playerInput == null) {
 			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
 		}
