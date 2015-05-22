@@ -764,10 +764,12 @@ public class Vine : MonoBehaviour
 		{
 			// instantiate the VineShred GameObject in the correct position.
 			Vector3 shredPos = vineSkeleton[prevIndex].startPoint;
-			GameObject newVine = Instantiate(Resources.Load("VinePlant/VineShredPrefab"), shredPos, Quaternion.identity) as GameObject;
+			GameObject vineShred = Instantiate(Resources.Load("VinePlant/VineShredPrefab"), shredPos, Quaternion.identity) as GameObject;
+			VineShred vineShredScript = vineShred.GetComponent<VineShred>();
 
 			// create the Mesh.
 			Mesh shredMesh = new Mesh();
+			shredMesh.name = "VineShred";
 			List<Vector3> shredMeshVertices = new List<Vector3>();
 			List<int> shredMeshTriangles = new List<int>();
 			List<Vector2> shredMeshUvs = new List<Vector2>();
@@ -805,6 +807,7 @@ public class Vine : MonoBehaviour
 			}
 
 			shredMesh.vertices = shredMeshVertices.ToArray();
+			shredMesh.uv = shredMeshUvs.ToArray();
 
 			// now push the triangles
 			for (int node = prevIndex; node < splitIndex; node++)
@@ -858,14 +861,23 @@ public class Vine : MonoBehaviour
 					}
 					
 				}
+				shredMesh.triangles = shredMeshTriangles.ToArray();
 			}
-			shredMesh.triangles = shredMeshTriangles.ToArray();
+
+			// add that mesh to a new VineShred GameObject
+			vineShredScript.setMesh(shredMesh);
+			vineShredScript.setMaterial(meshRenderer.material);
+
+			// parent the VineShreds to the VinePlant object
+			vineShred.transform.parent = transform.parent;
 		}
-		// add that mesh to a new VineShred GameObject
-		
-		// parent the VineShreds to the VinePlant object
+
 		// finally, destroy this Vine. Its day of judgement has arrived.
+		gameObject.Destroy();
+
 	}
+	
+	
 
 	/*
 	PUBLIC FUNCTIONS
