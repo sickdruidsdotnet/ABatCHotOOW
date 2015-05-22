@@ -17,15 +17,15 @@ public class WaterDrop : MonoBehaviour {
 		this.transform.localScale = new Vector3 (0.001f, 0.001f, 0.001f);
 		myRenderer = GetComponent<Renderer> ();
 		myMaterial = myRenderer.material;
-		Debug.Log (myMaterial.color.r);
-		Debug.Log (myMaterial.color.g);
-		Debug.Log (myMaterial.color.b);
+		//Debug.Log (myMaterial.color.r);
+		//Debug.Log (myMaterial.color.g);
+		//Debug.Log (myMaterial.color.b);
 		startTime = Time.time;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		Debug.Log ("Seconds = " + (Time.time - startTime));
+		//Debug.Log ("Seconds = " + (Time.time - startTime));
 		myColor = myMaterial.color;
 		if (this.transform.localScale.x < 0.3) {
 			this.transform.localScale += new Vector3 (0.005f, 0.005f, 0.005f);
@@ -43,7 +43,7 @@ public class WaterDrop : MonoBehaviour {
 		}
 
 		if (Time.time - startTime > 10f) {
-			Debug.Log ("Destroy");
+			//Debug.Log ("Destroy");
 			Destroy(this.gameObject);
 		}
 	}
