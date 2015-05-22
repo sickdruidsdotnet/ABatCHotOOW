@@ -19,6 +19,10 @@ public class PlayerController : BaseBehavior {
 	public bool isJumping = false;
 	public bool isAirDashing = false;
 	public bool isStunned = false;
+	public bool isPlanting = false;
+	public bool isSunLighting = false;
+
+	public float watering = 0.0f;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -39,6 +43,7 @@ public class PlayerController : BaseBehavior {
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
+	public Transform blossomParent;
 	public GameObject blossomPrefab;	
 	public GameObject[] blossoms;
 	public Vector3[] blossomPositions;
@@ -58,16 +63,15 @@ public class PlayerController : BaseBehavior {
 			playerInput = playerInputObj.GetComponent<InputHandler> ();
 		}
     	// initialize Amelia's health blossoms
-		blossoms = new GameObject[10];
+		blossoms = GameObject.FindGameObjectsWithTag("Blossom");
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
 		int i = 0;
-		foreach (Transform child in transform) 
+		foreach (GameObject child in blossoms) 
 		{
-			blossomMover tempBlossom = child.GetComponent<blossomMover>();
+			blossomMover tempBlossom = blossoms[i].GetComponent<blossomMover>();
 			if(tempBlossom != null)
 			{
-				blossoms[i] = child.gameObject;
 				blossoms[i].name = blossoms[i].name + " " + i;
 				blossomPositions[i] = blossoms[i].transform.localPosition;
 				blossomRotations[i] = blossoms[i].transform.localRotation;
@@ -117,16 +121,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		//check to see if blossoms are up-to-date
-		//checkHealth ();
-
-		//debug, remove this when we get it properly detaching via health drops
-		if (Input.GetKey ("1")) {
-			for(int i = 0; i < 10; i++)
-			{	
-				if(blossoms[i] != null)
-					blossoms[i].GetComponent<blossomMover>().detach ();
-			}
-		}
+		checkHealth ();
 
 		if (playerInput.jumpUp || !canControl)
 			StopJump();
@@ -306,6 +301,9 @@ public class PlayerController : BaseBehavior {
 				player.SetSunning(true);
 			}
 		}
+		if (playerInput.sunUp) {
+			isSunLighting = false;
+		}
 	}
 	
 	protected void Jump() {
@@ -324,6 +322,8 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+		isPlanting = true;
+		
 	}
 
 	protected void Dash() {
@@ -336,6 +336,7 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
@@ -397,7 +398,7 @@ public class PlayerController : BaseBehavior {
      		{
 				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
 				blossoms[currTens-i] = newBlossom;
-				blossoms[currTens-i].transform.parent = transform;
+				blossoms[currTens-i].transform.parent = blossomParent;
 				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
 				blossoms[currTens-i].transform.localPosition = blossomPositions[currTens-i];
 				//rotation varies depending on which direction the player, but not locally...?

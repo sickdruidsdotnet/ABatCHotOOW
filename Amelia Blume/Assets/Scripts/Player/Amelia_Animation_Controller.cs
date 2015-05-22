@@ -9,6 +9,9 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 	public bool dashing;
 	public bool airDashing;
 	public bool stunned;
+	public bool planting;
+	public bool sunLighting;
+	public float watering;
 
 	Animator anim;
 
@@ -26,15 +29,19 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 		dashing = amelia.isDashing;
 		airDashing = amelia.isAirDashing;
 		stunned = amelia.isStunned;
+		planting = amelia.isPlanting;
+		sunLighting = amelia.isSunLighting;
+		watering = amelia.watering;
 
-		if(running)
+		if(running && !jumping)
 			anim.SetBool ("isRunning", true);
 		else
 			anim.SetBool ("isRunning", false);
 
-		if(jumping)
-			anim.SetBool ("isJumping", true);
-		else
+		if (jumping) {
+			if (!dashing && !airDashing)
+				anim.SetBool ("isJumping", true);
+		}else
 			anim.SetBool ("isJumping", false);
 
 		if(dashing)
@@ -51,6 +58,23 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 			anim.SetBool ("isStunned", true);
 		else
 			anim.SetBool ("isStunned", false);
+
+		if (planting){
+			anim.SetBool ("isPlanting", true);
+			amelia.isPlanting = false;
+		}
+		else
+			anim.SetBool ("isPlanting", false);
+
+		if (sunLighting)
+			anim.SetBool ("isSunLighting", true);
+		else
+			anim.SetBool ("isSunLighting", false);
+		
+		//anim.SetFloat ("watering", watering);
+
+
+
 	
 	}
 }
