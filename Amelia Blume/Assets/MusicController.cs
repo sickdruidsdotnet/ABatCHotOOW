@@ -30,20 +30,24 @@ public class MusicController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sources = GameObject.FindGameObjectWithTag ("MainCamera").GetComponents<AudioSource> ();
+		
 		activeSource = sources[0];
+		activeSource.loop = true;
+
 		standbySource = sources[1];
-		standbySource.clip = act1;
+		//standbySource.clip = act1;
 		standbySource.loop = true;
-		standbySource.Play();
+		//standbySource.Play();
+		
 		fadeIn = true;
 		fadeOut = false;
+		crossFade = false;
 	}
 	
 	// Update is called once per framea
 	void Update () {
 		if(fadeIn){
 			fadeInAudio(standbySource);
-
 		}
 
 		if(fadeOut)
@@ -98,8 +102,6 @@ public class MusicController : MonoBehaviour {
     		}
     	}
  	}
- 
-
 
  	public void crossFadeActiveAndStandby(bool pause = true){
  		crossFade = true;
@@ -107,7 +109,6 @@ public class MusicController : MonoBehaviour {
  		fadeOut = true;
  		cfPause = pause;
  	}
-
 
  	public void setClip(AudioClip clip, string clipType){
  		if(clipType == "active")
@@ -150,7 +151,11 @@ public class MusicController : MonoBehaviour {
  		prevAct = currentAct;
  		currentLevel = Application.loadedLevelName;
  		currentAct = extractAct(currentLevel);
-
+ 		Debug.Log("currentAct: " + currentAct);
+ 		
+ 		if(currentAct != prevAct)
+ 			setClip(currentAct, "standby");
+ 			fadeInStandby();
  	}
 
  	public string extractAct(string levelName){

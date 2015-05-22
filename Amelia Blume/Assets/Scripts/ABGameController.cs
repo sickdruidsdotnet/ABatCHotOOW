@@ -19,8 +19,8 @@ public class ABGameController : MonoBehaviour {
 	GameObject activeFD;
 	public GameObject TransistionText;
 	GameObject activeTT;
-	public GameObject musicController;
-	GameObject activeMC;
+	public MusicController musicController;
+	MusicController activeMC;
 
 	GameObject amelia;
 
@@ -79,8 +79,8 @@ public class ABGameController : MonoBehaviour {
 		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 
 		//Music Controller for controlling music
-		//activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as GameObject;
-		activeMC = musicController;
+		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as MusicController;
+		//activeMC = musicController;
 		activeMC.name = "Music Controller";
 		//activeMC.GetComponent<Script> ()
 		
