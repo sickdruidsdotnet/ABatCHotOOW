@@ -38,6 +38,7 @@ public class VineShred : MonoBehaviour
 
 	public void setMaterial(Material mat)
 	{
+		if (meshRenderer == null) {meshRenderer = GetComponent<MeshRenderer>();}
 		meshRenderer.material = mat;
 	}
 }
