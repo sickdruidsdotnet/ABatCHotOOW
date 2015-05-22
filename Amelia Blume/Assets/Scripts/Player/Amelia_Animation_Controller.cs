@@ -71,7 +71,7 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 		else
 			anim.SetBool ("isSunLighting", false);
 		
-		anim.SetFloat ("watering", watering);
+		//anim.SetFloat ("watering", watering);
 
 
 
