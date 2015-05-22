@@ -79,8 +79,10 @@ public class ABGameController : MonoBehaviour {
 		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 
 		//Music Controller for controlling music
-		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as GameObject;
+		//activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as GameObject;
+		activeMC = musicController;
 		activeMC.name = "Music Controller";
+		//activeMC.GetComponent<Script> ()
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);
@@ -121,6 +123,10 @@ public class ABGameController : MonoBehaviour {
 	public IEnumerator FadeOut()
 	{
 		float startTime = Time.time;
+
+		//fadeout music
+		activeMC.fadeOutActive();
+
 		while (activeFD.GetComponent<Image>().color.a < 1) {
 			yield return new WaitForSeconds (0.01f);
 			float t = (Time.time - startTime)/0.5f;//(timepassed/duration)
@@ -181,6 +187,8 @@ public class ABGameController : MonoBehaviour {
 
 	public IEnumerator FadeIn(float delay = 0)
 	{
+		//fade in music
+		activeMC.fadeInStandby();
 		yield return new WaitForSeconds (delay);
 		float startTime = Time.time;
 		while (activeFD.GetComponent<Image>().color.a > 0) {
