@@ -33,12 +33,21 @@ public class MusicController : MonoBehaviour {
 		
 		activeSource = sources[0];
 		activeSource.loop = true;
+		activeSource.volume = (float)0.0;
 
 		standbySource = sources[1];
 		//standbySource.clip = act1;
 		standbySource.loop = true;
 		//standbySource.Play();
+		standbySource.volume = (float)0.0;
+
+		currentLevel = Application.loadedLevelName;
+ 		currentAct = extractAct(currentLevel);
+ 		Debug.Log("currentAct == " + currentAct);
+ 		setClip(currentAct, "standby");
 		
+		//standbySource.clip = act1;		
+
 		fadeIn = true;
 		fadeOut = false;
 		crossFade = false;
@@ -74,7 +83,7 @@ public class MusicController : MonoBehaviour {
     	}
     	else 
     	{
-    		fadeIn = false;
+    		fadeOut = false;
     		if(!crossFade)
     		{
     			audio.Stop();
@@ -94,11 +103,13 @@ public class MusicController : MonoBehaviour {
     	}
     	else 
     	{
-    		fadeOut = false;
+    		fadeIn = false;
     		if(!crossFade)
     		{
     			standbySource = activeSource;
     			activeSource = audio;
+
+    			//standbySource.volume = 0.0;
     		}
     	}
  	}
@@ -147,15 +158,16 @@ public class MusicController : MonoBehaviour {
  	}
 
  	void OnLevelWasLoaded(int level){
- 		prevLevel = currentLevel;
- 		prevAct = currentAct;
- 		currentLevel = Application.loadedLevelName;
- 		currentAct = extractAct(currentLevel);
- 		Debug.Log("currentAct: " + currentAct);
+ 		Debug.Log("MusicController OnLevelWasLoaded called");
+ 		//prevLevel = currentLevel;
+ 		//prevAct = currentAct;
+ 		//currentLevel = Application.loadedLevelName;
+ 		//currentAct = extractAct(currentLevel);
+ 		//Debug.Log("currentAct: " + currentAct);
  		
- 		if(currentAct != prevAct)
- 			setClip(currentAct, "standby");
- 			fadeInStandby();
+ 		//if(currentAct != prevAct)
+ 		//	setClip(currentAct, "standby");
+ 		//	fadeInStandby();
  	}
 
  	public string extractAct(string levelName){
