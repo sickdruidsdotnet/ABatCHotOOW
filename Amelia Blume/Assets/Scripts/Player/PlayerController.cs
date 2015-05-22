@@ -19,6 +19,10 @@ public class PlayerController : BaseBehavior {
 	public bool isJumping = false;
 	public bool isAirDashing = false;
 	public bool isStunned = false;
+	public bool isPlanting = false;
+	public bool isSunLighting = false;
+
+	public float watering = 0.0f;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -26,6 +30,9 @@ public class PlayerController : BaseBehavior {
 
     public bool isFacingRight;
     public int faceDirection;
+
+	public bool invulnerable = false;
+	public int invulCounter;
 
 	public bool canControl;
 	public int stunTimer;
@@ -166,6 +173,9 @@ public class PlayerController : BaseBehavior {
 			player.transform.rotation *= player.motor.environment.groundRotation;
 		}
 
+		if (invulnerable) {
+			HandleInvulnerability();
+		}
 	}
 	
 	public void CommitMove(Vector3 finalMovement) {
@@ -300,6 +310,9 @@ public class PlayerController : BaseBehavior {
 				player.SetSunning(true);
 			}
 		}
+		if (playerInput.sunUp) {
+			isSunLighting = false;
+		}
 	}
 	
 	protected void Jump() {
@@ -318,6 +331,8 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+		isPlanting = true;
+		
 	}
 
 	protected void Dash() {
@@ -330,6 +345,7 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
@@ -355,6 +371,15 @@ public class PlayerController : BaseBehavior {
 				stunTimer--;
 			}
 		}
+	}
+
+	public void HandleInvulnerability()
+	{
+		invulCounter--;
+		if (invulCounter <= 0) {
+			invulnerable = false;
+		}
+
 	}
 
 	//essentially check if the blossoms need to be detached/added
@@ -399,5 +424,24 @@ public class PlayerController : BaseBehavior {
 		}
 		activeSeeds [slot] = seed;
 
+	}
+
+	public void damagePlayer(int damageValue, int hitDirection = 0)
+	{
+		if (!invulnerable) {
+			if(hitDirection == 0)
+			{
+				hitDirection = faceDirection;
+			}
+			if (!(gameObject.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
+				gameObject.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
+			}
+			canControl = false;
+			isStunned = true;
+			invulnerable = true;
+			stunTimer = 45;
+			invulCounter = 75;
+			gameObject.GetComponent<Player> ().ReduceHealth (damageValue);
+		}
 	}
 }
