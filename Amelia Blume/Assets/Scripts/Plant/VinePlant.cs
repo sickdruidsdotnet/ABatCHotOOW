@@ -61,6 +61,7 @@ public class VinePlant : Plant
     public override void Update()
     {
         base.Update();
+		animals = GameObject.FindGameObjectsWithTag("Animal");
 
         bool isGrowing = vines[0].GetComponent<Vine>().isGrowing;
 
