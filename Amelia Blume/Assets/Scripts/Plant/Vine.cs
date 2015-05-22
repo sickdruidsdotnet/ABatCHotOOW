@@ -891,11 +891,11 @@ public class Vine : MonoBehaviour
 					
 				}
 			}
-
+			/*
 			Debug.Log("vertices length = " + shredMeshVertices.Count);
 			Debug.Log(vertString);
 			Debug.Log(triangleString);
-
+			*/
 			shredMesh.triangles = shredMeshTriangles.ToArray();
 
 			// add that mesh to a new VineShred GameObject
