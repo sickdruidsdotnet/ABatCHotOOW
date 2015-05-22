@@ -223,7 +223,7 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning() || player.isConverting()) {
+		if (!canControl || player.isSunning() || player.isConverting() || player.GetDead ()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
@@ -274,10 +274,18 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if(!canControl)
-			return;
+		if (!canControl) {
+			Debug.Log (canControl);
+			if(player.GetDead()){
+				if(playerInput.jumpDown){
+					player.SetSpawn(true);
+				}
+			}else{
+				return;
+			}
+		}
 
-		if (!player.isSunning() && !player.isConverting()) {
+		if (!player.isSunning() && !player.isConverting() && !player.GetDead()) {
 			if (playerInput.jumpDown) {
 				if(player.GetReadSign())
 					ReadSign();
