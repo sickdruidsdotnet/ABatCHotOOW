@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Soil : MonoBehaviour {
-	public int HydrationLevel;
-	public bool isPlanted;
+	private int HydrationLevel;
+	private bool isPlanted;
 	private Vector3 SeedLocation;
 	private int SeedWater;
 	private int SeedType;
@@ -17,9 +17,12 @@ public class Soil : MonoBehaviour {
 	public int[] water;
 	private float start;
 	private float slotSize;
-	int waterDropCount = 0;  
-	public GameObject[][] waterDrops; 
-	public GameObject[] drops;
+	private int waterDropCount = 0;  
+	//public GameObject[][] waterDrops; 
+	private GameObject[] drops;
+
+	int addCount = 0;
+	int subtractCount = 0;
 	// Use this for initialization
 	void Start () {
 		HydrationLevel = 0;
@@ -33,10 +36,10 @@ public class Soil : MonoBehaviour {
 		start = this.transform.position.x - size / 2;
 		startHeight = this.transform.position.y - height / 2;
 		slotSize = size / water.Length;
-		waterDrops = new GameObject[10][];
-		for (int i = 0; i < waterDrops.Length; i++) {
-			waterDrops[i] = new GameObject[30];
-		}
+		//waterDrops = new GameObject[10][];
+		//for (int i = 0; i < waterDrops.Length; i++) {
+		//	waterDrops[i] = new GameObject[30];
+		//}
 		/*
 		for (int i = 0; i < water.Length; i++) {
 			float x = start+slotSize*i;
@@ -107,8 +110,9 @@ public class Soil : MonoBehaviour {
 	}
 
 	void AddWater(int index){
-		int nextIndex = 0;
+//		int nextIndex = 0;
 		waterDropCount += 1;
+		addCount += 1;
 		float posX;
 		float posY;
 		GameObject newDrop = (GameObject)Resources.Load ("waterDrop");
@@ -118,18 +122,11 @@ public class Soil : MonoBehaviour {
 		} else {
 			posX = Random.Range (start + slotSize * index, start + slotSize * (index - 1));
 		}
-		posY = Random.Range(startHeight, startHeight + height);
+		posY = Random.Range(startHeight+(height/2), startHeight + height-0.25f);
 		newDrop.transform.position = new Vector3 (posX, posY, -5);
+		newDrop.GetComponent<WaterDrop> ().SetSoil (this);
+		newDrop.GetComponent<WaterDrop> ().SetIndex (index);
 		Instantiate (newDrop);
-		while (waterDrops[index][nextIndex] != null) {
-			nextIndex++;
-			if(nextIndex >= waterDrops[index].Length-1){
-				GameObject[] tmp = new GameObject[waterDrops[index].Length];
-				waterDrops[index] = tmp;
-			}
-		}
-		waterDrops [index] [nextIndex] = newDrop;
-		Debug.Log (waterDrops [index]);
 	
 	}
 
@@ -138,36 +135,40 @@ public class Soil : MonoBehaviour {
 		float posX;
 		float xUBound;
 		float xLBound = start + slotSize * index;
-		int newIndex = 0;
+		float yLBound = startHeight;
+		float yUBound = startHeight + height;
+
+		int newIndex = -1;
 		if (index < water.Length) {
 			xUBound = start + slotSize * (index + 1);
 		} else {
 			xUBound = start + slotSize * (index - 1);
 		}
 
-		/*
-		if (water [index] > 0 && index > 0 && index < water.Length) {
-			int randomIndex = Random.Range(0, waterDrops[index].Length);
-			while(waterDrops[index][randomIndex] == null){
-				randomIndex = Random.Range(0, waterDrops[index].Length);
-			}
-			//Destroy(waterDrops[index][randomIndex].gameObject);
-			GameObject newDrop = waterDrops[index][randomIndex];
-			WaterDrop drop = newDrop.GetComponent<WaterDrop>();
-			drop.Kill();
-			//Object.DestroyObject(newDrop);
-		}
-		*/
+		float xMiddle = (xUBound + xLBound) / 2;
+		float yMiddle = (yUBound + yLBound) / 2;
+
 		drops = GameObject.FindGameObjectsWithTag ("waterDrop"); 
 		for (int i = 0; i < drops.Length; i++) {
-			posY = drops[i].transform.position.y;
-			posX = drops[i].transform.position.x;
-			if(posY > startHeight && posY < startHeight+height && posX > xLBound && posX < xUBound){
-				newIndex = i;
-				i = drops.Length+1;
+			//Debug.Log (drops[i]);
+			if(drops[i].GetComponent<WaterDrop>().GetSoil() == this){
+				posY = drops[i].transform.position.y;
+				posX = drops[i].transform.position.x;
+				//Debug.Log ("X DIST: " + Mathf.Abs((posX - xMiddle)));
+				//Debug.Log ("Y DIST: " + Mathf.Abs((posY - yMiddle)));
+				//Debug.Log (Mathf.Abs((posX - xMiddle)) < slotSize*3 && Mathf.Abs((posY - yMiddle)) < slotSize*3);
+				if(Mathf.Abs((posX - xMiddle)) < slotSize*3 && Mathf.Abs((posY - yMiddle)) < slotSize*3){
+				//if(posY > startHeight && posY < startHeight+height && posX > xLBound && posX < xUBound){
+					newIndex = i;
+					i = drops.Length+1;
+				}
 			}
 		}
-		Destroy (drops [newIndex]);
+		//Debug.Log (newIndex);
+		if (newIndex >= 0 && newIndex < drops.Length) {
+			Destroy (drops [newIndex]);
+			subtractCount++;
+		}
 	}
 
 	public int getWaterLength()
@@ -190,9 +191,9 @@ public class Soil : MonoBehaviour {
 				index = 0;
 			}
 			water[index]+=3;
-			for(int i = 0; i < 3; i++){
+			//for(int i = 0; i < 3; i++){
 				AddWater(index);
-			}
+			//}
 		}
 	}
 
