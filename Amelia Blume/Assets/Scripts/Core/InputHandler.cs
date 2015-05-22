@@ -95,12 +95,7 @@ public class InputHandler : MonoBehaviour {
 			   Input.GetButtonDown("joystick button 3") || Input.GetButtonDown("joystick button 4") ||
 			   Input.GetButtonDown("joystick button 5") || Input.GetButtonDown("joystick button 6") ||
 			   Input.GetButtonDown("joystick button 7") || Input.GetButtonDown("joystick button 8") ||
-			   Input.GetButtonDown("joystick button 9") || Input.GetButtonDown("joystick button 0") ||
-			   Input.GetButtonDown("joystick button 10") || Input.GetButtonDown("joystick button 11") ||
-			   Input.GetButtonDown("joystick button 12") || Input.GetButtonDown("joystick button 13") ||
-			   Input.GetButtonDown("joystick button 14") || Input.GetButtonDown("joystick button 15") ||
-			   Input.GetButtonDown("joystick button 16") || Input.GetButtonDown("joystick button 17") ||
-			   Input.GetButtonDown("joystick button 18") || Input.GetButtonDown("joystick button 19"))
+			   Input.GetButtonDown("joystick button 9") || Input.GetButtonDown("joystick button 0"))
 			{
 				primaryInput = connectedJoysticks[0];
 			}
@@ -115,9 +110,6 @@ public class InputHandler : MonoBehaviour {
 			break;
 		case "Sony Computer Entertainment Wireless Controller":
 			Playstation4Controller();
-			break;
-		case "©Microsoft Corporation Xbox 360 Wired Controller":
-			Xbox360ControllerMac();
 			break;
 		}
 
@@ -207,47 +199,6 @@ public class InputHandler : MonoBehaviour {
 		startUp = Input.GetButtonUp ("joystick button 7");
 
 	}
-
-	void Xbox360ControllerMac(){
-		//Debug.Log (Input.GetButtonDown ());
-		xMove = Input.GetAxis("Horizontal");
-		yMove = Input.GetAxis ("Vertical");
-		xSelect = Input.GetAxis ("Horizontal 4");
-		ySelect = Input.GetAxis ("Vertical 4");
-		Debug.Log ("X-Axis: " + xSelect);
-		Debug.Log ("Y-Axis: " + ySelect);
-
-		jumpDown = Input.GetButtonDown ("joystick button 16");
-		jump = Input.GetButton ("joystick button 16");
-		jumpUp = Input.GetButtonUp ("joystick button 16");
-		
-		throwSeedDown = Input.GetButtonDown ("joystick button 18");
-		throwSeed = Input.GetButton ("joystick button 18");
-		throwSeedUp = Input.GetButtonUp ("joystick button 18");
-		
-		waterDown = Input.GetButtonDown ("joystick button 17");
-		water = Input.GetButton ("joystick button 17");
-		waterUp = Input.GetButtonUp ("joystick button 17");
-		
-		sunDown = Input.GetButtonDown ("joystick button 19");
-		sun = Input.GetButton ("joystick button 19");
-		sunUp = Input.GetButtonUp ("joystick button 19");
-		
-		dashDown = Input.GetButtonDown ("joystick button 14");
-		dash = Input.GetButton ("joystick button 14");
-		dashUp = Input.GetButtonUp ("joystick button 14");
-		
-		selectDown = Input.GetButtonDown ("joystick button 10");
-		select = Input.GetButton ("joystick button 10");
-		selectUp = Input.GetButtonUp ("joystick button 10");
-		
-		startDown = Input.GetButtonDown ("joystick button 9");
-		start = Input.GetButton ("joystick button 9");
-		startUp = Input.GetButtonUp ("joystick button 9");
-
-		
-	}
-
 
 	void Playstation4Controller(){
 		xMove = Input.GetAxis("Horizontal");
