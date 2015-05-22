@@ -63,8 +63,14 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public float maxScreenDist;
 	public float minScreenDist;
 
+	bool isRumbling = false;
+	float rumbleStart;
+	float rumbleDuration;
+	float shakeValue = 0.03f;
+
 	void Start()
 	{
+		Rumble (0);
 		isTracking = false;
 
 		zooming = false;
@@ -228,6 +234,11 @@ public class SideScrollerCameraController : MonoBehaviour {
 				panLimiter.GetComponent<PanLimiter>().checkForcePan();
 		}
 
+		//do the rumbling after we have the base position for this frame
+		if (isRumbling) {
+			HandleRumble();
+		}
+
 		//let's get how much has changed between frames and handle that parallax
 		if (prevPos != transform.position) {
 			HandleParallax (new Vector3(transform.position.x - prevPos.x, transform.position.y - prevPos.y, 0f));
@@ -243,14 +254,10 @@ public class SideScrollerCameraController : MonoBehaviour {
 		int index = 0;
 		List<int> removeIndices = new List<int>();
 		foreach(GameObject trackable in trackables) {
-			if(trackable == null){
-				recalculateTrackables();
-				return;
-			}
 			//for starters, let's make sure it should be in this list
-			if( trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false))
+			if( trackable == null || (trackable.tag == "Animal" && (trackable.GetComponent<Animal>() == null || trackable.GetComponent<Animal>().isInfected == false)))
 			{
-				//remove uninfected animals from the list, they're no longer important enough
+				//remove uninfected animals from the list or bugged trackpoints, they're no longer important enough
 				removeIndices.Add (trackables.IndexOf(trackable));
 			}
 			else {
@@ -611,6 +618,24 @@ public class SideScrollerCameraController : MonoBehaviour {
 		for (int i = 0; i < tempTrackables.Count(); i++) {
 			trackables.Add (tempTrackables[i]);
 			tracking.Add (false);
+		}
+	}
+
+	public void Rumble (float duration = 0.5f)
+	{
+		isRumbling = true;
+		rumbleStart = Time.time;
+		rumbleDuration = duration;
+	}
+
+	public void HandleRumble()
+	{
+		if (Time.time - rumbleDuration > rumbleStart) {
+			isRumbling = false;
+		} else {
+			transform.position = new Vector3 (Random.Range (-1 * shakeValue, shakeValue) + transform.position.x, 
+			                                  Random.Range (-1 * shakeValue, shakeValue) + transform.position.y,
+			                                  transform.position.z);
 		}
 	}
 }
