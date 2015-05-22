@@ -170,7 +170,8 @@ public class Animal : MonoBehaviour
 		yield return new WaitForSeconds (10f - (strength * sporeModifier));
 		if (isRestrained && isInfected) {
 			// destrov the vines that this animal has broken
-			Destroy(vineCollider.gameObject);
+			//Destroy(vineCollider.gameObject);
+			vineCollider.gameObject.GetComponent<VinePlant>().shredVines();
 			/*
 			//ignore that vine's collider from now on, it's broken free from it
 			Collider[] animalColliders = transform.GetComponents<Collider>();
