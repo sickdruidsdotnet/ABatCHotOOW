@@ -253,7 +253,7 @@ public class Player : BaseBehavior {
 	
 	protected void Start() {
 		Broadcast("OnSpawn");
-		health = 1;
+		health = 100;
 	}
 
 #endregion
