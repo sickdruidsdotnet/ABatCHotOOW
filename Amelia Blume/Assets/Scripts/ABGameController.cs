@@ -129,11 +129,11 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionNum)
 				{
 				case 1:
-					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "Branching out");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case 2:
-					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
 				default:
@@ -149,15 +149,15 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionName)
 				{
 				case "ActI-1":
-					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "Branching out");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case "ActII-1_Encounter":
-					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "It takes a lot to make a tree");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
 				case "ActIII-2_Boar_Encounter":
-					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "Over the river and through the woods");
+					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
 					delay = 2f;
 					break;
 				default:
