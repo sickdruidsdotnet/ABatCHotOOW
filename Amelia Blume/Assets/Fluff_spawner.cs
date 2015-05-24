@@ -4,6 +4,7 @@ using System.Collections;
 public class Fluff_spawner : MonoBehaviour {
 
 	public int preloadedSeed;
+	public int activeSeed;
 	public GameObject[] fluffObjects;
 	//roughly how many gameObjects we want spawned in this area
 	public float density;
@@ -18,6 +19,10 @@ public class Fluff_spawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//we flat-out can't handly rotation; none of our fluff allows for it
+
+		if (transform.parent.transform.rotation.x != 0 && transform.parent.transform.rotation.x != 270 && transform.parent.transform.rotation.x != 90 )
+			Destroy (gameObject);
 		//seed random so we can get a consistant experience if we so chose
 		if (preloadedSeed == 0) {
 			Random.seed = (int) System.DateTime.Now.Ticks;
@@ -28,6 +33,9 @@ public class Fluff_spawner : MonoBehaviour {
 		if (density == 0) {
 			density = Random.Range(10, 30);
 		}
+
+		//to see if there's a seed we really like and want to save
+		activeSeed = Random.seed;
 
 		Bounds boxBounds = gameObject.GetComponent<BoxCollider> ().bounds;
 		spawnHeight = transform.position.y;
