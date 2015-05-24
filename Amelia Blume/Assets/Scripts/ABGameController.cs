@@ -90,6 +90,23 @@ public class ABGameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.LeftBracket)) {
+			if(Application.loadedLevel > 0)
+			{
+				BeginSceneTransition(Application.loadedLevel - 1);
+			}
+			else{
+				Debug.Log("Cannot go to a level before main menu");
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.RightBracket)) {
+			if (Application.loadedLevel < 8) {
+				BeginSceneTransition (Application.loadedLevel + 1);
+			} else {
+				Debug.Log ("Cannot go to a level after the final one in the build");
+			}
+		}
+
 	}
 	
 	void OnLevelWasLoaded(int level)
