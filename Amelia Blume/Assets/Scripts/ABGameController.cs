@@ -169,8 +169,12 @@ public class ABGameController : MonoBehaviour {
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
-				case "ActIII-2_Boar_Encounter":
+				case "ActIII-1_Encounter":
 					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
+					delay = 2f;
+					break;
+				case "ActIV-1_Encounter":
+					activeTT.GetComponent<Act_Text>().FadeInText("Act IV", "Ignatius and the Heart");
 					delay = 2f;
 					break;
 				default:

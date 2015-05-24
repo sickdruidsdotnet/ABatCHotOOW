@@ -275,7 +275,7 @@ public class PlayerController : BaseBehavior {
 		}
 
 		if (!canControl) {
-			Debug.Log (canControl);
+			//Debug.Log (canControl);
 			if(player.GetDead()){
 				if(playerInput.jumpDown){
 					player.SetSpawn(true);

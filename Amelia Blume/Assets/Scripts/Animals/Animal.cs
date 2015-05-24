@@ -116,6 +116,7 @@ public class Animal : MonoBehaviour
 	void OnTriggerStay(Collider other){
 		if (other.tag == "Player") {
 			if(isRestrained && isInfected){
+				//Debug.Log ("Can convert");
 				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = true;
 				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = gameObject;
 			}

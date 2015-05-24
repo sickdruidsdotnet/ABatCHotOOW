@@ -271,13 +271,7 @@ public class Squirrel : Animal {
 					} else {
 						hitDirection = 1;
 					}
-					player.GetComponent<Player> ().ReduceHealth (damageValue);
-					//other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
-					if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
-						player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 8, 8f, 0f), 100f);
-					}
-					other.GetComponent<PlayerController> ().canControl = false;
-					other.GetComponent<PlayerController> ().stunTimer = 30;
+					player.GetComponent<PlayerController>().damagePlayer(damageValue, hitDirection);
 					//Debug.Log (player.GetComponent<Player> ().GetHealth ());
 					//hitCoolDown = 60;
 				}
