@@ -191,8 +191,6 @@ public class ABGameController : MonoBehaviour {
 
 	public IEnumerator FadeIn(float delay = 0)
 	{
-		//fade in music
-		activeMC.fadeInStandby();
 		yield return new WaitForSeconds (delay);
 		float startTime = Time.time;
 		while (activeFD.GetComponent<Image>().color.a > 0) {

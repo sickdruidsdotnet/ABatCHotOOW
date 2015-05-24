@@ -29,24 +29,21 @@ public class MusicController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		sources = GameObject.FindGameObjectWithTag ("MainCamera").GetComponents<AudioSource> ();
+		Debug.Log("MusicController Start called");
+		sources = this.GetComponents<AudioSource> ();
 		
 		activeSource = sources[0];
 		activeSource.loop = true;
 		activeSource.volume = (float)0.0;
 
 		standbySource = sources[1];
-		//standbySource.clip = act1;
 		standbySource.loop = true;
-		//standbySource.Play();
 		standbySource.volume = (float)0.0;
 
 		currentLevel = Application.loadedLevelName;
  		currentAct = extractAct(currentLevel);
- 		Debug.Log("currentAct == " + currentAct);
+ 		//Debug.Log("currentAct == " + currentAct);
  		setClip(currentAct, "standby");
-		
-		//standbySource.clip = act1;		
 
 		fadeIn = true;
 		fadeOut = false;
@@ -79,7 +76,7 @@ public class MusicController : MonoBehaviour {
 	void fadeOutAudio(AudioSource audio) {
     	if(audio.volume > 0.0)
     	{
-        	audio.volume -= (float)0.1 * Time.deltaTime;
+        	audio.volume -= (float)0.5 * Time.deltaTime;
     	}
     	else 
     	{
@@ -87,8 +84,8 @@ public class MusicController : MonoBehaviour {
     		if(!crossFade)
     		{
     			audio.Stop();
-    			activeSource = standbySource;
-    			standbySource = audio;
+    			//activeSource = standbySource;
+    			//standbySource = audio;
     		}
     	}
  	}
@@ -146,6 +143,9 @@ public class MusicController : MonoBehaviour {
 				case "ActV":
 					setClip(act5, clipType);
 					break;
+				default:
+					setClip(act1, clipType);
+					break;
 				}
  	}
 
@@ -158,20 +158,33 @@ public class MusicController : MonoBehaviour {
  	}
 
  	void OnLevelWasLoaded(int level){
- 		Debug.Log("MusicController OnLevelWasLoaded called");
- 		//prevLevel = currentLevel;
- 		//prevAct = currentAct;
- 		//currentLevel = Application.loadedLevelName;
- 		//currentAct = extractAct(currentLevel);
- 		//Debug.Log("currentAct: " + currentAct);
- 		
- 		//if(currentAct != prevAct)
- 		//	setClip(currentAct, "standby");
- 		//	fadeInStandby();
+ 		//Debug.Log("MusicController OnLevelWasLoaded called");
+ 		prevLevel = currentLevel;
+ 		prevAct = currentAct;
+ 		currentLevel = Application.loadedLevelName;
+ 		currentAct = extractAct(currentLevel);
+
+ 		if(currentAct != prevAct) {
+ 		//	Debug.Log("Act change. " + prevAct + " to " + currentAct);
+ 			setClip(currentAct, "standby");
+ 			fadeInStandby();
+ 		}
+ 		else{
+ 		//	Debug.Log("No act change. " + prevAct + " to " + currentAct);
+ 		}
  	}
 
  	public string extractAct(string levelName){
- 		return levelName.Substring(0, levelName.IndexOf('-'));
+
+ 		string actName;
+ 		try{
+ 			actName = levelName.Substring(0, levelName.IndexOf('-'));
+ 		}
+ 		catch{
+ 			actName = levelName;
+ 		}
+
+ 		return actName;
  	}
 
 }
