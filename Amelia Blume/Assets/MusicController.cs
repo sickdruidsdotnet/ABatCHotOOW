@@ -29,7 +29,7 @@ public class MusicController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log("MusicController Start called");
+		//Debug.Log("MusicController Start called");
 		sources = this.GetComponents<AudioSource> ();
 		
 		activeSource = sources[0];
