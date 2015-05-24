@@ -141,9 +141,6 @@ public class ABGameController : MonoBehaviour {
 	{
 		float startTime = Time.time;
 
-		//fadeout music
-		activeMC.fadeOutActive();
-
 		while (activeFD.GetComponent<Image>().color.a < 1) {
 			yield return new WaitForSeconds (0.01f);
 			float t = (Time.time - startTime)/0.5f;//(timepassed/duration)
@@ -159,11 +156,23 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionNum)
 				{
 				case 1:
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case 2:
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
+					delay = 2f;
+					break;
+				case 6:
+					activeMC.fadeOutActive();
+					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
+					delay = 2f;
+					break;
+				case 8:
+					activeMC.fadeOutActive();
+					activeTT.GetComponent<Act_Text>().FadeInText("Act IV", "Ignatius and the Heart");
 					delay = 2f;
 					break;
 				default:
@@ -179,18 +188,22 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionName)
 				{
 				case "ActI-1":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case "ActII-1_Encounter":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
 				case "ActIII-1_Encounter":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
 					delay = 2f;
 					break;
 				case "ActIV-1_Encounter":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act IV", "Ignatius and the Heart");
 					delay = 2f;
 					break;
