@@ -80,6 +80,7 @@ public class TreePlant_Procedural : Plant
 
         treeStructure.GetComponent<TreeStructure>().maturity = maturity;
         treeStructure.GetComponent<TreeStructure>().isMaturing = isMaturing;
+        treeStructure.GetComponent<TreeStructure>().sunFactor = sunFactor;
 
         
         foreach (GameObject bp in branchPlatforms)
