@@ -228,49 +228,41 @@ public class Branch
 
 		float newGrowth = newBranchLength - getLength();
 
-		// Extend the length of the branch.
-		// The segment before the tip ring will be extended. If it reaches its max length,
-		// then a new segment will be added, and the overflow growth distance
-		// will be its initial length.
+		// grow the branch, creating as many new segments as needed.
 
-		int growIndex = skeleton.Count - 2;
-
-		// should probably throw an error if newGrowth > treeSettings.branchSegLength
-		if (newGrowth > treeSettings.branchSegLength)
+		while (newGrowth > 0)
 		{
-			Debug.Log("Whoops, newGrowth > treeSettings.branchSegLength in grow(). We should do something to handle this case.");
-		}
+			float amountToGrow = Mathf.Min(newGrowth, treeSettings.branchSegLength);
+			newGrowth -= amountToGrow;
 
-		// trim the new growth if our vine is overshooting the total length goal
-		if (getLength() + newGrowth > lengthGoal)
-		{
-			newGrowth = lengthGoal - getLength();
-			growthStart = lengthGoal;
-		}
+			// Extend the length of the branch.
+			// The segment before the tip ring will be extended. If it reaches its max length,
+			// then a new segment will be added, and the overflow growth distance
+			// will be its initial length.
 
-		// if the only segment is the tip segment, then we need to start fresh on a new one.
-		if (skeleton.Count == 1)
-		{
-			addSegment(treeSettings.branchMinWidth / (depth + 1), newGrowth, determineSegDirection(skeleton.Last().direction));
-			//Debug.Log("Creating first non-tip segment");
-		}
-		else
-		{
-			// we're not editing the very last segment, but the one right before it.
-			// this is to maintain constant tip length. Otherwise growth will look funky.
-			float currentLength = skeleton[growIndex].length;
-			float newSegLength = currentLength + newGrowth;
+			int growIndex = skeleton.Count - 2;
 
-			if (newSegLength < treeSettings.branchSegLength)
+			// if the only segment is the tip segment, then we need to start fresh on a new one.
+			if (skeleton.Count == 1)
 			{
-				skeleton[growIndex].length = newSegLength;
+				addSegment(treeSettings.branchMinWidth / (depth + 1), amountToGrow, determineSegDirection(skeleton.Last().direction));
+				//Debug.Log("Creating first non-tip segment");
 			}
 			else
 			{
-				skeleton[growIndex].length = treeSettings.branchSegLength;
-				float overflow = newSegLength - treeSettings.branchSegLength;
-				addSegment(treeSettings.branchMinWidth / (depth + 1), overflow, determineSegDirection(skeleton.Last().direction));
-				//Debug.Log("Segment overflow (" + newSegLength + "). segment " + growIndex + " maxed out at " + skeleton[growIndex].length + ", so a new node is created with length " + overflow);
+				float currentLength = skeleton[growIndex].length;
+				float roomLeftToGrow = treeSettings.branchSegLength - currentLength;
+
+				if (amountToGrow <= roomLeftToGrow)
+				{
+					skeleton[growIndex].length += amountToGrow;
+				}
+				else
+				{
+					skeleton[growIndex].length = treeSettings.branchSegLength;
+					float overflow = amountToGrow - roomLeftToGrow;
+					addSegment(treeSettings.branchMinWidth / (depth + 1), overflow, determineSegDirection(skeleton.Last().direction));
+				}
 			}
 		}
 
@@ -370,7 +362,7 @@ public class Branch
 
 		if (magnitude > treeSettings.branchSegLength)
 		{
-			Debug.Log("Whoops, magnitude > treeSettings.branchSegLength in addSegment(). We should do something to handle this case.");
+			Debug.Log("Whoops, magnitude > treeSettings.branchSegLength in addSegment.\n" + magnitude + ">" + treeSettings.branchSegLength);
 		}
 		float tipLength = skeleton.Last().length;
 		skeleton.Last().length = magnitude;
