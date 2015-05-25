@@ -10,6 +10,7 @@ public class Fluff_spawner : MonoBehaviour {
 	public float density;
 
 	public float spawnOffset = 1.0f;
+	public bool preventOverlap = false;
 
 	float spawnHeight;
 	float spawnDepth;
@@ -58,6 +59,7 @@ public class Fluff_spawner : MonoBehaviour {
 		float roughDist = length / density;
 
 		Vector3 currPos = new Vector3 (xLeft, spawnHeight, spawnDepth);
+		GameObject prev = null;
 		while (currPos.x < xRight) {
 			Vector3 spawnPoint = new Vector3(Mathf.Clamp(currPos.x + Random.Range(-1 * spawnOffset, spawnOffset), xLeft, xRight),
 			                                 currPos.y, currPos.z);
@@ -69,6 +71,49 @@ public class Fluff_spawner : MonoBehaviour {
 			GameObject newFluff = Instantiate (fluffObjects[index], spawnPoint, fluffObjects[index].transform.rotation) as GameObject;
 			newFluff.transform.SetParent(transform);
 			currPos = new Vector3(spawnPoint.x + roughDist, currPos.y, currPos.z);
+			if(preventOverlap)
+			{
+	
+				if(prev != null)
+				{
+					Bounds currCombinedBounds;
+
+					if(newFluff.renderer != null){
+						currCombinedBounds = newFluff.renderer.bounds;
+					}
+					else
+					{
+						currCombinedBounds = newFluff.GetComponentInChildren<Renderer>().bounds;
+					}
+					Renderer[] currRenderers = newFluff.GetComponentsInChildren<Renderer>();
+					foreach (Renderer render in currRenderers) {
+						if (render != renderer) 
+							currCombinedBounds.Encapsulate(render.bounds);
+					}
+					Bounds prevCombinedBounds;
+					if(prev.renderer != null){
+						prevCombinedBounds = prev.renderer.bounds;
+					}
+					else
+					{
+						prevCombinedBounds = prev.GetComponentInChildren<Renderer>().bounds;
+					}
+					Renderer[] prevRenderers = prev.GetComponentsInChildren<Renderer>();
+					foreach (Renderer render in prevRenderers) {
+						if (render != renderer) 
+							prevCombinedBounds.Encapsulate(render.bounds);
+					}
+					float currLeft = newFluff.transform.position.x - currCombinedBounds.extents.x;
+					float prevRight = prev.transform.position.x + prevCombinedBounds.extents.x;
+					while(currLeft < prevRight)
+					{
+						newFluff.transform.position = new Vector3(newFluff.transform.position.x +0.1f, newFluff.transform.position.y, newFluff.transform.position.z);
+						currPos = new Vector3(currPos.x +0.1f, currPos.y, currPos.z);
+						currLeft = newFluff.transform.position.x - currCombinedBounds.extents.x;
+					}
+				}
+				prev = newFluff;
+			}
 		}
 
 	}
