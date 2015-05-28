@@ -12,11 +12,15 @@ public class Plant : MonoBehaviour
     public int collectionTimer;
     public int collectionDelay;
     private float scaleFactor;
-	private float Sunfactor;
+	public float sunFactor = 1.0f;
+    public float sunRange = 2.0f;
 	private int soilIndex;
     public float matureRate = 0.05f;
     public float maturityGoal;
     public bool isMaturing = false;
+    private GameObject amelia;
+    private Player playerScript;
+    private GameObject sun;
 
 	public float startTime;
 	public float lifeTime = 9999999f;
@@ -34,9 +38,6 @@ public class Plant : MonoBehaviour
         // initialize collection timer and delay
         collectionTimer = 0;
         collectionDelay = 30;
-
-		Sunfactor = 1;
-
         
         //Debug.Log("Plant created");
         //Debug.Log("Default hydrationGoal: " + hydrationGoal);
@@ -46,10 +47,16 @@ public class Plant : MonoBehaviour
     {
         // this can't be in the constructor or Unity complains
 		startTime = Time.time;
+        amelia = GameObject.FindWithTag("Player");
+        playerScript = amelia.GetComponent<Player>();
     }
 
     public virtual void Update()
     {
+        if (amelia == null || playerScript == null)
+        {
+            getPlayer();
+        }
         // maturity is value between 0 and 1. Used for linearly interpolating growth goals.
         maturityGoal = Mathf.Clamp01((float)waterCount / (float)hydrationGoal);
 
@@ -58,7 +65,7 @@ public class Plant : MonoBehaviour
         if (maturity < maturityGoal)
         {
             isMaturing = true;
-            maturity += matureRate * Time.deltaTime;
+            maturity += matureRate * sunFactor * Time.deltaTime;
 
             if (maturity > maturityGoal)
             {
@@ -85,12 +92,14 @@ public class Plant : MonoBehaviour
         {
             //Debug.Log("Plant has no soil!");
         }
-        /*
-        if (amelia.GetComponent<Player>().isSunning()){
+        
+        sunFactor = 1.0f;
+        if (playerScript.isSunning())
+        {
             CollectSun();
             //Debug.Log("Sunning");
         }
-        */
+        
         collectionTimer++;
 
         grow();
@@ -172,15 +181,28 @@ public class Plant : MonoBehaviour
 
 	public void CollectSun()
 	{
-		GameObject sun = GameObject.Find ("Sun");
-		if (sun) {
+        if (sun == null)
+        {
+		  sun = GameObject.Find ("Sun");
+        }
+		if (sun != null) {
 			float distance = transform.position.x - sun.transform.position.x;
-			if (distance <= 2 && distance >= -2) {
-				Sunfactor += 0.01f;
-				Debug.Log (Sunfactor);
+			if (distance <= sunRange && distance >= -sunRange) {
+				sunFactor = 1.5f;
+                //Debug.Log("Collecting sun");
 			}
 		}
+        else
+        {
+            //Debug.Log("Player is sunning, but can't find sun object!");
+        }
 	}
+
+    private void getPlayer()
+    {
+        amelia = GameObject.FindWithTag("Player");
+        playerScript = amelia.GetComponent<Player>();
+    }
 
     public int getWaterCount()
     {

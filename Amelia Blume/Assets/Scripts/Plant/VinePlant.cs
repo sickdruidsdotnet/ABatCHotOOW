@@ -61,6 +61,7 @@ public class VinePlant : Plant
     public override void Update()
     {
         base.Update();
+		animals = GameObject.FindGameObjectsWithTag("Animal");
 
         bool isGrowing = vines[0].GetComponent<Vine>().isGrowing;
 
@@ -167,5 +168,15 @@ public class VinePlant : Plant
         {
             vines[vine].GetComponent<Vine>().setGrowthInfo(goal, growthRate);
         }
+    }
+
+    public void shredVines()
+    {
+        foreach (GameObject vine in vines)
+        {
+            vine.GetComponent<Vine>().shredVine();
+        }
+
+        Destroy(gameObject);
     }
 }

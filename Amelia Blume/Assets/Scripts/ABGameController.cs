@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ public class ABGameController : MonoBehaviour {
 	GameObject activeFD;
 	public GameObject TransistionText;
 	GameObject activeTT;
+	public MusicController musicController;
+	MusicController activeMC;
 
 	GameObject amelia;
 
@@ -70,11 +73,16 @@ public class ABGameController : MonoBehaviour {
 		activeFD.GetComponent<Image> ().color = new Color (activeFD.GetComponent<Image> ().color.r, activeFD.GetComponent<Image> ().color.g,
 		                                                 activeFD.GetComponent<Image> ().color.b, 0);
 
-
 		//Text UI for Act transitions
 		activeTT = Instantiate (TransistionText, TransistionText.transform.position, Quaternion.identity) as GameObject;
 		activeTT.name = "Transition Text";
 		activeTT.GetComponent<Canvas> ().worldCamera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+
+		//Music Controller for controlling music
+		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as MusicController;
+		//activeMC = musicController;
+		activeMC.name = "Music Controller";
+		//activeMC.GetComponent<Script> ()
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);
@@ -83,6 +91,7 @@ public class ABGameController : MonoBehaviour {
 		activePC.transform.SetParent (transform);
 		activeSS.transform.SetParent (transform);
 		activeUI.transform.SetParent (transform);
+		activeMC.transform.SetParent (transform);
 
 		//load amelia for some direct influence
 		amelia = GameObject.FindGameObjectWithTag("Player");
@@ -90,6 +99,23 @@ public class ABGameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.LeftBracket)) {
+			if(Application.loadedLevel > 0)
+			{
+				BeginSceneTransition(Application.loadedLevel - 1);
+			}
+			else{
+				Debug.Log("Cannot go to a level before main menu");
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.RightBracket)) {
+			if (Application.loadedLevel < 8) {
+				BeginSceneTransition (Application.loadedLevel + 1);
+			} else {
+				Debug.Log ("Cannot go to a level after the final one in the build");
+			}
+		}
+
 	}
 	
 	void OnLevelWasLoaded(int level)
@@ -114,6 +140,7 @@ public class ABGameController : MonoBehaviour {
 	public IEnumerator FadeOut()
 	{
 		float startTime = Time.time;
+
 		while (activeFD.GetComponent<Image>().color.a < 1) {
 			yield return new WaitForSeconds (0.01f);
 			float t = (Time.time - startTime)/0.5f;//(timepassed/duration)
@@ -129,11 +156,23 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionNum)
 				{
 				case 1:
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case 2:
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
+					delay = 2f;
+					break;
+				case 6:
+					activeMC.fadeOutActive();
+					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
+					delay = 2f;
+					break;
+				case 8:
+					activeMC.fadeOutActive();
+					activeTT.GetComponent<Act_Text>().FadeInText("Act IV", "Ignatius and the Heart");
 					delay = 2f;
 					break;
 				default:
@@ -149,15 +188,23 @@ public class ABGameController : MonoBehaviour {
 				switch(transitionName)
 				{
 				case "ActI-1":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act I", "The Old, Old Woods");
 					delay = 2f;
 					break;
 				case "ActII-1_Encounter":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act II", "The Forest Guardian");
 					delay = 2f;
 					break;
-				case "ActIII-2_Boar_Encounter":
+				case "ActIII-1_Encounter":
+					activeMC.fadeOutActive();
 					activeTT.GetComponent<Act_Text>().FadeInText("Act III", "The River Guardian");
+					delay = 2f;
+					break;
+				case "ActIV-1_Encounter":
+					activeMC.fadeOutActive();
+					activeTT.GetComponent<Act_Text>().FadeInText("Act IV", "Ignatius and the Heart");
 					delay = 2f;
 					break;
 				default:

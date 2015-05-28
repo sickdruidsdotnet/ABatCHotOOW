@@ -40,7 +40,7 @@ public class Owl : Animal {
 	void ChasePlayer()
 	{
 		//Debug.Log ("In pursuit");
-		Vector3 targetPos = new Vector3 (player.transform.position.x, player.transform.position.y - 0.5f, player.transform.position.z);
+		Vector3 targetPos = new Vector3 (player.transform.position.x, player.transform.position.y - 0.5f, 0);
 		transform.position = Vector3.MoveTowards (transform.position, targetPos, speed);
 	}
 
@@ -68,6 +68,20 @@ public class Owl : Animal {
 			}
 		}
 	}
+
+	void OnTriggerEnter(Collider other){
+		if (other.gameObject.tag == "Player") {
+			if (isRestrained && isInfected) {
+				Debug.Log ("Can convert");
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().canConvert = true;
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().conversionTarget = gameObject;
+			} else {
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().canConvert = false;
+				GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().conversionTarget = null;
+			}
+		}
+	}
+	
 
 
 
