@@ -151,6 +151,25 @@ public class PlayerController : BaseBehavior {
 			isAirDashing = false;
 		}
 
+		//check to see if the player can convert
+		GameObject[] animals = GameObject.FindGameObjectsWithTag ("Animal");
+		canConvert = false;
+		conversionTarget = null;
+		foreach(GameObject animal in animals)
+		{
+			float dist = Vector3.Distance(transform.position, animal.transform.position);
+			//change this number to update the distance the player has to be in order to convert animals
+			if (dist <= 4.0f)
+			{
+				Animal aStats = animal.GetComponent<Animal>();
+				if(aStats.isRestrained && aStats.isInfected)
+				{
+					canConvert = true;
+					conversionTarget = animal;
+				}
+			}
+		}
+
         //locking needs to happen last
         transform.position = new Vector3(transform.position.x, transform.position.y, lockedAxisValue);
 	}

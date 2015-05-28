@@ -113,27 +113,6 @@ public class Animal : MonoBehaviour
 		StartCoroutine (sporeTimer ());
 	}
 
-	void OnTriggerStay(Collider other){
-		if (other.tag == "Player") {
-			if(isRestrained && isInfected){
-				//Debug.Log ("Can convert");
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = true;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = gameObject;
-			}
-			else{
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
-			}
-		}
-	}
-
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Player") {
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
-		}
-	}
-
 	void OnParticleCollision(GameObject other) 
     {
     	if (other.tag == "Pollen")
