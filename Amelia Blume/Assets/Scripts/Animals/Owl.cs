@@ -7,7 +7,7 @@ public class Owl : Animal {
 	private Vector3 to;
 	private Vector3 from;
 	private float angle;
-	private float fieldOfView = 13;
+	private float fieldOfView = 10;
 	private float speed;
 	public Transform perch;
 	private float distance;
@@ -18,7 +18,7 @@ public class Owl : Animal {
 		playerObject = GameObject.FindGameObjectWithTag ("Player");
 		player = playerObject.GetComponent <Player>();
 		//to = -this.transform.up;
-		speed = 0.1f;
+		speed = 0.13f;
 		damageValue = 5;
 	}
 	
@@ -40,7 +40,7 @@ public class Owl : Animal {
 	void ChasePlayer()
 	{
 		//Debug.Log ("In pursuit");
-		Vector3 targetPos = new Vector3 (player.transform.position.x, player.transform.position.y - 0.5f, 0);
+		Vector3 targetPos = new Vector3 (player.transform.position.x, player.transform.position.y - 0.7f, 0);
 		transform.position = Vector3.MoveTowards (transform.position, targetPos, speed);
 	}
 
