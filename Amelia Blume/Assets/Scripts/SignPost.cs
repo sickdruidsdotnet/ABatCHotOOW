@@ -150,11 +150,13 @@ public class SignPost : MonoBehaviour {
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
 		if (!inCutscene) {
+			//Debug.Log("Not Cutscene");
 			nameText.enabled = uiText.enabled;
+//			Debug.Log (personSpeaking);
 			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
 		} else {
 			nameText.enabled = uiText.enabled;
-			uiPortraitSprite.enabled = nameText.enabled;
+			uiPortraitSprite.enabled = true;
 		}
 		//Debug.Log ("NAME: " + nameText.enabled);
 		//Debug.Log ("PORTRAIT: " + uiPortraitSprite.enabled);
@@ -167,22 +169,26 @@ public class SignPost : MonoBehaviour {
 		if (speaker == "Amelia") {
 //			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
-			uiPortraitSprite.enabled = true;
+			//uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
 			uiPortraitSprite.sprite = portraits[0];
 			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
 			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
 		} else if (speaker == "Ignatius") {
 			uiPortraitSprite.sprite = portraits[1];
-			uiPortraitSprite.enabled = true;
+			//uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
-			nameRect.anchoredPosition = new Vector2(307f, -53.7f);
+			nameRect.anchoredPosition = new Vector2(258.2f, -53.7f);
 		} else {
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;
-			personSpeaking = false;
+			if(nameText.text == "Ignatius" || nameText.text == "Amelia"){
+				personSpeaking = true;
+			}else{
+				personSpeaking = false;
+			}
 		}
 
 	}

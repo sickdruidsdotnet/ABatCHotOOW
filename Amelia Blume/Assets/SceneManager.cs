@@ -32,6 +32,7 @@ public class SceneManager : MonoBehaviour {
 		NextEvent ();
 
 		nextUse = Time.time + delay;
+		//signPost.inCutscene = true;
 
 	}
 	
