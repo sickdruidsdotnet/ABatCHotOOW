@@ -19,10 +19,11 @@ public class SignPost : MonoBehaviour {
 	float delay = 0.03f;
 	float nextUse;
 	public string startingPassage;
-	string nextPassage;
-	string currentPassage;
-	string speaker;
+	public string nextPassage;
+	public string currentPassage;
+	public string speaker;
 	string connection;
+	public bool doneReading = true;
 
 	bool personSpeaking = false;
 
@@ -100,6 +101,7 @@ public class SignPost : MonoBehaviour {
 	//sorry to jam this in here but it's running into issues with the gamecontroller;
 	void ReloadResources()
 	{
+		Debug.Log ("Reload");
 		uiTextObj = GameObject.Find ("Words");
 		uiText = uiTextObj.GetComponent<Text>();
 		uiText.text = words[wordsIndex];
@@ -154,15 +156,20 @@ public class SignPost : MonoBehaviour {
 		if (speaker == "Amelia") {
 //			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
+			//uiPortraitSprite.enabled = true;
+			//nameText.enabled = true;
 			uiPortraitSprite.sprite = portraits[0];
 			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
 			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
-		} else if (speaker == "Ig") {
-			uiPortraitSprite.sprite = portraits[0];
+		} else if (speaker == "Ignatius") {
+			uiPortraitSprite.sprite = portraits[1];
+			//uiPortraitSprite.enabled = true;
+			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
 			nameRect.anchoredPosition = new Vector2(307f, -53.7f);
 		} else {
+			uiPortraitSprite.enabled = false;
 			nameText.enabled = false;
 			personSpeaking = false;
 		}
@@ -170,29 +177,40 @@ public class SignPost : MonoBehaviour {
 	}
 
 	public void Read(){
+		doneReading = false;
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
+			Debug.Log ("DONE");
+			//BroadcastMessage("PrintThis");
 			beingRead = false;
 			uiText.enabled = false;
 			nextPassage = startingPassage;
 			currentPassage = "";
+			//doneReading = true;
 			}
 			return;
 		}
-	//	Debug.Log ("reading");
+
+		if(beingRead && stillWritingCurrentPassage){
+			DisplayFullText();
+			return;
+		}
+		//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
 			beingRead = true;
 
 			uiText.enabled = true;
 		}
+
+
 		NextSentence ();
 		//CheckFlags ();
 		
 	}
-
+	/*
 	public void Read(string passage){
 		if (passage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
@@ -216,8 +234,10 @@ public class SignPost : MonoBehaviour {
 		//CheckFlags ();
 		
 	}
+	*/
 
 	void DisplayFullText(){
+		Debug.Log ("Show Full");
 		if (beingRead) {
 			bool keepWriting = true;
 				while(keepWriting){
@@ -326,6 +346,8 @@ public class SignPost : MonoBehaviour {
 
 				uiText.enabled = false;
 				sentenceIndex = 0;
+				Debug.Log ("DONE");
+				//BroadcastMessage("PrintThis");
 			}
 
 			sentenceWords = words [wordsIndex].Split (titleSplit);

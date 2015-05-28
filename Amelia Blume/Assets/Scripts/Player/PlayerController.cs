@@ -4,7 +4,7 @@ using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseBehavior {
-
+	//public bool Cutscene = false;
 	public InputHandler playerInput;
 	
 	public float inputDeadZone = 0.05f;
@@ -181,10 +181,11 @@ public class PlayerController : BaseBehavior {
 		
 		bool wasRunning = running;
 		Vector3 lastInput = pendingMovementInput;
-				
-		horizontal  = playerInput.xMove;
+
         //Debug.Log("Horizontal input is: " + horizontal);
-        if (Mathf.Abs(horizontal) < inputDeadZone)
+		horizontal  = playerInput.xMove;
+
+        if (Mathf.Abs(horizontal) < inputDeadZone || player.CUTSCENE)
         {
             horizontal = 0f;
 		}
@@ -289,17 +290,19 @@ public class PlayerController : BaseBehavior {
 			if (playerInput.jumpDown) {
 				if(player.GetReadSign())
 					ReadSign();
-				else
+				else{
+					if(!player.CUTSCENE)
 					Jump ();
+				}
 			}
-			if (playerInput.throwSeedDown) {
+			if (playerInput.throwSeedDown && !player.CUTSCENE) {
 				ThrowSeed ();
 			}
-			if (playerInput.dashDown) {
+			if (playerInput.dashDown && !player.CUTSCENE) {
 				Dash ();
 			}
 		}
-		if (playerInput.sunDown) {
+		if (playerInput.sunDown && !player.CUTSCENE) {
 			if(canConvert){
 				AnimalConvert();
 				player.SetConverting(true);

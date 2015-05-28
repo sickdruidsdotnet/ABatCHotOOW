@@ -33,6 +33,7 @@ public class Player : BaseBehavior {
 		FlowerSeed,
 	};
 
+	public bool CUTSCENE = false;
 	public bool isDead = false;
 	public bool canSpawn = false;
 	public int health;
@@ -47,8 +48,8 @@ public class Player : BaseBehavior {
 	private bool sunning = false;
 	private bool converting = false;
 	public SeedType currentSeed = SeedType.VineSeed;
-	private bool canReadSign = false;
-	private GameObject currentSign;
+	public bool canReadSign = false;
+	public GameObject currentSign;
 
 	public bool vineUnlocked = false;
 	public bool treeUnlocked = false;
@@ -282,6 +283,9 @@ public class Player : BaseBehavior {
 
 	void Update()
 	{
+		//if (CUTSCENE) {
+		//	canReadSign = true;
+		//}
 
 		//ReduceHealth(1);
 
