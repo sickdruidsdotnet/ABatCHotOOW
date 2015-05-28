@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SceneManager : MonoBehaviour {
+	public string LevelToLoad;
 	public List<GameObject> events;
+	ABGameController GameController;
 	GameObject amelia;
 	GameObject ig;
 	GameObject currChar;
@@ -18,6 +20,7 @@ public class SceneManager : MonoBehaviour {
 	//float timer;
 	// Use this for initialization
 	void Start () {
+		GameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<ABGameController> ();
 		//events = new List<GameObject>();
 		ig = GameObject.Find ("Ignatius");
 		amelia = GameObject.Find ("Player");
@@ -73,7 +76,7 @@ public class SceneManager : MonoBehaviour {
 		if (index < events.Count) {
 			switch (events [index].tag) {
 			case "Amelia":
-				Debug.Log ("Amelia Move");
+				//Debug.Log ("Amelia Move");
 				currChar = amelia;
 				moving = true;
 				player.SetReadSign (false);
@@ -85,7 +88,7 @@ public class SceneManager : MonoBehaviour {
 				break;
 		
 			case "Ig":
-				Debug.Log ("Ig Move");
+				//Debug.Log ("Ig Move");
 				currChar = ig;
 				moving = true;
 				player.SetReadSign (false);
@@ -99,7 +102,7 @@ public class SceneManager : MonoBehaviour {
 			case "Text":
 				ameliaAnimator.SetBool ("isRunning", false);
 				igAnimator.SetBool ("isRunning", false);
-				Debug.Log ("Text");
+				//Debug.Log ("Text");
 				StartReading ();
 				index++;
 				//NextEvent ();
@@ -112,6 +115,7 @@ public class SceneManager : MonoBehaviour {
 			//Load Next Scene
 			ameliaAnimator.SetBool ("isRunning", false);
 			igAnimator.SetBool ("isRunning", false);
+			GameController.BeginSceneTransition(LevelToLoad);
 		}
 	}
 
