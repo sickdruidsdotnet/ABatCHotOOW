@@ -56,6 +56,9 @@ public class SeedSelector : MonoBehaviour {
 			if(playerInput.primaryInput == "©Microsoft Corporation Xbox 360 Wired Controller"){
 				horizontal2 = Input.GetAxis("Horizontal 4");
 				vertical2 = Input.GetAxis ("Vertical 4");
+			}else if(playerInput.primaryInput == "Sony Computer Entertainment Wireless Controller"){
+				horizontal2 = Input.GetAxis("Horizontal 3");
+				vertical2 = Input.GetAxis ("Vertical 3");
 			}else{
 				horizontal2 = Input.GetAxis("Horizontal 3");
 				vertical2 = Input.GetAxis ("Vertical 3");
