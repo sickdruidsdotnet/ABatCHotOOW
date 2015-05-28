@@ -10,7 +10,7 @@ public class SignPost : MonoBehaviour {
 	GameObject player;
 	Player amelia;
 	string[] words; //Lines of txt file
-	bool beingRead = false;
+	public bool beingRead = false;
 	public TextAsset file;
 	int sentenceIndex = 0;
 	string textDisplay = "";
@@ -104,6 +104,7 @@ public class SignPost : MonoBehaviour {
 	//sorry to jam this in here but it's running into issues with the gamecontroller;
 	void ReloadResources()
 	{
+		beingRead = false;
 		Debug.Log ("Reload");
 		uiTextObj = GameObject.Find ("Words");
 		uiText = uiTextObj.GetComponent<Text>();
@@ -209,8 +210,9 @@ public class SignPost : MonoBehaviour {
 					currentPassage = "";
 				}else{
 					cutSceneStart = false;
+					beingRead = true;
 				}
-			//doneReading = true;
+			doneReading = true;
 			}
 			return;
 		}
@@ -367,6 +369,7 @@ public class SignPost : MonoBehaviour {
 				beingRead = false;
 
 				uiText.enabled = false;
+				beingRead = false;
 				sentenceIndex = 0;
 				Debug.Log ("DONE");
 				//BroadcastMessage("PrintThis");

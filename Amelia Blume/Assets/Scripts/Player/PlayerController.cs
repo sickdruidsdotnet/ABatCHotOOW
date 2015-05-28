@@ -48,7 +48,7 @@ public class PlayerController : BaseBehavior {
 	public GameObject[] blossoms;
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
-
+	
 	public GameObject[] activeSeeds;
 
 	protected Vector3 pendingMovementInput;
@@ -66,8 +66,7 @@ public class PlayerController : BaseBehavior {
 		blossoms = GameObject.FindGameObjectsWithTag("Blossom");
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
-		int i = 0;
-		foreach (GameObject child in blossoms) 
+		for(int i = 0; i < blossoms.Length; i++)
 		{
 			blossomMover tempBlossom = blossoms[i].GetComponent<blossomMover>();
 			if(tempBlossom != null)
