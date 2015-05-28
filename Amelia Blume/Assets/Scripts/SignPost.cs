@@ -23,7 +23,10 @@ public class SignPost : MonoBehaviour {
 	public string currentPassage;
 	public string speaker;
 	string connection;
-	public bool doneReading = true;
+
+	public bool doneReading = false;
+	public bool cutSceneStart;
+	public bool inCutscene;
 
 	bool personSpeaking = false;
 
@@ -59,8 +62,8 @@ public class SignPost : MonoBehaviour {
 	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
-
-
+		inCutscene = false;
+		cutSceneStart = false;
 		nextPassage = startingPassage;
 		nextUse = Time.time + delay;
 		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
@@ -135,6 +138,7 @@ public class SignPost : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		if (uiCanvas == null || uiButtonSprite == null) {
+			Debug.Log ("Null stuff");
 			ReloadResources();
 			return;
 		}
@@ -145,8 +149,15 @@ public class SignPost : MonoBehaviour {
 
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
-		nameText.enabled = uiText.enabled;
-		uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+		if (!inCutscene) {
+			nameText.enabled = uiText.enabled;
+			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+		} else {
+			nameText.enabled = uiText.enabled;
+			uiPortraitSprite.enabled = nameText.enabled;
+		}
+		//Debug.Log ("NAME: " + nameText.enabled);
+		//Debug.Log ("PORTRAIT: " + uiPortraitSprite.enabled);
 		if (uiButtonSprite.enabled) {
 			if (uiCanvas != null) {
 				uiCanvas.planeDistance = 2;
@@ -156,21 +167,21 @@ public class SignPost : MonoBehaviour {
 		if (speaker == "Amelia") {
 //			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
-			//uiPortraitSprite.enabled = true;
+			uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
 			uiPortraitSprite.sprite = portraits[0];
 			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
 			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
 		} else if (speaker == "Ignatius") {
 			uiPortraitSprite.sprite = portraits[1];
-			//uiPortraitSprite.enabled = true;
+			uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
 			nameRect.anchoredPosition = new Vector2(307f, -53.7f);
 		} else {
-			uiPortraitSprite.enabled = false;
-			nameText.enabled = false;
+			//uiPortraitSprite.enabled = false;
+			//nameText.enabled = false;
 			personSpeaking = false;
 		}
 
@@ -182,12 +193,17 @@ public class SignPost : MonoBehaviour {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
-			Debug.Log ("DONE");
-			//BroadcastMessage("PrintThis");
-			beingRead = false;
-			uiText.enabled = false;
-			nextPassage = startingPassage;
-			currentPassage = "";
+				if(!cutSceneStart){
+					//Debug.Log ("DONE");
+					if(inCutscene)
+						BroadcastMessage("NextEvent");
+					beingRead = false;
+					uiText.enabled = false;
+					nextPassage = startingPassage;
+					currentPassage = "";
+				}else{
+					cutSceneStart = false;
+				}
 			//doneReading = true;
 			}
 			return;
@@ -237,7 +253,7 @@ public class SignPost : MonoBehaviour {
 	*/
 
 	void DisplayFullText(){
-		Debug.Log ("Show Full");
+//		Debug.Log ("Show Full");
 		if (beingRead) {
 			bool keepWriting = true;
 				while(keepWriting){
@@ -401,4 +417,16 @@ public class SignPost : MonoBehaviour {
 		}
 	}
 
+	public void CutsceneStart(string startPass){
+		uiText.enabled = true;
+		inCutscene = true;
+		cutSceneStart = true;
+		startingPassage = startPass;
+		nextPassage = startingPassage;
+		//textDisplay = "";
+		amelia.SetReadSign(true);
+		amelia.SetCurrentSign(this.gameObject);
+		Read ();
+	}
+	
 }

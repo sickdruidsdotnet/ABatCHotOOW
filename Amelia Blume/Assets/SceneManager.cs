@@ -5,37 +5,66 @@ using System.Collections.Generic;
 public class SceneManager : MonoBehaviour {
 	public List<GameObject> events;
 	GameObject amelia;
+	GameObject ig;
+	GameObject currChar;
 	Player player;
 	int index;
 	SignPost signPost;
+	float nextUse;
+	float delay = 0.3f;
+	bool moving = false;
+	public Animator ameliaAnimator;
+	public Animator igAnimator;
+	//float timer;
 	// Use this for initialization
 	void Start () {
 		//events = new List<GameObject>();
+		ig = GameObject.Find ("Ignatius");
 		amelia = GameObject.Find ("Player");
 		player = amelia.GetComponent<Player> ();
+		player.CUTSCENE = true;
 		player.SetCurrentSign (this.gameObject);
 		signPost = GetComponent<SignPost>();
+		igAnimator = ig.GetComponentInChildren<Animator> ();
+		ameliaAnimator = amelia.GetComponentInChildren<Animator> ();
 		index = 0;
 
 		NextEvent ();
+
+		nextUse = Time.time + delay;
 
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-	
+		//timer++;
+		if (moving) {
+			MoveCharacter();
+		}
 	}
 
 	void StartReading(){
-		player.SetReadSign (true);
-		signPost.startingPassage = events [index].name;
-		//signPost.currentPassage = signPost.startingPassage;
-		signPost.nextPassage = signPost.startingPassage;
-		player.SetCurrentSign (this.gameObject);
-		signPost.Read ();
-		//signPost.Read ();
-		//signPost.Read ();
-		//signPost.Read ();
+		signPost.CutsceneStart (events [index].name);
+	}
+
+	void MoveCharacter(){
+		Vector3 targetPos;
+		if(currChar == ig)
+			targetPos = new Vector3(events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
+		else
+			targetPos = events [index].transform.position;
+		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
+			//if(Time.time > nextUse){
+//				Debug.Log ("Moving");
+				currChar.transform.position = Vector3.MoveTowards (currChar.transform.position, targetPos, 0.1f);
+				//MoveCharacter (currChar);
+				//nextUse = Time.time+delay;
+			//}
+		} else {
+			index++;
+			moving = false;
+			NextEvent();
+		}
 	}
 
 	void NextEvent(){
@@ -44,25 +73,44 @@ public class SceneManager : MonoBehaviour {
 			switch (events [index].tag) {
 			case "Amelia":
 				Debug.Log ("Amelia Move");
-				index++;
+				currChar = amelia;
+				moving = true;
+				player.SetReadSign (false);
+				ameliaAnimator.SetBool ("isRunning", true);
+				igAnimator.SetBool ("isRunning", false);
+				//MoveCharacter();
+				//index++;
 				//NextEvent ();
 				break;
 		
 			case "Ig":
 				Debug.Log ("Ig Move");
-				index++;
+				currChar = ig;
+				moving = true;
+				player.SetReadSign (false);
+				ameliaAnimator.SetBool ("isRunning", false);
+				igAnimator.SetBool ("isRunning", true);
+				//MoveCharacter();
+				//index++;
 				//NextEvent ();
 				break;
 		
 			case "Text":
+				ameliaAnimator.SetBool ("isRunning", false);
+				igAnimator.SetBool ("isRunning", false);
 				Debug.Log ("Text");
-				StartReading();
+				StartReading ();
 				index++;
 				//NextEvent ();
 				break;
 		
 		
 			}
+		} else {
+			//Fade to Black?
+			//Load Next Scene
+			ameliaAnimator.SetBool ("isRunning", false);
+			igAnimator.SetBool ("isRunning", false);
 		}
 	}
 
