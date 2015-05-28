@@ -1,0 +1,52 @@
+Initialize engine version: 4.6.4f1 (99f88340878d)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics Family (ID=0xa16)
+    Vendor:   Intel
+    VRAM:     128 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.133 seconds
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+Platform assembly: C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\JoeWise\Documents\ABatCHotOOW\Amelia Blume\Builds\Beta\Beta_Data\Managed\System.dll (this message is harmless)
+UnloadTime: 15.206349 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 10 unused Assets to reduce memory usage. Loaded Objects now: 3117.
+Total: 5.315260 ms (FindLiveObjects: 0.447586 ms CreateObjectMapping: 0.105314 ms MarkObjects: 1.335620 ms  DeleteObjects: 1.315985 ms)
+
+Now targeting Deer_Infected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+
+Now targeting Deer_Infected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+
+No longer targeting Deer_Infected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+
+Now targeting Deer_Infected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+
+UnloadTime: 6.966825 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 1736 unused Assets to reduce memory usage. Loaded Objects now: 3278.
+Total: 8.617942 ms (FindLiveObjects: 0.378418 ms CreateObjectMapping: 0.340933 ms MarkObjects: 0.668925 ms  DeleteObjects: 6.743254 ms)
+
+Now targeting Deer_Infected
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+

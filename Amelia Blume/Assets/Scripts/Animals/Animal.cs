@@ -14,6 +14,11 @@ public class Animal : MonoBehaviour
 	public Vector3 target;
 	public float targetOffset;
 
+	public GameObject conversionPrompt;
+	GameObject activePrompt;
+
+	Collider vines;
+
 	//on a scale oof 0-10, how powerful is this animal. the more strenght, the easier it
 	//breaks free from vines
 	public float strength;
@@ -43,6 +48,14 @@ public class Animal : MonoBehaviour
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>(), collider, true);
 		StartCoroutine (breakFree (vineCollider));
+		if (conversionPrompt != null) {
+			activePrompt = Instantiate (conversionPrompt, transform.position, Quaternion.identity) as GameObject;
+			if(activePrompt != null)
+			{
+				activePrompt.GetComponent<fade_in>().FadeIn();
+			}
+		}
+
     }
 
     public void changeInfection()
@@ -54,6 +67,14 @@ public class Animal : MonoBehaviour
 		BroadcastMessage ("clearInfection");
 		//quit spawning spores unecessarily
 		isSpored = false;
+		//destroy the vines
+		Destroy(vines.gameObject);
+		if (conversionPrompt != null) {
+			if(activePrompt != null)
+			{
+				activePrompt.GetComponent<fade_in>().FadeOut();
+			}
+		}
     }
 
 
@@ -95,6 +116,7 @@ public class Animal : MonoBehaviour
 	void OnTriggerStay(Collider other){
 		if (other.tag == "Player") {
 			if(isRestrained && isInfected){
+				//Debug.Log ("Can convert");
 				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = true;
 				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = gameObject;
 			}
@@ -111,6 +133,18 @@ public class Animal : MonoBehaviour
 				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
 		}
 	}
+
+	void OnParticleCollision(GameObject other) 
+    {
+    	if (other.tag == "Pollen")
+    	{
+    		if (!isSpored)
+    		{
+    			becomeSpored();
+    			Debug.Log(gameObject.name + " is spored");
+    		}
+    	}
+    }
 
 	IEnumerator sporeTimer()
 	{
@@ -133,10 +167,16 @@ public class Animal : MonoBehaviour
 
 	IEnumerator breakFree(Collider vineCollider)
 	{
+		vines = vineCollider;
 		yield return new WaitForSeconds (10f - (strength * sporeModifier));
 		if (isRestrained && isInfected) {
 			// destrov the vines that this animal has broken
+<<<<<<< HEAD
 			Destroy(vineCollider.gameObject);
+=======
+			//Destroy(vineCollider.gameObject);
+			vineCollider.gameObject.GetComponent<VinePlant>().shredVines();
+>>>>>>> master
 			/*
 			//ignore that vine's collider from now on, it's broken free from it
 			Collider[] animalColliders = transform.GetComponents<Collider>();
@@ -149,6 +189,12 @@ public class Animal : MonoBehaviour
 			*/
 			isRestrained = false;
 			BroadcastMessage("BrokeFree", SendMessageOptions.DontRequireReceiver);
+			if (conversionPrompt != null) {
+				if(activePrompt != null)
+				{
+					activePrompt.GetComponent<fade_in>().FadeOut();
+				}
+			}
 		}
 	}
 

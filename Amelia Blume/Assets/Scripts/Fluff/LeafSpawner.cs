@@ -11,10 +11,13 @@ public class LeafSpawner : MonoBehaviour {
 
 	//how many leaves per second you want to spawn
 	public float spawnRate = 0.1f;
+
+	GameObject mainCamera;
 	float lastSpawnTime;
 
 	// Use this for initialization
 	void Start () {
+		mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
 		width = gameObject.GetComponent<BoxCollider> ().size.x;
 		lastSpawnTime = Time.time;
 		if(spawnRate == 0)
@@ -25,6 +28,7 @@ public class LeafSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		transform.position = new Vector3 (mainCamera.transform.position.x, mainCamera.transform.position.y + 10, transform.position.z);
 		if (Mathf.Abs (lastSpawnTime - Time.time) > (1f/spawnRate)) {
 			spawnLeaf();
 			lastSpawnTime = Time.time;
@@ -45,7 +49,7 @@ public class LeafSpawner : MonoBehaviour {
 		                                      transform.position.y, transform.position.z);
 		leaf.BroadcastMessage ("randomize", leaf_override);
 
-		leaf.transform.parent = transform;
+		leaf.transform.SetParent(transform.parent);
 
 	}
 }

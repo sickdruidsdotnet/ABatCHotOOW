@@ -19,6 +19,10 @@ public class PlayerController : BaseBehavior {
 	public bool isJumping = false;
 	public bool isAirDashing = false;
 	public bool isStunned = false;
+	public bool isPlanting = false;
+	public bool isSunLighting = false;
+
+	public float watering = 0.0f;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -26,6 +30,9 @@ public class PlayerController : BaseBehavior {
 
     public bool isFacingRight;
     public int faceDirection;
+
+	public bool invulnerable = false;
+	public int invulCounter;
 
 	public bool canControl;
 	public int stunTimer;
@@ -36,10 +43,13 @@ public class PlayerController : BaseBehavior {
 	public bool isTurning = false;
 	public float turnDirection = 0f;
 
+	public Transform blossomParent;
 	public GameObject blossomPrefab;	
 	public GameObject[] blossoms;
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
+
+	public GameObject[] activeSeeds;
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
@@ -48,18 +58,20 @@ public class PlayerController : BaseBehavior {
     {
 //		Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
-		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
+		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
+		if (playerInputObj != null) {
+			playerInput = playerInputObj.GetComponent<InputHandler> ();
+		}
     	// initialize Amelia's health blossoms
-		blossoms = new GameObject[10];
+		blossoms = GameObject.FindGameObjectsWithTag("Blossom");
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
 		int i = 0;
-		foreach (Transform child in transform) 
+		foreach (GameObject child in blossoms) 
 		{
-			blossomMover tempBlossom = child.GetComponent<blossomMover>();
+			blossomMover tempBlossom = blossoms[i].GetComponent<blossomMover>();
 			if(tempBlossom != null)
 			{
-				blossoms[i] = child.gameObject;
 				blossoms[i].name = blossoms[i].name + " " + i;
 				blossomPositions[i] = blossoms[i].transform.localPosition;
 				blossomRotations[i] = blossoms[i].transform.localRotation;
@@ -95,27 +107,21 @@ public class PlayerController : BaseBehavior {
 
 		canControl = true;
 		stunTimer = 0;
-
+		activeSeeds = new GameObject[3];
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
 	protected void Update() {
+		if (playerInput == null) {
+			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
+		}
 
 		if (Camera.main == null) {
 			return;		
 		}
 
 		//check to see if blossoms are up-to-date
-		//checkHealth ();
-
-		//debug, remove this when we get it properly detaching via health drops
-		if (Input.GetKey ("1")) {
-			for(int i = 0; i < 10; i++)
-			{	
-				if(blossoms[i] != null)
-					blossoms[i].GetComponent<blossomMover>().detach ();
-			}
-		}
+		checkHealth ();
 
 		if (playerInput.jumpUp || !canControl)
 			StopJump();
@@ -158,6 +164,9 @@ public class PlayerController : BaseBehavior {
 			player.transform.rotation *= player.motor.environment.groundRotation;
 		}
 
+		if (invulnerable) {
+			HandleInvulnerability();
+		}
 	}
 	
 	public void CommitMove(Vector3 finalMovement) {
@@ -214,7 +223,7 @@ public class PlayerController : BaseBehavior {
         pendingMovementInput = new Vector3(0, 0, faceDirection * horizontal);
         //original vector was (vertical, 0, horizontal), just for if we want to edit in vertical later
 
-		if (!canControl || player.isSunning() || player.isConverting()) {
+		if (!canControl || player.isSunning() || player.isConverting() || player.GetDead ()) {
 			pendingMovementInput = Vector3.zero;
 		}
 		
@@ -257,7 +266,7 @@ public class PlayerController : BaseBehavior {
 				float angle = Vector2.Angle (Vector2.up * -1f, new Vector2 (horizontal2, vertical2));
 				if (player.treeUnlocked && angle >= 60 && angle < 180 && horizontal2 > 0) {
 					player.SetCurrentSeed (Player.SeedType.TreeSeed);
-				} else if (player.fernUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
+				} else if (player.fluerUnlocked && angle >= 60 && angle < 180 && horizontal2 < 0) {
 					player.SetCurrentSeed (Player.SeedType.FlowerSeed);
 				} else if (player.vineUnlocked && angle < 60) {
 					player.SetCurrentSeed (Player.SeedType.VineSeed);
@@ -265,10 +274,18 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if(!canControl)
-			return;
+		if (!canControl) {
+			//Debug.Log (canControl);
+			if(player.GetDead()){
+				if(playerInput.jumpDown){
+					player.SetSpawn(true);
+				}
+			}else{
+				return;
+			}
+		}
 
-		if (!player.isSunning() && !player.isConverting()) {
+		if (!player.isSunning() && !player.isConverting() && !player.GetDead()) {
 			if (playerInput.jumpDown) {
 				if(player.GetReadSign())
 					ReadSign();
@@ -292,6 +309,9 @@ public class PlayerController : BaseBehavior {
 				player.SetSunning(true);
 			}
 		}
+		if (playerInput.sunUp) {
+			isSunLighting = false;
+		}
 	}
 	
 	protected void Jump() {
@@ -310,6 +330,8 @@ public class PlayerController : BaseBehavior {
 	protected void ThrowSeed() {
 		player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
+		isPlanting = true;
+		
 	}
 
 	protected void Dash() {
@@ -322,6 +344,7 @@ public class PlayerController : BaseBehavior {
 	protected void Sun() {
 		player.Broadcast("OnSunRequest");
 		player.motor.Sun();
+		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
@@ -336,7 +359,7 @@ public class PlayerController : BaseBehavior {
 
 	public void HandleStun()
 	{
-		if (!canControl) {
+		if (isStunned) {
 			if(stunTimer <= 0)
 			{
 				canControl = true;
@@ -347,6 +370,15 @@ public class PlayerController : BaseBehavior {
 				stunTimer--;
 			}
 		}
+	}
+
+	public void HandleInvulnerability()
+	{
+		invulCounter--;
+		if (invulCounter <= 0) {
+			invulnerable = false;
+		}
+
 	}
 
 	//essentially check if the blossoms need to be detached/added
@@ -374,7 +406,7 @@ public class PlayerController : BaseBehavior {
      		{
 				GameObject newBlossom = (GameObject)Instantiate(blossomPrefab);
 				blossoms[currTens-i] = newBlossom;
-				blossoms[currTens-i].transform.parent = transform;
+				blossoms[currTens-i].transform.parent = blossomParent;
 				blossoms[currTens-i].name = blossoms[currTens-i].name + " " + (currTens-i);
 				blossoms[currTens-i].transform.localPosition = blossomPositions[currTens-i];
 				//rotation varies depending on which direction the player, but not locally...?
@@ -382,5 +414,33 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		//Debug.Log ("Curr: " + currentHealth + " tens: " + currTens + " prev: " + prevHealth +  prevTens
+	}
+
+	public void updateActiveSeeds(int slot, GameObject seed)
+	{
+		if (activeSeeds [slot] != null) {
+			Destroy (activeSeeds [slot]);
+		}
+		activeSeeds [slot] = seed;
+
+	}
+
+	public void damagePlayer(int damageValue, int hitDirection = 0)
+	{
+		if (!invulnerable) {
+			if(hitDirection == 0)
+			{
+				hitDirection = faceDirection;
+			}
+			if (!(gameObject.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
+				gameObject.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
+			}
+			canControl = false;
+			isStunned = true;
+			invulnerable = true;
+			stunTimer = 45;
+			invulCounter = 75;
+			gameObject.GetComponent<Player> ().ReduceHealth (damageValue);
+		}
 	}
 }

@@ -33,6 +33,8 @@ public class Player : BaseBehavior {
 		FlowerSeed,
 	};
 
+	public bool isDead = false;
+	public bool canSpawn = false;
 	public int health;
 	public bool airDashed = false;
 	public bool isDashing = false;
@@ -286,6 +288,8 @@ public class Player : BaseBehavior {
 
 
 		//ReduceHealth(1);
+		if (isDead)
+			cachedPlayerController.canControl = false;
 		if (canGrow && this.transform.localScale.x < 1) {
 			this.transform.localScale = new Vector3 (this.transform.localScale.x + .1f, this.
 			                                        transform.localScale.y + .1f, this.transform.localScale.z + .1f);
@@ -394,6 +398,24 @@ public class Player : BaseBehavior {
 		controller.MoveToPosition (spawner.transform.position.x, spawner.transform.position.y + 4f, true);
 		Instantiate (fruit);
 		this.transform.localScale = new Vector3 (0.1f, 0.1f, 0.1f);
+		isDead = true;
+		cachedPlayerController.canControl = false;
+	}
+
+	public void SetDead(bool value){
+		isDead = value;
+	}
+
+	public bool GetDead(){
+		return isDead;
+	}
+
+	public void SetSpawn(bool value){
+		canSpawn = value;
+	}
+	
+	public bool GetSpawn(){
+		return canSpawn;
 	}
 
 
