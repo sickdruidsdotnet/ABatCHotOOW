@@ -187,6 +187,13 @@ THE HEART agrees, and assures AMELIA and IGNATIUS that the magic here will prote
 :: 3-2 Boar Separation
 
 
+:: 3-2 Examine Ig Vines [Amelia]
+It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
+
+
+:: 3-2 What Was That [Amelia]
+That sounded big...
+
 
 :: 3-3 River Guardian
 

@@ -16,6 +16,8 @@ public class BoarEventsPart1 : MonoBehaviour {
 	SignPost sign;
 	public SignPost mushSign;
 
+	public GameObject vinePrefab;
+
 	public GameObject invisibleWall;
 	Vector3 invisPos;
 	public GameObject panLimiter;
@@ -147,13 +149,18 @@ public class BoarEventsPart1 : MonoBehaviour {
 		E1Done = false;
 		E2Started = false;
 		E2Done = false;
+		player.SetReadSign(false);
+
+		//respawn a vine because the first one broke
+		GameObject newVine = Instantiate (vinePrefab, new Vector3 (23.93f, -1.93f, 0), vinePrefab.transform.rotation) as GameObject;
+		newVine.GetComponent<VinePlant> ().waterCount = 100;
 	}
 
 	IEnumerator WaitForABit(float waitTime = 2f)
 	{
 		yield return new WaitForSeconds(waitTime);
 		player.gameObject.GetComponent<PlayerController> ().canControl = true;
-		sign.CutsceneStart ("3-2 What was that");
+		sign.CutsceneStart ("3-2 What Was That");
 		E1Done = true;
 
 	}
