@@ -84,8 +84,9 @@ public class BoarEventsPart1 : MonoBehaviour {
 		}
 
 		if (E1Done && !E2Started) {
-			if(sign.doneReading)
+			if(!sign.beingRead)
 			{
+				player.SetReadSign(false);
 				E2Started = true;
 				Event2();
 			}
@@ -131,7 +132,7 @@ public class BoarEventsPart1 : MonoBehaviour {
 		//move the wall/limiter to make it easier to reset later
 		invisibleWall.transform.position = new Vector3 (invisPos.x, invisPos.y, -10f);
 		panLimiter.transform.position = new Vector3 (-20f, panPos.y, panPos.z);
-
+		//exit the cutscene
 	}
 
 	public void Reset()

@@ -49,7 +49,7 @@ public class SignPost : MonoBehaviour {
 
 	GameObject nameObj;
 
-	Text uiText;
+	public Text uiText;
 	Text nameText;
 
 	RectTransform portraitRect;
@@ -203,7 +203,7 @@ public class SignPost : MonoBehaviour {
 				if(!cutSceneStart){
 					//Debug.Log ("DONE");
 					if(inCutscene)
-						BroadcastMessage("NextEvent");
+						BroadcastMessage("NextEvent", SendMessageOptions.DontRequireReceiver);
 					beingRead = false;
 					uiText.enabled = false;
 					nextPassage = startingPassage;
