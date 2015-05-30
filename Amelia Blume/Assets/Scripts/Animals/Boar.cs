@@ -4,7 +4,7 @@ using System.Collections;
 public class Boar : Animal
 {
 	Player player;
-	//Animator anim;
+	public Animator anim;
 	
 	//how much damage this will do to the player
 	public int damageValue = 100;
@@ -57,9 +57,14 @@ public class Boar : Animal
 		lockedAxisValue = this.transform.position.z;
 		
 		speed = baseSpeed;
-		
+
 		//this will change to check to see how it's positioned in the editor later
 		faceDirection = -1;
+
+		anim = GetComponentInChildren<Animator> ();
+		anim.SetBool ("IsCharging", true);
+		anim.SetBool ("IsWalking", false);
+		anim.SetBool ("IsRestrained", false);
 
 		source.PlayOneShot (spotPlayer1, 3F);
 	}
@@ -86,9 +91,15 @@ public class Boar : Animal
 			if (isRestrained) {
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+				anim.SetBool ("IsRestrained", true);
+				anim.SetBool ("IsCharging", false);
+				anim.SetBool ("IsWalking", false);
 			}
 			else
 			{
+				anim.SetBool ("IsCharging", true);
+				anim.SetBool ("IsWalking", false);
+				anim.SetBool ("IsRestrained", false);
 				MoveRight();
 				//special behaviors like jumping should be here
 				
