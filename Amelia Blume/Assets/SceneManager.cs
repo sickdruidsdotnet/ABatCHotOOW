@@ -23,12 +23,12 @@ public class SceneManager : MonoBehaviour {
 		GameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<ABGameController> ();
 		//events = new List<GameObject>();
 		ig = GameObject.Find ("Ignatius");
-		amelia = GameObject.Find ("Player");
+		amelia = GameObject.FindGameObjectWithTag ("Player");
 		player = amelia.GetComponent<Player> ();
 		player.CUTSCENE = true;
 		player.SetCurrentSign (this.gameObject);
 		signPost = GetComponent<SignPost>();
-		igAnimator = ig.GetComponentInChildren<Animator> ();
+		if (ig != null){igAnimator = ig.GetComponentInChildren<Animator> ();}
 		ameliaAnimator = amelia.GetComponentInChildren<Animator> ();
 		index = 0;
 
