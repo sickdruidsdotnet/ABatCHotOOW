@@ -17,7 +17,7 @@ public class BaseBehavior : MonoBehaviour {
 	public Player player {
 		get {
 			if (cachedPlayer == null) {
-				cachedPlayer = GameObject.Find("Player").GetComponent<Player>();
+				cachedPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 			}
 			return cachedPlayer;
 		}

@@ -86,12 +86,6 @@ public class Flower : Plant {
 		animals = GameObject.FindGameObjectsWithTag ("Animal");
 		health = 120;
 		//Debug.Log (animals.Length);
-
-		for(int i = 0; i < animals.Length;i++){
-			animalCon = animals[i].GetComponent<Animal>();
-			animalCon.LurePlant(this.transform);
-			//Debug.Log (animals[i]);
-		}
 	}
 
 	private void setRandomValues()

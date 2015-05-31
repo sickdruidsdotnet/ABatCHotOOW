@@ -22,7 +22,7 @@ public class PlayerController : BaseBehavior {
 	public bool isPlanting = false;
 	public bool isSunLighting = false;
 
-	public float watering = 0.0f;
+	public bool watering = false;
 	
     //do we want sliding? could be cool...
 	public bool sliding = false;
@@ -272,11 +272,11 @@ public class PlayerController : BaseBehavior {
 	protected void HandleActionInput() {
 
 		if (playerInput.primaryInput == "Keyboard") {
-			if(playerInput.firstSeedDown && player.vineUnlocked)
+			if (playerInput.firstSeedDown && player.vineUnlocked)
 				player.SetCurrentSeed (Player.SeedType.VineSeed);
-			else if(playerInput.secondSeedDown && player.treeUnlocked)
+			else if (playerInput.secondSeedDown && player.treeUnlocked)
 				player.SetCurrentSeed (Player.SeedType.TreeSeed);
-			else if(playerInput.thirdSeedDown && player.fluerUnlocked)
+			else if (playerInput.thirdSeedDown && player.fluerUnlocked)
 				player.SetCurrentSeed (Player.SeedType.FlowerSeed);
 		} else {
 			float horizontal2 = playerInput.xSelect;
@@ -295,22 +295,22 @@ public class PlayerController : BaseBehavior {
 
 		if (!canControl) {
 			//Debug.Log (canControl);
-			if(player.GetDead()){
-				if(playerInput.jumpDown){
-					player.SetSpawn(true);
+			if (player.GetDead ()) {
+				if (playerInput.jumpDown) {
+					player.SetSpawn (true);
 				}
-			}else{
+			} else {
 				return;
 			}
 		}
 
-		if (!player.isSunning() && !player.isConverting() && !player.GetDead()) {
+		if (!player.isSunning () && !player.isConverting () && !player.GetDead () && player.isGrounded) {
 			if (playerInput.jumpDown) {
-				if(player.GetReadSign())
-					ReadSign();
-				else{
-					if(!player.CUTSCENE)
-					Jump ();
+				if (player.GetReadSign ())
+					ReadSign ();
+				else {
+					if (!player.CUTSCENE)
+						Jump ();
 				}
 			}
 			if (playerInput.throwSeedDown && !player.CUTSCENE) {
@@ -321,18 +321,25 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 		if (playerInput.sunDown && !player.CUTSCENE) {
-			if(canConvert){
-				AnimalConvert();
-				player.SetConverting(true);
-			}
-			else{
-				Sun();
-				player.SetSunning(true);
+			if (canConvert) {
+				AnimalConvert ();
+				player.SetConverting (true);
+			} else {
+				Sun ();
+				player.SetSunning (true);
 			}
 		}
 		if (playerInput.sunUp) {
 			isSunLighting = false;
 		}
+		if (playerInput.waterDown) {
+			watering = true;
+		} 
+		if (playerInput.waterUp){
+			watering = false;
+		}
+
+	
 	}
 	
 	protected void Jump() {
