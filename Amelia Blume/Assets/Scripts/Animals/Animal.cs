@@ -77,20 +77,6 @@ public class Animal : MonoBehaviour
 		}
     }
 
-
-	public void LurePlant(Transform plantPosition)
-	{
-		//Debug.Log ("LurePlant called: " + gameObject.name);
-		//NavMeshAgentController agentController = this.GetComponent<NavMeshAgentController> ();
-		//agentController.EnableAgent (plantPosition);
-		if (plantPosition.position.x > this.transform.position.x)
-			targetOffset = -0.5f;
-		else
-			targetOffset = 1.2f;
-		SetTarget (plantPosition.position);
-		isBeingLured = true;
-	}
-
 	public void SetTarget(Vector3 position){
 		this.target = new Vector3 (position.x + targetOffset, transform.position.y, transform.position.z);
 	}
@@ -136,6 +122,7 @@ public class Animal : MonoBehaviour
 
 	void OnParticleCollision(GameObject other) 
     {
+    	Debug.Log("Collided with " + other.name);
     	if (other.tag == "Pollen")
     	{
     		if (!isSpored)
@@ -159,7 +146,7 @@ public class Animal : MonoBehaviour
 	IEnumerator sporeSpawner()
 	{
 		if (isSpored) {
-			Instantiate(Resources.Load("Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
+			Instantiate(Resources.Load("FlowerPlant/Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
 			yield return new WaitForSeconds(1f);
 			StartCoroutine(sporeSpawner());
 		}
