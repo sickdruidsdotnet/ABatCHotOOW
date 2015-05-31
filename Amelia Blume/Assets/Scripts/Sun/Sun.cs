@@ -27,7 +27,10 @@ public class Sun : MonoBehaviour {
 
 		SunRay[] childRays = gameObject.GetComponentsInChildren<SunRay> ();
 		for (int i = 0; i < targets.Count; i++) {
-			childRays[i].target = targets[i];
+			//redundant check to fix errors
+			if(i < targets.Count){
+				childRays[i].target = targets[i];
+			}
 		}
 	}
 	

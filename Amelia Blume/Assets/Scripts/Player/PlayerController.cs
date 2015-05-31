@@ -161,7 +161,7 @@ public class PlayerController : BaseBehavior {
 			if (dist <= 4.0f)
 			{
 				Animal aStats = animal.GetComponent<Animal>();
-				if(aStats.isRestrained && aStats.isInfected)
+				if(aStats != null && aStats.isRestrained && aStats.isInfected)
 				{
 					canConvert = true;
 					conversionTarget = animal;
@@ -299,7 +299,15 @@ public class PlayerController : BaseBehavior {
 				if (playerInput.jumpDown) {
 					player.SetSpawn (true);
 				}
-			} else {
+			} else if (player.GetReadSign ())
+			{
+				//the player can still read signs even though they can't move
+				if (playerInput.jumpDown) {
+					ReadSign ();
+				}
+
+			}
+			else {
 				return;
 			}
 		}
@@ -313,14 +321,14 @@ public class PlayerController : BaseBehavior {
 						Jump ();
 				}
 			}
-			if (playerInput.throwSeedDown && !player.CUTSCENE) {
+			if (playerInput.throwSeedDown && !player.CUTSCENE && canControl) {
 				ThrowSeed ();
 			}
-			if (playerInput.dashDown && !player.CUTSCENE) {
+			if (playerInput.dashDown && !player.CUTSCENE && canControl) {
 				Dash ();
 			}
 		}
-		if (playerInput.sunDown && !player.CUTSCENE) {
+		if (playerInput.sunDown && !player.CUTSCENE && canControl) {
 			if (canConvert) {
 				AnimalConvert ();
 				player.SetConverting (true);
@@ -332,7 +340,7 @@ public class PlayerController : BaseBehavior {
 		if (playerInput.sunUp) {
 			isSunLighting = false;
 		}
-		if (playerInput.waterDown) {
+		if (playerInput.waterDown && canControl) {
 			watering = true;
 		} 
 		if (playerInput.waterUp){

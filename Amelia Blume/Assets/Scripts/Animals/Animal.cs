@@ -25,7 +25,7 @@ public class Animal : MonoBehaviour
 
 
 	public bool isSpored;
-	protected float sporeModifier = 1f;
+	public float sporeModifier = 1f;
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 

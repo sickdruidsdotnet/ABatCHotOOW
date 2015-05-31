@@ -80,7 +80,9 @@ public class BoarEventsPart2 : MonoBehaviour {
 		} else if (E2Started && !E2Done) {
 			//event2 is underway, we need to check if the player has finished with the text
 			if (!sign.beingRead) {
-				Debug.Log ("E2 Done");
+				transform.position = new Vector3 (transform.position.x, transform.position.y, -10);
+				sign.inCutscene = false;
+				//Debug.Log ("E2 Done");
 				player.SetReadSign(false);
 				E2Done = true;
 				player.gameObject.GetComponent<PlayerController> ().canControl = true;
@@ -89,14 +91,17 @@ public class BoarEventsPart2 : MonoBehaviour {
 			}
 		} else if (E2Done && !E3Started) {
 			//change rumbling intervals to make it sound like it's getting closer
-			if (Time.time - rumbleStart > 15) {
+			if (Time.time - rumbleStart > 20) {
 				Event3 ();
+			} else if (Time.time - rumbleStart > 15 && !rumbling) {
+				//Debug.Log ("Stage3");
+				StartCoroutine(RumbleInterval (0.15f, 0.05f, 5));
 			} else if (Time.time - rumbleStart > 10 && !rumbling) {
-				Debug.Log ("Stage3");
-				RumbleInterval (0.15f, 0.2f, 5);
+				//Debug.Log ("Stage3");
+				StartCoroutine(RumbleInterval (0.15f, 0.2f, 5));
 			} else if (Time.time - rumbleStart > 5 && !rumbling) {
-				Debug.Log ("Stage2");
-				RumbleInterval (0.15f, 0.2f, 5);
+				//Debug.Log ("Stage2");
+				StartCoroutine(RumbleInterval (0.15f, 0.35f, 5));
 			}
 		} else if (E3Done && !activeBoar.GetComponent<Animal> ().isInfected) {
 			//Player has purified the boar! time to get rid of the fake progress blocks
@@ -115,13 +120,13 @@ public class BoarEventsPart2 : MonoBehaviour {
 
 	public void Event2(){
 		E2Started = true;
-		player.gameObject.GetComponent<PlayerController> ().canControl = true;
+		//player.gameObject.GetComponent<PlayerController> ().canControl = true;
 		sign.CutsceneStart ("3-4 Time to Prepare");
 	}
 
 	public void Event3(){
 		E3Started = true;
-		Debug.Log ("Spawning Boar");
+		//Debug.Log ("Spawning Boar");
 		activeBoar = BoarSpawner.SpawnBoar();
 		E3Done = true;
 	}
@@ -142,6 +147,7 @@ public class BoarEventsPart2 : MonoBehaviour {
 		E3Started = false;
 		E3Done = false;
 		player.SetReadSign(false);
+		transform.position = new Vector3 (transform.position.x, transform.position.y, 0);
 	}
 
 	IEnumerator RumbleInterval(float rumbleTime, float bwRumbles, float duration)

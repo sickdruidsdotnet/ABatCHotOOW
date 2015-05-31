@@ -45,7 +45,7 @@ public class SignPost : MonoBehaviour {
 	Image uiTextBoxSprite;
 
 	GameObject portraitObj;
-	Image uiPortraitSprite;
+	public Image uiPortraitSprite;
 
 	GameObject nameObj;
 
