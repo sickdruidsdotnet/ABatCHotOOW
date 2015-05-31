@@ -19,10 +19,12 @@ public class Flame : MonoBehaviour
 	// transformation stuff
 	public float flameSpeed = 1.0f;
 	private float startTime;
-	Vector3 targetLoc;
+	Vector3 targetLoc = Vector3.zero;
 	Vector3 initialPos;
 	Vector3 initialScale;
 	Vector3 goalScale = Vector3.zero;
+	Quaternion initialRot;
+	Quaternion goalRotation;
 
 
 
@@ -37,13 +39,17 @@ public class Flame : MonoBehaviour
 		setMaterial();
 
 		initialPos = transform.position;
+		initialRot = transform.rotation;
+		float rot = Random.Range(90, 180);
+		if (Random.Range(0, 1f) < 0.5f) {rot *= -1f;}
+		goalRotation = Quaternion.AngleAxis(rot, Vector3.up);
 		initialScale = new Vector3(initialScaleFactor,initialScaleFactor,initialScaleFactor);
 		startTime = Time.time;
 	}
 
 	void Update()
 	{
-		if (targetLoc != null)
+		if (targetLoc != Vector3.zero)
 		{
 			beFire();
 			if (transform.position == targetLoc)
@@ -82,7 +88,8 @@ public class Flame : MonoBehaviour
 
 	private void setMaterial()
 	{
-		Material fireMat = Resources.Load("Materials/Fire_base", typeof(Material)) as Material;
+		Material fireMat = new Material(Shader.Find("ABlumeUnlit"));
+		fireMat.color = new Color(Random.Range(0.9f, 1f), Random.Range(0.5f, 0.65f), 0);
 		meshRenderer.material = fireMat;
 	}
 
@@ -90,6 +97,7 @@ public class Flame : MonoBehaviour
 	{
 		float percent = (Time.time - startTime) * flameSpeed / Vector3.Distance(initialPos, targetLoc);
 		transform.position = Vector3.Lerp(initialPos, targetLoc, percent);
+		transform.rotation = Quaternion.Lerp(initialRot, goalRotation, percent);
 		transform.localScale = Vector3.Lerp(initialScale, goalScale, percent);
 	}
 
