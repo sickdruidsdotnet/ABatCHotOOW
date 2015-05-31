@@ -43,6 +43,9 @@ public class SunRay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (isTargeter && target == null) {
+			isTargeter = false;
+		}
 		if (isTargeter) {
 			Debug.DrawLine (transform.position, target.transform.position, Color.yellow);
 		} else {

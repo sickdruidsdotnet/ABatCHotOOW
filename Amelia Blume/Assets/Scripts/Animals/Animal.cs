@@ -68,7 +68,9 @@ public class Animal : MonoBehaviour
 		//quit spawning spores unecessarily
 		isSpored = false;
 		//destroy the vines
-		Destroy(vines.gameObject);
+		if (vines != null) {
+			Destroy (vines.gameObject);
+		}
 		if (conversionPrompt != null) {
 			if(activePrompt != null)
 			{
