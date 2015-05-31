@@ -195,6 +195,13 @@ It looks like Ignatius has already passed through here. This area is empty save 
 That sounded big...
 
 
+:: 3-3 Discovered Flower a [Amelia]
+This flower seems to be giving up a pollen that repels fungus... I may be able to use this to slow down infected animal.[[Discovered Flower b]]
+d
+
+:: 3-3 Discovered Flower b [Amelia]
+The weakened creature would then take longer to break out of my vines, and would therefore be much easier to rid of the infection.
+
 :: 3-3 River Guardian
 
 

@@ -54,7 +54,7 @@ public class Boar : Animal
 		}
 		
 		//get the value where the animal should be locked to
-		lockedAxisValue = this.transform.position.z;
+		lockedAxisValue = transform.position.z;
 		
 		speed = baseSpeed;
 
@@ -91,15 +91,19 @@ public class Boar : Animal
 			if (isRestrained) {
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
-				anim.SetBool ("IsRestrained", true);
-				anim.SetBool ("IsCharging", false);
-				anim.SetBool ("IsWalking", false);
+				if(!anim.GetBool("IsRestrained")){
+					anim.SetBool ("IsRestrained", true);
+					anim.SetBool ("IsCharging", false);
+					anim.SetBool ("IsWalking", false);
+				}
 			}
 			else
 			{
-				anim.SetBool ("IsCharging", true);
-				anim.SetBool ("IsWalking", false);
-				anim.SetBool ("IsRestrained", false);
+				if (!anim.GetBool("IsCharging")){
+					anim.SetBool ("IsCharging", true);
+					anim.SetBool ("IsWalking", false);
+					anim.SetBool ("IsRestrained", false);
+				}
 				MoveRight();
 				//special behaviors like jumping should be here
 				
