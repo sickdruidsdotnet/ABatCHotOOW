@@ -137,7 +137,7 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (uiCanvas == null || uiButtonSprite == null) {
+		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
 			return;
@@ -424,6 +424,7 @@ public class SignPost : MonoBehaviour {
 	}
 
 	public void CutsceneStart(string startPass){
+		if (uiText == null){Debug.Log("uiText null!");ReloadResources();}
 		uiText.enabled = true;
 		inCutscene = true;
 		cutSceneStart = true;
