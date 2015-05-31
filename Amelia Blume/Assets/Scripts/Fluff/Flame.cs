@@ -19,7 +19,8 @@ public class Flame : MonoBehaviour
 	// transformation stuff
 	public float flameSpeed = 1.0f;
 	private float startTime;
-	Vector3 targetLoc = Vector3.zero;
+	Vector3 targetStart;
+	Vector3 targetEnd;
 	Vector3 initialPos;
 	Vector3 initialScale;
 	Vector3 goalScale = Vector3.zero;
@@ -49,13 +50,10 @@ public class Flame : MonoBehaviour
 
 	void Update()
 	{
-		if (targetLoc != Vector3.zero)
+		beFire();
+		if (transform.position == targetEnd)
 		{
-			beFire();
-			if (transform.position == targetLoc)
-			{
-				Destroy(gameObject);
-			}
+			Destroy(gameObject);
 		}
 	}
 
@@ -95,15 +93,19 @@ public class Flame : MonoBehaviour
 
 	private void beFire()
 	{
-		float percent = (Time.time - startTime) * flameSpeed / Vector3.Distance(initialPos, targetLoc);
+		float percent = (Time.time - startTime) * flameSpeed / Vector3.Distance(initialPos, targetEnd);
+		Vector3 targetLoc = Vector3.Lerp(targetStart, targetEnd, percent);
 		transform.position = Vector3.Lerp(initialPos, targetLoc, percent);
-		transform.rotation = Quaternion.Lerp(initialRot, goalRotation, percent);
+		Vector3 rotAxis = Vector3.Cross(Vector3.up, targetLoc - transform.position);
+		// first rotation points towards target, second rotation twists about its local y-axis
+		transform.rotation = Quaternion.AngleAxis(Vector3.Angle(Vector3.up, targetLoc - transform.position), rotAxis) * Quaternion.Lerp(initialRot, goalRotation, percent);
 		transform.localScale = Vector3.Lerp(initialScale, goalScale, percent);
 	}
 
-	public void setTrajectory(Vector3 target)
+	public void setTrajectory(Vector3 start, Vector3 end)
 	{
-		targetLoc = target;
+		targetStart = start;
+		targetEnd = end;
 	}
 
 }
