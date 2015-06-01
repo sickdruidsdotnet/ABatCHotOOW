@@ -155,7 +155,10 @@ public class Fluff_spawner : MonoBehaviour {
 			Renderer[] childRenderers = item.GetComponentsInChildren<Renderer>();
 			foreach(Renderer render in childRenderers)
 			{
-				render.material.color = newColor;
+				foreach(Material mat in render.materials)
+				{
+					mat.color = newColor;
+				}
 			}
 		}
 	}
