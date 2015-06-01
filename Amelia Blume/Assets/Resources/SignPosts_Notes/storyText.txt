@@ -213,8 +213,11 @@ Sounds like the boar has found me again. It seems to be far away, so unlike last
 
 
 
-:: 4-2 Ashes
+:: 4-2 Ashes a [Ignatius]
+I am totally the Heart of the Woods and not Ignatius. And you should totally get out of here! There's fire and shit! Hide out in that cave behind you. [[4-2 Ashes b]]
 
+:: 4-2 Ashes b [Amelia]
+Aight.
 
 
 :: 5-1
