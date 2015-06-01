@@ -151,8 +151,8 @@ public class SceneManager : MonoBehaviour {
 		} else {
 			//Fade to Black?
 			//Load Next Scene
-			ameliaAnimator.SetBool ("isRunning", false);
-			igAnimator.SetBool ("isRunning", false);
+			if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+			if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 			GameController.BeginSceneTransition(LevelToLoad);
 		};
 	}
