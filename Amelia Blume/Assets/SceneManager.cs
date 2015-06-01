@@ -108,8 +108,8 @@ public class SceneManager : MonoBehaviour {
 				currChar = amelia;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", true);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", true);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//MoveCharacter();
 				//NextEvent ();
 				break;
@@ -119,15 +119,15 @@ public class SceneManager : MonoBehaviour {
 				currChar = ig;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", true);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", true);}
 				//MoveCharacter();
 				//NextEvent ();
 				break;
 		
 			case "Text":
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//Debug.Log ("Text");
 				StartReading ();
 				//NextEvent ();

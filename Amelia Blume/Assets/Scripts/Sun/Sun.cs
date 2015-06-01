@@ -10,7 +10,7 @@ public class Sun : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
-		player = GameObject.Find ("Player");
+		player = GameObject.FindGameObjectWithTag ("Player");
 		gameObject.name = "Sun";
 		//get all plants this will target
 		transform.position = new Vector3((player.transform.position.x +(0.5f* player.GetComponent<PlayerController>().faceDirection)),
