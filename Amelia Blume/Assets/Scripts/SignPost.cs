@@ -186,9 +186,11 @@ public class SignPost : MonoBehaviour {
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;
 			if(nameText.text == "Ignatius" || nameText.text == "Amelia"){
+				uiPortraitSprite.enabled = true;
 				personSpeaking = true;
 			}else{
 				personSpeaking = false;
+				uiPortraitSprite.enabled = false;
 			}
 		}
 

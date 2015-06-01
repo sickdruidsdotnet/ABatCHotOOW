@@ -312,17 +312,19 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (!player.isSunning () && !player.isConverting () && !player.GetDead () && player.isGrounded) {
-			if (playerInput.jumpDown) {
-				if (player.GetReadSign ())
-					ReadSign ();
-				else {
-					if (!player.CUTSCENE)
-						Jump ();
+		if (!player.isSunning () && !player.isConverting () && !player.GetDead ()) {
+			if(player.isGrounded){
+				if (playerInput.jumpDown) {
+					if (player.GetReadSign ())
+						ReadSign ();
+					else {
+						if (!player.CUTSCENE)
+							Jump ();
+					}
 				}
-			}
-			if (playerInput.throwSeedDown && !player.CUTSCENE && canControl) {
-				ThrowSeed ();
+				if (playerInput.throwSeedDown && !player.CUTSCENE && canControl) {
+					ThrowSeed ();
+				}
 			}
 			if (playerInput.dashDown && !player.CUTSCENE && canControl) {
 				Dash ();
