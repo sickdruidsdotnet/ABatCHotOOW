@@ -105,15 +105,14 @@ public class Boar : Animal
 					anim.SetBool ("IsRestrained", false);
 				}
 				MoveRight();
-				//special behaviors like jumping should be here
-				if (!anim.GetBool("IsWalking")){
-					anim.SetBool ("IsWalking", true);
-					anim.SetBool ("IsCharging", false);
-					anim.SetBool ("IsRestrained", false);
-				}
 			}
 		} else {
 			MoveRight();
+			if (!anim.GetBool("IsWalking")){
+				anim.SetBool ("IsWalking", true);
+				anim.SetBool ("IsCharging", false);
+				anim.SetBool ("IsRestrained", false);
+			}
 			//walk away from amelia stuff, probably to the left
 		}
 		
