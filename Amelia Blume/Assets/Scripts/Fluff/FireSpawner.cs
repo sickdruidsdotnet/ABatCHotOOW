@@ -15,16 +15,24 @@ public class FireSpawner : MonoBehaviour
 
 	private Vector3 extents;
 
+	public GameObject focusObject;
+	public Vector3 focus;
+
 	void Start()
 	{
 		spawnFlame();
 		lastSpawnTime = Time.time;
 		extents = GetComponent<Collider>().bounds.extents;
 		waitTime = 1.0f / (density * extents.x * extents.z);
+		focusObject = transform.Find("Focus").gameObject;
+		focus = focusObject.transform.position;
 	}
 
 	void Update()
 	{
+		focus = focusObject.transform.position;
+		waitTime = 1.0f / (density * extents.x * extents.z);
+		
 		if (Time.time > lastSpawnTime + waitTime)
 		{
 			spawnFlame();
@@ -40,7 +48,7 @@ public class FireSpawner : MonoBehaviour
 		Quaternion rot = Quaternion.identity;
 		GameObject flame = Instantiate(Resources.Load("Flame"), pos, rot) as GameObject;
 		Vector3 start = pos + new Vector3(0,fireHeight + Random.Range(-heightVariation, heightVariation),0);
-		Vector3 end = start + new Vector3(Random.Range(-flameTargetSpread, flameTargetSpread), 0, Random.Range(-flameTargetSpread, flameTargetSpread));
+		Vector3 end = Vector3.MoveTowards(start, focus, flameTargetSpread);
 		flame.GetComponent<Flame>().setTrajectory(start, end);
 		flame.transform.parent = transform;
 	}
