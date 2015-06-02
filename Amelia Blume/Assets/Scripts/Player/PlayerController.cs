@@ -271,6 +271,7 @@ public class PlayerController : BaseBehavior {
 
 	protected void HandleActionInput() {
 
+		//changing seeds
 		if (playerInput.primaryInput == "Keyboard") {
 			if (playerInput.firstSeedDown && player.vineUnlocked)
 				player.SetCurrentSeed (Player.SeedType.VineSeed);
@@ -330,7 +331,9 @@ public class PlayerController : BaseBehavior {
 				Dash ();
 			}
 		}
-		if (playerInput.sunDown && !player.CUTSCENE && canControl) {
+		//sunning, cannot sun and water at the same time
+		if (playerInput.sunDown && !player.CUTSCENE && canControl && !watering) {
+			isSunLighting = true;
 			if (canConvert) {
 				AnimalConvert ();
 				player.SetConverting (true);
@@ -342,7 +345,8 @@ public class PlayerController : BaseBehavior {
 		if (playerInput.sunUp) {
 			isSunLighting = false;
 		}
-		if (playerInput.waterDown && canControl) {
+		//watering, player cannot water and sun at the same time
+		if (playerInput.waterDown && canControl && !player.isSunning() && !player.isConverting()) {
 			watering = true;
 		} 
 		if (playerInput.waterUp){
