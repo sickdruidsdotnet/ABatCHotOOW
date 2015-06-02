@@ -200,7 +200,7 @@ public class Boar : Animal
 			//animation["Walking"].enabled = true;
 			//anim.SetBool ("isRunning", true);
 		} else {
-			transform.Translate (-0.08f, 0, 0);
+			transform.Translate (-0.03f, 0, 0);
 		}
 	}
 
