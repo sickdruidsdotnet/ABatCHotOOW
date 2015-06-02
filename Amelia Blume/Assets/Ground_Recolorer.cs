@@ -29,6 +29,27 @@ public class Ground_Recolorer : MonoBehaviour {
 				render.materials[1].color = grassColor;
 
 			}
+
+			foreach (GameObject soil in allSoil) {
+				//first recolor the fluff
+				Fluff_spawner[] fluff = soil.GetComponentsInChildren<Fluff_spawner>();
+				int i = 0;
+				foreach(Fluff_spawner spawner in fluff)
+				{
+					fluff[i].overrideColor = true;
+					fluff[i].newColor = grassFluffColor;
+					//fluff[i].respawnFluff();
+					i++;
+				}
+				
+			}
+
+			//now check for all lingering fluff
+			GameObject[] grassFluff = GameObject.FindGameObjectsWithTag("Grass Fluff");
+			foreach(GameObject grass in grassFluff)
+			{
+				grass.renderer.material.color = grassFluffColor;
+			}
 		}
 	}
 
