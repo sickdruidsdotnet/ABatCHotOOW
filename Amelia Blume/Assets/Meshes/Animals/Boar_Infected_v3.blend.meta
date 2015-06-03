@@ -117,6 +117,8 @@ ModelImporter:
     7400002: charge
     7400004: walk
     7400006: walk_v2
+    7400008: walk0
+    7400010: charge0
     9500000: //RootNode
     13700000: Boar_Model
     13700002: Eyes
@@ -138,7 +140,367 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: charge
+      takeName: charge
+      firstFrame: 0
+      lastFrame: 22
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Control
+        weight: 1
+      - path: Armature/Control/hip_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L/leg_hind_lower_L
+        weight: 1
+      - path: Armature/Control/hip_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R/leg_hind_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_R
+        weight: 1
+      - path: Armature/Control/stomach
+        weight: 1
+      - path: Armature/Control/stomach/chest
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck/neck_001
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L/leg_front_lower_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R/leg_front_lower_R
+        weight: 1
+      - path: Armature/Control/tail_upper
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid/tail_lower
+        weight: 1
+      - path: Boar_Model
+        weight: 1
+      - path: Eyes
+        weight: 1
+      - path: Infection
+        weight: 1
+      - path: Tusk_Left
+        weight: 1
+      - path: Tusk_Right
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: walk
+      takeName: walk
+      firstFrame: 0
+      lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Control
+        weight: 1
+      - path: Armature/Control/hip_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L/leg_hind_lower_L
+        weight: 1
+      - path: Armature/Control/hip_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R/leg_hind_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_R
+        weight: 1
+      - path: Armature/Control/stomach
+        weight: 1
+      - path: Armature/Control/stomach/chest
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck/neck_001
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L/leg_front_lower_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R/leg_front_lower_R
+        weight: 1
+      - path: Armature/Control/tail_upper
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid/tail_lower
+        weight: 1
+      - path: Boar_Model
+        weight: 1
+      - path: Eyes
+        weight: 1
+      - path: Infection
+        weight: 1
+      - path: Tusk_Left
+        weight: 1
+      - path: Tusk_Right
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: walk_v2
+      takeName: walk_v2
+      firstFrame: 0
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Control
+        weight: 1
+      - path: Armature/Control/hip_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L
+        weight: 1
+      - path: Armature/Control/hip_L/leg_hind_upper_L/leg_hind_mid_L/leg_hind_lower_L
+        weight: 1
+      - path: Armature/Control/hip_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R
+        weight: 1
+      - path: Armature/Control/hip_R/leg_hind_upper_R/leg_hind_mid_R/leg_hind_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_front_pole_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_IK_upper_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_lower_R
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_L
+        weight: 1
+      - path: Armature/Control/leg_hind_pole_upper_R
+        weight: 1
+      - path: Armature/Control/stomach
+        weight: 1
+      - path: Armature/Control/stomach/chest
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck
+        weight: 1
+      - path: Armature/Control/stomach/chest/neck/neck_001
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_L/leg_front_upper_L/leg_front_mid_L/leg_front_lower_L
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R
+        weight: 1
+      - path: Armature/Control/stomach/chest/shoulder_R/leg_front_upper_R/leg_front_mid_R/leg_front_lower_R
+        weight: 1
+      - path: Armature/Control/tail_upper
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid
+        weight: 1
+      - path: Armature/Control/tail_upper/tail_mid/tail_lower
+        weight: 1
+      - path: Boar_Model
+        weight: 1
+      - path: Eyes
+        weight: 1
+      - path: Infection
+        weight: 1
+      - path: Tusk_Left
+        weight: 1
+      - path: Tusk_Right
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []

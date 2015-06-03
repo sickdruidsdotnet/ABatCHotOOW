@@ -21,6 +21,7 @@ class TreeStructure : MonoBehaviour
 	public bool isGrowing = false;
 	public bool debugDoneGrowing = false;
 	public float growthRate = 0.1f;
+	public float sunFactor;
 	
 	public float lengthGoal = 1f;
 	public bool isMaturing = false;

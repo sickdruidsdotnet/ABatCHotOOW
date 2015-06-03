@@ -7,8 +7,12 @@ public class WaterParticles : MonoBehaviour {
 	bool rightTrigger;
 	int coolDown;
 	public ParticleSystem water;
+	GameObject amelia;
+	Player player;
 	// Use this for initialization
 	void Start () {
+		amelia = GameObject.FindGameObjectWithTag ("Player");
+		player = amelia.GetComponent<Player> ();
 		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
 		if (playerInputObj != null) {
 			playerInput = playerInputObj.GetComponent<InputHandler> ();
@@ -21,7 +25,7 @@ public class WaterParticles : MonoBehaviour {
 			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
 		}
 		rightTrigger = playerInput.water;
-		if (rightTrigger && coolDown > 10)
+		if (rightTrigger && coolDown > 10 && !player.CUTSCENE)
 		{
 			StartWater ();
 			coolDown = 0;

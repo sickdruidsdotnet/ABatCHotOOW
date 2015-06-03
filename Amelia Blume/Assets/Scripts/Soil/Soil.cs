@@ -27,7 +27,7 @@ public class Soil : MonoBehaviour {
 	void Start () {
 		HydrationLevel = 0;
 		isPlanted = false;
-		MaxWater = 100;
+		MaxWater = 300;
 //		timer = 0;
 		height = renderer.bounds.size.y;
 		size = renderer.bounds.size.x;
@@ -178,7 +178,7 @@ public class Soil : MonoBehaviour {
 
 	void OnParticleCollision(GameObject other) {
 		if (other.tag == "Water" && GetHydrationLevel() < MaxWater) {
-			ChangeHydrationLevel (3);
+			ChangeHydrationLevel (6);
 			int index;
 			if(other.transform.rotation.y > 0)
 				index = (int)((other.transform.position.x+2f - start)/slotSize);
@@ -190,7 +190,7 @@ public class Soil : MonoBehaviour {
 			if(index < 0){
 				index = 0;
 			}
-			water[index]+=3;
+			water[index]+=6;
 			//for(int i = 0; i < 3; i++){
 				AddWater(index);
 			//}

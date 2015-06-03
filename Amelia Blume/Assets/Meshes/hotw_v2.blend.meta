@@ -89,6 +89,15 @@ ModelImporter:
     100166: uplid_R
     100168: upper_arm_L
     100170: upper_arm_R
+    100172: root_006
+    100174: root_007
+    100176: treetop_000
+    100178: treetop_001
+    100180: treetop_002
+    100182: treetop_003
+    100184: treetop_004
+    100186: trunk
+    100188: Cube_001
     400000: BezierCurve
     400002: chest
     400004: chest-1
@@ -175,6 +184,15 @@ ModelImporter:
     400166: uplid_R
     400168: upper_arm_L
     400170: upper_arm_R
+    400172: root_006
+    400174: root_007
+    400176: treetop_000
+    400178: treetop_001
+    400180: treetop_002
+    400182: treetop_003
+    400184: treetop_004
+    400186: trunk
+    400188: Cube_001
     2300000: BezierCurve
     2300002: Cube
     2300004: root_000
@@ -184,6 +202,15 @@ ModelImporter:
     2300012: root_004
     2300014: root_005
     2300016: taper_000
+    2300018: root_006
+    2300020: root_007
+    2300022: treetop_000
+    2300024: treetop_001
+    2300026: treetop_002
+    2300028: treetop_003
+    2300030: treetop_004
+    2300032: trunk
+    2300034: Cube_001
     3300000: BezierCurve
     3300002: Cube
     3300004: root_000
@@ -193,6 +220,15 @@ ModelImporter:
     3300012: root_004
     3300014: root_005
     3300016: taper_000
+    3300018: root_006
+    3300020: root_007
+    3300022: treetop_000
+    3300024: treetop_001
+    3300026: treetop_002
+    3300028: treetop_003
+    3300030: treetop_004
+    3300032: trunk
+    3300034: Cube_001
     4300000: python_hotw_makehuman-low_poly
     4300002: python_hotw_makehuman-proxy741
     4300004: Cube
@@ -204,6 +240,15 @@ ModelImporter:
     4300016: root_002
     4300018: root_000
     4300020: root_001
+    4300022: root_006
+    4300024: trunk
+    4300026: treetop_002
+    4300028: treetop_003
+    4300030: treetop_004
+    4300032: treetop_000
+    4300034: treetop_001
+    4300036: root_007
+    4300038: Cube_001
     7400000: Default Take
     9500000: //RootNode
     13700000: python_hotw_makehuman-low_poly

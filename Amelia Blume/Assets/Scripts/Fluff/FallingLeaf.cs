@@ -8,10 +8,16 @@ public class FallingLeaf : MonoBehaviour {
 	float amplitude = 0.03f;
 	float frequency = 1.5f;
 	float offset = 0f;
-	float bottomLimit = -2;
+
+	GameObject mainCamera;
 
 	//edit this on the falling leaf prefab (Resources) in editor to have more colors.
 	public Color[] leafColors;
+
+	void Start()
+	{
+		mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
+	}
 
 	void FixedUpdate () {
 
@@ -21,7 +27,7 @@ public class FallingLeaf : MonoBehaviour {
 		transform.RotateAround (transform.position, Vector3.right, 400 * Time.deltaTime);	
 
 		//Out of bounds clean-up
-		if (transform.position.y <= bottomLimit) {
+		if (transform.position.y <= mainCamera.transform.position.y - 10f) {
 			Destroy(gameObject);
 		}
 	}

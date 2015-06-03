@@ -1,22 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Fluff_spawner : MonoBehaviour {
 
 	public int preloadedSeed;
 	public int activeSeed;
 	public GameObject[] fluffObjects;
+	public bool weighObjects;
+	public float[] weights;
 	//roughly how many gameObjects we want spawned in this area
 	public float density;
 
 	public float spawnOffset = 1.0f;
 	public bool preventOverlap = false;
 
+	public bool overrideColor;
+	public Color newColor;
+
+	List<GameObject> spawnedFluff;
+
 	float spawnHeight;
 	float spawnDepth;
 	float xLeft;
 	float xRight;
 	float length;
+
+	float totalFreq = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -45,8 +56,20 @@ public class Fluff_spawner : MonoBehaviour {
 		xRight = transform.position.x + boxBounds.extents.x;
 		length = Mathf.Abs (xLeft - xRight);
 
-		spawnFluff ();
+		if (weighObjects) {
+			if(weights.Length != fluffObjects.Length)
+			{
+				Debug.Log ("Fluff spawner error: weight array needs to be the same length as the fluff objects array!");
+				weighObjects = false;
+			} else{// do this once:
+				for(int i=0; i<weights.Length; i++)
+					totalFreq += weights[i];
+			}
+		}
 
+		spawnedFluff = new List<GameObject> ();
+
+		spawnFluff ();
 
 	}
 	
@@ -63,11 +86,11 @@ public class Fluff_spawner : MonoBehaviour {
 		while (currPos.x < xRight) {
 			Vector3 spawnPoint = new Vector3(Mathf.Clamp(currPos.x + Random.Range(-1 * spawnOffset, spawnOffset), xLeft, xRight),
 			                                 currPos.y, currPos.z);
-			/*if(spawnPoint.x > xRight)
-			{
-				break;
-			}*/
-			int index = Random.Range(0, fluffObjects.Length);
+			int index;
+			if(weighObjects){
+				index = Roll();
+			}else
+				index = Random.Range(0, fluffObjects.Length);
 			GameObject newFluff = Instantiate (fluffObjects[index], spawnPoint, fluffObjects[index].transform.rotation) as GameObject;
 			newFluff.transform.SetParent(transform);
 			currPos = new Vector3(spawnPoint.x + roughDist, currPos.y, currPos.z);
@@ -113,8 +136,67 @@ public class Fluff_spawner : MonoBehaviour {
 					}
 				}
 				prev = newFluff;
+				spawnedFluff.Add(newFluff);
 			}
 		}
+		if (overrideColor) {
+			ReassignColors();
+		}
+	}
 
+	public void ReassignColors()
+	{
+		foreach (GameObject item in spawnedFluff) {
+			if(item.renderer != null)
+			{
+				item.renderer.material.color = newColor;
+			}
+
+			Renderer[] childRenderers = item.GetComponentsInChildren<Renderer>();
+			foreach(Renderer render in childRenderers)
+			{
+				foreach(Material mat in render.materials)
+				{
+					mat.color = newColor;
+				}
+			}
+		}
+		//specifically for grass fluff because it's being a jerk
+		SkinnedMeshRenderer[] renders = GetComponentsInChildren<SkinnedMeshRenderer>();
+		foreach(SkinnedMeshRenderer render in renders)
+		{
+			render.material.color = newColor;
+		}
+	}
+
+	public void respawnFluff()
+	{
+		foreach (GameObject fluff in spawnedFluff) {
+			Destroy(fluff);
+		}
+		spawnFluff ();
+
+	}
+
+	int Roll(){
+		float roll= Random.Range(0,totalFreq);
+		// Ex: we roll 0.68
+		//   #0 subtracts 0.25, leaving 0.43
+		//   #1 subtracts 0.4, leaving 0.03
+		//   #2 is a hit
+		int index = -1;
+		for(int i=0; i<weights.Length; i++) {
+			if(roll<=weights[i]) 
+			{ 
+				index=i; 
+				break; 
+			}
+			roll -= weights[i];
+		}
+		// just in case we manage to roll 0.0001 past the highest:
+		if(index==-1) 
+			index = Random.Range(0, fluffObjects.Length);
+
+		return index;
 	}
 }
