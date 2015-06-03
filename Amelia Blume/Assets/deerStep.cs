@@ -83,8 +83,8 @@ public class deerStep : MonoBehaviour {
 
  	void OnTriggerEnter(Collider other) {
  		Debug.Log("other tag == " + other.tag);
- 		Debug.Log(this.tag + "Enter");
-    	//if(other.tag=="Ground" || other.tag=="Soil") {
+ 		//Debug.Log(this.tag + " Enter");
+    	if(other.tag=="Ground" || other.tag=="Soil" || other.tag=="Grass") {
 
     		source.pitch = Random.Range(lowPitchRange, highPitchRange);
     		float vol = Random.Range (volLowRange, volHighRange);
@@ -94,7 +94,7 @@ public class deerStep : MonoBehaviour {
 
     		source.PlayOneShot(step1, vol);
 
-    	//}
+    	}
  	}
 
  	void OnTriggerStay(Collider other) {
