@@ -81,24 +81,24 @@ public class deerStep : MonoBehaviour {
 	}
 
 
- 	//void OnTriggerEnter(Collider other) {
- 		//Debug.Log("other tag == " + other.tag);
- 		//Debug.Log(this.tag + "Enter");
+ 	void OnTriggerEnter(Collider other) {
+ 		Debug.Log("other tag == " + other.tag);
+ 		Debug.Log(this.tag + "Enter");
     	//if(other.tag=="Ground" || other.tag=="Soil") {
 
-    	//	source.pitch = Random.Range(lowPitchRange, highPitchRange);
-    	//	float vol = Random.Range (volLowRange, volHighRange);
+    		source.pitch = Random.Range(lowPitchRange, highPitchRange);
+    		float vol = Random.Range (volLowRange, volHighRange);
 
-    	//	Debug.Log("play from trigger");
-    	//	source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
+    		Debug.Log("play from trigger");
+    		source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
 
-    	//	source.PlayOneShot(step1, vol);
+    		source.PlayOneShot(step1, vol);
 
     	//}
- 	//}
+ 	}
 
- 	//void OnTriggerStay(Collider other) {
- 		//Debug.Log(this.tag + "Stay");
+ 	void OnTriggerStay(Collider other) {
+ 		Debug.Log(this.tag + "Stay");
  		//    source.pitch = Random.Range(lowPitchRange, highPitchRange);
     	//	float vol = Random.Range (volLowRange, volHighRange);
 
@@ -109,7 +109,7 @@ public class deerStep : MonoBehaviour {
 
  	//void OnTriggerExit(Collider other) {
  		//Debug.Log(this.tag + "Exit");
- 	//}
+ 	}
 
 
  	void stepSound() {
