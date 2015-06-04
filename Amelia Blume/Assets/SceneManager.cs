@@ -60,10 +60,16 @@ public class SceneManager : MonoBehaviour {
 
 	void MoveCharacter(){
 		Vector3 targetPos;
-		if(currChar == ig)
-			targetPos = new Vector3(events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
-		else
+		if (currChar == ig) {
+			targetPos = new Vector3 (events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
+			if(targetPos.x > currChar.transform.position.x){
+				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
+			}else{
+				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
+			}
+		} else {
 			targetPos = events [index].transform.position;
+		}
 		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
 			//if(Time.time > nextUse){
 //				Debug.Log ("Moving");
