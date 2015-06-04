@@ -260,6 +260,7 @@ public class Squirrel : Animal {
 	}
 
 	void OnTriggerStay(Collider other){
+		/*
 		if (other.gameObject.tag == "Player") {
 			//Debug.Log ("HIT");
 			if (hitCoolDown <= 0 && !isRestrained) {
@@ -277,6 +278,8 @@ public class Squirrel : Animal {
 				}
 			}
 		}
+		*/
 	}
+
 
 }
