@@ -39,8 +39,8 @@ public class Seed : MonoBehaviour
 	void Start()
 	{
 		seedHealth = 120;
-		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
-		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<CapsuleCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<CapsuleCollider>(), true);
 		gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = false;
 	}
 
@@ -101,29 +101,29 @@ public class Seed : MonoBehaviour
         //soil.ChangeHydrationLevel(-1);
 		if (soil.GetWaterCount (soilIndex) > 0) { //WaterCount of Current Slot
 			//Debug.Log ("Soil Water Before: " + soilIndex + " = " + soil.GetWaterCount (soilIndex));
-			soil.ChangeHydrationLevel(-3);
-			soil.ChangeWaterCount(soilIndex, -3);
+			soil.ChangeHydrationLevel(-5);
+			soil.ChangeWaterCount(soilIndex, -5);
 			//Debug.Log ("Soil Water After: " + soilIndex + " = " + soil.GetWaterCount (soilIndex));
-			waterCount+=3;
+			waterCount+=5;
 		}
 
 		if (soilIndex > 0) { //Water Count of left neighbor
 			if (soil.GetWaterCount (soilIndex - 1) > 0) {
 				//Debug.Log ("Soil Water Before: " + (soilIndex-1) + " = " + soil.GetWaterCount (soilIndex-1));
-				soil.ChangeHydrationLevel (-2);
-				soil.ChangeWaterCount (soilIndex-1, -2);
+				soil.ChangeHydrationLevel (-3);
+				soil.ChangeWaterCount (soilIndex-1, -3);
 				//Debug.Log ("Soil Water After: " + (soilIndex-1) + " = " + soil.GetWaterCount (soilIndex-1));
-				waterCount+=2;
+				waterCount+=3;
 			}
 		}
 
 		if (soilIndex < soil.getWaterLength () - 1) { //water count of right neighbor
 			if (soil.GetWaterCount (soilIndex + 1) > 0) {
 				//Debug.Log ("Soil Water Before: " + (soilIndex+1) + " = " + soil.GetWaterCount (soilIndex+1));
-				soil.ChangeHydrationLevel (-2);
-				soil.ChangeWaterCount (soilIndex + 1, -2);
+				soil.ChangeHydrationLevel (-3);
+				soil.ChangeWaterCount (soilIndex + 1, -3);
 				//Debug.Log ("Soil Water After: " + (soilIndex+1) + " = " + soil.GetWaterCount (soilIndex+1));
-				waterCount+=2;
+				waterCount+=3;
 			}
 		}
 

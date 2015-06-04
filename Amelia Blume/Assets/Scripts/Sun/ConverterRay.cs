@@ -6,13 +6,16 @@ public class ConverterRay : MonoBehaviour {
 	float rotationSpeed;
 	Vector3 pivot;
 	public bool isMainRay;
-	public int startLife;
-	public int life = 60;
-	public int lifeThirds;
+	public float startTime;
+	public float startLife;
+	public float life = 1f;
+	public float lifeThirds;
 	public float transparencySpeed;
+	public float currTransparency;
 	
 	// Use this for initialization
 	void Start () {
+		startTime = Time.time;
 		if (!isMainRay) {
 			Color newColor = new Color(0.95f, 
 			                           0.95f,
@@ -20,7 +23,7 @@ public class ConverterRay : MonoBehaviour {
 			                           0f);
 			renderer.material.SetColor ("_Color", newColor);
 			pivot = transform.parent.transform.position;
-			life = Random.Range (40, 180);
+			life = Random.Range (0.66f, 3f);
 			startLife = life;
 			lifeThirds = life / 3;
 			transform.RotateAround (pivot, Vector3.back, Random.Range (0, 180) - 90);
@@ -30,10 +33,10 @@ public class ConverterRay : MonoBehaviour {
 				distanceFromBottom = 90f + (360f - transform.rotation.eulerAngles.x);
 			else
 				distanceFromBottom = 90f - transform.rotation.eulerAngles.x;
-			rotationSpeed = distanceFromBottom/ startLife;
-			transparencySpeed = (float)transparencyMax / (float)lifeThirds;
+			rotationSpeed = distanceFromBottom / (startLife * 60f);
+			transparencySpeed = (float)transparencyMax / (lifeThirds * 60f);
 		} else {
-			startLife = 200;
+			startLife = 3.33333f;
 			life = startLife;
 			transform.Rotate(new Vector3(180f, 0f, 0f));
 			Color newColor = new Color(0.95f, 
@@ -47,42 +50,43 @@ public class ConverterRay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		currTransparency = renderer.material.color.a;
 		if (isMainRay) {
 			HandleMainRay();
 			return;
 		}
-		if (GetComponentInParent<Converter> ().life < 20) {
+		if (GetComponentInParent<Converter> ().conversionSuccess) {
 			transform.rotation = new Quaternion(270, 0, 0, transform.rotation.w);
 			return;
 		}
-		life--;
-		if (life <= 0) {
+		if (Time.time - startTime >= life) {
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,
 			                            renderer.material.color.b,
 			                            0f);
 			renderer.material.SetColor ("_Color", newColor);
 			transform.RotateAround (pivot, Vector3.back, Random.Range (0, 180) - 90);
-			life = Random.Range (40, 180);
+			life = Random.Range (0.66f, 3f);
+			startTime = Time.time;
 			startLife = life;
 			lifeThirds = life / 3;
-			transparencySpeed = (float)transparencyMax / (float)lifeThirds;
+			transparencySpeed = (float)transparencyMax / (lifeThirds * 60f);
 			//set up a rotation speed that will land it squarely on the bottom
 			float distanceFromBottom;
 			if(transform.rotation.eulerAngles.x > 270f)
 				distanceFromBottom = 90f + (360f - transform.rotation.eulerAngles.x);
 			else
 				distanceFromBottom = 90f - transform.rotation.eulerAngles.x;
-			rotationSpeed = distanceFromBottom/ startLife;
+			rotationSpeed = distanceFromBottom/ (startLife * 60f);
 			//rotationSpeed = (transform.rotation.eulerAngles.x) / startLife;
-		} else if (life > startLife - lifeThirds) {
+		} else if (Time.time - startTime <= startLife - lifeThirds) {	//(life <= startLife - lifeThirds
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,
 			                            renderer.material.color.b,
 			                            renderer.material.color.a + transparencySpeed);
 			renderer.material.SetColor ("_Color", newColor);
 			//need to make sure it's rotating towards the bottom
-			if( life == startLife - 1){
+			if (Time.time - startTime > 0.01f && Time.time - startTime < 0.03f){ //( life == startLife - 1){
 				float oldAngle = transform.rotation.eulerAngles.x;
 				transform.RotateAround (pivot, Vector3.back, rotationSpeed);
 				if(oldAngle - transform.rotation.eulerAngles.x > 0)
@@ -92,7 +96,7 @@ public class ConverterRay : MonoBehaviour {
 			}
 			else
 				transform.RotateAround (pivot, Vector3.back, rotationSpeed);
-		} else if (life < startLife - (2 * lifeThirds) ) {
+		} else if (Time.time - startTime > startLife - (2 * lifeThirds) ) {//(life < startLife - (2 * lifeThirds) ) {
 			Color newColor = new Color (renderer.material.color.r, 
 			                            renderer.material.color.g,
 			                            renderer.material.color.b,
@@ -106,11 +110,10 @@ public class ConverterRay : MonoBehaviour {
 	}
 
 	void HandleMainRay(){
-		life--;
-		if (life > 80) {
+		if (Time.time - startTime < 2f) {
 			transform.localScale = transform.localScale = new Vector3 (transform.localScale.x + 0.0025f, 
 			                                                          transform.localScale.y, transform.localScale.z);
-		} else if (life <= 20 && life > 0) {
+		} else if (Time.time - startTime >= 3) {
 			transform.localScale = transform.localScale = new Vector3 (transform.localScale.x - 0.018f, 
 			                                                           transform.localScale.y, transform.localScale.z);
 		}

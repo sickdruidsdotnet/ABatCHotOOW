@@ -29,7 +29,7 @@ public class Boar_Spawner : MonoBehaviour {
 					boarSpawned = false;
 					spawner.GetComponent<Boar_Spawner> ().boarSpawned = false;
 					mainCamera.BroadcastMessage("recalculateTrackables");
-					GameObject.Find ("Boar Event Spawner").BroadcastMessage("Reset");
+					GameObject.Find ("Boar Event Handler").BroadcastMessage("Reset");
 
 				}
 			}

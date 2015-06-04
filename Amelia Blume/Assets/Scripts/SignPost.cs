@@ -10,7 +10,7 @@ public class SignPost : MonoBehaviour {
 	GameObject player;
 	Player amelia;
 	string[] words; //Lines of txt file
-	bool beingRead = false;
+	public bool beingRead = false;
 	public TextAsset file;
 	int sentenceIndex = 0;
 	string textDisplay = "";
@@ -19,10 +19,14 @@ public class SignPost : MonoBehaviour {
 	float delay = 0.03f;
 	float nextUse;
 	public string startingPassage;
-	string nextPassage;
-	string currentPassage;
-	string speaker;
+	public string nextPassage;
+	public string currentPassage;
+	public string speaker;
 	string connection;
+
+	public bool doneReading = false;
+	public bool cutSceneStart;
+	public bool inCutscene;
 
 	bool personSpeaking = false;
 
@@ -41,11 +45,11 @@ public class SignPost : MonoBehaviour {
 	Image uiTextBoxSprite;
 
 	GameObject portraitObj;
-	Image uiPortraitSprite;
+	public Image uiPortraitSprite;
 
 	GameObject nameObj;
 
-	Text uiText;
+	public Text uiText;
 	Text nameText;
 
 	RectTransform portraitRect;
@@ -58,8 +62,8 @@ public class SignPost : MonoBehaviour {
 	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
-
-
+		inCutscene = false;
+		cutSceneStart = false;
 		nextPassage = startingPassage;
 		nextUse = Time.time + delay;
 		//file = (TextAsset)Resources.Load ("SignPosts_Notes/test");
@@ -100,6 +104,8 @@ public class SignPost : MonoBehaviour {
 	//sorry to jam this in here but it's running into issues with the gamecontroller;
 	void ReloadResources()
 	{
+		beingRead = false;
+		Debug.Log ("Reload");
 		uiTextObj = GameObject.Find ("Words");
 		uiText = uiTextObj.GetComponent<Text>();
 		uiText.text = words[wordsIndex];
@@ -132,7 +138,8 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (uiCanvas == null || uiButtonSprite == null) {
+		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
+			Debug.Log ("Null stuff");
 			ReloadResources();
 			return;
 		}
@@ -143,8 +150,17 @@ public class SignPost : MonoBehaviour {
 
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
-		nameText.enabled = uiText.enabled;
-		uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+		if (!inCutscene) {
+			//Debug.Log("Not Cutscene");
+			nameText.enabled = uiText.enabled;
+//			Debug.Log (personSpeaking);
+			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+		} else {
+			nameText.enabled = uiText.enabled;
+			uiPortraitSprite.enabled = true;
+		}
+		//Debug.Log ("NAME: " + nameText.enabled);
+		//Debug.Log ("PORTRAIT: " + uiPortraitSprite.enabled);
 		if (uiButtonSprite.enabled) {
 			if (uiCanvas != null) {
 				uiCanvas.planeDistance = 2;
@@ -154,45 +170,73 @@ public class SignPost : MonoBehaviour {
 		if (speaker == "Amelia") {
 //			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
+			//uiPortraitSprite.enabled = true;
+			//nameText.enabled = true;
 			uiPortraitSprite.sprite = portraits[0];
 			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
 			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
-		} else if (speaker == "Ig") {
-			uiPortraitSprite.sprite = portraits[0];
+		} else if (speaker == "Ignatius") {
+			uiPortraitSprite.sprite = portraits[1];
+			//uiPortraitSprite.enabled = true;
+			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
-			nameRect.anchoredPosition = new Vector2(307f, -53.7f);
+			nameRect.anchoredPosition = new Vector2(258.2f, -53.7f);
 		} else {
-			nameText.enabled = false;
-			personSpeaking = false;
+			//uiPortraitSprite.enabled = false;
+			//nameText.enabled = false;
+			if(nameText.text == "Ignatius" || nameText.text == "Amelia"){
+				uiPortraitSprite.enabled = true;
+				personSpeaking = true;
+			}else{
+				personSpeaking = false;
+				uiPortraitSprite.enabled = false;
+			}
 		}
 
 	}
 
 	public void Read(){
+		doneReading = false;
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
-			beingRead = false;
-			uiText.enabled = false;
-			nextPassage = startingPassage;
-			currentPassage = "";
+				if(!cutSceneStart){
+					//Debug.Log ("DONE");
+					if(inCutscene)
+						BroadcastMessage("NextEvent", SendMessageOptions.DontRequireReceiver);
+					beingRead = false;
+					uiText.enabled = false;
+					nextPassage = startingPassage;
+					currentPassage = "";
+				}else{
+					cutSceneStart = false;
+					beingRead = true;
+				}
+			doneReading = true;
 			}
 			return;
 		}
-	//	Debug.Log ("reading");
+
+		if(beingRead && stillWritingCurrentPassage){
+			DisplayFullText();
+			return;
+		}
+		//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
 			beingRead = true;
 
 			uiText.enabled = true;
 		}
+
+
 		NextSentence ();
 		//CheckFlags ();
 		
 	}
-
+	/*
 	public void Read(string passage){
 		if (passage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
@@ -216,8 +260,10 @@ public class SignPost : MonoBehaviour {
 		//CheckFlags ();
 		
 	}
+	*/
 
 	void DisplayFullText(){
+//		Debug.Log ("Show Full");
 		if (beingRead) {
 			bool keepWriting = true;
 				while(keepWriting){
@@ -325,7 +371,10 @@ public class SignPost : MonoBehaviour {
 				beingRead = false;
 
 				uiText.enabled = false;
+				beingRead = false;
 				sentenceIndex = 0;
+				Debug.Log ("DONE");
+				//BroadcastMessage("PrintThis");
 			}
 
 			sentenceWords = words [wordsIndex].Split (titleSplit);
@@ -379,4 +428,17 @@ public class SignPost : MonoBehaviour {
 		}
 	}
 
+	public void CutsceneStart(string startPass){
+		if (uiText == null){Debug.Log("uiText null!");ReloadResources();}
+		uiText.enabled = true;
+		inCutscene = true;
+		cutSceneStart = true;
+		startingPassage = startPass;
+		nextPassage = startingPassage;
+		//textDisplay = "";
+		amelia.SetReadSign(true);
+		amelia.SetCurrentSign(this.gameObject);
+		Read ();
+	}
+	
 }

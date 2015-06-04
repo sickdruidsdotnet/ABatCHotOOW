@@ -15,6 +15,7 @@ public class MusicController : MonoBehaviour {
 	public AudioClip cut5;
 
 	AudioSource[] sources;
+	AudioSource[] allSources;
 	// We need two audio sources in order to cross fade
 	AudioSource activeSource;
 	AudioSource standbySource;
@@ -31,6 +32,7 @@ public class MusicController : MonoBehaviour {
 	void Start () {
 		//Debug.Log("MusicController Start called");
 		sources = this.GetComponents<AudioSource> ();
+		allSources = GameObject.FindSceneObjectsOfType(typeof(AudioSource)) as AudioSource[];
 		
 		activeSource = sources[0];
 		activeSource.loop = true;
@@ -70,6 +72,17 @@ public class MusicController : MonoBehaviour {
 				standbySource.Stop();
 
 		}
+
+		  // When a key is pressed list all the gameobjects that are playing an audio
+        if(Input.GetKeyUp(KeyCode.A))
+        { 
+        	foreach(AudioSource audioSource in allSources)
+            {
+                if(audioSource.isPlaying) Debug.Log(audioSource.name+" is playing "+audioSource.clip.name);
+            }
+            Debug.Log("---------------------------"); //to avoid confusion next time
+            Debug.Break(); //pause the editor     
+        }
 
 	}
 

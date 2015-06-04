@@ -8,6 +8,7 @@ public class WaterDrop : MonoBehaviour {
 	public float green;
 	public float blue;
 	public Color myColor;
+	public Color startColor;
 	Renderer myRenderer;
 	Material myMaterial;
 	float startTime;
@@ -21,25 +22,29 @@ public class WaterDrop : MonoBehaviour {
 		//Debug.Log (myMaterial.color.g);
 		//Debug.Log (myMaterial.color.b);
 		startTime = Time.time;
+		startColor = myMaterial.color;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		//Debug.Log ("Seconds = " + (Time.time - startTime));
 		myColor = myMaterial.color;
+		red = myColor.r;
+		green = myColor.g;
+		blue = myColor.b;
 		if (this.transform.localScale.x < 0.3) {
 			this.transform.localScale += new Vector3 (0.005f, 0.005f, 0.005f);
 		} else {
-			if(myMaterial.color.r < 0.2980f){
-				red += 0.2f;
+			if(myColor.r < 0.5567f){
+				red += 0.01f;
 			}
-			if(myMaterial.color.g > 0.1137f){
-				green -= 0.3f;
+			if(myColor.g > 0.2784f){
+				green -= 0.01f;
 			}
-			if(myMaterial.color.b > 0.0353f){
-				blue -= 0.5f;
+			if(myColor.b > 0.1765f){
+				blue -= 0.01f;
 			}
-			myMaterial.color = new Color(red,green,blue,1);
+			myMaterial.color = new Vector4(red,green,blue,1.0f);
 		}
 
 		if (Time.time - startTime > 10f) {
