@@ -97,6 +97,7 @@ ModelImporter:
     100182: treetop_003
     100184: treetop_004
     100186: trunk
+    100188: Cube_001
     400000: BezierCurve
     400002: chest
     400004: chest-1
@@ -191,6 +192,7 @@ ModelImporter:
     400182: treetop_003
     400184: treetop_004
     400186: trunk
+    400188: Cube_001
     2300000: BezierCurve
     2300002: Cube
     2300004: root_000
@@ -208,6 +210,7 @@ ModelImporter:
     2300028: treetop_003
     2300030: treetop_004
     2300032: trunk
+    2300034: Cube_001
     3300000: BezierCurve
     3300002: Cube
     3300004: root_000
@@ -225,6 +228,7 @@ ModelImporter:
     3300028: treetop_003
     3300030: treetop_004
     3300032: trunk
+    3300034: Cube_001
     4300000: python_hotw_makehuman-low_poly
     4300002: python_hotw_makehuman-proxy741
     4300004: Cube
@@ -244,6 +248,7 @@ ModelImporter:
     4300032: treetop_000
     4300034: treetop_001
     4300036: root_007
+    4300038: Cube_001
     7400000: Default Take
     9500000: //RootNode
     13700000: python_hotw_makehuman-low_poly
