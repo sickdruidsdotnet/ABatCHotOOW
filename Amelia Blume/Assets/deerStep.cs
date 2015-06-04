@@ -92,13 +92,13 @@ public class deerStep : MonoBehaviour {
     		Debug.Log("play from trigger");
     		source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
 
-    		source.PlayOneShot(step1, vol);
+    		//source.PlayOneShot(step1, vol);
 
     	}
  	}
 
  	void OnTriggerStay(Collider other) {
- 		Debug.Log(this.tag + "Stay");
+ 		//Debug.Log(this.tag + "Stay");
  		//    source.pitch = Random.Range(lowPitchRange, highPitchRange);
     	//	float vol = Random.Range (volLowRange, volHighRange);
 
