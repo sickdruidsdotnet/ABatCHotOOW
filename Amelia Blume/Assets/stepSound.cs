@@ -2,16 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class deerStep : MonoBehaviour {
+public class stepSound : MonoBehaviour {
 
-	public AudioClip step1;
-	public AudioClip step2;
-	public AudioClip step3;
-	public AudioClip step4;
+	public AudioClip soil1;
+	public AudioClip grass1;
+	public AudioClip wood1;
+	//public AudioClip step2;
+	//public AudioClip step3;
+	//public AudioClip step4;
 	public float volLowRange = 0.5F;
-	public float volHighRange = 1.0F;
-	public float lowPitchRange = .75F;
-    public float highPitchRange = 1.5F;
+	public float volHighRange = 0.75F;
+	public float lowPitchRange = .85F;
+    public float highPitchRange = 1.25F;
 	public float stepTimer = 0.0F;
 	public float stepCoolDown = 0.6F;
 	public float prevY;
@@ -26,7 +28,7 @@ public class deerStep : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
-		stepList = new List<AudioClip>{step1, step2, step3, step4};
+		//stepList = new List<AudioClip>{step1, step2, step3, step4};
 		prevY = transform.position.y;
 	
 	}
@@ -82,19 +84,25 @@ public class deerStep : MonoBehaviour {
 
 
  	void OnTriggerEnter(Collider other) {
- 		Debug.Log("other tag == " + other.tag);
- 		//Debug.Log(this.tag + " Enter");
-    	if(other.tag=="Ground" || other.tag=="Soil" || other.tag=="Grass") {
+ 		//Debug.Log("other tag == " + other.tag);
 
+ 		float vol = Random.Range (volLowRange, volHighRange);
+ 		//float vol = 1.0F;
+
+    	if(other.tag=="Ground") {
     		source.pitch = Random.Range(lowPitchRange, highPitchRange);
-    		float vol = Random.Range (volLowRange, volHighRange);
-
-    		Debug.Log("play from trigger");
-    		source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
-
-    		//source.PlayOneShot(step1, vol);
-
+    		
+    		Debug.Log("play grass1: other tag == " + other.tag);
+    		source.PlayOneShot(grass1, vol);
+    		//source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
     	}
+    	else if(other.tag=="Soil") {
+    		source.pitch = Random.Range(lowPitchRange, highPitchRange);
+
+    		Debug.Log("play soil1: other tag == " + other.tag);
+    		source.PlayOneShot(soil1, vol);
+    	}
+
  	}
 
  	void OnTriggerStay(Collider other) {
@@ -112,16 +120,16 @@ public class deerStep : MonoBehaviour {
  	}
 
 
- 	void stepSound() {
+ 	//void playStepSound() {
 		//if(stepTimer == 0)
 		//{
-			source.pitch = Random.Range(lowPitchRange, highPitchRange);
-    		float vol = Random.Range (volLowRange, volHighRange);
+	//		source.pitch = Random.Range(lowPitchRange, highPitchRange);
+    //		float vol = Random.Range (volLowRange, volHighRange);
 
-    		Debug.Log("play from StepSound");
-    		source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
-			stepTimer = stepCoolDown;
+    //		Debug.Log("play from StepSound");
+    //		source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
+	//		stepTimer = stepCoolDown;
 		//}
-	}
+	//}
 
 }
