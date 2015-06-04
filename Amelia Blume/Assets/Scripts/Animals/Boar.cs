@@ -4,7 +4,7 @@ using System.Collections;
 public class Boar : Animal
 {
 	Player player;
-	//Animator anim;
+	public Animator anim;
 	
 	//how much damage this will do to the player
 	public int damageValue = 100;
@@ -54,12 +54,17 @@ public class Boar : Animal
 		}
 		
 		//get the value where the animal should be locked to
-		lockedAxisValue = this.transform.position.z;
+		lockedAxisValue = transform.position.z;
 		
 		speed = baseSpeed;
-		
+
 		//this will change to check to see how it's positioned in the editor later
 		faceDirection = -1;
+
+		anim = GetComponentInChildren<Animator> ();
+		anim.SetBool ("IsCharging", true);
+		anim.SetBool ("IsWalking", false);
+		anim.SetBool ("IsRestrained", false);
 
 		source.PlayOneShot (spotPlayer1, 3F);
 	}
@@ -86,14 +91,28 @@ public class Boar : Animal
 			if (isRestrained) {
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
 				rigidbody.constraints = RigidbodyConstraints.FreezePositionX;
+				if(!anim.GetBool("IsRestrained")){
+					anim.SetBool ("IsRestrained", true);
+					anim.SetBool ("IsCharging", false);
+					anim.SetBool ("IsWalking", false);
+				}
 			}
 			else
 			{
+				if (!anim.GetBool("IsCharging")){
+					anim.SetBool ("IsCharging", true);
+					anim.SetBool ("IsWalking", false);
+					anim.SetBool ("IsRestrained", false);
+				}
 				MoveRight();
-				//special behaviors like jumping should be here
-				
 			}
 		} else {
+			MoveRight();
+			if (!anim.GetBool("IsWalking")){
+				anim.SetBool ("IsWalking", true);
+				anim.SetBool ("IsCharging", false);
+				anim.SetBool ("IsRestrained", false);
+			}
 			//walk away from amelia stuff, probably to the left
 		}
 		
@@ -132,6 +151,10 @@ public class Boar : Animal
 			transform.rotation = new Quaternion (transform.rotation.x, transform.rotation.y,
 		                                    angle, transform.rotation.w);
 		}
+
+		if (isSpored) {
+			strength = 3;
+		}
 	}
 	
 	//this will bounce the player and cause the boar to look towards them,
@@ -142,45 +165,43 @@ public class Boar : Animal
 			return;
 		
 		if (other.tag == "Player") {
-			//make sure the player isn't in stun before bouncing to prevent exponential force addition
-			if(other.GetComponent<PlayerController>().stunTimer <= 0 || other.GetComponent<PlayerController>().canControl == true)
-			{	
-				int hitDirection;
-				
-				if (transform.position.x - other.transform.position.x >= 0)
-					hitDirection = -1;
-				else
-					hitDirection = 1;
-				lockCounter = 60;
-				rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-				rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
-				other.GetComponent<ImpactReceiver> ().AddImpact (new Vector3(hitDirection * 4, 8f, 0f), 100f);
-				other.GetComponent<PlayerController>().canControl = false;
-				other.GetComponent<PlayerController>().isStunned = true;
-				other.GetComponent<PlayerController>().stunTimer = 30;
-			}
 
 			HitPlayer(other.transform.gameObject);
 
+		}
+	}
+
+	void OnTriggerStay(Collider other){
+		if (isRestrained || !isInfected)
+			return;
+		
+		if (other.tag == "Player") {
+			
+			HitPlayer(other.transform.gameObject);
+			
 		}
 	}
 	
 
 	void MoveRight()
 	{
-		//special charging stuff would go here
-		//move slightly slower when closer to the player for more tension
-		float xDistance = Mathf.Abs (player.transform.position.x - transform.position.x);
-		// ideal distance is ~10 units away. This should be tweaked as needed, but that's basically a whole boar
-		// away from the boar's outer hitbox
-		float dif = xDistance - idealDistance;
-		//if xdif is negative, then the player is too close, else the player is too far away
-		//these are magic numbers, adjust as needed. Clamping so it never hits speed of 0 or supersonic
-		speed = Mathf.Clamp( baseSpeed + (dif * 0.013f), 0.07f, 0.25f) ;
+		if (isInfected) {
+			//special charging stuff would go here
+			//move slightly slower when closer to the player for more tension
+			float xDistance = Mathf.Abs (player.transform.position.x - transform.position.x);
+			// ideal distance is ~10 units away. This should be tweaked as needed, but that's basically a whole boar
+			// away from the boar's outer hitbox
+			float dif = xDistance - idealDistance;
+			//if xdif is negative, then the player is too close, else the player is too far away
+			//these are magic numbers, adjust as needed. Clamping so it never hits speed of 0 or supersonic
+			speed = Mathf.Clamp ((baseSpeed * sporeModifier) + (dif * 0.013f), 0.07f, 0.25f);
 
-		transform.Translate ((speed * -1 * sporeModifier), 0, 0);
-		//animation["Walking"].enabled = true;
-		//anim.SetBool ("isRunning", true);
+			transform.Translate ((speed * -1 * sporeModifier), 0, 0);
+			//animation["Walking"].enabled = true;
+			//anim.SetBool ("isRunning", true);
+		} else {
+			transform.Translate (-0.03f, 0, 0);
+		}
 	}
 
 	//deals the impact and damage to the player
@@ -192,15 +213,10 @@ public class Boar : Animal
 			hitDirection = -1;
 		else
 			hitDirection = 1;
+
+		player.GetComponent<PlayerController> ().damagePlayer (damageValue, hitDirection);
 		lockCounter = 60;
 		rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-		//don't add the impact if player is about to die
-		if (!(player.GetComponent<Player> ().GetHealth () - damageValue <= 0)) {
-			player.GetComponent<ImpactReceiver> ().AddImpact (new Vector3 (hitDirection * 4, 8f, 0f), 100f);
-		}
-		player.GetComponent<PlayerController>().canControl = false;
-		player.GetComponent<PlayerController>().stunTimer = 45;
-		player.GetComponent<Player> ().ReduceHealth (damageValue);
 		
 	}
 

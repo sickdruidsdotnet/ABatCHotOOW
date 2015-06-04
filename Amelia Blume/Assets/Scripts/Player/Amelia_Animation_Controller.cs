@@ -12,7 +12,8 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 	public bool stunned;
 	public bool planting;
 	public bool sunLighting;
-	public float watering;
+	public bool watering;
+	public float fallSpeed;
 	
 	Animator anim;
 
@@ -35,6 +36,8 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 			planting = amelia.isPlanting;
 			sunLighting = amelia.isSunLighting;
 			watering = amelia.watering;
+			fallSpeed = amelia.player.motor.movement.fallSpeed;
+
 
 			if (running && !jumping)
 				anim.SetBool ("isRunning", true);
@@ -72,6 +75,17 @@ public class Amelia_Animation_Controller : MonoBehaviour {
 				anim.SetBool ("isSunLighting", true);
 			else
 				anim.SetBool ("isSunLighting", false);
+
+			if (fallSpeed < 0)
+				anim.SetBool("isFalling", true);
+			else
+				anim.SetBool("isFalling", false);
+
+			if (watering)
+				anim.SetBool("isWatering", true);
+			else
+				anim.SetBool("isWatering", false);
+
 		}
 		
 		//anim.SetFloat ("watering", watering);

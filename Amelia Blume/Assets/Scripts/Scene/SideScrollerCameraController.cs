@@ -8,7 +8,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool manual = false;
 	bool unlockAfterPan = false;
 	Vector3 startPos;
-	float panRate = 80f;
+	float panRate = .80f;
+	float panTime = 1f;
 	Vector3 panLength;
 
 	public Transform target;
@@ -46,8 +47,8 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	public float panSpeedX = 0.4f;
 	public float panSpeedY = 0.2f;
-	Vector3 panTo;
-	int panTime;
+	public Vector3 panTo;
+	float resizeTo = 0;
 
 	//panlimiters for more smooth scrolling
 	List<GameObject>[] panLimiters;
@@ -75,6 +76,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 		zooming = false;
 		thisCam = gameObject.GetComponent<Camera> ();
+		startPos = transform.position;
 		target = GameObject.FindGameObjectWithTag ("Player").transform;
 		canPanUp = true;
 		canPanRight = true;
@@ -547,9 +549,13 @@ public class SideScrollerCameraController : MonoBehaviour {
 
 	void ManualHandler(){
 		if (transform.position != panTo) {
-			float newX = Mathf.SmoothStep(startPos.x, panTo.x, ((Time.time - startTime) * panRate) / panLength.x);
-			float newY = Mathf.SmoothStep(startPos.y, panTo.y, ((Time.time - startTime) * panRate) / panLength.y);
-			transform.position = new Vector3(newX, newY, transform.position.z);
+			float percentComplete = (Time.time - startTime) / panTime;
+			transform.position = Vector3.Lerp(startPos, panTo, percentComplete);
+			if (resizeTo > 0)
+			{
+				thisCam.orthographicSize = Mathf.Lerp(startSize, resizeTo, percentComplete);;
+
+			}
 			if(transform.position == panTo && unlockAfterPan)
 			{
 				manual = false;
@@ -591,10 +597,27 @@ public class SideScrollerCameraController : MonoBehaviour {
 	{
 		startPos = transform.position;
 		manual = true;
-		panTo = new Vector3 (newPos.x, newPos.y, 0f);
+		panTo = newPos;
 		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
 		unlockAfterPan = unlock;
 		startTime = Time.time;
+	}
+	public void MoveToPosition(Vector3 newPos, float speed, float size, bool unlock = false)
+	{
+		startPos = transform.position;
+		manual = true;
+		panTo = newPos;
+		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		unlockAfterPan = unlock;
+		startTime = Time.time;
+		if (speed == 0)
+		{
+			Debug.Log("Speed of camera can not be zero. Defaulted to 1.0");
+			speed = 1;
+		}
+		panTime = Vector3.Distance(startPos, panTo) / speed;
+		startSize = thisCam.orthographicSize;
+		resizeTo = size;
 	}
 
 	public void MoveToPosition(float newX, float newY, bool unlock = false)

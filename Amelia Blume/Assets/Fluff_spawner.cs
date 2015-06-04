@@ -70,9 +70,6 @@ public class Fluff_spawner : MonoBehaviour {
 		spawnedFluff = new List<GameObject> ();
 
 		spawnFluff ();
-		if (overrideColor) {
-			ReassignColors();
-		}
 
 	}
 	
@@ -142,22 +139,43 @@ public class Fluff_spawner : MonoBehaviour {
 				spawnedFluff.Add(newFluff);
 			}
 		}
-
+		if (overrideColor) {
+			ReassignColors();
+		}
 	}
 
-	void ReassignColors()
+	public void ReassignColors()
 	{
 		foreach (GameObject item in spawnedFluff) {
 			if(item.renderer != null)
 			{
 				item.renderer.material.color = newColor;
 			}
+
 			Renderer[] childRenderers = item.GetComponentsInChildren<Renderer>();
 			foreach(Renderer render in childRenderers)
 			{
-				render.material.color = newColor;
+				foreach(Material mat in render.materials)
+				{
+					mat.color = newColor;
+				}
 			}
 		}
+		//specifically for grass fluff because it's being a jerk
+		SkinnedMeshRenderer[] renders = GetComponentsInChildren<SkinnedMeshRenderer>();
+		foreach(SkinnedMeshRenderer render in renders)
+		{
+			render.material.color = newColor;
+		}
+	}
+
+	public void respawnFluff()
+	{
+		foreach (GameObject fluff in spawnedFluff) {
+			Destroy(fluff);
+		}
+		spawnFluff ();
+
 	}
 
 	int Roll(){

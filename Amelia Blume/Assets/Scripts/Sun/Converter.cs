@@ -5,32 +5,36 @@ public class Converter : MonoBehaviour {
 
 	public InputHandler playerInput;
 
-	public float life = 200;
+	//public float life = 200;
+	public float life;
+	public float startTime;
 	float scaleValue;
 	private GameObject player;
-	bool conversionSuccess = false;
+	public bool conversionSuccess = false;
+	bool exited = false;
 	public GameObject target;
 	void Start()
 	{
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
 		player = GameObject.Find ("Player");
 		scaleValue = transform.localScale.x / 11f;
+		life = 3.33333f;
+		startTime = Time.time;
 	}
 	// Update is called once per frame
 	void FixedUpdate () {
 		HandleInput ();
-		life--; 
-		if (life < 0) {
+		if (Time.time - startTime > life) {
 			Destroy (gameObject);
 		}
 
 		if (player.GetComponent<Player> ().isConverting () || conversionSuccess) {
-			if (life < 20 && life > 10) {
+			if (Time.time - startTime  > 3f && Time.time - startTime < 3.15f) {
 				transform.localScale = new Vector3 (transform.localScale.x - scaleValue,
 			                        transform.localScale.y + 8f,
 			                        transform.localScale.z);
 			}
-			else if(life == 20)
+			else if(Time.time - startTime > 2.95f && !conversionSuccess && !exited)
 			{
 				//successful conversion
 				conversionSuccess = true;
@@ -61,7 +65,8 @@ public class Converter : MonoBehaviour {
 	protected void HandleInput() {
 		if (playerInput.sunUp) {
 			player.GetComponent<Player>().SetConverting(false);
-			life = 60;
+			life = 1;
+			exited = true;
 		}
 	}
 

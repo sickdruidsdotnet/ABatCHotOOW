@@ -187,17 +187,37 @@ THE HEART agrees, and assures AMELIA and IGNATIUS that the magic here will prote
 :: 3-2 Boar Separation
 
 
+:: 3-2 Examine Ig Vines [Amelia]
+It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
+
+
+:: 3-2 What Was That [Amelia]
+That sounded big...
+
+
+:: 3-3 Discovered Flower a [Amelia]
+This flower seems to be giving up a pollen that repels fungus... I may be able to use this to slow down infected animal.[[Discovered Flower b]]
+d
+
+:: 3-3 Discovered Flower b [Amelia]
+The weakened creature would then take longer to break out of my vines, and would therefore be much easier to rid of the infection.
 
 :: 3-3 River Guardian
 
+
+:: 3-4 Time to Prepare
+Sounds like the boar has found me again. It seems to be far away, so unlike last time I'm not off-gaurd and can prepare
 
 
 :: 4-1 Return to the Heart
 
 
 
-:: 4-2 Ashes
+:: 4-2 Ashes a [Ignatius]
+Amelia! The fire that Ignatius has unleashed is encroaching on us. Take shelter in the cave behind you! [[Ashes b]]
 
+:: 4-2 Ashes b [Amelia]
+...!
 
 
 :: 5-1

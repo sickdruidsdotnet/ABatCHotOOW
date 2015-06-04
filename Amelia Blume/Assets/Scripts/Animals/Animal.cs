@@ -25,7 +25,7 @@ public class Animal : MonoBehaviour
 
 
 	public bool isSpored;
-	protected float sporeModifier = 1f;
+	public float sporeModifier = 1f;
 	//how long it will last in seconds after being infected by fern spores
 	public float sporeResistance;
 
@@ -68,7 +68,9 @@ public class Animal : MonoBehaviour
 		//quit spawning spores unecessarily
 		isSpored = false;
 		//destroy the vines
-		Destroy(vines.gameObject);
+		if (vines != null) {
+			Destroy (vines.gameObject);
+		}
 		if (conversionPrompt != null) {
 			if(activePrompt != null)
 			{
@@ -76,20 +78,6 @@ public class Animal : MonoBehaviour
 			}
 		}
     }
-
-
-	public void LurePlant(Transform plantPosition)
-	{
-		//Debug.Log ("LurePlant called: " + gameObject.name);
-		//NavMeshAgentController agentController = this.GetComponent<NavMeshAgentController> ();
-		//agentController.EnableAgent (plantPosition);
-		if (plantPosition.position.x > this.transform.position.x)
-			targetOffset = -0.5f;
-		else
-			targetOffset = 1.2f;
-		SetTarget (plantPosition.position);
-		isBeingLured = true;
-	}
 
 	public void SetTarget(Vector3 position){
 		this.target = new Vector3 (position.x + targetOffset, transform.position.y, transform.position.z);
@@ -113,29 +101,9 @@ public class Animal : MonoBehaviour
 		StartCoroutine (sporeTimer ());
 	}
 
-	void OnTriggerStay(Collider other){
-		if (other.tag == "Player") {
-			if(isRestrained && isInfected){
-				//Debug.Log ("Can convert");
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = true;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = gameObject;
-			}
-			else{
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
-			}
-		}
-	}
-
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Player") {
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().canConvert = false;
-				GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().conversionTarget = null;
-		}
-	}
-
 	void OnParticleCollision(GameObject other) 
     {
+    	Debug.Log("Collided with " + other.name);
     	if (other.tag == "Pollen")
     	{
     		if (!isSpored)
@@ -159,7 +127,7 @@ public class Animal : MonoBehaviour
 	IEnumerator sporeSpawner()
 	{
 		if (isSpored) {
-			Instantiate(Resources.Load("Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
+			Instantiate(Resources.Load("FlowerPlant/Spore Breath"), transform.position + sporeLoc, Quaternion.identity);
 			yield return new WaitForSeconds(1f);
 			StartCoroutine(sporeSpawner());
 		}

@@ -36,16 +36,10 @@ public class Deer : Animal
     public float speed;
 
 	public bool isFacingRight = false;
-	
-	//audio variables
-	public AudioClip spotPlayer1;
-	private AudioSource source;
-
 
     // Use this for initialization
     void Start()
     {
-    	source = GetComponent<AudioSource>();
 
 		anim = GetComponentsInChildren<Animator> ()[0];
 		animalType = "Deer";
@@ -305,8 +299,6 @@ public class Deer : Animal
 						if(visionHit.transform.tag == "Player" || visionHit.transform.tag == "Blossom")
 						{
 							//Debug.Log("found player");
-							//play audio
-							source.PlayOneShot(spotPlayer1, 3F);
 
 							isCharging = true;
 							isInChargeUp = true;
@@ -332,7 +324,6 @@ public class Deer : Animal
 						{
 							//Debug.Log("found player");
 							//play audio
-							source.PlayOneShot(spotPlayer1, 3F);
 
 							isCharging = true;
 							isInChargeUp = true;
@@ -358,7 +349,6 @@ public class Deer : Animal
 						{
 							//Debug.Log("found player");
 							//play audio
-							source.PlayOneShot(spotPlayer1, 3F);
 							
 							isCharging = true;
 							isInChargeUp = true;

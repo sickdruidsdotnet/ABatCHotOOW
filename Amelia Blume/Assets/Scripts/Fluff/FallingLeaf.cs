@@ -8,7 +8,6 @@ public class FallingLeaf : MonoBehaviour {
 	float amplitude = 0.03f;
 	float frequency = 1.5f;
 	float offset = 0f;
-	float bottomLimit = -2;
 
 	GameObject mainCamera;
 

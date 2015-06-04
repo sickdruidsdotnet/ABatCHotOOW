@@ -401,39 +401,31 @@ public class PlayerMotor : BaseBehavior {
 		if(player.canThrowSeed) {
 			player.Broadcast("OnThrowSeed");
 			// spawn a seed
-			Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.5f, 1, 0);
-			loc += transform.position;
 			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
 			GameObject newSeed;
 			Player.SeedType currSeed = player.getCurrentSeedType();
 			switch(currSeed){
 			case Player.SeedType.VineSeed:
-				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
-				player.controller.updateActiveSeeds(0, newSeed);
+				StartCoroutine(spawnSeed("Seeds/VineSeed", 0));
 				break;
 				
 			case Player.SeedType.TreeSeed:
-				newSeed = Instantiate(Resources.Load("Seeds/TreeSeed")) as GameObject;
-				player.controller.updateActiveSeeds(1, newSeed);
+				StartCoroutine(spawnSeed("Seeds/TreeSeed", 1));
 				break;
 				
 			case Player.SeedType.FlowerSeed:
-				newSeed = Instantiate(Resources.Load("Seeds/FlowerSeed")) as GameObject;
-				player.controller.updateActiveSeeds(2, newSeed);
+				StartCoroutine(spawnSeed("Seeds/FlowerSeed", 2));
 				break;
 				
 			case Player.SeedType.FernSeed:
-				newSeed = Instantiate(Resources.Load("Seeds/FernSeed")) as GameObject;
+				StartCoroutine(spawnSeed("Seeds/FernSeed", 3));
 				break;
 
 			default:
-				newSeed = Instantiate(Resources.Load("Seeds/VineSeed")) as GameObject;
-				player.controller.updateActiveSeeds(1, newSeed);
+				StartCoroutine(spawnSeed("Seeds/VineSeed", 0));
 				break;
 			}
-
-			newSeed.transform.position = loc;
-			newSeed.rigidbody.velocity = new Vector3(0,-3,0);
+				              
 		}
 		else{
 			player.Broadcast("OnThrowSeedDenied");
@@ -481,5 +473,18 @@ public class PlayerMotor : BaseBehavior {
 				Time.fixedDeltaTime * movement.turnToFaceCameraSpeed
 			);
 		}
+	}
+
+	IEnumerator spawnSeed(string prefabLoc, int seedNum)
+	{
+		yield return new WaitForSeconds (0.35f);
+		Vector3 loc = new Vector3(transform.GetComponent<PlayerController>().faceDirection * 0.2f, 0.7f, 0);
+		loc += transform.position;
+
+		GameObject newSeed = Instantiate(Resources.Load(prefabLoc)) as GameObject;
+		player.controller.updateActiveSeeds(seedNum, newSeed);
+		newSeed.transform.position = loc;
+		newSeed.rigidbody.velocity = new Vector3(0,-3,0);
+
 	}
 }

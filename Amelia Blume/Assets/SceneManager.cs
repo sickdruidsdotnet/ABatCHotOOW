@@ -6,6 +6,7 @@ public class SceneManager : MonoBehaviour {
 	public string LevelToLoad;
 	public List<GameObject> events;
 	ABGameController GameController;
+	SideScrollerCameraController CameraController;
 	GameObject amelia;
 	GameObject ig;
 	GameObject currChar;
@@ -15,22 +16,24 @@ public class SceneManager : MonoBehaviour {
 	float nextUse;
 	float delay = 0.3f;
 	bool moving = false;
+	bool waitingOnCamera = false;
 	public Animator ameliaAnimator;
 	public Animator igAnimator;
 	//float timer;
 	// Use this for initialization
 	void Start () {
 		GameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<ABGameController> ();
+		CameraController = Camera.main.GetComponent<SideScrollerCameraController>();
 		//events = new List<GameObject>();
 		ig = GameObject.Find ("Ignatius");
-		amelia = GameObject.Find ("Player");
+		amelia = GameObject.FindGameObjectWithTag ("Player");
 		player = amelia.GetComponent<Player> ();
 		player.CUTSCENE = true;
 		player.SetCurrentSign (this.gameObject);
 		signPost = GetComponent<SignPost>();
-		igAnimator = ig.GetComponentInChildren<Animator> ();
+		if (ig != null){igAnimator = ig.GetComponentInChildren<Animator> ();}
 		ameliaAnimator = amelia.GetComponentInChildren<Animator> ();
-		index = 0;
+		index = -1;
 
 		NextEvent ();
 
@@ -45,6 +48,10 @@ public class SceneManager : MonoBehaviour {
 		if (moving) {
 			MoveCharacter();
 		}
+		if (waitingOnCamera)
+		{
+			CheckCamera();
+		}
 	}
 
 	void StartReading(){
@@ -53,10 +60,16 @@ public class SceneManager : MonoBehaviour {
 
 	void MoveCharacter(){
 		Vector3 targetPos;
-		if(currChar == ig)
-			targetPos = new Vector3(events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
-		else
+		if (currChar == ig) {
+			targetPos = new Vector3 (events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
+			if(targetPos.x > currChar.transform.position.x){
+				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
+			}else{
+				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
+			}
+		} else {
 			targetPos = events [index].transform.position;
+		}
 		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
 			//if(Time.time > nextUse){
 //				Debug.Log ("Moving");
@@ -65,14 +78,35 @@ public class SceneManager : MonoBehaviour {
 				//nextUse = Time.time+delay;
 			//}
 		} else {
-			index++;
 			moving = false;
 			NextEvent();
 		}
 	}
 
+	void CheckCamera()
+	{
+		if(waitingOnCamera)
+		{
+			if (Camera.main.transform.position == CameraController.panTo)
+			{
+				Debug.Log("Camera has reached its location, start next event.");
+				waitingOnCamera = false;
+				NextEvent();
+			}
+			else
+			{
+				Debug.Log("Camera still in motion, don't start next event yet.");
+			}
+		}
+		else
+		{
+			Debug.Log("Why check on the camera if it's not being waitied on?");
+		}
+	}
+
 	void NextEvent(){
-		//Debug.Log (events [index]);
+		index++;
+		Debug.Log (index);
 		if (index < events.Count) {
 			switch (events [index].tag) {
 			case "Amelia":
@@ -80,10 +114,9 @@ public class SceneManager : MonoBehaviour {
 				currChar = amelia;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", true);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", true);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//MoveCharacter();
-				//index++;
 				//NextEvent ();
 				break;
 		
@@ -92,31 +125,42 @@ public class SceneManager : MonoBehaviour {
 				currChar = ig;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", true);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", true);}
 				//MoveCharacter();
-				//index++;
 				//NextEvent ();
 				break;
 		
 			case "Text":
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//Debug.Log ("Text");
 				StartReading ();
-				index++;
 				//NextEvent ();
 				break;
+
+			case "Camera":
+				Debug.Log("Camera Event");
+				CameraEvent eventScript = events[index].GetComponent<CameraEvent>();
+				CameraController.MoveToPosition(events[index].transform.position, eventScript.speed, eventScript.cameraSize);
+				waitingOnCamera = eventScript.waitForDestination;
+				if (!waitingOnCamera)
+				{
+					Debug.Log("Starting next event while Camera is still in motion");
+					NextEvent();
+				}
+				break;
+
 		
 		
 			}
 		} else {
 			//Fade to Black?
 			//Load Next Scene
-			ameliaAnimator.SetBool ("isRunning", false);
-			igAnimator.SetBool ("isRunning", false);
+			if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+			if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 			GameController.BeginSceneTransition(LevelToLoad);
-		}
+		};
 	}
 
 	void PrintThis(){
