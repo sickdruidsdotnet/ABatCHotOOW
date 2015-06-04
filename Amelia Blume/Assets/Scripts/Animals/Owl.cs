@@ -39,9 +39,15 @@ public class Owl : Animal {
 
 	void ChasePlayer()
 	{
+		Vector3 targetPos;
 		//Debug.Log ("In pursuit");
-		Vector3 targetPos = new Vector3 (player.transform.position.x, player.transform.position.y - 0.7f, 0);
-		transform.position = Vector3.MoveTowards (transform.position, targetPos, speed);
+		if (hitCoolDown <= 0) {
+			if(player.transform.position.x > this.transform.position.x)
+				targetPos = new Vector3 (player.transform.position.x + 0.5f, player.transform.position.y - 0.7f, 0);
+			else
+				targetPos = new Vector3 (player.transform.position.x - 0.5f, player.transform.position.y - 0.7f, 0);
+			transform.position = Vector3.MoveTowards (transform.position, targetPos, speed);
+		}
 	}
 
 	void ReturnToPerch()
@@ -63,7 +69,7 @@ public class Owl : Animal {
 						hitDirection = 1;
 					}
 					player.GetComponent<PlayerController>().damagePlayer(damageValue, hitDirection);
-					hitCoolDown = 60;
+					hitCoolDown = 80;
 				}
 			}
 		}

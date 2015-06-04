@@ -30,7 +30,7 @@ public class SignPost : MonoBehaviour {
 
 	bool personSpeaking = false;
 
-	public Sprite[] portraits = new Sprite[2];
+	public Sprite[] portraits = new Sprite[3];
 
 	char[] charsToTrim = { '[' ,']'};
 	char[] titleSplit = { '[', ']' , ':'};
@@ -172,20 +172,27 @@ public class SignPost : MonoBehaviour {
 			personSpeaking = true;
 			//uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
-			uiPortraitSprite.sprite = portraits[0];
-			nameRect.anchoredPosition = new Vector2(-145.8f, -53.7f);
-			portraitRect.anchoredPosition = new Vector2(-265.2f, -66.5f);
+			uiPortraitSprite.sprite = portraits [0];
+			nameRect.anchoredPosition = new Vector2 (-271.7f, -144.4f);
+			portraitRect.anchoredPosition = new Vector2 (-440.1f, -135.8f);
 		} else if (speaker == "Ignatius") {
-			uiPortraitSprite.sprite = portraits[1];
+			uiPortraitSprite.sprite = portraits [1];
 			//uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
 			personSpeaking = true;
-			portraitRect.anchoredPosition = new Vector2(352f, -66.5f);
-			nameRect.anchoredPosition = new Vector2(258.2f, -53.7f);
-		} else {
+			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
+			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
+		} else if (speaker == "Heart") {
+			uiPortraitSprite.sprite = portraits [2];
+			//uiPortraitSprite.enabled = true;
+			//nameText.enabled = true;
+			personSpeaking = true;
+			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
+			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
+		}else {
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;
-			if(nameText.text == "Ignatius" || nameText.text == "Amelia"){
+			if(nameText.text == "Ignatius" || nameText.text == "Amelia" || nameText.text == "Heart"){
 				uiPortraitSprite.enabled = true;
 				personSpeaking = true;
 			}else{
