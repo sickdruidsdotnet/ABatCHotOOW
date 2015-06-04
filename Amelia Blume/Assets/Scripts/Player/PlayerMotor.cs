@@ -402,7 +402,6 @@ public class PlayerMotor : BaseBehavior {
 			player.Broadcast("OnThrowSeed");
 			// spawn a seed
 			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
-			GameObject newSeed;
 			Player.SeedType currSeed = player.getCurrentSeedType();
 			switch(currSeed){
 			case Player.SeedType.VineSeed:
