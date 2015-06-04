@@ -42,137 +42,58 @@ Tale.prototype.printPassages = function() {
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 
-:: Untitled Annotation 1 [annotation meta]
-These are for testing.
-
-
-:: test 1000 dubs
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-
-
 :: recovered text from the topographical anomaly
 Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that never were and never could be writhe for the impatience of the few who never saw what could have been. In the black water with the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the earth or above on green fields, or out to sea or in the very air, all shall come to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and their teeth shall devour and sustain and herald the passing of an age. That which dies shall still know life in death for all that decays is not forgotten and reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of you that remains.
-
-:: 1-1 tutorial water [Amelia]
-I can water this seed (B Button) and Sun it (Y Button) to make it grow into a tree that I can use to ascend this cliff
-
-
-:: 1-1 tutorial acorn [Amelia]
-That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
-
-
-:: 1-1 tutorial dash [Amelia]
-This gap is too wide to jump over without falling into that bramble patch. I can dash (right bumper) on the ground or midair to get across, though.
-
-
-:: 1-1 tutorial vine convert [Amelia]
-If it becomes necessary, I can restrain that deer with vines (Right Thumbstick). I might then be able to cleanse the animal of its infection (Y button).
-
-
-:: Act Subtitles
-1: The Old, Old Woods
-2: The Forest Guardian
-3: The River Guardian
-4: The Heart of the Woods
-5: Roots
 
 
 :: 1-1 narration
 You notice that this text box is narrated, not spoken.
 
 
-:: 1-1 examination a
-Growing on the side of the tree is a patch of mold, ink-black and dappled with violet.[[1-1 examination b]]
+:: test 1000 dubs
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 
 
-:: 1-1 examination b [Amelia]
-Odd... These conditions don't favor mold.
+:: Act I [annotation]
+The Old, Old Woods
+
+
+:: Act II [annotation]
+The Forest Guardian
+
+
+:: Act III [annotation]
+The River Guardian
+
+
+:: Act IV [annotation]
+The Heart of the Woods
+
+
+:: Act V [annotation]
+Roots
+
+
+:: 1-1 tutorial dash [Amelia]
+This gap is too wide to jump over without falling into that bramble patch. I can dash (right bumper) on the ground or midair to get across, though.
 
 
 :: 1-1 mushroom examination a
 A crimson mushroom cap lies at your feet.[[1-1 mushroom examination b]]
 
 
-:: 1-1 mushroom examination b [Amelia]
-This fungus smells... oily, and almost like a woodfire. I've never encountered such a thing in all my many years.
-
-
 :: 1-1 Meeting Ignatius a
 Another druid approaches you. He bears a stern countenance and a staff of charred oak. Worry lines are etched into his face.[[1-1 Meeting Ignatius b]]
-
-
-:: 1-1 Meeting Ignatius b [Ignatius]
-The trees foretold your arrival, Archdruid. It is good to see your face in this dire season. I am Ignatius, third keeper of the Circle of Ash.[[1-1 Meeting Ignatius c]]
-
-
-:: 1-1 Meeting Ignatius c [Amelia]
-Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ignatius d]]
-
-
-:: 1-1 Meeting Ignatius d [Ignatius]
-The same thing that surely brings you here, Archdruid. A dark presence lurks over this forest... the winds blowing through are heavy with death and rot.[[1-1 Meeting Ignatius e]]
-
-
-:: 1-1 Meeting Ignatius e [Amelia]
-There is a great sickness here, yes, and it is only growing. I seek now to make an audience with The Heart of the Woods.[[1-1 Meeting Ignatius f]]
-
-
-:: 1-1 Meeting Ignatius f [Ignatius]
-As do I. If you will permit me the honor, I will go on ahead of you and announce you more formally.[[1-1 Meeting Ignatius g]]
-
-
-:: 1-1 Meeting Ignatius g [Amelia]
-My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
-
-
-:: 1-1 Meeting Ignatius h
-Ignatius runs ahead with surprising speed, disappearing out of sight in moments.
 
 
 :: 1-2 Audience a
 A single massive oak stands at the center of what would otherwise be a clearing. The Heart of the Woods is seated here on a throne of interwoven vines. He holds a crystal-tipped staff in his ghastly white hand.[[1-2 Audience b]]
 
 
-:: 1-2 Audience b [Amelia]
-Greetings, lord. I am Amélia, an Archdruid come to aid in healing the sickness in your woods.[[1-2 Audience c]]
-
-
-:: 1-2 Audience c
-The old man gives no sign that he heard you, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
-
-
-:: 1-2 Audience d [Ignatius]
-The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2 Audience e]]
-
-
-:: 1-2 Audience e
-The Heart of the Woods lets out a long wheeze, though you're not certain if it was an attempt at speech.[[1-2 Audience f]]
-
-
-:: 1-2 Audience f [Amelia]
-We should seek out the Forest Guardian. The greenbond is our best route to gaining an understanding of this malady.[[1-2 Audience g]]
-
-
-:: 1-2 Audience g [Ignatius]
-I should stay here; I will do what little I can to ease the pain.[[1-2 Audience h]]
-
-
-:: 1-2 Audience h
-Ignatius makes a circle with his thumb and forefinger and makes a sweeping gesture with his hand. A wish for luck. You return the gesture and leave.
-
-
 :: 2-1 getting vines
 A large buck stands ahead of you, staring blankly into the distance. It seems to be covered in fruiting bodies, a living colony for some kind of fungus.
 
 A: If it becomes necessary, I should restrain the animal with
-
-
-:: 2-1 Forest Guardian
-AMELIA approaches the dying beast. She tries asking what happened, and if she can help
-FOREST GUARDIAN responds only with wheezing or some vague bullshit about a malignant force in the woods, and how it must be cleansed.
-AMELIA wonders aloud what could have caused this. It’s important to note that she has already encountered infected plants and animals, but didn’t think it was possible for this to overcome the power of the FOREST GUARDIAN. 
-AMELIA realizes she needs to return to the Heart, for it is not safe.
-
 
 
 :: 3-1
@@ -187,22 +108,13 @@ THE HEART agrees, and assures AMELIA and IGNATIUS that the magic here will prote
 :: 3-2 Boar Separation
 
 
-:: 3-2 Examine Ig Vines [Amelia]
-It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
-
-
-:: 3-2 What Was That [Amelia]
-That sounded big...
-
 
 :: 3-3 Discovered Flower a [Amelia]
-This flower seems to be giving up a pollen that repels fungus... I may be able to use this to slow down infected animal.[[Discovered Flower b]]
-d
+This flower seems to be giving up a pollen that repels fungus... I may be able to use this to slow down infected animal.[[3-3 Discovered Flower b]]
 
-:: 3-3 Discovered Flower b [Amelia]
-The weakened creature would then take longer to break out of my vines, and would therefore be much easier to rid of the infection.
 
 :: 3-3 River Guardian
+You enter the grounds for the protector of the forest's life-giving water only to find a horrible sight. The body of the once great River Guardian lies covered in blood and parasitic fungus.	[[3-3 River Guardian a]]
 
 
 :: 3-4 Time to Prepare
@@ -214,13 +126,130 @@ Sounds like the boar has found me again. It seems to be far away, so unlike last
 
 
 :: 4-2 Ashes a [Ignatius]
-Amelia! The fire that Ignatius has unleashed is encroaching on us. Take shelter in the cave behind you! [[Ashes b]]
+Amelia! The fire that Ignatius has unleashed is encroaching on us. Take shelter in the cave behind you! [[4-2 Ashes b]]
+
+
+:: 5-1
+
+
+
+:: 1-1 tutorial vine convert [Amelia]
+If it becomes necessary, I can restrain that deer with vines (Right Thumbstick). I might then be able to cleanse the animal of its infection (Y button).
+
+
+:: 1-1 mushroom examination b [Amelia]
+This fungus smells... oily, and almost like a woodfire. I've never encountered such a thing in all my many years.
+
+
+:: 1-1 Meeting Ignatius b [Ignatius]
+The trees foretold your arrival, Archdruid. It is good to see your face in this dire season. I am Ignatius, third keeper of the Circle of Ash.[[1-1 Meeting Ignatius c]]
+
+
+:: 1-2 Audience b [Amelia]
+Greetings, lord. I am Amélia, an Archdruid come to aid in healing the sickness in your woods.[[1-2 Audience c]]
+
+
+:: 2-1 Forest Guardian
+AMELIA approaches the dying beast. She tries asking what happened, and if she can help
+FOREST GUARDIAN responds only with wheezing or some vague bullshit about a malignant force in the woods, and how it must be cleansed.
+AMELIA wonders aloud what could have caused this. It’s important to note that she has already encountered infected plants and animals, but didn’t think it was possible for this to overcome the power of the FOREST GUARDIAN. 
+AMELIA realizes she needs to return to the Heart, for it is not safe.
+
+
+:: 3-2 What Was That [Amelia]
+That sounded big...
+
+
+:: 3-3 Discovered Flower b [Amelia]
+The weakened creature would then take longer to break out of my vines, and would therefore be much easier to rid of the infection.
+
+
+:: 3-3 River Guardian a [Amelia]
+Ignatius! What happened here? The infection only makes the host go insane, and it would have no reason to kill the host! [[3-3 River Guardian b]]
+
+
 
 :: 4-2 Ashes b [Amelia]
 ...!
 
 
-:: 5-1
+:: 1-1 tutorial acorn [Amelia]
+That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
 
+
+:: 1-1 examination a
+Growing on the side of the tree is a patch of mold, ink-black and dappled with violet.[[1-1 examination b]]
+
+
+:: 1-1 Meeting Ignatius c [Amelia]
+Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ignatius d]]
+
+
+:: 1-2 Audience c
+The old man gives no sign that he heard you, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
+
+
+:: 3-2 Examine Ig Vines [Amelia]
+It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
+
+
+:: 3-3 River Guardian b [Ignatius]
+This creature was in agony and barely clinging on to its life with every wheezing breath. The infection grows stronger and more resistant. We must purge this land of this vile disease! [[3-3 River Guardian c]]
+
+
+:: 1-1 tutorial water [Amelia]
+There's an acorn in the soil here... I could conjure some water (B Button) to wet the soil and then shine sunlight upon it (Y Button) once it sprouts. Once it grows tall enough, I should be able to climb its limbs.
+
+
+:: 1-1 examination b [Amelia]
+Odd... These conditions don't favor mold.
+
+
+:: 1-1 Meeting Ignatius d [Ignatius]
+The same thing that surely brings you here, Archdruid. A dark presence lurks over this forest... the winds blowing through are heavy with death and rot.[[1-1 Meeting Ignatius e]]
+
+
+:: 1-2 Audience d [Ignatius]
+The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2 Audience e]]
+
+
+:: 3-3 River Guardian c [Amelia]
+We came here to help, not to destroy this once great wood and kill all its inhabitants! Stop! [[3-3 River Guardian d]]
+
+
+:: 1-1 Meeting Ignatius e [Amelia]
+There is a great sickness here, yes, and it is only growing. I seek now to make an audience with The Heart of the Woods.[[1-1 Meeting Ignatius f]]
+
+
+:: 1-2 Audience e
+The Heart of the Woods lets out a long wheeze, though you're not certain if it was an attempt at speech.[[1-2 Audience f]]
+
+
+:: 3-3 River Guardian d
+Ignatius begins a determined run back in the direction of the heart after exuding a piercing look of dissapointment.
+
+
+:: 1-1 Meeting Ignatius f [Ignatius]
+As do I. If you will permit me the honor, I will go on ahead of you and announce you more formally.[[1-1 Meeting Ignatius g]]
+
+
+:: 1-2 Audience f [Amelia]
+We should seek out the Forest Guardian. The greenbond is our best route to gaining an understanding of this malady.[[1-2 Audience g]]
+
+
+:: 1-1 Meeting Ignatius g [Amelia]
+My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
+
+
+:: 1-2 Audience g [Ignatius]
+I should stay here; I will do what little I can to ease the pain.[[1-2 Audience h]]
+
+
+:: 1-1 Meeting Ignatius h
+Ignatius runs ahead with surprising speed, disappearing out of sight in moments.
+
+
+:: 1-2 Audience h
+Ignatius makes a circle with his thumb and forefinger and makes a sweeping gesture with his hand. A wish for luck. You return the gesture and leave.
 
 

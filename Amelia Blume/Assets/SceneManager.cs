@@ -110,7 +110,7 @@ public class SceneManager : MonoBehaviour {
 		if (index < events.Count) {
 			switch (events [index].tag) {
 			case "Amelia":
-				//Debug.Log ("Amelia Move");
+				Debug.Log ("Amelia Move");
 				currChar = amelia;
 				moving = true;
 				player.SetReadSign (false);
