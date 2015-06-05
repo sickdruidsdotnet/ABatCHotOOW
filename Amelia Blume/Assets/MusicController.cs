@@ -28,7 +28,7 @@ public class MusicController : MonoBehaviour {
 	string prevLevel = "Act0-Nothing";
 	string prevAct = "Act0";
 
-	float max_vol = 0.7F;
+	float max_vol = 0.3F;
 
 	// Use this for initialization
 	void Start () {

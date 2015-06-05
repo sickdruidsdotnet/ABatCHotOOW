@@ -10,8 +10,8 @@ public class stepSound : MonoBehaviour {
 	//public AudioClip step2;
 	//public AudioClip step3;
 	//public AudioClip step4;
-	public float volLowRange = 0.5F;
-	public float volHighRange = 0.75F;
+	public float volLowRange = 0.75F;
+	public float volHighRange = 1.0F;
 	public float lowPitchRange = .85F;
     public float highPitchRange = 1.25F;
 	public float stepTimer = 0.0F;
