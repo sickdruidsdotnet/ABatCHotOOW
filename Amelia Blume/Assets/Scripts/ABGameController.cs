@@ -80,9 +80,7 @@ public class ABGameController : MonoBehaviour {
 
 		//Music Controller for controlling music
 		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as MusicController;
-		//activeMC = musicController;
 		activeMC.name = "Music Controller";
-		//activeMC.GetComponent<Script> ()
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);

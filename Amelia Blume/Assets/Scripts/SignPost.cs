@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
@@ -59,6 +60,20 @@ public class SignPost : MonoBehaviour {
 	Canvas uiCanvas;
 
 
+	public AudioClip pageSound1;
+	public AudioClip pageSound2;
+	public AudioClip pageSound3;
+	public AudioClip pageSound4;
+	private AudioSource source;
+	public float volLowRange;
+	public float volHighRange;
+	public float lowPitchRange = 0.85F;
+    public float highPitchRange = 1.0F;
+	private List<AudioClip> soundList;
+
+
+
+
 	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
@@ -93,6 +108,9 @@ public class SignPost : MonoBehaviour {
 		nameText = nameObj.GetComponent<Text> ();
 		nameText.enabled = false;
 		nameRect = nameObj.GetComponent<RectTransform> ();
+
+		source = this.GetComponent<AudioSource> ();
+		soundList = new List<AudioClip>{pageSound1, pageSound2, pageSound3, pageSound4};
 
 		//load/put the canvas behind the camera for easier editor experience
 		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
@@ -153,7 +171,7 @@ public class SignPost : MonoBehaviour {
 		if (!inCutscene) {
 			//Debug.Log("Not Cutscene");
 			nameText.enabled = uiText.enabled;
-//			Debug.Log (personSpeaking);
+			//Debug.Log (personSpeaking);
 			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
 		} else {
 			nameText.enabled = uiText.enabled;
@@ -168,7 +186,7 @@ public class SignPost : MonoBehaviour {
 		}
 
 		if (speaker == "Amelia") {
-//			Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
+			//Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
 			//uiPortraitSprite.enabled = true;
 			//nameText.enabled = true;
@@ -204,11 +222,17 @@ public class SignPost : MonoBehaviour {
 	}
 
 	public void Read(){
+
 		doneReading = false;
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
+
+				float vol = Random.Range (volLowRange, volHighRange);
+				source.pitch = Random.Range(lowPitchRange, highPitchRange);
+				source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
+
 				if(!cutSceneStart){
 					//Debug.Log ("DONE");
 					if(inCutscene)
@@ -229,6 +253,11 @@ public class SignPost : MonoBehaviour {
 		if(beingRead && stillWritingCurrentPassage){
 			DisplayFullText();
 			return;
+		}
+		else {
+			float vol = Random.Range (volLowRange, volHighRange);
+			source.pitch = Random.Range(lowPitchRange, highPitchRange);
+			source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
 		}
 		//	Debug.Log ("reading");
 		if (!beingRead) {
@@ -351,7 +380,7 @@ public class SignPost : MonoBehaviour {
 					sentenceWords = words [currentIndex].Split (titleSplit);
 					sentenceWords[2].Trim(' ');
 					for(int i = 0 ; i < sentenceWords.Length; i++){
-//						Debug.Log (sentenceWords[i] + "  " + i);
+						//Debug.Log (sentenceWords[i] + "  " + i);
 					}
 					if (sentenceWords [2].Contains(nextPassage)) {
 						lookingForPassage = false;
