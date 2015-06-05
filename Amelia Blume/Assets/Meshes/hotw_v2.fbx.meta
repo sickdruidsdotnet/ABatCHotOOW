@@ -103,6 +103,9 @@ ModelImporter:
     100194: Cylinder
     100196: Mustache
     100198: Robe
+    100200: BezierCurve.001
+    100202: root.008
+    100204: root.009
     400000: BezierCurve
     400002: Camera
     400004: chest
@@ -203,6 +206,9 @@ ModelImporter:
     400194: Cylinder
     400196: Mustache
     400198: Robe
+    400200: BezierCurve.001
+    400202: root.008
+    400204: root.009
     2300000: BezierCurve
     2300002: Cube
     2300004: root.000
@@ -225,6 +231,9 @@ ModelImporter:
     2300038: Cylinder
     2300040: Mustache
     2300042: Robe
+    2300044: BezierCurve.001
+    2300046: root.008
+    2300048: root.009
     3300000: BezierCurve
     3300002: Cube
     3300004: root.000
@@ -247,6 +256,9 @@ ModelImporter:
     3300038: Cylinder
     3300040: Mustache
     3300042: Robe
+    3300044: BezierCurve.001
+    3300046: root.008
+    3300048: root.009
     4300000: python_hotw_makehuman-low_poly
     4300002: python_hotw_makehuman-proxy741
     4300004: Cube
@@ -270,6 +282,9 @@ ModelImporter:
     4300040: Robe
     4300042: Beard
     4300044: Mustache
+    4300046: root.008
+    4300048: root.009
+    4300052: BezierCurve.001
     9500000: //RootNode
     13700000: python_hotw_makehuman-low_poly
     13700002: python_hotw_makehuman-proxy741
