@@ -10,6 +10,7 @@ public class SceneManager : MonoBehaviour {
 	GameObject amelia;
 	GameObject ig;
 	GameObject currChar;
+	Quaternion igRot = Quaternion.Euler(270, 90, 0);
 	Player player;
 	int index;
 	SignPost signPost;
@@ -25,7 +26,7 @@ public class SceneManager : MonoBehaviour {
 		GameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<ABGameController> ();
 		CameraController = Camera.main.GetComponent<SideScrollerCameraController>();
 		//events = new List<GameObject>();
-		ig = GameObject.Find ("Ignatius");
+		ig = GameObject.Find("IgnatiusPrefab");
 		amelia = GameObject.FindGameObjectWithTag ("Player");
 		player = amelia.GetComponent<Player> ();
 		player.CUTSCENE = true;
@@ -63,9 +64,11 @@ public class SceneManager : MonoBehaviour {
 		if (currChar == ig) {
 			targetPos = new Vector3 (events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
 			if(targetPos.x > currChar.transform.position.x){
-				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
+				// face right
+				currChar.transform.rotation = Quaternion.Euler(270f,90f,0);
 			}else{
-				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
+				// face left
+				currChar.transform.rotation = Quaternion.Euler(270f,270f,0);
 			}
 		} else {
 			targetPos = events [index].transform.position;
@@ -115,28 +118,24 @@ public class SceneManager : MonoBehaviour {
 				moving = true;
 				player.SetReadSign (false);
 				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", true);}
-				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
-				//MoveCharacter();
-				//NextEvent ();
+				if (igAnimator != null){igAnimator.SetBool ("isWalking", false);}
 				break;
 		
 			case "Ig":
-				//Debug.Log ("Ig Move");
+				Debug.Log ("Ig Move");
 				currChar = ig;
 				moving = true;
 				player.SetReadSign (false);
 				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
-				if (igAnimator != null){igAnimator.SetBool ("isRunning", true);}
-				//MoveCharacter();
-				//NextEvent ();
+				if (igAnimator != null){igAnimator.SetBool ("isWalking", true);}
+				else {Debug.Log("NULL");}
 				break;
 		
 			case "Text":
 				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
-				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isWalking", false);}
 				//Debug.Log ("Text");
 				StartReading ();
-				//NextEvent ();
 				break;
 
 			case "Camera":
