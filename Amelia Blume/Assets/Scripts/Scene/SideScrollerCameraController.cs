@@ -616,6 +616,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 			speed = 1;
 		}
 		panTime = Vector3.Distance(startPos, panTo) / speed;
+		if(thisCam == null){
+			thisCam = gameObject.GetComponent<Camera> ();
+		}
 		startSize = thisCam.orthographicSize;
 		resizeTo = size;
 	}
