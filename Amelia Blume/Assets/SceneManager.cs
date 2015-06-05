@@ -10,7 +10,7 @@ public class SceneManager : MonoBehaviour {
 	GameObject amelia;
 	GameObject ig;
 	GameObject currChar;
-	Quaternion igRot = Quaternion.Euler(270, 90, 0);
+	//Quaternion igRot = Quaternion.Euler(0, 270, 0);
 	Player player;
 	int index;
 	SignPost signPost;
@@ -65,10 +65,10 @@ public class SceneManager : MonoBehaviour {
 			targetPos = new Vector3 (events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
 			if(targetPos.x > currChar.transform.position.x){
 				// face right
-				currChar.transform.rotation = Quaternion.Euler(270f,90f,0);
+				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
 			}else{
 				// face left
-				currChar.transform.rotation = Quaternion.Euler(270f,270f,0);
+				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
 			}
 		} else {
 			targetPos = events [index].transform.position;
