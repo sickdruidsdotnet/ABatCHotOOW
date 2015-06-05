@@ -28,7 +28,7 @@ public class MusicController : MonoBehaviour {
 	string prevLevel = "Act0-Nothing";
 	string prevAct = "Act0";
 
-	float max_vol = 0.7F;
+	float max_vol = 0.3F;
 
 	// Use this for initialization
 	void Start () {
@@ -181,6 +181,9 @@ public class MusicController : MonoBehaviour {
 
  		if(currentAct != prevAct) {
  		//	Debug.Log("Act change. " + prevAct + " to " + currentAct);
+ 			if(!fadeOut)
+ 				fadeOutActive();
+
  			setClip(currentAct, "standby");
  			fadeInStandby();
  		}
