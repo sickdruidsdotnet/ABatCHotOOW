@@ -192,12 +192,12 @@ public class SignPost : MonoBehaviour {
 		if (nameText.text == "Amelia") {
 			//Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
-			Debug.Log ("Amelia Speaking");
+//			Debug.Log ("Amelia Speaking");
 			uiPortraitSprite.sprite = portraits [0];
 			nameRect.anchoredPosition = new Vector2 (-271.7f, -144.4f);
 			portraitRect.anchoredPosition = new Vector2 (-440.1f, -135.8f);
 		} else if (nameText.text == "Ignatius") {
-			Debug.Log ("Ig Speaking");
+			//Debug.Log ("Ig Speaking");
 			uiPortraitSprite.sprite = portraits [1];
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);

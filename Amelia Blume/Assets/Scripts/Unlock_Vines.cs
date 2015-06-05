@@ -13,6 +13,8 @@ public class Unlock_Vines : MonoBehaviour {
 	void Start () {
 		sign = GetComponent<SignPost> ();
 		amelia = GameObject.FindGameObjectWithTag ("Player").GetComponent<Player> ();
+		amelia.vineUnlocked = true;
+		amelia.vineUnlocked = false;
 	}
 	
 	// Update is called once per frame
@@ -22,8 +24,9 @@ public class Unlock_Vines : MonoBehaviour {
 			if(!sign.beingRead)
 			{
 				amelia.vineUnlocked = true;
-				Destroy (vseed);
-				transform.Translate(new Vector3(0,0, 6));
+				if(vseed != null)
+					Destroy (vseed);
+				//transform.Translate(new Vector3(0,0, 6));
 				hasStartedReading = false;
 			}
 		} else {
