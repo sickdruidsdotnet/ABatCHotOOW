@@ -98,6 +98,11 @@ ModelImporter:
     100184: treetop.003
     100186: treetop.004
     100188: trunk
+    100190: Beard
+    100192: Cube.001
+    100194: Cylinder
+    100196: Mustache
+    100198: Robe
     400000: BezierCurve
     400002: Camera
     400004: chest
@@ -193,6 +198,11 @@ ModelImporter:
     400184: treetop.003
     400186: treetop.004
     400188: trunk
+    400190: Beard
+    400192: Cube.001
+    400194: Cylinder
+    400196: Mustache
+    400198: Robe
     2300000: BezierCurve
     2300002: Cube
     2300004: root.000
@@ -210,6 +220,11 @@ ModelImporter:
     2300028: treetop.003
     2300030: treetop.004
     2300032: trunk
+    2300034: Beard
+    2300036: Cube.001
+    2300038: Cylinder
+    2300040: Mustache
+    2300042: Robe
     3300000: BezierCurve
     3300002: Cube
     3300004: root.000
@@ -227,6 +242,11 @@ ModelImporter:
     3300028: treetop.003
     3300030: treetop.004
     3300032: trunk
+    3300034: Beard
+    3300036: Cube.001
+    3300038: Cylinder
+    3300040: Mustache
+    3300042: Robe
     4300000: python_hotw_makehuman-low_poly
     4300002: python_hotw_makehuman-proxy741
     4300004: Cube
@@ -244,7 +264,12 @@ ModelImporter:
     4300028: treetop.004
     4300030: treetop.000
     4300032: treetop.001
+    4300034: Cylinder
     4300036: root.007
+    4300038: Cube.001
+    4300040: Robe
+    4300042: Beard
+    4300044: Mustache
     9500000: //RootNode
     13700000: python_hotw_makehuman-low_poly
     13700002: python_hotw_makehuman-proxy741
