@@ -129,8 +129,8 @@ Sounds like the boar has found me again. It seems to be far away, so unlike last
 Amelia! The fire that Ignatius has unleashed is encroaching on us. Take shelter in the cave behind you! [[4-2 Ashes b]]
 
 
-:: 5-1
-
+:: 5-1 Fungus a [Creature]
+Insert evil monologue [[5-1 Fungus b]]
 
 
 :: 1-1 tutorial vine convert [Amelia]
@@ -173,6 +173,10 @@ Ignatius! What happened here? The infection only makes the host go insane, and i
 ...!
 
 
+:: 5-1 Fungus b [Amelia]
+Cool story bro. Is it time for me to kill you yet? [[5-1 Fungus c]]
+
+
 :: 1-1 tutorial acorn [Amelia]
 That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
 
@@ -197,6 +201,10 @@ It looks like Ignatius has already passed through here. This area is empty save 
 This creature was in agony and barely clinging on to its life with every wheezing breath. The infection grows stronger and more resistant. We must purge this land of this vile disease! [[3-3 River Guardian c]]
 
 
+:: 5-1 Fungus c [Creature]
+If you must. But know that my kind will always return, it is inevitable. Your kind will eventually tire, and fall to our will. You always do. [[5-1 Fungus d]]
+
+
 :: 1-1 tutorial water [Amelia]
 There's an acorn in the soil here... I could conjure some water (B Button) to wet the soil and then shine sunlight upon it (Y Button) once it sprouts. Once it grows tall enough, I should be able to climb its limbs.
 
@@ -215,6 +223,10 @@ The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2
 
 :: 3-3 River Guardian c [Amelia]
 We came here to help, not to destroy this once great wood and kill all its inhabitants! Stop! [[3-3 River Guardian d]]
+
+
+:: 5-1 Fungus d [Amelia]
+IT'S CLOBBERIN' TIME
 
 
 :: 1-1 Meeting Ignatius e [Amelia]
