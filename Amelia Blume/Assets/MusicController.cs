@@ -181,6 +181,9 @@ public class MusicController : MonoBehaviour {
 
  		if(currentAct != prevAct) {
  		//	Debug.Log("Act change. " + prevAct + " to " + currentAct);
+ 			if(!fadeOut)
+ 				fadeOutActive();
+
  			setClip(currentAct, "standby");
  			fadeInStandby();
  		}
