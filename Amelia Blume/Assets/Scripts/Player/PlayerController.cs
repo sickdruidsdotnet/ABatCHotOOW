@@ -56,6 +56,10 @@ public class PlayerController : BaseBehavior {
 
 	public AudioClip damageSound;
 	private AudioSource source;
+	public float volLowRange = 0.1F;
+	public float volHighRange = 0.2F;
+	public float lowPitchRange = 0.7F;
+    public float highPitchRange = 1.0F;
 	
     void Start()
     {
@@ -475,8 +479,7 @@ public class PlayerController : BaseBehavior {
 	public void damagePlayer(int damageValue, int hitDirection = 0)
 	{
 		if (!invulnerable) {
-			Debug.Log("play damage damageSound");
-			source.PlayOneShot(damageSound, 1.0F);
+			playDamageSound();
 			if(hitDirection == 0)
 			{
 				hitDirection = faceDirection;
@@ -491,5 +494,11 @@ public class PlayerController : BaseBehavior {
 			invulCounter = 75;
 			gameObject.GetComponent<Player> ().ReduceHealth (damageValue);
 		}
+	}
+
+	void playDamageSound(){
+		float vol = UnityEngine.Random.Range (volLowRange, volHighRange);
+		source.pitch = UnityEngine.Random.Range(lowPitchRange, highPitchRange);
+		source.PlayOneShot(damageSound, vol);
 	}
 }
