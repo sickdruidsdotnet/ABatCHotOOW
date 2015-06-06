@@ -91,7 +91,7 @@ public class MusicController : MonoBehaviour {
 	void fadeOutAudio(AudioSource audio) {
     	if(audio.volume > 0.0)
     	{
-        	audio.volume -= (float)0.5 * Time.deltaTime;
+        	audio.volume -= (float)0.4 * Time.deltaTime;
     	}
     	else 
     	{
@@ -157,6 +157,21 @@ public class MusicController : MonoBehaviour {
 					break;
 				case "ActV":
 					setClip(act5, clipType);
+					break;
+				case "Cutscene1":
+					setClip(cut1, clipType);
+					break;
+				case "Cutscene2":
+					setClip(cut2, clipType);
+					break;
+				case "Cutscene3":
+					setClip(cut3, clipType);
+					break;
+				case "Cutscene4":
+					setClip(cut4, clipType);
+					break;
+				case "Cutscene5":
+					setClip(cut5, clipType);
 					break;
 				default:
 					setClip(act1, clipType);
