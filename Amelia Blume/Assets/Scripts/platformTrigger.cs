@@ -46,6 +46,10 @@ public class platformTrigger : MonoBehaviour {
 		if (other.tag == "Player") {
 			playerColliding = true;
 		}
+		if (platParent == null)
+		{
+			platParent = transform.parent;
+		}
 		if (other == null){Debug.Log("platformTrigger \"other\" is null.");}
 		if (platParent == null){Debug.Log("platformTrigger \"platParent\" is null.");}
 		if (platParent.collider == null){Debug.Log("platformTrigger \"platParent.collider\" is null.");}
@@ -57,6 +61,11 @@ public class platformTrigger : MonoBehaviour {
 		if (other.tag == "Player") {
 			playerColliding = false;
 		}
+		if (platParent == null)
+		{
+			platParent = transform.parent;
+		}
+		
 		Physics.IgnoreCollision (other, platParent.collider, false);
 	}
 }
