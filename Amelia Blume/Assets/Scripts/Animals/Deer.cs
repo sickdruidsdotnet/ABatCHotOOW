@@ -48,7 +48,7 @@ public class Deer : Animal
 		sporeLoc = new Vector3 (-1.5f, 1.5f, 0f);
 
 		if (!isInfected) {
-			BroadcastMessage ("clearInfection");
+			BroadcastMessage ("clearInfection", SendMessageOptions.DontRequireReceiver);
 		}
 
 		//get the player to easily work with
