@@ -20,6 +20,10 @@ public class BoarEventsPart2 : MonoBehaviour {
 	SignPost sign;
 
 	public GameObject invisibleWall;
+	public GameObject invisWallLeft;
+	public GameObject panLimiterLeft;
+	Vector3 pllOrigPos;
+	Vector3 iwlOrigPos;
 	Vector3 invisPos;
 	public GameObject panLimiter;
 	Vector3 panPos;
@@ -62,6 +66,9 @@ public class BoarEventsPart2 : MonoBehaviour {
 		invisPos = invisibleWall.transform.position;
 		panPos = panLimiter.transform.position;
 		sign = gameObject.GetComponent<SignPost>();
+
+		iwlOrigPos = invisWallLeft.transform.position;
+		pllOrigPos = panLimiterLeft.transform.position;
 	}
 
 	/*void Update(){
@@ -115,6 +122,9 @@ public class BoarEventsPart2 : MonoBehaviour {
 		E1Started = true;
 		//lock the player because it's a cutscene
 		player.gameObject.GetComponent<PlayerController> ().canControl = false;
+		//move limiting wall and limiter back into place
+		panLimiterLeft.transform.position = new Vector3 (18.22f, 2.16f, 0);
+		invisWallLeft.transform.position = new Vector3(18f, 2.16f, 0);
 		StartCoroutine(RumbleInterval (0.15f, 0.7f, 3));
 	}
 
@@ -127,19 +137,25 @@ public class BoarEventsPart2 : MonoBehaviour {
 	public void Event3(){
 		E3Started = true;
 		//Debug.Log ("Spawning Boar");
+		invisWallLeft.transform.position = iwlOrigPos;
+		invisibleWall.transform.position = new Vector3 (invisPos.x, invisPos.y, -10f);
+		panLimiter.transform.position = new Vector3 (-20f, panPos.y, panPos.z);
 		activeBoar = BoarSpawner.SpawnBoar();
+
 		E3Done = true;
 	}
 
 	public void Event4(){
-		invisibleWall.transform.position = new Vector3 (invisPos.x, invisPos.y, -10f);
-		panLimiter.transform.position = new Vector3 (-20f, panPos.y, panPos.z);
+		//invisibleWall.transform.position = new Vector3 (invisPos.x, invisPos.y, -10f);
+		//panLimiter.transform.position = new Vector3 (-20f, panPos.y, panPos.z);
 	}
 
 	public void Reset()
 	{
 		invisibleWall.transform.position = invisPos;
 		panLimiter.transform.position = panPos;
+		panLimiterLeft.transform.position = pllOrigPos;
+		invisWallLeft.transform.position = iwlOrigPos;
 		E1Started = false;
 		E1Done = false;
 		E2Started = false;
