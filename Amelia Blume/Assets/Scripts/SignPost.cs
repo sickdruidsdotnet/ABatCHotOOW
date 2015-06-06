@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SignPost : MonoBehaviour {
 	public bool stillWritingCurrentPassage = false;
-	private int maxCharCount = 150;
+	private int maxCharCount = 145;
 	public bool continueCurrentPassage = false;
 	int wordsIndex = 0;
 	GameObject player;
@@ -156,7 +156,6 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-
 		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
@@ -177,9 +176,8 @@ public class SignPost : MonoBehaviour {
 
 		} else {
 			//Debug.Log ("Cutscene");
-			uiPortraitSprite.sprite = portraits [0];
 			nameText.enabled = uiText.enabled;
-			uiPortraitSprite.enabled = true;
+			uiPortraitSprite.enabled = uiText.enabled;
 		}
 		//Debug.Log ("NAME: " + nameText.enabled);
 		//Debug.Log ("PORTRAIT: " + uiPortraitSprite.enabled);
@@ -215,19 +213,21 @@ public class SignPost : MonoBehaviour {
 			//		uiPortraitSprite.enabled = true;
 					//personSpeaking = true;
 			//}else{
-				personSpeaking = false;
-				uiPortraitSprite.enabled = false;
+			personSpeaking = false;
+			uiPortraitSprite.enabled = false;
+			nameText.enabled = false;
 			//}
 		}
-
 	}
 
 	public void Read(){
-
 		doneReading = false;
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
+				//if(inCutscene)
+					//beingRead = false;
+				return;
 			}else{
 				pageFlipSound();			
 
@@ -236,6 +236,7 @@ public class SignPost : MonoBehaviour {
 					if(inCutscene)
 						BroadcastMessage("NextEvent", SendMessageOptions.DontRequireReceiver);
 					beingRead = false;
+					doneReading = true;
 					uiText.enabled = false;
 					nextPassage = startingPassage;
 					currentPassage = "";
@@ -255,6 +256,7 @@ public class SignPost : MonoBehaviour {
 		else {
 			pageFlipSound();
 		}
+
 		//	Debug.Log ("reading");
 		if (!beingRead) {
 			wordsIndex = -1;
@@ -316,6 +318,7 @@ public class SignPost : MonoBehaviour {
 				while(keepWriting){
 					if(sentenceIndex > sentence.Length-1){
 						keepWriting = false;
+						//stillWritingCurrentPassage = false;
 						return;
 					}
 					textDisplay += sentence [sentenceIndex];
@@ -331,6 +334,7 @@ public class SignPost : MonoBehaviour {
 						sentenceIndex++;
 					}else{
 						keepWriting = false;
+						//stillWritingCurrentPassage = false;
 					}
 
 				}
@@ -361,7 +365,7 @@ public class SignPost : MonoBehaviour {
 				//Debug.Log(textDisplay.Length);
 				if(textDisplay.Length > maxCharCount){
 					if(sentence [sentenceIndex] == '.' || sentence [sentenceIndex] == ' '){
-						Debug.Log ("Stop Here");
+						//Debug.Log ("Stop Here");
 						continueCurrentPassage = true;
 					}
 				}

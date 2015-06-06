@@ -24,16 +24,20 @@ public class Owl : Animal {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		hitCoolDown--;
-		//from = player.transform.position - this.transform.position;
-		//angle = (Vector3.Angle(to, from));
-		distance = (Vector3.Distance(player.transform.position, this.transform.position));
-		//Debug.DrawLine(to, from, Color.red,100f,false);
-		if (!isRestrained) {
-			if (distance < fieldOfView)
-				ChasePlayer ();
-			else 
-				ReturnToPerch ();
+		if (isInfected) {
+			hitCoolDown--;
+			//from = player.transform.position - this.transform.position;
+			//angle = (Vector3.Angle(to, from));
+			distance = (Vector3.Distance (player.transform.position, this.transform.position));
+			//Debug.DrawLine(to, from, Color.red,100f,false);
+			if (!isRestrained) {
+				if (distance < fieldOfView && hitCoolDown < 0)
+					ChasePlayer ();
+				else 
+					ReturnToPerch ();
+			}
+		} else {
+			FlyOffScreen();
 		}
 	}
 
@@ -87,7 +91,10 @@ public class Owl : Animal {
 			}
 		}
 	}
-	
+
+	void FlyOffScreen(){
+		this.transform.Translate (0f, 0.1f, 0f);
+	}
 
 
 

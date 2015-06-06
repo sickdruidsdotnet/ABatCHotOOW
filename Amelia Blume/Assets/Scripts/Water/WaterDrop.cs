@@ -36,18 +36,18 @@ public class WaterDrop : MonoBehaviour {
 			this.transform.localScale += new Vector3 (0.005f, 0.005f, 0.005f);
 		} else {
 			if(myColor.r < 0.5567f){
-				red += 0.01f;
+				red += 0.03f;
 			}
 			if(myColor.g > 0.2784f){
-				green -= 0.01f;
+				green -= 0.06f;
 			}
 			if(myColor.b > 0.1765f){
-				blue -= 0.01f;
+				blue -= 0.06f;
 			}
 			myMaterial.color = new Vector4(red,green,blue,1.0f);
 		}
 
-		if (Time.time - startTime > 10f) {
+		if (Time.time - startTime > 30f) {
 			//Debug.Log ("Destroy");
 			Destroy(this.gameObject);
 		}
