@@ -96,6 +96,14 @@ A large buck stands ahead of you, staring blankly into the distance. It seems to
 A: If it becomes necessary, I should restrain the animal with
 
 
+:: 2-5 Forest Guardian
+The forest guardian lies before you, slouching over and using his staff for support. His wheezing indicates that he too has been infected. [[2-5 Forest Guardian a]]
+
+
+:: 3-5 Heart [Amelia]
+The forest guardian was diseased as well. It appears this accursed infection is not limited to just the forest's animals. [[3-5 Heart a]]
+
+
 :: 3-1
 AMELIA approaches to find that there are now mushroom caps and fungi around THE HEART’s sanctuary. However, IGNATIUS's magic seems to have shielded THE HEART from the fungus, for now (maybe some sort of glowy effect to indicate a magical aura?)
 AMELIA enters the uninfected zone surrounding THE HEART and IGNATIUS, and tells them of FOREST GUARDIAN’s fate
@@ -156,6 +164,14 @@ AMELIA wonders aloud what could have caused this. It’s important to note that 
 AMELIA realizes she needs to return to the Heart, for it is not safe.
 
 
+:: 2-5 Forest Guardian a [Amelia]
+Oh no... Great guardian, what terrible fate has befallen you? [[2-5 Forest Guardian b]]
+
+
+:: 3-5 Heart a [Ignatius]
+This is troubling news. If higher beings are affected then all the protectors of this land are at risk.[[3-5 Heart b]]
+
+
 :: 3-2 What Was That [Amelia]
 That sounded big...
 
@@ -193,6 +209,14 @@ Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ign
 The old man gives no sign that he heard you, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
 
 
+:: 2-5 Forest Guardian b
+The guardian does not acknowledge you, and only continues his exhausted exhales. His gaze is distant and empty. [[2-5 Forest Guardian c]]
+
+
+:: 3-5 Heart b [Ignatius]
+The River Guardian would be our next priority. Should it fall under this vile infestation, the entire forest's water will become rancid with it, and it will spread. [[3-5 Heart c]]
+
+
 :: 3-2 Examine Ig Vines [Amelia]
 It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
 
@@ -221,6 +245,14 @@ The same thing that surely brings you here, Archdruid. A dark presence lurks ove
 The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2 Audience e]]
 
 
+:: 2-5 Forest Guardian c [Amelia]
+...
+
+
+:: 3-5 Heart c [Ignatius]
+I will scout the path ahead; you wait here a moment to get your bearings, then join me on the path to the guardian's sanctuary. [[3-5 Heart d]]
+
+
 :: 3-3 River Guardian c [Amelia]
 We came here to help, not to destroy this once great wood and kill all its inhabitants! Stop! [[3-3 River Guardian d]]
 
@@ -235,6 +267,10 @@ There is a great sickness here, yes, and it is only growing. I seek now to make 
 
 :: 1-2 Audience e
 The Heart of the Woods lets out a long wheeze, though you're not certain if it was an attempt at speech.[[1-2 Audience f]]
+
+
+:: 3-5 Heart d
+Ignatius runs out of your sight as Amelia takes a moment to investigate the heart, whose condition has only worsened since your last encounter.
 
 
 :: 3-3 River Guardian d
