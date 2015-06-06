@@ -124,6 +124,7 @@ public class BoarEventsPart1 : MonoBehaviour {
 	public void Event2(){
 		mainCamera.Rumble(0.15f);
 		activeBoar = BoarSpawner.SpawnBoar();
+		player.gameObject.GetComponent<PlayerController> ().canControl = false;
 		waitingForBreakout = true;
 		E2Done = true;
 	}
