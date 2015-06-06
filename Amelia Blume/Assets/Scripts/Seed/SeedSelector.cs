@@ -18,6 +18,8 @@ public class SeedSelector : MonoBehaviour {
 	float horizontal2;
 	float vertical2;
 
+	bool anyUnlocked;
+
 	void Start(){
 		player = GameObject.FindGameObjectWithTag ("Player");
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
@@ -30,10 +32,13 @@ public class SeedSelector : MonoBehaviour {
 			renderer.enabled = false;
 		direction = "Up";
 		prevDirection = "Up";
+
+		anyUnlocked = playerStats.vineUnlocked || playerStats.treeUnlocked || playerStats.fluerUnlocked;
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () {
+		anyUnlocked = playerStats.vineUnlocked || playerStats.treeUnlocked || playerStats.fluerUnlocked;
 
 		transform.position = new Vector3 (player.transform.position.x,
 		                                  player.transform.position.y + 3f,
@@ -176,6 +181,11 @@ public class SeedSelector : MonoBehaviour {
 		} else {
 			foreach(Renderer renderer in childRenderers)
 				renderer.enabled = false;
+		}
+
+		if (!anyUnlocked) {
+			//unrender ball
+			stickImage.renderer.enabled = false;
 		}
 	}
 

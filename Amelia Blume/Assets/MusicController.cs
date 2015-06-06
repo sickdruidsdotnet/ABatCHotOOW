@@ -15,6 +15,7 @@ public class MusicController : MonoBehaviour {
 	public AudioClip cut5;
 
 	AudioSource[] sources;
+	AudioSource[] allSources;
 	// We need two audio sources in order to cross fade
 	AudioSource activeSource;
 	AudioSource standbySource;
@@ -27,18 +28,21 @@ public class MusicController : MonoBehaviour {
 	string prevLevel = "Act0-Nothing";
 	string prevAct = "Act0";
 
+	float max_vol = 0.2F;
+
 	// Use this for initialization
 	void Start () {
 		//Debug.Log("MusicController Start called");
 		sources = this.GetComponents<AudioSource> ();
+		allSources = GameObject.FindSceneObjectsOfType(typeof(AudioSource)) as AudioSource[];
 		
 		activeSource = sources[0];
 		activeSource.loop = true;
-		activeSource.volume = (float)0.0;
+		activeSource.volume = 0.0F;
 
 		standbySource = sources[1];
 		standbySource.loop = true;
-		standbySource.volume = (float)0.0;
+		standbySource.volume = 0.0F;
 
 		currentLevel = Application.loadedLevelName;
  		currentAct = extractAct(currentLevel);
@@ -71,6 +75,17 @@ public class MusicController : MonoBehaviour {
 
 		}
 
+		  // When a key is pressed list all the gameobjects that are playing an audio
+        if(Input.GetKeyUp(KeyCode.L))
+        { 
+        	foreach(AudioSource audioSource in allSources)
+            {
+                if(audioSource.isPlaying) Debug.Log(audioSource.name+" is playing "+audioSource.clip.name);
+            }
+            Debug.Log("---------------------------"); //to avoid confusion next time
+            Debug.Break(); //pause the editor     
+        }
+
 	}
 
 	void fadeOutAudio(AudioSource audio) {
@@ -94,7 +109,7 @@ public class MusicController : MonoBehaviour {
 		if(!audio.isPlaying)
 			audio.Play();
 
-    	if(audio.volume < 1.0)
+    	if(audio.volume < max_vol)
     	{
         	audio.volume += (float)0.1 * Time.deltaTime;	
     	}
@@ -166,6 +181,9 @@ public class MusicController : MonoBehaviour {
 
  		if(currentAct != prevAct) {
  		//	Debug.Log("Act change. " + prevAct + " to " + currentAct);
+ 			if(!fadeOut)
+ 				fadeOutActive();
+
  			setClip(currentAct, "standby");
  			fadeInStandby();
  		}

@@ -60,10 +60,16 @@ public class SceneManager : MonoBehaviour {
 
 	void MoveCharacter(){
 		Vector3 targetPos;
-		if(currChar == ig)
-			targetPos = new Vector3(events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
-		else
+		if (currChar == ig) {
+			targetPos = new Vector3 (events [index].transform.position.x, currChar.transform.position.y, currChar.transform.position.z);
+			if(targetPos.x > currChar.transform.position.x){
+				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
+			}else{
+				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
+			}
+		} else {
 			targetPos = events [index].transform.position;
+		}
 		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
 			//if(Time.time > nextUse){
 //				Debug.Log ("Moving");
@@ -104,12 +110,12 @@ public class SceneManager : MonoBehaviour {
 		if (index < events.Count) {
 			switch (events [index].tag) {
 			case "Amelia":
-				//Debug.Log ("Amelia Move");
+				Debug.Log ("Amelia Move");
 				currChar = amelia;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", true);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", true);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//MoveCharacter();
 				//NextEvent ();
 				break;
@@ -119,15 +125,15 @@ public class SceneManager : MonoBehaviour {
 				currChar = ig;
 				moving = true;
 				player.SetReadSign (false);
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", true);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", true);}
 				//MoveCharacter();
 				//NextEvent ();
 				break;
 		
 			case "Text":
-				ameliaAnimator.SetBool ("isRunning", false);
-				igAnimator.SetBool ("isRunning", false);
+				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+				if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 				//Debug.Log ("Text");
 				StartReading ();
 				//NextEvent ();
@@ -151,8 +157,8 @@ public class SceneManager : MonoBehaviour {
 		} else {
 			//Fade to Black?
 			//Load Next Scene
-			ameliaAnimator.SetBool ("isRunning", false);
-			igAnimator.SetBool ("isRunning", false);
+			if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
+			if (igAnimator != null){igAnimator.SetBool ("isRunning", false);}
 			GameController.BeginSceneTransition(LevelToLoad);
 		};
 	}

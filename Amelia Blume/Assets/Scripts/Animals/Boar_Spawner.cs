@@ -29,7 +29,7 @@ public class Boar_Spawner : MonoBehaviour {
 					boarSpawned = false;
 					spawner.GetComponent<Boar_Spawner> ().boarSpawned = false;
 					mainCamera.BroadcastMessage("recalculateTrackables");
-					GameObject.Find ("Boar Event Spawner").BroadcastMessage("Reset");
+					GameObject.Find ("Boar Event Handler").BroadcastMessage("Reset");
 
 				}
 			}
@@ -41,7 +41,7 @@ public class Boar_Spawner : MonoBehaviour {
 		if(!boarSpawned)
 		{
 			boarSpawned = true;
-			activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 18f, transform.position.y, 0), 
+			activeBoar = Instantiate(boarPrefab, new Vector3( transform.position.x - 18f, transform.position.y + 3, 0), 
 			                         boarPrefab.transform.rotation) as GameObject;
 			activeBoar = GameObject.Find ("Boar(Clone)");
 			despawner.GetComponent<Boar_Spawner>().LoadBoar();

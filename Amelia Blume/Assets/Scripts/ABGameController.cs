@@ -80,9 +80,7 @@ public class ABGameController : MonoBehaviour {
 
 		//Music Controller for controlling music
 		activeMC = Instantiate (musicController, musicController.transform.position, Quaternion.identity) as MusicController;
-		//activeMC = musicController;
 		activeMC.name = "Music Controller";
-		//activeMC.GetComponent<Script> ()
 		
 		//set as children so they aren't destroyed
 		activeIH.transform.SetParent (transform);
@@ -99,20 +97,28 @@ public class ABGameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.LeftBracket)) {
-			if(Application.loadedLevel > 0)
-			{
-				BeginSceneTransition(Application.loadedLevel - 1);
+		//debug keys
+		if (Debug.isDebugBuild) {
+			//scene transitions using [ and ]
+			if (Input.GetKeyDown (KeyCode.LeftBracket)) {
+				if (Application.loadedLevel > 0) {
+					BeginSceneTransition (Application.loadedLevel - 1);
+				} else {
+					Debug.Log ("Cannot go to a level before main menu");
+				}
 			}
-			else{
-				Debug.Log("Cannot go to a level before main menu");
+			if (Input.GetKeyDown (KeyCode.RightBracket)) {
+				if (Application.loadedLevel < 8) {
+					BeginSceneTransition (Application.loadedLevel + 1);
+				} else {
+					Debug.Log ("Cannot go to a level after the final one in the build");
+				}
 			}
-		}
-		if (Input.GetKeyDown (KeyCode.RightBracket)) {
-			if (Application.loadedLevel < 8) {
-				BeginSceneTransition (Application.loadedLevel + 1);
-			} else {
-				Debug.Log ("Cannot go to a level after the final one in the build");
+
+			//unlock all levels on mainMenu, keypad 5
+			if(Input.GetKeyDown(KeyCode.Keypad5)){
+				Debug.Log ("Unlocking all levels to 10");
+				PlayerPrefs.SetInt("Highest Stage", 10);
 			}
 		}
 

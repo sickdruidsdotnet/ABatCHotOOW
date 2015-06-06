@@ -39,8 +39,8 @@ public class Seed : MonoBehaviour
 	void Start()
 	{
 		seedHealth = 120;
-		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<SphereCollider>(), true);
-		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<SphereCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider> (), transform.GetComponent<CapsuleCollider>(), true);
+		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController> (), transform.GetComponent<CapsuleCollider>(), true);
 		gameObject.GetComponentInChildren<SpriteRenderer> ().enabled = false;
 	}
 

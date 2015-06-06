@@ -25,7 +25,7 @@ public class WaterParticles : MonoBehaviour {
 			playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();	
 		}
 		rightTrigger = playerInput.water;
-		if (rightTrigger && coolDown > 10 && !player.CUTSCENE)
+		if (rightTrigger && coolDown > 10 && !player.CUTSCENE && player.gameObject.GetComponent<PlayerController>().watering)
 		{
 			StartWater ();
 			coolDown = 0;

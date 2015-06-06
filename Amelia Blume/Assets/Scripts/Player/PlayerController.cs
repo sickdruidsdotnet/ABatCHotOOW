@@ -48,15 +48,22 @@ public class PlayerController : BaseBehavior {
 	public GameObject[] blossoms;
 	public Vector3[] blossomPositions;
 	public Quaternion[] blossomRotations;
-
+	
 	public GameObject[] activeSeeds;
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
+
+	public AudioClip damageSound;
+	private AudioSource source;
+	public float volLowRange = 0.1F;
+	public float volHighRange = 0.2F;
+	public float lowPitchRange = 0.7F;
+    public float highPitchRange = 1.0F;
 	
     void Start()
     {
-//		Debug.Log (Input.GetJoystickNames()[0]);
+		//Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
 		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
 		if (playerInputObj != null) {
@@ -66,8 +73,7 @@ public class PlayerController : BaseBehavior {
 		blossoms = GameObject.FindGameObjectsWithTag("Blossom");
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
-		int i = 0;
-		foreach (GameObject child in blossoms) 
+		for(int i = 0; i < blossoms.Length; i++)
 		{
 			blossomMover tempBlossom = blossoms[i].GetComponent<blossomMover>();
 			if(tempBlossom != null)
@@ -108,6 +114,8 @@ public class PlayerController : BaseBehavior {
 		canControl = true;
 		stunTimer = 0;
 		activeSeeds = new GameObject[3];
+
+		source = GetComponent<AudioSource>();
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -149,6 +157,25 @@ public class PlayerController : BaseBehavior {
 			isDashing = false;
 			player.isDashing = false;
 			isAirDashing = false;
+		}
+
+		//check to see if the player can convert
+		GameObject[] animals = GameObject.FindGameObjectsWithTag ("Animal");
+		canConvert = false;
+		conversionTarget = null;
+		foreach(GameObject animal in animals)
+		{
+			float dist = Vector3.Distance(transform.position, animal.transform.position);
+			//change this number to update the distance the player has to be in order to convert animals
+			if (dist <= 4.0f)
+			{
+				Animal aStats = animal.GetComponent<Animal>();
+				if(aStats != null && aStats.isRestrained && aStats.isInfected)
+				{
+					canConvert = true;
+					conversionTarget = animal;
+				}
+			}
 		}
 
         //locking needs to happen last
@@ -253,6 +280,7 @@ public class PlayerController : BaseBehavior {
 
 	protected void HandleActionInput() {
 
+		//changing seeds
 		if (playerInput.primaryInput == "Keyboard") {
 			if (playerInput.firstSeedDown && player.vineUnlocked)
 				player.SetCurrentSeed (Player.SeedType.VineSeed);
@@ -281,28 +309,40 @@ public class PlayerController : BaseBehavior {
 				if (playerInput.jumpDown) {
 					player.SetSpawn (true);
 				}
-			} else {
+			} else if (player.GetReadSign ())
+			{
+				//the player can still read signs even though they can't move
+				if (playerInput.jumpDown) {
+					ReadSign ();
+				}
+
+			}
+			else {
 				return;
 			}
 		}
 
-		if (!player.isSunning () && !player.isConverting () && !player.GetDead () && player.isGrounded) {
-			if (playerInput.jumpDown) {
-				if (player.GetReadSign ())
-					ReadSign ();
-				else {
-					if (!player.CUTSCENE)
-						Jump ();
+		if (!player.isSunning () && !player.isConverting () && !player.GetDead ()) {
+			if(player.isGrounded){
+				if (playerInput.jumpDown) {
+					if (player.GetReadSign ())
+						ReadSign ();
+					else {
+						if (!player.CUTSCENE)
+							Jump ();
+					}
+				}
+				if (playerInput.throwSeedDown && !player.CUTSCENE && canControl) {
+					ThrowSeed ();
 				}
 			}
-			if (playerInput.throwSeedDown && !player.CUTSCENE) {
-				ThrowSeed ();
-			}
-			if (playerInput.dashDown && !player.CUTSCENE) {
+			if (playerInput.dashDown && !player.CUTSCENE && canControl) {
 				Dash ();
 			}
 		}
-		if (playerInput.sunDown && !player.CUTSCENE) {
+		//sunning, cannot sun and water at the same time
+		if (playerInput.sunDown && !player.CUTSCENE && canControl && !watering) {
+			isSunLighting = true;
 			if (canConvert) {
 				AnimalConvert ();
 				player.SetConverting (true);
@@ -314,7 +354,8 @@ public class PlayerController : BaseBehavior {
 		if (playerInput.sunUp) {
 			isSunLighting = false;
 		}
-		if (playerInput.waterDown) {
+		//watering, player cannot water and sun at the same time
+		if (playerInput.waterDown && canControl && !player.isSunning() && !player.isConverting()) {
 			watering = true;
 		} 
 		if (playerInput.waterUp){
@@ -438,6 +479,7 @@ public class PlayerController : BaseBehavior {
 	public void damagePlayer(int damageValue, int hitDirection = 0)
 	{
 		if (!invulnerable) {
+			playDamageSound();
 			if(hitDirection == 0)
 			{
 				hitDirection = faceDirection;
@@ -452,5 +494,11 @@ public class PlayerController : BaseBehavior {
 			invulCounter = 75;
 			gameObject.GetComponent<Player> ().ReduceHealth (damageValue);
 		}
+	}
+
+	void playDamageSound(){
+		float vol = UnityEngine.Random.Range (volLowRange, volHighRange);
+		source.pitch = UnityEngine.Random.Range(lowPitchRange, highPitchRange);
+		source.PlayOneShot(damageSound, vol);
 	}
 }
