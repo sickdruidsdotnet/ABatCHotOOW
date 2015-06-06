@@ -95,10 +95,10 @@ public class PlayerMotor : BaseBehavior {
 
 	public AudioClip dashSound;
 	private AudioSource source;
-	public float volLowRange = 0.5F;
-	public float volHighRange = 0.8F;
-	public float lowPitchRange = 0.7F;
-    public float highPitchRange = 1.0F;
+	public float volLowRange = 0.1F;
+	public float volHighRange = 0.3F;
+	public float lowPitchRange = 0.75F;
+    public float highPitchRange = 1.25F;
 	
 	protected Vector3 pendingInput;
 	
