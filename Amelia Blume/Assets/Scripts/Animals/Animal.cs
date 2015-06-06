@@ -37,15 +37,15 @@ public class Animal : MonoBehaviour
 
     public void Start()
     {
-    	Debug.Log("Start!");
+    	//Debug.Log("Start!");
     	GameObject[] plants = GameObject.FindGameObjectsWithTag("Plant");
     	foreach (GameObject plant in plants)
     	{
-    		Debug.Log("Plants: " + plants.Length);
+    		//Debug.Log("Plants: " + plants.Length);
     		Flower f = plant.GetComponent<Flower>();
     		if (f != null)
     		{
-    			Debug.Log("Found a flower!");
+    			//Debug.Log("Found a flower!");
     			f.getAnimals();
     		}
     	}

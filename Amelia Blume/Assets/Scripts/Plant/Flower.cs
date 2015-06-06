@@ -211,7 +211,7 @@ public class Flower : Plant {
 				}
 				if (Mathf.Abs(animal.transform.position.x - transform.position.x) < sporeRange)
 				{
-					Debug.Log("Animal in range being spored.");
+					//Debug.Log("Animal in range being spored.");
 					animal.GetComponent<Animal>().becomeSpored();
 				}
 			}
@@ -324,7 +324,7 @@ public class Flower : Plant {
     public void getAnimals()
     {
     	animals = GameObject.FindGameObjectsWithTag ("Animal");
-		Debug.Log ("Animals: " + animals.Length);
+		//Debug.Log ("Animals: " + animals.Length);
     }
 
     /*
