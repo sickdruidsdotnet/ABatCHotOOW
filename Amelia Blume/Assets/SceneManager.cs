@@ -17,6 +17,7 @@ public class SceneManager : MonoBehaviour {
 	float nextUse;
 	float delay = 0.3f;
 	bool moving = false;
+	bool runNotWalk = true;
 	bool waitingOnCamera = false;
 	public Animator ameliaAnimator;
 	public Animator igAnimator;
@@ -74,12 +75,9 @@ public class SceneManager : MonoBehaviour {
 			targetPos = events [index].transform.position;
 		}
 		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
-			//if(Time.time > nextUse){
-//				Debug.Log ("Moving");
-				currChar.transform.position = Vector3.MoveTowards (currChar.transform.position, targetPos, 0.1f);
-				//MoveCharacter (currChar);
-				//nextUse = Time.time+delay;
-			//}
+			float moveSpeed = 0.1f;
+			if (!runNotWalk){moveSpeed = 0.025f;}
+			currChar.transform.position = Vector3.MoveTowards (currChar.transform.position, targetPos, moveSpeed);
 		} else {
 			moving = false;
 			NextEvent();
@@ -114,21 +112,51 @@ public class SceneManager : MonoBehaviour {
 			switch (events [index].tag) {
 			case "Amelia":
 				Debug.Log ("Amelia Move");
+				MoveEvent ameliaMoveEventScript = events[index].GetComponent<MoveEvent>();
 				currChar = amelia;
 				moving = true;
+				if (ameliaMoveEventScript != null){runNotWalk = ameliaMoveEventScript.run;}
+				else{runNotWalk = true;}
 				player.SetReadSign (false);
-				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", true);}
-				if (igAnimator != null){igAnimator.SetBool ("isWalking", false);}
+				if (ameliaAnimator != null )
+				{
+					if(runNotWalk){ameliaAnimator.SetBool ("isRunning", true);}
+					else{Debug.Log("Amelia doesn't have a walk animation!"); Debug.Break();}
+				}
+				if (igAnimator != null)
+				{
+					
+					igAnimator.SetBool ("isRunning", false);
+					igAnimator.SetBool ("isWalking", false);
+					
+				}
 				break;
 		
 			case "Ig":
 				Debug.Log ("Ig Move");
+				MoveEvent igMoveEventScript = events[index].GetComponent<MoveEvent>();
 				currChar = ig;
 				moving = true;
+				if (igMoveEventScript != null){runNotWalk = igMoveEventScript.run;}
+				else{runNotWalk = true;}
 				player.SetReadSign (false);
-				if (ameliaAnimator != null){ameliaAnimator.SetBool ("isRunning", false);}
-				if (igAnimator != null){igAnimator.SetBool ("isWalking", true);}
-				else {Debug.Log("NULL");}
+				if (ameliaAnimator != null )
+				{
+					ameliaAnimator.SetBool ("isRunning", false);
+				}
+				if (igAnimator != null)
+				{
+					if(runNotWalk)
+					{
+						igAnimator.SetBool ("isRunning", true);
+						igAnimator.SetBool ("isWalking", false);
+					}
+					else
+					{
+						igAnimator.SetBool ("isRunning", false);
+						igAnimator.SetBool ("isWalking", true);
+					}
+				}
 				break;
 		
 			case "Text":
