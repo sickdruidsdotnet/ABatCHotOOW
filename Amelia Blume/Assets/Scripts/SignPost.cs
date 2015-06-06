@@ -104,10 +104,8 @@ public class SignPost : MonoBehaviour {
 		nameText.enabled = false;
 		nameRect = nameObj.GetComponent<RectTransform> ();
 
-		//source = this.GetComponent<AudioSource> ();	
 		source = gameObject.AddComponent<AudioSource>();
 		
-		//pageSound1 = Resources.Load<AudioClip>("Audio/Effects/Text/scrollingpageflip_0_edit");
 		pageSound1 = Resources.Load("scrollingpageflip_0_edit") as AudioClip;
 		pageSound2 = Resources.Load("scrollingpageflip_1_edit") as AudioClip;
 		pageSound3 = Resources.Load("scrollingpageflip_5_edit") as AudioClip;
@@ -230,7 +228,6 @@ public class SignPost : MonoBehaviour {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
-				Debug.Log("play page flip sound 1");
 				pageFlipSound();			
 
 				if(!cutSceneStart){
@@ -255,7 +252,6 @@ public class SignPost : MonoBehaviour {
 			return;
 		}
 		else {
-			Debug.Log("play page flip sound 2");
 			pageFlipSound();
 		}
 		//	Debug.Log ("reading");
