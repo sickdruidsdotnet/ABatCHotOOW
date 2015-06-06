@@ -37,6 +37,7 @@ public class FireSpawner : MonoBehaviour
 		vol = density*0.02F;
 		source.volume = vol;
 		//source.volume = 0.5F;
+		source.time = Random.Range(0, fireSound.length);
 		source.Play();
 	}
 
