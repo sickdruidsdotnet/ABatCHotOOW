@@ -53,10 +53,13 @@ public class PlayerController : BaseBehavior {
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
+
+	public AudioClip damageSound;
+	private AudioSource source;
 	
     void Start()
     {
-//		Debug.Log (Input.GetJoystickNames()[0]);
+		//Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
 		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
 		if (playerInputObj != null) {
@@ -107,6 +110,8 @@ public class PlayerController : BaseBehavior {
 		canControl = true;
 		stunTimer = 0;
 		activeSeeds = new GameObject[3];
+
+		source = GetComponent<AudioSource>();
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -470,6 +475,8 @@ public class PlayerController : BaseBehavior {
 	public void damagePlayer(int damageValue, int hitDirection = 0)
 	{
 		if (!invulnerable) {
+			Debug.Log("play damage damageSound");
+			source.PlayOneShot(damageSound, 1.0F);
 			if(hitDirection == 0)
 			{
 				hitDirection = faceDirection;
