@@ -79,70 +79,71 @@ This gap is too wide to jump over without falling into that bramble patch. I can
 
 
 :: 1-1 mushroom examination a
-A crimson mushroom cap lies at your feet.[[1-1 mushroom examination b]]
+A crimson mushroom cap lies on the ground.[[1-1 mushroom examination b]]
 
 
 :: 1-1 Meeting Ignatius a
-Another druid approaches you. He bears a stern countenance and a staff of charred oak. Worry lines are etched into his face.[[1-1 Meeting Ignatius b]]
+Another druid approaches, bearing a stern countenance and a staff of charred oak. Worry lines are etched into his face.[[1-1 Meeting Ignatius b]]
 
 
 :: 1-2 Audience a
-A single massive oak stands at the center of what would otherwise be a clearing. The Heart of the Woods is seated here on a throne of interwoven vines. He holds a crystal-tipped staff in his ghastly white hand.[[1-2 Audience b]]
+A single massive oak stands at the center of what would otherwise be a clearing. Here presides The Heart of the Woods, bound to the throne of vines he sits on. He holds a birchstaff in his ghastly white hand.[[1-2 Audience b]]
 
 
 :: 2-1 getting vines
 A large buck stands ahead of you, staring blankly into the distance. It seems to be covered in fruiting bodies, a living colony for some kind of fungus.
 
-A: If it becomes necessary, I should restrain the animal with
+
+:: 2-1 Forest Guardian a
+The Forest Guardian is slumped over, a massive beast breathing in long, ragged gasps and weakly clutching a young pine sapling that's been pressed into service as a staff.[[2-1 Forest Guardian b]]
 
 
-:: 2-5 Forest Guardian
-The forest guardian lies before you, slouching over and using his staff for support. His wheezing indicates that he too has been infected. [[2-5 Forest Guardian a]]
+:: 2-2 Dour News a
+Ignatius is hovering over the Heart of the Woods, cycling through a rapid series of hand gestures and chanting in the peculiar magical syntax used by members of the Circle of Ash. He finishes a chant, but continuing to cycle through the gestures.[[2-2 Dour News b]]
 
 
-:: 3-5 Heart [Amelia]
-The forest guardian was diseased as well. It appears this accursed infection is not limited to just the forest's animals. [[3-5 Heart a]]
-
-
-:: 3-1
-AMELIA approaches to find that there are now mushroom caps and fungi around THE HEART’s sanctuary. However, IGNATIUS's magic seems to have shielded THE HEART from the fungus, for now (maybe some sort of glowy effect to indicate a magical aura?)
-AMELIA enters the uninfected zone surrounding THE HEART and IGNATIUS, and tells them of FOREST GUARDIAN’s fate
-IGNATIUS is shocked to hear the news
-HEART OF THE WOODS is saddened, but unsurprised.
-IGNATIUS insists that he and AMELIA must venture out to the RIVER GUARDIAN to seek help, for it is their last hope (for reasons) to defend against the fungus
-THE HEART agrees, and assures AMELIA and IGNATIUS that the magic here will protect it in their absence. Time is of the essence, and the druids must be hasty if the woods are to be saved.
-
-
-:: 3-2 Boar Separation
-
+:: 3-2 What Was That [Amelia]
+That sounded big...
 
 
 :: 3-3 Discovered Flower a [Amelia]
-This flower seems to be giving up a pollen that repels fungus... I may be able to use this to slow down infected animal.[[3-3 Discovered Flower b]]
+The growth of fungus near this flower appears to be inhibited... I may be use this to slow down the corrupted creatures. A slowed creature might have more trouble breaking out of vine bindings.
 
 
-:: 3-3 River Guardian
-You enter the grounds for the protector of the forest's life-giving water only to find a horrible sight. The body of the once great River Guardian lies covered in blood and parasitic fungus.	[[3-3 River Guardian a]]
+:: 3-3 guardian murdered a
+The woods remain eerily silent, but even the sound of rushing water in the distance has gone.[[3-3 guardian murdered b]]
 
 
-:: 3-4 Time to Prepare
-Sounds like the boar has found me again. It seems to be far away, so unlike last time I'm not off-gaurd and can prepare
+:: 3-5 strangled deer
+A deer lies dead here. Wrapped around it are thick vines, covered in inch-long barbs that have torn the skin and muscle from the bones of the creature. A milk-white film covers the creature's eyes, a sharp contrast to the black ichor still pulsing from its wounds.[[3-5 strangled deer b]]
 
 
 :: 4-1 Return to the Heart
+>> fire
 
+ignatius does a slight monologue about how the fire will cleanse and give rebirth
+
+ig: sorry about this, but save yourself and flee
+
+a: the heart of the woods, daowg, i gotta save that old dude
 
 
 :: 4-2 Ashes a [Ignatius]
-Amelia! The fire that Ignatius has unleashed is encroaching on us. Take shelter in the cave behind you! [[4-2 Ashes b]]
+>>indicate that the heart is in pain
+
+heart: the fire is encroaching
+
+a: i'll save you, good sir!
+
+h: leave me, my time is ending. there is still hope for you. there is a cave nearby to take shelter in.
 
 
 :: 5-1 Fungus a [Creature]
 Insert evil monologue [[5-1 Fungus b]]
 
 
-:: 1-1 tutorial vine convert [Amelia]
-If it becomes necessary, I can restrain that deer with vines (Right Thumbstick). I might then be able to cleanse the animal of its infection (Y button).
+:: 1-1 tutorial acorn [Amelia]
+That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
 
 
 :: 1-1 mushroom examination b [Amelia]
@@ -157,32 +158,28 @@ The trees foretold your arrival, Archdruid. It is good to see your face in this 
 Greetings, lord. I am Amélia, an Archdruid come to aid in healing the sickness in your woods.[[1-2 Audience c]]
 
 
-:: 2-1 Forest Guardian
-AMELIA approaches the dying beast. She tries asking what happened, and if she can help
-FOREST GUARDIAN responds only with wheezing or some vague bullshit about a malignant force in the woods, and how it must be cleansed.
-AMELIA wonders aloud what could have caused this. It’s important to note that she has already encountered infected plants and animals, but didn’t think it was possible for this to overcome the power of the FOREST GUARDIAN. 
-AMELIA realizes she needs to return to the Heart, for it is not safe.
+:: 2-1 Forest Guardian b [Amelia]
+Am I too late? Has the illness crept even here to fell you, mighty one?[[2-1 Forest Guardian c]]
 
 
-:: 2-5 Forest Guardian a [Amelia]
-Oh no... Great guardian, what terrible fate has befallen you? [[2-5 Forest Guardian b]]
+:: 2-2 Dour News b [Ignatius]
+Welcome back, Archdruid. What news?[[2-2 Dour News c]]
 
 
-:: 3-5 Heart a [Ignatius]
-This is troubling news. If higher beings are affected then all the protectors of this land are at risk.[[3-5 Heart b]]
+:: 3-2 Examine Ig Vines [Amelia]
+Ignatius must have passed through here recently. This area is empty save for a few scattered fungi and his leftover plants.
 
 
-:: 3-2 What Was That [Amelia]
-That sounded big...
+:: 3-4 Time to Prepare
+There is an unnatural quiet here, as even the occasional sound of birdsong has gone. In the distance there is a faint sound of rushing water.[[3-4 Time to Prepare b]]
 
 
-:: 3-3 Discovered Flower b [Amelia]
-The weakened creature would then take longer to break out of my vines, and would therefore be much easier to rid of the infection.
+:: 3-3 guardian murdered b [action]
+<Ignatius enters.>[[3-3 guardian murdered c]]
 
 
-:: 3-3 River Guardian a [Amelia]
-Ignatius! What happened here? The infection only makes the host go insane, and it would have no reason to kill the host! [[3-3 River Guardian b]]
-
+:: 3-5 strangled deer b [Amelia]
+This... is an old form of botanomancy, meant to sow only sorrow and death.
 
 
 :: 4-2 Ashes b [Amelia]
@@ -193,8 +190,8 @@ Ignatius! What happened here? The infection only makes the host go insane, and i
 Cool story bro. Is it time for me to kill you yet? [[5-1 Fungus c]]
 
 
-:: 1-1 tutorial acorn [Amelia]
-That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
+:: 1-1 tutorial vine convert [Amelia]
+If it becomes necessary, I can restrain that deer with vines (Right Thumbstick). I might then be able to cleanse the animal of its infection (Y button).
 
 
 :: 1-1 examination a
@@ -206,23 +203,23 @@ Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ign
 
 
 :: 1-2 Audience c
-The old man gives no sign that he heard you, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
+The old man gives no sign that he heard, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
 
 
-:: 2-5 Forest Guardian b
-The guardian does not acknowledge you, and only continues his exhausted exhales. His gaze is distant and empty. [[2-5 Forest Guardian c]]
+:: 2-1 Forest Guardian c
+The giant looks up with eyes covered in a milk-white film. It attempts to muster a response, but the only thing to pass its lips are weak breath and several drops of a black ichor that falls to the moss-covered ground.[[2-1 Forest Guardian d]]
 
 
-:: 3-5 Heart b [Ignatius]
-The River Guardian would be our next priority. Should it fall under this vile infestation, the entire forest's water will become rancid with it, and it will spread. [[3-5 Heart c]]
+:: 2-2 Dour News c [Amelia]
+The same corruption that plagues the Heart of the Woods also grips much of the wildlife.[[2-2 Dour News d]]
 
 
-:: 3-2 Examine Ig Vines [Amelia]
-It looks like Ignatius has already passed through here. This area is empty save for a few scattered fungi and his leftover plants
+:: 3-4 Time to Prepare b [Amelia]
+That lumbering beast is as stubborn in pursuit as it is big. Forewarned is forearmed, however; I should use this time to prepare defenses.
 
 
-:: 3-3 River Guardian b [Ignatius]
-This creature was in agony and barely clinging on to its life with every wheezing breath. The infection grows stronger and more resistant. We must purge this land of this vile disease! [[3-3 River Guardian c]]
+:: 3-3 guardian murdered c [Amelia]
+Ignatius... those bodies, what have you done?[[3-3 guardian murdered d]]
 
 
 :: 5-1 Fungus c [Creature]
@@ -245,16 +242,16 @@ The same thing that surely brings you here, Archdruid. A dark presence lurks ove
 The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2 Audience e]]
 
 
-:: 2-5 Forest Guardian c [Amelia]
-...
+:: 2-1 Forest Guardian d [Amelia]
+Rest now, and close your eyes. You have served the woods well, and will be welcomed into the roots and boughs.[[2-1 Forest Guardian e]]
 
 
-:: 3-5 Heart c [Ignatius]
-I will scout the path ahead; you wait here a moment to get your bearings, then join me on the path to the guardian's sanctuary. [[3-5 Heart d]]
+:: 2-2 Dour News d [Ignatius]
+Then, the greenbond? What does the Forest Guardian advise?[[2-2 Dour News e]]
 
 
-:: 3-3 River Guardian c [Amelia]
-We came here to help, not to destroy this once great wood and kill all its inhabitants! Stop! [[3-3 River Guardian d]]
+:: 3-3 guardian murdered d [Ignatius]
+Only what's necessary, Archdruid. This corruption spreads every minute these creatures breathe. They must be culled if the woods are to be saved.[[3-3 guardian murdered e]]
 
 
 :: 5-1 Fungus d [Amelia]
@@ -266,15 +263,23 @@ There is a great sickness here, yes, and it is only growing. I seek now to make 
 
 
 :: 1-2 Audience e
-The Heart of the Woods lets out a long wheeze, though you're not certain if it was an attempt at speech.[[1-2 Audience f]]
+The Heart of the Woods lets out a long wheeze, though it's not clear whether it's an attempt at speech.[[1-2 Audience f]]
 
 
-:: 3-5 Heart d
-Ignatius runs out of your sight as Amelia takes a moment to investigate the heart, whose condition has only worsened since your last encounter.
+:: 2-1 Forest Guardian e
+The Forest Guardian takes in a deep breath and slowly exhales before becoming still. There is no motion, but for the glistening of the dying sunlight on the pool of black ichor surrounding the giant's corpse.
 
 
-:: 3-3 River Guardian d
-Ignatius begins a determined run back in the direction of the heart after exuding a piercing look of dissapointment.
+:: 2-2 Dour News e [Amelia]
+Nothing. The greenbond has been severed.[[2-2 Dour News f]]
+
+
+:: 3-3 guardian murdered e [Amelia]
+That's not true! I've cleansed these animals myself... the corruption can be halted, the woods healed. There's no need to shed innocent blood![[3-3 guardian murdered f]]
+
+
+:: Passages to split [annotation]
+[[3-3]]
 
 
 :: 1-1 Meeting Ignatius f [Ignatius]
@@ -285,6 +290,14 @@ As do I. If you will permit me the honor, I will go on ahead of you and announce
 We should seek out the Forest Guardian. The greenbond is our best route to gaining an understanding of this malady.[[1-2 Audience g]]
 
 
+:: 2-2 Dour News f
+Ignatius freezes mid-gesture and turns.[[2-2 Dour News g]]
+
+
+:: 3-3 guardian murdered f [Ignatius]
+And how long would that take, Amélia? The corruption will claim every life in these woods before you go about attending to half of the creatures here! The Forest Guardian has fallen, and without the protections of the greenbond the corruption will only spread faster.[[3-3 guardian murdered g]]
+
+
 :: 1-1 Meeting Ignatius g [Amelia]
 My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
 
@@ -293,11 +306,79 @@ My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
 I should stay here; I will do what little I can to ease the pain.[[1-2 Audience h]]
 
 
-:: 1-1 Meeting Ignatius h
+:: 2-2 Dour News g [Ignatius]
+Then the Guardian is dead. Another will not rise for a year and a day... we will have to make without the protections afforded by the Forest Guardian's magics.[[2-2 Dour News h]]
+
+
+:: 3-3 guardian murdered g [Amelia]
+And what of the River Guardian?[[3-3 guardian murdered h]]
+
+
+:: 1-1 Meeting Ignatius h [action]
 Ignatius runs ahead with surprising speed, disappearing out of sight in moments.
 
 
 :: 1-2 Audience h
-Ignatius makes a circle with his thumb and forefinger and makes a sweeping gesture with his hand. A wish for luck. You return the gesture and leave.
+Ignatius makes a circle with his thumb and forefinger and makes a sweeping gesture with his hand. A wish for luck.
+
+
+:: 2-2 Dour News h [Heart]
+...the River Guardian...[[2-2 Dour News i]]
+
+
+:: 3-3 guardian murdered h
+Ignatius pauses for a moment, looking down at the ground before continuing.[[3-3 guardian murdered i]]
+
+
+:: 2-2 Dour News i [Ignatius]
+My lord, you must conserve your strength! But... yes, the River Guardian may be willing to help us in this dire hour. Archdruid, rest now and I will attend to an audience with the River Guardian. My healing magics will hold until sunset, at least.[[2-2 Dour News j]]
+
+
+:: 3-3 guardian murdered i [Ignatius]
+Those waters were tainted. I did... I did what I felt was necessary.[[3-3 guardian murdered j]]
+
+
+:: 2-2 Dour News j [action]
+Ignatius leaves.[[2-2 Dour News k]]
+
+
+:: 3-3 guardian murdered j [Amelia]
+Gods, no... The River Guardian's magics were our last hope. You've doomed these woods, Ignatius.[[3-3 guardian murdered k]]
+
+
+:: 2-2 Dour News k [Amelia]
+What do we do if the River Guardian refuses?[[2-2 Dour News l]]
+
+
+:: 3-3 guardian murdered k [Ignatius]
+No, I've saved them! The corruption will spread faster than you could ever hope to heal it, Amélia. If we do not take action, this disease will not stop at the boundaries of these woods. And if you won't act, then I will.[[3-3 guardian murdered l]]
+
+
+:: 2-2 Dour News l [Heart]
+H: ...then we perish.[[2-2 Dour News m]]
+
+
+:: 3-3 guardian murdered l [Amelia]
+BUHHhhhhhhhhh[[3-3 guardian murdered m]]
+
+
+:: 2-2 Dour News m
+The Heart of the Woods grips his birchstaff with renewed vigor, but his gaze remains at a distance.[[2-2 Dour News n]]
+
+
+:: 3-3 guardian murdered m [actions]
+<Ignatius leaves.>[[3-3 guardian murdered n]]
+
+
+:: 2-2 Dour News n [Heart]
+Go to Ignatius' aid. His wards will keep the Heartsgrove safe until your return.[[2-2 Dour News o]]
+
+
+:: 3-3 guardian murdered n [Amelia]
+hhhhhhh what WAIT SHIT FUCK
+
+
+:: 2-2 Dour News o [Amelia]
+As you wish. I won't fail.
 
 
