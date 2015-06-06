@@ -117,8 +117,8 @@ public class ABGameController : MonoBehaviour {
 
 			//unlock all levels on mainMenu, keypad 5
 			if(Input.GetKeyDown(KeyCode.Keypad5)){
-				Debug.Log ("Unlocking all levels to 10");
-				PlayerPrefs.SetInt("Highest Stage", 10);
+				Debug.Log ("Unlocking all levels to 11");
+				PlayerPrefs.SetInt("Highest Stage", 11);
 			}
 		}
 
