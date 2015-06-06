@@ -73,8 +73,15 @@ public class SceneManager : MonoBehaviour {
 			}
 		} else {
 			targetPos = events [index].transform.position;
+			if(targetPos.x > currChar.transform.position.x){
+				// face right
+				currChar.transform.rotation = Quaternion.Euler(0,90f,0);
+			}else{
+				// face left
+				currChar.transform.rotation = Quaternion.Euler(0,270f,0);
+			}
 		}
-		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2) {
+		if (Mathf.Abs(targetPos.x - currChar.transform.position.x) > 2f) {
 			float moveSpeed = 0.1f;
 			if (!runNotWalk){moveSpeed = 0.025f;}
 			currChar.transform.position = Vector3.MoveTowards (currChar.transform.position, targetPos, moveSpeed);
