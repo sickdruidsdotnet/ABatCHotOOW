@@ -59,20 +59,15 @@ public class SignPost : MonoBehaviour {
 	//get the canvas we'll be working with
 	Canvas uiCanvas;
 
-
-	public AudioClip pageSound1;
-	public AudioClip pageSound2;
-	public AudioClip pageSound3;
-	public AudioClip pageSound4;
+	private AudioClip pageSound1;
+	private AudioClip pageSound2;
+	private AudioClip pageSound3;
+	private AudioClip pageSound4;
 	private AudioSource source;
-	public float volLowRange;
-	public float volHighRange;
+	public float volLowRange = 0.8F;
+	public float volHighRange = 1.0F;
 	public float lowPitchRange = 0.85F;
     public float highPitchRange = 1.0F;
-	private List<AudioClip> soundList;
-
-
-
 
 	int newLineIndex = 75;
 	// Use this for initialization
@@ -98,6 +93,7 @@ public class SignPost : MonoBehaviour {
 		portraitObj = GameObject.Find ("Portrait");
 		uiPortraitSprite = portraitObj.GetComponent<Image>();
 		uiPortraitSprite.enabled = false;
+		uiPortraitSprite.sprite = portraits [0];
 		portraitRect = portraitObj.GetComponent<RectTransform> ();
 
 		buttonObj = GameObject.Find ("Button");
@@ -109,8 +105,12 @@ public class SignPost : MonoBehaviour {
 		nameText.enabled = false;
 		nameRect = nameObj.GetComponent<RectTransform> ();
 
-		source = this.GetComponent<AudioSource> ();
-		soundList = new List<AudioClip>{pageSound1, pageSound2, pageSound3, pageSound4};
+		source = gameObject.AddComponent<AudioSource>();
+		
+		pageSound1 = Resources.Load("scrollingpageflip_0_edit") as AudioClip;
+		pageSound2 = Resources.Load("scrollingpageflip_1_edit") as AudioClip;
+		pageSound3 = Resources.Load("scrollingpageflip_5_edit") as AudioClip;
+		pageSound4 = Resources.Load("scrollingpageflip_7_edit") as AudioClip;
 
 		//load/put the canvas behind the camera for easier editor experience
 		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
@@ -156,6 +156,7 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+
 		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
@@ -173,7 +174,10 @@ public class SignPost : MonoBehaviour {
 			nameText.enabled = uiText.enabled;
 			//Debug.Log (personSpeaking);
 			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+
 		} else {
+			//Debug.Log ("Cutscene");
+			uiPortraitSprite.sprite = portraits [0];
 			nameText.enabled = uiText.enabled;
 			uiPortraitSprite.enabled = true;
 		}
@@ -185,38 +189,35 @@ public class SignPost : MonoBehaviour {
 			}
 		}
 
-		if (speaker == "Amelia") {
+		if (nameText.text == "Amelia") {
 			//Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
+//			Debug.Log ("Amelia Speaking");
 			uiPortraitSprite.sprite = portraits [0];
 			nameRect.anchoredPosition = new Vector2 (-271.7f, -144.4f);
 			portraitRect.anchoredPosition = new Vector2 (-440.1f, -135.8f);
-		} else if (speaker == "Ignatius") {
+		} else if (nameText.text == "Ignatius") {
+			//Debug.Log ("Ig Speaking");
 			uiPortraitSprite.sprite = portraits [1];
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
 			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
-		} else if (speaker == "Heart") {
+		} else if (nameText.text == "Heart") {
 			uiPortraitSprite.sprite = portraits [2];
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
 			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
 		}else {
+			//Debug.Log ("ELSE");
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;
-			if(nameText.text == "Ignatius" || nameText.text == "Amelia" || nameText.text == "Heart"){
-				uiPortraitSprite.enabled = true;
-				personSpeaking = true;
-			}else{
+			//if(nameText.text == "Ignatius" || nameText.text == "Amelia" || nameText.text == "Heart"){
+			//		uiPortraitSprite.enabled = true;
+					//personSpeaking = true;
+			//}else{
 				personSpeaking = false;
 				uiPortraitSprite.enabled = false;
-			}
+			//}
 		}
 
 	}
@@ -228,10 +229,7 @@ public class SignPost : MonoBehaviour {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
-
-				float vol = Random.Range (volLowRange, volHighRange);
-				source.pitch = Random.Range(lowPitchRange, highPitchRange);
-				source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
+				pageFlipSound();			
 
 				if(!cutSceneStart){
 					//Debug.Log ("DONE");
@@ -255,9 +253,7 @@ public class SignPost : MonoBehaviour {
 			return;
 		}
 		else {
-			float vol = Random.Range (volLowRange, volHighRange);
-			source.pitch = Random.Range(lowPitchRange, highPitchRange);
-			source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
+			pageFlipSound();
 		}
 		//	Debug.Log ("reading");
 		if (!beingRead) {
@@ -297,6 +293,21 @@ public class SignPost : MonoBehaviour {
 		
 	}
 	*/
+
+	void pageFlipSound(){
+		float vol = Random.Range (volLowRange, volHighRange);
+		source.pitch = Random.Range(lowPitchRange, highPitchRange);
+		switch(Random.Range(0, 4)){
+			case 0: source.PlayOneShot(pageSound1, 1.0F);
+					break;
+			case 1: source.PlayOneShot(pageSound2, 1.0F);
+					break;
+			case 2: source.PlayOneShot(pageSound3, 1.0F);
+					break;
+			case 3: source.PlayOneShot(pageSound4, 1.0F);
+					break;
+		}	
+	}
 
 	void DisplayFullText(){
 //		Debug.Log ("Show Full");
