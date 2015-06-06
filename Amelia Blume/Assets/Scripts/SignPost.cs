@@ -93,6 +93,7 @@ public class SignPost : MonoBehaviour {
 		portraitObj = GameObject.Find ("Portrait");
 		uiPortraitSprite = portraitObj.GetComponent<Image>();
 		uiPortraitSprite.enabled = false;
+		uiPortraitSprite.sprite = portraits [0];
 		portraitRect = portraitObj.GetComponent<RectTransform> ();
 
 		buttonObj = GameObject.Find ("Button");
@@ -173,7 +174,10 @@ public class SignPost : MonoBehaviour {
 			nameText.enabled = uiText.enabled;
 			//Debug.Log (personSpeaking);
 			uiPortraitSprite.enabled = (personSpeaking && uiText.enabled);
+
 		} else {
+			//Debug.Log ("Cutscene");
+			uiPortraitSprite.sprite = portraits [0];
 			nameText.enabled = uiText.enabled;
 			uiPortraitSprite.enabled = true;
 		}
@@ -185,38 +189,35 @@ public class SignPost : MonoBehaviour {
 			}
 		}
 
-		if (speaker == "Amelia") {
+		if (nameText.text == "Amelia") {
 			//Debug.Log (portraitObj.GetComponent<RectTransform>().anchoredPosition);
 			personSpeaking = true;
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
+//			Debug.Log ("Amelia Speaking");
 			uiPortraitSprite.sprite = portraits [0];
 			nameRect.anchoredPosition = new Vector2 (-271.7f, -144.4f);
 			portraitRect.anchoredPosition = new Vector2 (-440.1f, -135.8f);
-		} else if (speaker == "Ignatius") {
+		} else if (nameText.text == "Ignatius") {
+			//Debug.Log ("Ig Speaking");
 			uiPortraitSprite.sprite = portraits [1];
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
 			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
-		} else if (speaker == "Heart") {
+		} else if (nameText.text == "Heart") {
 			uiPortraitSprite.sprite = portraits [2];
-			//uiPortraitSprite.enabled = true;
-			//nameText.enabled = true;
 			personSpeaking = true;
 			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
 			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
 		}else {
+			//Debug.Log ("ELSE");
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;
-			if(nameText.text == "Ignatius" || nameText.text == "Amelia" || nameText.text == "Heart"){
-				uiPortraitSprite.enabled = true;
-				personSpeaking = true;
-			}else{
+			//if(nameText.text == "Ignatius" || nameText.text == "Amelia" || nameText.text == "Heart"){
+			//		uiPortraitSprite.enabled = true;
+					//personSpeaking = true;
+			//}else{
 				personSpeaking = false;
 				uiPortraitSprite.enabled = false;
-			}
+			//}
 		}
 
 	}
