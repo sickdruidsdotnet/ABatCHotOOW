@@ -43,7 +43,7 @@ public class Squirrel : Animal {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-
+		Physics.IgnoreCollision(player.GetComponent<Collider>(), GetComponent<Collider>(), false);
 		CheckRotation ();
 		if (targetSeed == null) {
 			GetTargetSeed();
@@ -232,6 +232,7 @@ public class Squirrel : Animal {
 	{
 		//Debug.Log ("collision");
 		if (other.gameObject.tag == "Seed") {
+			Physics.IgnoreCollision(player.GetComponent<Collider>(), GetComponent<Collider>(), false);
 			if(other.gameObject == targetSeed){
 				if(currentSeed.getHealth() <= 0){
 					Destroy (other.gameObject);
@@ -243,8 +244,9 @@ public class Squirrel : Animal {
 			}
 			//GetTargetSeed();
 		}
-
-
+		if (other.gameObject.tag == "Player") {
+			Physics.IgnoreCollision(player.GetComponent<Collider>(), GetComponent<Collider>(), false);
+		}
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -262,7 +264,9 @@ public class Squirrel : Animal {
 	void OnTriggerStay(Collider other){
 		/*
 		if (other.gameObject.tag == "Player") {
+
 			//Debug.Log ("HIT");
+		
 			if (hitCoolDown <= 0 && !isRestrained) {
 				if ((other.GetComponent<PlayerController> ().stunTimer <= 0 || other.GetComponent<PlayerController> ().canControl == true)) {	
 					int hitDirection;

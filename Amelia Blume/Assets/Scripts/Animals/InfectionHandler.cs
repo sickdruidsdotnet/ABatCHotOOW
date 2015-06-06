@@ -31,6 +31,7 @@ public class InfectionHandler : MonoBehaviour {
 	
 	public void clearInfection(){
 		GetComponentInChildren<Renderer> ().material.color = originalColor;
-		Destroy (infectionObject);
+		if(infectionObject!=null)
+			Destroy (infectionObject);
 	}
 }

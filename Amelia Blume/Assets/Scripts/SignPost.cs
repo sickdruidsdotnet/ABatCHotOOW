@@ -156,7 +156,6 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-
 		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
@@ -215,15 +214,14 @@ public class SignPost : MonoBehaviour {
 			//		uiPortraitSprite.enabled = true;
 					//personSpeaking = true;
 			//}else{
-				personSpeaking = false;
-				uiPortraitSprite.enabled = false;
+			personSpeaking = false;
+			uiPortraitSprite.enabled = false;
+			nameText.enabled = false;
 			//}
 		}
-
 	}
 
 	public void Read(){
-
 		doneReading = false;
 		if (currentPassage == nextPassage && !continueCurrentPassage) {
 			if(beingRead && stillWritingCurrentPassage){
