@@ -32,6 +32,7 @@ public class Boar : Animal
 	// Use this for initialization
 	void Start()
 	{
+		base.Start();
 		source = GetComponent<AudioSource>();
 
 		Physics.IgnoreCollision (GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider>(), collider, true);

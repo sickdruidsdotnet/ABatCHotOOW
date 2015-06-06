@@ -12,6 +12,7 @@ public class Flower : Plant {
 	private Animal animalCon;
 	public PlantSettings plantSettings;
 	public ParticleSystem pollenSystem;
+	public float sporeRange = 2.5f;
 
 	public bool bloomed = false;
 
@@ -83,9 +84,8 @@ public class Flower : Plant {
 		stalk.GetComponent<PlantStalk>().colorVal = plantSettings.stalkColorVal;
 
 
-		animals = GameObject.FindGameObjectsWithTag ("Animal");
+		getAnimals();
 		health = 120;
-		//Debug.Log (animals.Length);
 	}
 
 	private void setRandomValues()
@@ -198,6 +198,26 @@ public class Flower : Plant {
 		{
 			//Debug.Log("Particle system playing: " + pollenSystem.isPlaying);
 		}
+
+		if (bloomed)
+		{
+			bool recheck = false;
+			foreach (GameObject animal in animals)
+			{
+				if (animal == null)
+				{
+					recheck = true;
+					continue;
+				}
+				if (Mathf.Abs(animal.transform.position.x - transform.position.x) < sporeRange)
+				{
+					//Debug.Log("Animal in range being spored.");
+					animal.GetComponent<Animal>().becomeSpored();
+				}
+			}
+
+			if (recheck){getAnimals();}
+		}
 	}
 
     private void spawnLeaf(int node, float rotation, float curlStart, float length, float width, float thickness)
@@ -299,6 +319,12 @@ public class Flower : Plant {
         float goal = maturity * plantSettings.stalkMaxHeight;
 
         stalk.GetComponent<PlantStalk>().setGrowthInfo(goal, plantSettings.stalkGrowthRate);
+    }
+
+    public void getAnimals()
+    {
+    	animals = GameObject.FindGameObjectsWithTag ("Animal");
+		//Debug.Log ("Animals: " + animals.Length);
     }
 
     /*
