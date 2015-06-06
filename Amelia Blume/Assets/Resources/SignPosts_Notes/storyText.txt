@@ -111,7 +111,7 @@ The growth of fungus near this flower appears to be inhibited... I may be use th
 
 
 :: 3-3 guardian murdered a
-The woods remain eerily silent, but even the sound of rushing water in the distance has gone.[[3-3 guardian murdered b]]
+The woods remain eerily silent, but even the sound of rushing water in the distance has gone.
 
 
 :: 3-5 strangled deer
@@ -175,7 +175,7 @@ There is an unnatural quiet here, as even the occasional sound of birdsong has g
 
 
 :: 3-3 guardian murdered b [action]
-<Ignatius enters.>[[3-3 guardian murdered c]]
+<Ignatius enters.>
 
 
 :: 3-5 strangled deer b [Amelia]
@@ -331,7 +331,7 @@ Ignatius pauses for a moment, looking down at the ground before continuing.[[3-3
 
 
 :: 2-2 Dour News i [Ignatius]
-My lord, you must conserve your strength! But... yes, the River Guardian may be willing to help us in this dire hour. Archdruid, rest now and I will attend to an audience with the River Guardian. My healing magics will hold until sunset, at least.[[2-2 Dour News j]]
+My lord, you must conserve your strength! But... yes, the River Guardian may be willing to help us in this dire hour. Archdruid, rest now and I will attend to an audience with the River Guardian. My healing magics will hold until sunset, at least.
 
 
 :: 3-3 guardian murdered i [Ignatius]
@@ -339,7 +339,7 @@ Those waters were tainted. I did... I did what I felt was necessary.[[3-3 guardi
 
 
 :: 2-2 Dour News j [action]
-Ignatius leaves.[[2-2 Dour News k]]
+<Ignatius leaves.>
 
 
 :: 3-3 guardian murdered j [Amelia]
@@ -355,11 +355,11 @@ No, I've saved them! The corruption will spread faster than you could ever hope 
 
 
 :: 2-2 Dour News l [Heart]
-H: ...then we perish.[[2-2 Dour News m]]
+...then we perish.[[2-2 Dour News m]]
 
 
 :: 3-3 guardian murdered l [Amelia]
-BUHHhhhhhhhhh[[3-3 guardian murdered m]]
+BUHHhhhhhhhhh
 
 
 :: 2-2 Dour News m
@@ -367,7 +367,7 @@ The Heart of the Woods grips his birchstaff with renewed vigor, but his gaze rem
 
 
 :: 3-3 guardian murdered m [actions]
-<Ignatius leaves.>[[3-3 guardian murdered n]]
+<Ignatius leaves.>
 
 
 :: 2-2 Dour News n [Heart]

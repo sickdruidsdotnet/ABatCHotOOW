@@ -2676,7 +2676,7 @@ Tiddler
 p829
 (dp830
 g21
-VThe woods remain eerily silent, but even the sound of rushing water in the distance has gone.[[3-3 guardian murdered b]]
+VThe woods remain eerily silent, but even the sound of rushing water in the distance has gone.
 p831
 sg23
 V3-3 guardian murdered a
@@ -2686,9 +2686,9 @@ g26
 ((I2015
 I6
 I6
-I2
-I5
-I0
+I3
+I7
+I7
 I5
 I157
 I1
@@ -2828,7 +2828,7 @@ Tiddler
 p875
 (dp876
 g21
-VH: ...then we perish.[[2-2 Dour News m]]
+V...then we perish.[[2-2 Dour News m]]
 p877
 sg23
 V2-2 Dour News l
@@ -2837,12 +2837,12 @@ sg25
 g26
 ((I2015
 I6
+I6
+I3
+I6
+I15
 I5
-I22
-I14
-I12
-I4
-I156
+I157
 I1
 tp879
 (dp880
@@ -2932,7 +2932,7 @@ Tiddler
 p907
 (dp908
 g21
-VIgnatius leaves.[[2-2 Dour News k]]
+V<Ignatius leaves.>
 p909
 sg23
 V2-2 Dour News j
@@ -2941,12 +2941,12 @@ sg25
 g26
 ((I2015
 I6
+I6
+I3
+I6
+I23
 I5
-I22
-I19
-I28
-I4
-I156
+I157
 I1
 tp911
 (dp912
@@ -2984,7 +2984,7 @@ Tiddler
 p923
 (dp924
 g21
-VMy lord, you must conserve your strength! But... yes, the River Guardian may be willing to help us in this dire hour. Archdruid, rest now and I will attend to an audience with the River Guardian. My healing magics will hold until sunset, at least.[[2-2 Dour News j]]
+VMy lord, you must conserve your strength! But... yes, the River Guardian may be willing to help us in this dire hour. Archdruid, rest now and I will attend to an audience with the River Guardian. My healing magics will hold until sunset, at least.
 p925
 sg23
 V2-2 Dour News i
@@ -2993,12 +2993,12 @@ sg25
 g26
 ((I2015
 I6
+I6
+I3
+I6
+I29
 I5
-I22
-I10
-I17
-I4
-I156
+I157
 I1
 tp927
 (dp928
@@ -3758,7 +3758,7 @@ Tiddler
 p1160
 (dp1161
 g21
-V<Ignatius leaves.>[[3-3 guardian murdered n]]
+V<Ignatius leaves.>
 p1162
 sg23
 V3-3 guardian murdered m
@@ -3768,9 +3768,9 @@ g26
 ((I2015
 I6
 I6
-I2
-I19
-I18
+I3
+I7
+I23
 I5
 I157
 I1
@@ -3810,7 +3810,7 @@ Tiddler
 p1176
 (dp1177
 g21
-VBUHHhhhhhhhhh[[3-3 guardian murdered m]]
+VBUHHhhhhhhhhh
 p1178
 sg23
 V3-3 guardian murdered l
@@ -3820,9 +3820,9 @@ g26
 ((I2015
 I6
 I6
-I2
-I18
-I58
+I3
+I7
+I29
 I5
 I157
 I1
@@ -3966,7 +3966,7 @@ Tiddler
 p1224
 (dp1225
 g21
-V<Ignatius enters.>[[3-3 guardian murdered c]]
+V<Ignatius enters.>
 p1226
 sg23
 V3-3 guardian murdered b
@@ -3976,9 +3976,9 @@ g26
 ((I2015
 I6
 I6
-I2
-I5
-I15
+I3
+I7
+I1
 I5
 I157
 I1
@@ -4267,7 +4267,7 @@ tp1316
 Rp1317
 sbsasS'scale'
 p1318
-F0.6000000000000001
+F0.8
 sS'snapping'
 p1319
 I01
