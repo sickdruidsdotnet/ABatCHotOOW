@@ -28,9 +28,7 @@ public class stepSound : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
-		//stepList = new List<AudioClip>{step1, step2, step3, step4};
 		prevY = transform.position.y;
-	
 	}
 	
 	// Update is called once per frame
@@ -91,15 +89,10 @@ public class stepSound : MonoBehaviour {
 
     	if(other.tag=="Ground") {
     		source.pitch = Random.Range(lowPitchRange, highPitchRange);
-    		
-    		Debug.Log("play grass1: other tag == " + other.tag);
     		source.PlayOneShot(grass1, vol);
-    		//source.PlayOneShot(stepList[Random.Range(0, stepList.Count)], vol);
     	}
     	else if(other.tag=="Soil") {
     		source.pitch = Random.Range(lowPitchRange, highPitchRange);
-
-    		Debug.Log("play soil1: other tag == " + other.tag);
     		source.PlayOneShot(soil1, vol);
     	}
 

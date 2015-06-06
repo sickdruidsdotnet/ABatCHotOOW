@@ -59,20 +59,15 @@ public class SignPost : MonoBehaviour {
 	//get the canvas we'll be working with
 	Canvas uiCanvas;
 
-
-	public AudioClip pageSound1;
-	public AudioClip pageSound2;
-	public AudioClip pageSound3;
-	public AudioClip pageSound4;
+	private AudioClip pageSound1;
+	private AudioClip pageSound2;
+	private AudioClip pageSound3;
+	private AudioClip pageSound4;
 	private AudioSource source;
-	public float volLowRange;
-	public float volHighRange;
+	public float volLowRange = 0.8F;
+	public float volHighRange = 1.0F;
 	public float lowPitchRange = 0.85F;
     public float highPitchRange = 1.0F;
-	private List<AudioClip> soundList;
-
-
-
 
 	int newLineIndex = 75;
 	// Use this for initialization
@@ -110,8 +105,12 @@ public class SignPost : MonoBehaviour {
 		nameText.enabled = false;
 		nameRect = nameObj.GetComponent<RectTransform> ();
 
-		source = this.GetComponent<AudioSource> ();
-		soundList = new List<AudioClip>{pageSound1, pageSound2, pageSound3, pageSound4};
+		source = gameObject.AddComponent<AudioSource>();
+		
+		pageSound1 = Resources.Load("scrollingpageflip_0_edit") as AudioClip;
+		pageSound2 = Resources.Load("scrollingpageflip_1_edit") as AudioClip;
+		pageSound3 = Resources.Load("scrollingpageflip_5_edit") as AudioClip;
+		pageSound4 = Resources.Load("scrollingpageflip_7_edit") as AudioClip;
 
 		//load/put the canvas behind the camera for easier editor experience
 		uiCanvas = GameObject.Find ("UI").GetComponent<Canvas> ();
@@ -157,6 +156,7 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+
 		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
@@ -229,10 +229,7 @@ public class SignPost : MonoBehaviour {
 			if(beingRead && stillWritingCurrentPassage){
 				DisplayFullText();
 			}else{
-
-				float vol = Random.Range (volLowRange, volHighRange);
-				source.pitch = Random.Range(lowPitchRange, highPitchRange);
-				source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
+				pageFlipSound();			
 
 				if(!cutSceneStart){
 					//Debug.Log ("DONE");
@@ -256,9 +253,7 @@ public class SignPost : MonoBehaviour {
 			return;
 		}
 		else {
-			float vol = Random.Range (volLowRange, volHighRange);
-			source.pitch = Random.Range(lowPitchRange, highPitchRange);
-			source.PlayOneShot(soundList[Random.Range(0, soundList.Count)], vol);
+			pageFlipSound();
 		}
 		//	Debug.Log ("reading");
 		if (!beingRead) {
@@ -298,6 +293,21 @@ public class SignPost : MonoBehaviour {
 		
 	}
 	*/
+
+	void pageFlipSound(){
+		float vol = Random.Range (volLowRange, volHighRange);
+		source.pitch = Random.Range(lowPitchRange, highPitchRange);
+		switch(Random.Range(0, 4)){
+			case 0: source.PlayOneShot(pageSound1, 1.0F);
+					break;
+			case 1: source.PlayOneShot(pageSound2, 1.0F);
+					break;
+			case 2: source.PlayOneShot(pageSound3, 1.0F);
+					break;
+			case 3: source.PlayOneShot(pageSound4, 1.0F);
+					break;
+		}	
+	}
 
 	void DisplayFullText(){
 //		Debug.Log ("Show Full");
