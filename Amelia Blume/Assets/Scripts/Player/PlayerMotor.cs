@@ -92,6 +92,13 @@ public class PlayerMotor : BaseBehavior {
 	
 	public Vector3 lastInput;
 	public Vector3 lastAttemptedMovement;
+
+	public AudioClip dashSound;
+	private AudioSource source;
+	public float volLowRange = 0.1F;
+	public float volHighRange = 0.3F;
+	public float lowPitchRange = 0.75F;
+    public float highPitchRange = 1.25F;
 	
 	protected Vector3 pendingInput;
 	
@@ -106,6 +113,7 @@ public class PlayerMotor : BaseBehavior {
 	
 	protected void Awake() {
 		groundTestMask = ~(1 << LayerMask.NameToLayer("Player"));
+		source = GetComponent<AudioSource>();
 	}
 		
 	// this is the only function that actually moves the player. All other functions prepare
@@ -382,6 +390,7 @@ public class PlayerMotor : BaseBehavior {
 
 	public void Dash() {
 		if (player.canDash) {
+			playDashSound();
 			player.dashStartX = player.transform.position.x;
 			player.dashedAtTime = Time.time;
 			player.isDashing = true;
@@ -485,5 +494,11 @@ public class PlayerMotor : BaseBehavior {
 		newSeed.transform.position = loc;
 		newSeed.rigidbody.velocity = new Vector3(0,-3,0);
 
+	}
+
+	void playDashSound(){
+		float vol = UnityEngine.Random.Range (volLowRange, volHighRange);
+		source.pitch = UnityEngine.Random.Range(lowPitchRange, highPitchRange);
+		source.PlayOneShot(dashSound, vol);
 	}
 }
