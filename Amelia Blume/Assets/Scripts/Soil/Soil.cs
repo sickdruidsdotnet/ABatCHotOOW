@@ -192,7 +192,9 @@ public class Soil : MonoBehaviour {
 			}
 			water[index]+=6;
 			//for(int i = 0; i < 3; i++){
+			if(HydrationLevel < MaxWater){
 				AddWater(index);
+			}
 			//}
 		}
 	}
