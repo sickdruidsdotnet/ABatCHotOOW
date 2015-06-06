@@ -174,6 +174,7 @@ public class MusicController : MonoBehaviour {
 
  	void OnLevelWasLoaded(int level){
  		//Debug.Log("MusicController OnLevelWasLoaded called");
+ 		allSources = GameObject.FindSceneObjectsOfType(typeof(AudioSource)) as AudioSource[];
  		prevLevel = currentLevel;
  		prevAct = currentAct;
  		currentLevel = Application.loadedLevelName;
