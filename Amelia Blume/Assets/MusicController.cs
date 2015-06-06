@@ -28,7 +28,7 @@ public class MusicController : MonoBehaviour {
 	string prevLevel = "Act0-Nothing";
 	string prevAct = "Act0";
 
-	float max_vol = 0.3F;
+	float max_vol = 0.2F;
 
 	// Use this for initialization
 	void Start () {
@@ -174,6 +174,7 @@ public class MusicController : MonoBehaviour {
 
  	void OnLevelWasLoaded(int level){
  		//Debug.Log("MusicController OnLevelWasLoaded called");
+ 		allSources = GameObject.FindSceneObjectsOfType(typeof(AudioSource)) as AudioSource[];
  		prevLevel = currentLevel;
  		prevAct = currentAct;
  		currentLevel = Application.loadedLevelName;

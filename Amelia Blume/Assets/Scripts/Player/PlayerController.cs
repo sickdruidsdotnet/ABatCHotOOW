@@ -53,10 +53,17 @@ public class PlayerController : BaseBehavior {
 
 	protected Vector3 pendingMovementInput;
 	public CollisionFlags collisionFlags;
+
+	public AudioClip damageSound;
+	private AudioSource source;
+	public float volLowRange = 0.1F;
+	public float volHighRange = 0.2F;
+	public float lowPitchRange = 0.7F;
+    public float highPitchRange = 1.0F;
 	
     void Start()
     {
-//		Debug.Log (Input.GetJoystickNames()[0]);
+		//Debug.Log (Input.GetJoystickNames()[0]);
 		//get the input handler and reference that instead
 		GameObject playerInputObj = GameObject.FindGameObjectWithTag ("Input Handler");
 		if (playerInputObj != null) {
@@ -107,6 +114,8 @@ public class PlayerController : BaseBehavior {
 		canControl = true;
 		stunTimer = 0;
 		activeSeeds = new GameObject[3];
+
+		source = GetComponent<AudioSource>();
     }
 	
 	// Update calls sporadically, as often as it can. Recieve input here, but don't apply it yet
@@ -470,6 +479,7 @@ public class PlayerController : BaseBehavior {
 	public void damagePlayer(int damageValue, int hitDirection = 0)
 	{
 		if (!invulnerable) {
+			playDamageSound();
 			if(hitDirection == 0)
 			{
 				hitDirection = faceDirection;
@@ -484,5 +494,11 @@ public class PlayerController : BaseBehavior {
 			invulCounter = 75;
 			gameObject.GetComponent<Player> ().ReduceHealth (damageValue);
 		}
+	}
+
+	void playDamageSound(){
+		float vol = UnityEngine.Random.Range (volLowRange, volHighRange);
+		source.pitch = UnityEngine.Random.Range(lowPitchRange, highPitchRange);
+		source.PlayOneShot(damageSound, vol);
 	}
 }
