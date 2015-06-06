@@ -18,6 +18,10 @@ public class FireSpawner : MonoBehaviour
 	public GameObject focusObject;
 	public Vector3 focus;
 
+	public AudioClip fireSound;
+	private AudioSource source;
+	public float vol;
+
 	void Start()
 	{
 		spawnFlame();
@@ -26,6 +30,14 @@ public class FireSpawner : MonoBehaviour
 		waitTime = 1.0f / (density * extents.x * extents.z);
 		focusObject = transform.Find("Focus").gameObject;
 		focus = focusObject.transform.position;
+
+		source = GetComponent<AudioSource>();
+		source.loop = true;
+		source.clip = fireSound;
+		vol = density*0.02F;
+		source.volume = vol;
+		//source.volume = 0.5F;
+		source.Play();
 	}
 
 	void Update()
