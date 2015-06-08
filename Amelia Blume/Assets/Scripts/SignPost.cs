@@ -192,19 +192,19 @@ public class SignPost : MonoBehaviour {
 			personSpeaking = true;
 //			Debug.Log ("Amelia Speaking");
 			uiPortraitSprite.sprite = portraits [0];
-			nameRect.anchoredPosition = new Vector2 (-271.7f, -144.4f);
-			portraitRect.anchoredPosition = new Vector2 (-440.1f, -135.8f);
+			nameRect.position = GameObject.Find ("Left Name Anchor").GetComponent<RectTransform>().position;
+			portraitRect.position = GameObject.Find ("Left Portrait Anchor").GetComponent<RectTransform>().position;
 		} else if (nameText.text == "Ignatius") {
 			//Debug.Log ("Ig Speaking");
 			uiPortraitSprite.sprite = portraits [1];
 			personSpeaking = true;
-			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
-			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
+			portraitRect.position = GameObject.Find ("Right Portrait Anchor").GetComponent<RectTransform>().position;
+			nameRect.position = GameObject.Find ("Right Name Anchor").GetComponent<RectTransform>().position;
 		} else if (nameText.text == "Heart") {
 			uiPortraitSprite.sprite = portraits [2];
 			personSpeaking = true;
-			portraitRect.anchoredPosition = new Vector2 (481.8f, -140.4f);
-			nameRect.anchoredPosition = new Vector2 (347f, -140.3f);
+			portraitRect.position = GameObject.Find ("Right Portrait Anchor").GetComponent<RectTransform>().position;
+			nameRect.position = GameObject.Find ("Right Name Anchor").GetComponent<RectTransform>().position;
 		}else {
 			//Debug.Log ("ELSE");
 			//uiPortraitSprite.enabled = false;
