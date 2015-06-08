@@ -268,7 +268,6 @@ public class SignPost : MonoBehaviour {
 
 		NextSentence ();
 		//CheckFlags ();
-		
 	}
 	/*
 	public void Read(string passage){
@@ -291,8 +290,7 @@ public class SignPost : MonoBehaviour {
 			uiText.enabled = true;
 		}
 		NextSentence ();
-		//CheckFlags ();
-		
+		//CheckFlags ();		
 	}
 	*/
 
@@ -340,8 +338,7 @@ public class SignPost : MonoBehaviour {
 				}
 			uiText.text = textDisplay;
 			nameText.text = speaker;
-		}
-		
+		}	
 	}
 
 	void CheckFlags(){
@@ -381,7 +378,6 @@ public class SignPost : MonoBehaviour {
 			//Debug.Log ("Line Count: " + uiText.cachedTextGenerator.lineCount);
 			nameText.text = speaker;
 		}
-
 	}
 
 	void NextSentence(){
@@ -442,7 +438,6 @@ public class SignPost : MonoBehaviour {
 			continueCurrentPassage = false;
 			textDisplay = "";
 		}
-
 	}
 
 	void OnTriggerStay(Collider other)
@@ -491,5 +486,4 @@ public class SignPost : MonoBehaviour {
 		amelia.SetCurrentSign(this.gameObject);
 		Read ();
 	}
-	
 }
