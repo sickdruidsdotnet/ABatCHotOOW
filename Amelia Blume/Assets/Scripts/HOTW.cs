@@ -44,11 +44,14 @@ class HOTW : MonoBehaviour
         }
 		if (sun != null) {
 			float distance = transform.position.x - sun.transform.position.x;
-			if (distance <= 4f && distance >= -4f && !startedFade) {
+			if (distance <= 9f && distance >= -9f && !startedFade) {
 				startedFade = true;
+				/*
 				activeFader = Instantiate(faderPrefab, faderPrefab.transform.position, Quaternion.identity) as GameObject;
 				activeFader.GetComponent<Image>().color = new Color(.063f, .584f, .153f, 0);
-                StartCoroutine(FadeOut());
+				*/
+				Debug.Log("Collecting sun");
+                GetComponent<LevelTransition>().transition();
 			}
 			else
 			{
@@ -61,6 +64,7 @@ class HOTW : MonoBehaviour
         }
 	}
 
+	/*
 	public IEnumerator FadeOut()
 	{
 		float startTime = Time.time;
@@ -79,11 +83,6 @@ class HOTW : MonoBehaviour
 
 	public IEnumerator FadeIn(float delay = 0)
 	{
-		/*
-		transform.position = new Vector3 (transform.position.x, 
-				transform.position.y, 
-				transform.position.z + 25);
-				*/
 		yield return new WaitForSeconds (delay);
 		float startTime = Time.time;
 		while (activeFader.GetComponent<Image>().color.a > 0) {
@@ -95,6 +94,7 @@ class HOTW : MonoBehaviour
 
 		ameliaIsHOTW = true;
 	}
+	*/
 
 	private void getPlayer()
 	{

@@ -86,6 +86,6 @@ class BecomeHOTW : MonoBehaviour {
 	
 	private void getHeart()
 	{
-		heartObject = GameObject.Find("hotw_v2");
+		heartObject = GameObject.Find("hotw_dead");
 	}
 }
