@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-class FungusCreature : MonoBehaviour
+class HOTW : MonoBehaviour
 {
 	public GameObject ameliaObject;
 	public Player playerScript;
@@ -15,8 +15,8 @@ class FungusCreature : MonoBehaviour
 	public float outTime = 0.15f;
 	public float waitTime = 1f;
 	public float inTime = 2f;
-	public bool readyToDie = false; // Super Nintendo, Sega Genesis
-	public bool dead = false;
+	public bool readyForAmelia = false; // Super Nintendo, Sega Genesis
+	public bool ameliaIsHOTW = false;
 
 
 	void Start()
@@ -30,7 +30,7 @@ class FungusCreature : MonoBehaviour
 
 	void Update()
 	{
-		if (playerScript.isSunning() && readyToDie)
+		if (playerScript.isSunning() && readyForAmelia)
         {
             reactToSunlight();
         }
@@ -44,10 +44,10 @@ class FungusCreature : MonoBehaviour
         }
 		if (sun != null) {
 			float distance = transform.position.x - sun.transform.position.x;
-			if (distance <= 9f && distance >= -9f && !startedFade) {
+			if (distance <= 4f && distance >= -4f && !startedFade) {
 				startedFade = true;
 				activeFader = Instantiate(faderPrefab, faderPrefab.transform.position, Quaternion.identity) as GameObject;
-				activeFader.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+				activeFader.GetComponent<Image>().color = new Color(.063f, .584f, .153f, 0);
                 StartCoroutine(FadeOut());
 			}
 			else
@@ -74,14 +74,16 @@ class FungusCreature : MonoBehaviour
 
 		StartCoroutine(FadeIn(waitTime));
 
-        Destroy(GameObject.Find("Fungus Kill Prompt"));
+        Destroy(GameObject.Find("Become HOTW Prompt"));
 	}
 
 	public IEnumerator FadeIn(float delay = 0)
 	{
+		/*
 		transform.position = new Vector3 (transform.position.x, 
 				transform.position.y, 
 				transform.position.z + 25);
+				*/
 		yield return new WaitForSeconds (delay);
 		float startTime = Time.time;
 		while (activeFader.GetComponent<Image>().color.a > 0) {
@@ -91,7 +93,7 @@ class FungusCreature : MonoBehaviour
 			                                                   activeFader.GetComponent<Image> ().color.b, 1 - Mathf.SmoothStep(0,1, t));
 		}
 
-		dead = true;
+		ameliaIsHOTW = true;
 	}
 
 	private void getPlayer()

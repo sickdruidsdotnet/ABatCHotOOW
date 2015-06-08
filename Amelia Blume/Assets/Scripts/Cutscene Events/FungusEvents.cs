@@ -42,6 +42,7 @@ class FungusEvents : MonoBehaviour {
 			activePrompt = Instantiate(conversionPrompt, 
 				signPostObject.transform.position, 
 				signPostObject.transform.rotation) as GameObject;
+			activePrompt.name = "Fungus Kill Prompt";
 			fade_in fadeInComponent = activePrompt.GetComponent<fade_in>();
 			fadeInComponent.isConversionPrompt = false;
 			fadeInComponent.overwrite = false;
