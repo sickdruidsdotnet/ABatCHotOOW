@@ -76,7 +76,7 @@ public class Fluff_spawner : MonoBehaviour {
 					totalFreq += weights[i];
 			}
 		}
-
+		 
 		spawnedFluff = new List<GameObject> ();
 
 		spawnFluff ();
@@ -147,7 +147,6 @@ public class Fluff_spawner : MonoBehaviour {
 				}
 				prev = newFluff;
 			}
-			Debug.Log ("This happened with " + gameObject.name);
 			spawnedFluff.Add(newFluff);
 		}
 		if (overrideColor) {

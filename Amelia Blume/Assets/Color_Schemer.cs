@@ -96,19 +96,15 @@ public class Color_Schemer : MonoBehaviour {
 	{
 		switch (objectName) {
 		case "Background 1":
-			Debug.Log("back 1");
 			return activeColors[0];
 		case "Background 2":
 			Debug.Log("back 2");
 			return activeColors[1];
 		case "Background 3":
-			Debug.Log ("back 3");
 			return activeColors[2];
 		case "Backmost":
-			Debug.Log ("backmost");
 			return activeColors[3];
 		default:
-			Debug.Log ("default");
 			return activeColors[0];
 		}
 	}

@@ -8,9 +8,9 @@ public class SideScrollerCameraController : MonoBehaviour {
 	public bool manual = false;
 	bool unlockAfterPan = false;
 	Vector3 startPos;
-	float panRate = .80f;
+	//float panRate = .80f;
 	float panTime = 1f;
-	Vector3 panLength;
+	//Vector3 panLength;
 
 	public Transform target;
 	Vector3 prevTargetPos;
@@ -598,7 +598,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		startPos = transform.position;
 		manual = true;
 		panTo = newPos;
-		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		//panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
 		unlockAfterPan = unlock;
 		startTime = Time.time;
 	}
@@ -607,7 +607,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		startPos = transform.position;
 		manual = true;
 		panTo = newPos;
-		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		//panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
 		unlockAfterPan = unlock;
 		startTime = Time.time;
 		if (speed == 0)
@@ -628,7 +628,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		startPos = transform.position;
 		manual = true;
 		panTo = new Vector3 (newX, newY, transform.position.z);
-		panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
+		//panLength = new Vector3 (Mathf.Abs (startPos.x - panTo.x), Mathf.Abs (startPos.y - panTo.y));
 		unlockAfterPan = unlock;
 		startTime = Time.time;
 	}

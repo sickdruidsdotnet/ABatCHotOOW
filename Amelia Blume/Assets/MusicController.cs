@@ -25,7 +25,7 @@ public class MusicController : MonoBehaviour {
 	bool cfPause;
 	string currentLevel;
 	string currentAct;
-	string prevLevel = "Act0-Nothing";
+	//string prevLevel = "Act0-Nothing";
 	string prevAct = "Act0";
 
 	float max_vol = 0.2F;
@@ -190,7 +190,7 @@ public class MusicController : MonoBehaviour {
  	void OnLevelWasLoaded(int level){
  		//Debug.Log("MusicController OnLevelWasLoaded called");
  		allSources = GameObject.FindSceneObjectsOfType(typeof(AudioSource)) as AudioSource[];
- 		prevLevel = currentLevel;
+ 		//prevLevel = currentLevel;
  		prevAct = currentAct;
  		currentLevel = Application.loadedLevelName;
  		currentAct = extractAct(currentLevel);

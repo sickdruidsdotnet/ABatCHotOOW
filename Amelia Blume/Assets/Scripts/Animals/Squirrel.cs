@@ -21,8 +21,8 @@ public class Squirrel : Animal {
 	public int faceDirection;
 	int rotationCooldown;
 	int chargeUpCooldown;
-	int hitCoolDown = -1;
-	int damageValue = 1;
+	//int hitCoolDown = -1;
+	//int damageValue = 1;
 	
 	//locking character to axis
 	public float lockedAxisValue;
