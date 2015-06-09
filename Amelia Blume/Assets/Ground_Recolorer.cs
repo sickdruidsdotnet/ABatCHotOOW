@@ -9,6 +9,14 @@ public class Ground_Recolorer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GameObject CSObject = GameObject.Find ("Color Schemer");
+		if (CSObject != null && gameObject.name != "Grass Fluff Spawner") {
+			overwriteColors = true;
+			Color_Schemer schemer = CSObject.GetComponent<Color_Schemer>();
+			grassColor = schemer.GetColor("grass");
+			grassFluffColor = schemer.GetColor("grass fluff");
+		}
+
 		if (overwriteColors) {
 			GameObject[] allGround = GameObject.FindGameObjectsWithTag ("Ground");
 			GameObject[] allSoil = GameObject.FindGameObjectsWithTag ("Soil");

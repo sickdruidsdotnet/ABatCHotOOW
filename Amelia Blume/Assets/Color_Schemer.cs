@@ -7,18 +7,17 @@ public class Color_Schemer : MonoBehaviour {
 
 	//Colors go in order from front layer to back.
 	//TODO: Read colors from Json file
-	public Color[] ActIColors = new Color[5];
-	public Color[] ActIIColors = new Color[5];
-	public Color[] ActIIIColors = new Color[5];
-	public Color[] ActIVColors = new Color[5];
-	public Color[] ActVColors = new Color[5];
+	public Color[] ActIColors = new Color[7];
+	public Color[] ActIIColors = new Color[7];
+	public Color[] ActIIIColors = new Color[7];
+	public Color[] ActIVColors = new Color[7];
+	public Color[] ActVColors = new Color[7];
 
 	Color[] activeColors;
 
 	// Use this for initialization
 	void Awake () {
-		GameObject musicController = GameObject.Find ("Music Controller");
-		string actName = musicController.GetComponent<MusicController> ().extractAct (Application.loadedLevelName);
+		string actName = extractAct (Application.loadedLevelName);
 		switch(actName)
 		{
 		case "ActI":
@@ -67,7 +66,7 @@ public class Color_Schemer : MonoBehaviour {
 			act = 5;
 			break;
 		default:
-			act = 2;
+			act = 1;
 			break;
 		}
 		//assign act colors here to prevent nested switch statesments because screw that
@@ -104,9 +103,26 @@ public class Color_Schemer : MonoBehaviour {
 			return activeColors[2];
 		case "Backmost":
 			return activeColors[3];
+		case "grass":
+			return activeColors[5];
+		case "grass fluff":
+			return activeColors[6];
 		default:
 			return activeColors[0];
 		}
+	}
+
+	public string extractAct(string levelName){
+		
+		string actName;
+		try{
+			actName = levelName.Substring(0, levelName.IndexOf('-'));
+		}
+		catch{
+			actName = levelName;
+		}
+		
+		return actName;
 	}
 	
 }

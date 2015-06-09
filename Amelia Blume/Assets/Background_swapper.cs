@@ -3,11 +3,12 @@ using System.Collections;
 
 public class Background_swapper : MonoBehaviour {
 
+	public int leftAct;
+	public int rightAct;
 	public Color leftColor;
 	public Color rightColor;
 
 	public bool leftActive = true;
-
 	Camera mainCamera;
 	public Color currentColor;
 
@@ -20,6 +21,52 @@ public class Background_swapper : MonoBehaviour {
 	Color nextColor;
 
 	void Start () {
+		GameObject CSObject = GameObject.Find ("Color Schemer");
+		if (CSObject != null) {
+			Color_Schemer schemer = CSObject.GetComponent<Color_Schemer>();
+			switch(leftAct){
+			case 1:
+				leftColor = schemer.ActIColors[4];
+				break;
+			case 2:
+				leftColor = schemer.ActIIColors[4];
+				break;
+			case 3:
+				leftColor = schemer.ActIIIColors[4];
+				break;
+			case 4:
+				leftColor = schemer.ActIVColors[4];
+				break;
+			case 5:
+				leftColor = schemer.ActVColors[4];
+				break;
+			default:
+				leftColor = schemer.ActIColors[4];
+				break;
+			}
+
+			switch(rightAct){
+			case 1:
+				rightColor = schemer.ActIColors[4];
+				break;
+			case 2:
+				rightColor = schemer.ActIIColors[4];
+				break;
+			case 3:
+				rightColor = schemer.ActIIIColors[4];
+				break;
+			case 4:
+				rightColor = schemer.ActIVColors[4];
+				break;
+			case 5:
+				rightColor = schemer.ActVColors[4];
+				break;
+			default:
+				rightColor = schemer.ActIColors[4];
+				break;
+			}
+		}
+
 		GameObject MainCameraObject = GameObject.FindGameObjectWithTag ("MainCamera");
 		if (MainCameraObject == null) {
 			Debug.Log ("Cannot find maincamera, deleting color changer");
