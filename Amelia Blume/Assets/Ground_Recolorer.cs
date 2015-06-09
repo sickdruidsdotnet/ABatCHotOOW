@@ -38,6 +38,9 @@ public class Ground_Recolorer : MonoBehaviour {
 					render.materials[1].color = grassColor;
 				}
 
+				if(ground.transform.Find ("Grass") != null)
+					ground.transform.Find ("Grass").renderer.material.color = grassFluffColor;
+
 			}
 
 			foreach (GameObject soil in allSoil) {

@@ -97,7 +97,6 @@ public class Color_Schemer : MonoBehaviour {
 		case "Background 1":
 			return activeColors[0];
 		case "Background 2":
-			Debug.Log("back 2");
 			return activeColors[1];
 		case "Background 3":
 			return activeColors[2];
