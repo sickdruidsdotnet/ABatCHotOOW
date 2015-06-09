@@ -19,7 +19,9 @@ public class Fluff_spawner : MonoBehaviour {
 	public bool overrideColor;
 	public Color newColor;
 
-	List<GameObject> spawnedFluff;
+	public bool redoColor;
+
+	public List<GameObject> spawnedFluff;
 
 	float spawnHeight;
 	float spawnDepth;
@@ -31,6 +33,14 @@ public class Fluff_spawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//get colors from color schemer, if it exists
+		GameObject CSObject = GameObject.Find ("Color Schemer");
+		if (CSObject != null && gameObject.name != "Grass Fluff Spawner") {
+			overrideColor = true;
+			Color_Schemer schemer = CSObject.GetComponent<Color_Schemer>();
+			newColor = schemer.GetColor(transform.parent.name);
+		}
 		//we flat-out can't handly rotation; none of our fluff allows for it
 
 		if (transform.parent.transform.rotation.x != 0 && transform.parent.transform.rotation.x != 270 && transform.parent.transform.rotation.x != 90 )
@@ -66,7 +76,7 @@ public class Fluff_spawner : MonoBehaviour {
 					totalFreq += weights[i];
 			}
 		}
-
+		 
 		spawnedFluff = new List<GameObject> ();
 
 		spawnFluff ();
@@ -136,16 +146,24 @@ public class Fluff_spawner : MonoBehaviour {
 					}
 				}
 				prev = newFluff;
-				spawnedFluff.Add(newFluff);
 			}
+			spawnedFluff.Add(newFluff);
 		}
 		if (overrideColor) {
 			ReassignColors();
 		}
 	}
 
+	void FixedUpdate(){
+		if (redoColor) {
+			redoColor = false;
+			ReassignColors ();
+		}
+	}
+
 	public void ReassignColors()
 	{
+
 		foreach (GameObject item in spawnedFluff) {
 			if(item.renderer != null)
 			{
@@ -155,9 +173,12 @@ public class Fluff_spawner : MonoBehaviour {
 			Renderer[] childRenderers = item.GetComponentsInChildren<Renderer>();
 			foreach(Renderer render in childRenderers)
 			{
-				foreach(Material mat in render.materials)
+				if(! (render.gameObject.name == "fluff_vine" || render.gameObject.name == "fluff_vine_leaf"))
 				{
-					mat.color = newColor;
+					foreach(Material mat in render.materials)
+					{
+						mat.color = newColor;
+					}
 				}
 			}
 		}
