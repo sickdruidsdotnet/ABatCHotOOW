@@ -1368,7 +1368,7 @@ Tiddler
 p430
 (dp431
 g21
-VThere's an acorn in the soil here... I could conjure some water to wet the soil and then shine sunlight upon it once it sprouts. (Conjure Water: B Button. Conjure Sunlight: Y Button.)[[1-1 tutorial water b]]
+VThere's an acorn in the soil here... I could conjure some water to wet the soil and then shine sunlight upon it once it sprouts.[[1-1 tutorial water b]]
 p432
 sg23
 V1-1 tutorial water
@@ -1377,12 +1377,12 @@ sg25
 g26
 ((I2015
 I6
-I11
-I20
-I20
-I38
-I3
-I162
+I12
+I5
+I17
+I37
+I4
+I163
 I1
 tp434
 (dp435
@@ -4818,7 +4818,7 @@ Tiddler
 p1485
 (dp1486
 g21
-VOnce it grows tall enough, I should be able to climb its limbs.
+V(Conjure Water: B Button. Conjure Sunlight: Y Button.)[[1-1 tutorial water c]]
 p1487
 sg23
 V1-1 tutorial water b
@@ -4827,12 +4827,12 @@ sg25
 g26
 ((I2015
 I6
-I11
-I20
-I20
-I45
-I3
-I162
+I12
+I5
+I17
+I54
+I4
+I163
 I1
 tp1489
 (dp1490
@@ -5013,10 +5013,60 @@ tp1543
 (dp1544
 tp1545
 Rp1546
+sbsa(dp1547
+g14
+I00
+sg15
+(lp1548
+F10.0
+aF990.0
+asg17
+(itiddlywiki
+Tiddler
+p1549
+(dp1550
+g21
+VOnce it grows tall enough, I should be able to climb its limbs.
+p1551
+sg23
+V1-1 tutorial water c
+p1552
+sg25
+g26
+((I2015
+I6
+I12
+I5
+I18
+I2
+I4
+I163
+I1
+tp1553
+(dp1554
+tp1555
+Rp1556
+sg31
+(lp1557
+sg34
+g26
+((I2015
+I6
+I12
+I5
+I17
+I57
+I4
+I163
+I1
+tp1558
+(dp1559
+tp1560
+Rp1561
 sbsasS'scale'
-p1547
+p1562
 F0.8
 sS'snapping'
-p1548
+p1563
 I01
 ss.
