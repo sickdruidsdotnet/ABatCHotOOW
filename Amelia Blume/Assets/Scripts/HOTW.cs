@@ -7,6 +7,7 @@ using System.Linq;
 class HOTW : MonoBehaviour
 {
 	public GameObject ameliaObject;
+	public GameObject fungusObject;
 	public Player playerScript;
 	private GameObject sun;
 	public GameObject faderPrefab;
@@ -25,6 +26,7 @@ class HOTW : MonoBehaviour
 		if (ameliaObject == null || playerScript == null)
 		{
 			getPlayer();
+			getFungus();
 		}
 	}
 
@@ -51,6 +53,16 @@ class HOTW : MonoBehaviour
 				activeFader.GetComponent<Image>().color = new Color(.063f, .584f, .153f, 0);
 				*/
 				Debug.Log("Collecting sun");
+				string level;
+				if (fungusObject.GetComponent<FungusCreature>().dead)
+				{
+					level = "Cutscene8-HeartNoFungus";
+				}
+				else
+				{
+					level = "Cutscene9-HeartFungus";
+				}
+                GetComponent<LevelTransition>().nextLevelName = level;
                 GetComponent<LevelTransition>().transition();
 			}
 			else
@@ -64,38 +76,6 @@ class HOTW : MonoBehaviour
         }
 	}
 
-	/*
-	public IEnumerator FadeOut()
-	{
-		float startTime = Time.time;
-
-		while (activeFader.GetComponent<Image>().color.a < 1) {
-			yield return new WaitForSeconds (0.01f);
-			float t = (Time.time - startTime)/outTime;//(timepassed/duration)
-			activeFader.GetComponent<Image> ().color = new Color (activeFader.GetComponent<Image> ().color.r, activeFader.GetComponent<Image> ().color.g,
-			                                                   activeFader.GetComponent<Image> ().color.b, Mathf.SmoothStep(0,1, t));
-		}
-
-		StartCoroutine(FadeIn(waitTime));
-
-        Destroy(GameObject.Find("Become HOTW Prompt"));
-	}
-
-	public IEnumerator FadeIn(float delay = 0)
-	{
-		yield return new WaitForSeconds (delay);
-		float startTime = Time.time;
-		while (activeFader.GetComponent<Image>().color.a > 0) {
-			yield return new WaitForSeconds (0.01f);
-			float t = (Time.time - startTime)/inTime; //(timepassed/duration)
-			activeFader.GetComponent<Image> ().color = new Color (activeFader.GetComponent<Image> ().color.r, activeFader.GetComponent<Image> ().color.g,
-			                                                   activeFader.GetComponent<Image> ().color.b, 1 - Mathf.SmoothStep(0,1, t));
-		}
-
-		ameliaIsHOTW = true;
-	}
-	*/
-
 	private void getPlayer()
 	{
 		ameliaObject = GameObject.FindWithTag("Player");
@@ -103,5 +83,10 @@ class HOTW : MonoBehaviour
 		{
 			playerScript = ameliaObject.GetComponent<Player>();
 		}
+	}
+
+	private void getFungus()
+	{
+		fungusObject = GameObject.Find("FungusCreature");
 	}
 }

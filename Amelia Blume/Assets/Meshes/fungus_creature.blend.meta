@@ -32,6 +32,7 @@ ModelImporter:
     100052: Sphere_003
     100054: Sphere_004
     100056: Sphere_005
+    100058: ichor_008
     400000: //RootNode
     400002: tentacle_top
     400004: tentacle_top_001
@@ -61,6 +62,7 @@ ModelImporter:
     400052: Sphere_003
     400054: Sphere_004
     400056: Sphere_005
+    400058: ichor_008
     2300000: //RootNode
     2300002: tentacle_top
     2300004: tentacle_top_001
@@ -90,6 +92,7 @@ ModelImporter:
     2300052: Sphere_003
     2300054: Sphere_004
     2300056: Sphere_005
+    2300058: ichor_008
     3300000: //RootNode
     3300002: tentacle_top
     3300004: tentacle_top_001
@@ -119,6 +122,7 @@ ModelImporter:
     3300052: Sphere_003
     3300054: Sphere_004
     3300056: Sphere_005
+    3300058: ichor_008
     4300000: fungus_body
     4300002: tentacle_top_003
     4300004: tentacle_top_002
@@ -147,6 +151,7 @@ ModelImporter:
     4300050: Sphere_002
     4300052: Sphere_001
     4300054: Sphere
+    4300056: ichor_008
     7400000: Default Take
     9500000: //RootNode
   materials:

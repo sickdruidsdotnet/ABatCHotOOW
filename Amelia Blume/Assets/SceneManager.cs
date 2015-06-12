@@ -185,6 +185,17 @@ public class SceneManager : MonoBehaviour {
 				}
 				break;
 
+			case "MushroomEvent":
+				// get all Mushrooms in scene
+				GameObject[] shrooms = GameObject.FindGameObjectsWithTag("SproutingShroom");
+				foreach (GameObject shroom in shrooms)
+				{
+					// tell them to start sprouting
+					shroom.GetComponent<MushroomSprout>().sprout();
+				}
+				NextEvent();
+				break;
+
 		
 		
 			}
