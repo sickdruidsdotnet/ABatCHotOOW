@@ -45,7 +45,7 @@ public class Color_Schemer : MonoBehaviour {
 			act = 2;
 			break;
 		case "Cutscene4":
-			act = 1;
+			act = 2;
 			break;
 		case "Cutscene5":
 			act = 3;
