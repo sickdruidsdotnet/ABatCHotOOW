@@ -118,24 +118,12 @@ The woods remain eerily silent, but even the sound of rushing water in the dista
 A deer lies dead here. Wrapped around it are thick vines, covered in inch-long barbs that have torn the skin and muscle from the bones of the creature. A milk-white film covers the creature's eyes, a sharp contrast to the black ichor still pulsing from its wounds.[[3-5 strangled deer b]]
 
 
-:: 4-1 Return to the Heart
->> fire
-
-ignatius does a slight monologue about how the fire will cleanse and give rebirth
-
-ig: sorry about this, but save yourself and flee
-
-a: the heart of the woods, daowg, i gotta save that old dude
+:: 4-1 Ashes a [action]
+<Ignatius appears.>[[4-1 Ashes b]]
 
 
-:: 4-2 Ashes a [Ignatius]
->>indicate that the heart is in pain
-
-heart: the fire is encroaching
-
-a: i'll save you, good sir!
-
-h: leave me, my time is ending. there is still hope for you. there is a cave nearby to take shelter in.
+:: 4-2 Return to the Heart a
+The flames dance all around at the edge of the Heartsgrove, slowly eating through the barriers and wards Ignatius lay himself.[[4-2 Return to the Heart b]]
 
 
 :: 5-1 Fungus a [Creature]
@@ -182,8 +170,12 @@ There is an unnatural quiet here, as even the occasional sound of birdsong has g
 This... is an old form of botanomancy, meant to sow only sorrow and death.
 
 
-:: 4-2 Ashes b [Amelia]
-...!
+:: 4-1 Ashes b [Amelia]
+Ignatius, stop this! Think about the consequences of what you're about to do![[4-1 Ashes c]]
+
+
+:: 4-2 Return to the Heart b [Amelia]
+My lord, I will renew the wards and protect you until these fires pass.[[4-2 Return to the Heart c]]
 
 
 :: 5-1 Fungus b [Amelia]
@@ -222,6 +214,14 @@ That lumbering beast is as stubborn in pursuit as it is big. Forewarned is forea
 Ignatius... those bodies, what have you done?[[3-3 guardian murdered d]]
 
 
+:: 4-1 Ashes c [Ignatius]
+I have, Amélia. The illness lurks in every stem, every root... The Heart of the Woods is connected to all of it. He has been strong, but he will succumb to the disease eventually, and by then the blight will have spread to far beyond the confines of this forest.[[4-1 Ashes d]]
+
+
+:: 4-2 Return to the Heart c
+The Heart of the Woods jerks his arm from a phantom pain, but it is restrained by the very roots which connect him with every living thing in the forest.[[4-2 Return to the Heart d]]
+
+
 :: 5-1 Fungus c [Creature]
 If you must. But know that my kind will always return, it is inevitable. Your kind will eventually tire, and fall to our will. You always do. [[5-1 Fungus d]]
 
@@ -254,6 +254,14 @@ Then, the greenbond? What does the Forest Guardian advise?[[2-2 Dour News e]]
 Only what's necessary, Archdruid. This corruption spreads every minute these creatures breathe. They must be culled if the woods are to be saved.[[3-3 guardian murdered e]]
 
 
+:: 4-1 Ashes d [Amelia]
+With... without a Heart, the leyline would be uncontrolled. Everything in this place will die![[4-1 Ashes e]]
+
+
+:: 4-2 Return to the Heart d [Heart]
+Amélia... no. It is the end of my season, and you would not survive the heat any more than the sun would walk backwards across the sky.[[4-2 Return to the Heart e]]
+
+
 :: 5-1 Fungus d [Amelia]
 IT'S CLOBBERIN' TIME
 
@@ -278,8 +286,12 @@ Nothing. The greenbond has been severed.[[2-2 Dour News f]]
 That's not true! I've cleansed these animals myself... the corruption can be halted, the woods healed. There's no need to shed innocent blood![[3-3 guardian murdered f]]
 
 
-:: Passages to split [annotation]
-[[3-3]]
+:: 4-1 Ashes e [Ignatius]
+It is only in the ashes of the malevolence lurking here that the woods will have a chance to regrow. Why can't you see how necessary this is for the survival of both this forest and every other?[[4-1 Ashes f]]
+
+
+:: 4-2 Return to the Heart e [Amelia]
+I will not stand and watch as these woods are destroyed.[[4-2 Return to the Heart f]]
 
 
 :: 1-1 Meeting Ignatius f [Ignatius]
@@ -298,6 +310,14 @@ Ignatius freezes mid-gesture and turns.[[2-2 Dour News g]]
 And how long would that take, Amélia? The corruption will claim every life in these woods before you go about attending to half of the creatures here! The Forest Guardian has fallen, and without the protections of the greenbond the corruption will only spread faster.[[3-3 guardian murdered g]]
 
 
+:: 4-1 Ashes f [Amelia]
+It is only necessary if there are no other choices![[4-1 Ashes g]]
+
+
+:: 4-2 Return to the Heart f [Heart]
+Go! Not far from here is a cave. Go, and do not tarry here wasting sentiment on an old druid.
+
+
 :: 1-1 Meeting Ignatius g [Amelia]
 My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
 
@@ -314,6 +334,10 @@ Then the Guardian is dead. Another will not rise for a year and a day... we will
 And what of the River Guardian?[[3-3 guardian murdered h]]
 
 
+:: 4-1 Ashes g [Ignatius]
+...Though I may bloody my hands with my actions today, I would not see you killed as well. Please, flee the woods while there's still time.[[4-1 Ashes h]]
+
+
 :: 1-1 Meeting Ignatius h [action]
 Ignatius runs ahead with surprising speed, disappearing out of sight in moments.
 
@@ -328,6 +352,10 @@ Ignatius makes a circle with his thumb and forefinger and makes a sweeping gestu
 
 :: 3-3 guardian murdered h
 Ignatius pauses for a moment, looking down at the ground before continuing.[[3-3 guardian murdered i]]
+
+
+:: 4-1 Ashes h [action]
+<Ignatius exits. #directors-cut: sun magic starts/spawns fires.>
 
 
 :: 2-2 Dour News i [Ignatius]
@@ -359,7 +387,7 @@ No, I've saved them! The corruption will spread faster than you could ever hope 
 
 
 :: 3-3 guardian murdered l [Amelia]
-BUHHhhhhhhhhh
+What... what are you planning to do?
 
 
 :: 2-2 Dour News m
@@ -375,7 +403,7 @@ Go to Ignatius' aid. His wards will keep the Heartsgrove safe until your return.
 
 
 :: 3-3 guardian murdered n [Amelia]
-hhhhhhh what WAIT SHIT FUCK
+Ignatius! Gods, no... he's heading for the Heartsgrove!
 
 
 :: 2-2 Dour News o [Amelia]

@@ -14,8 +14,8 @@ public class SceneManager : MonoBehaviour {
 	Player player;
 	int index;
 	SignPost signPost;
-	float nextUse;
-	float delay = 0.3f;
+	//float nextUse;
+	//float delay = 0.3f;
 	bool moving = false;
 	bool runNotWalk = true;
 	bool waitingOnCamera = false;
@@ -39,7 +39,7 @@ public class SceneManager : MonoBehaviour {
 
 		NextEvent ();
 
-		nextUse = Time.time + delay;
+		//nextUse = Time.time + delay;
 		//signPost.inCutscene = true;
 
 	}

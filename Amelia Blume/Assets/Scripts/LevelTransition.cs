@@ -40,7 +40,7 @@ public class LevelTransition : MonoBehaviour {
 		}
 	}
 
-	void transition()
+	public void transition()
 	{
 		if(PlayerPrefs.GetInt("Highest Stage", 0) < nextLevel)
 		{
