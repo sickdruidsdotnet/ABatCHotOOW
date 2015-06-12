@@ -61,7 +61,7 @@ public class TreePlant_Procedural : Plant
 
 		//setRandomValues();
 
-		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position + new Vector3(0, 0, zOffset), Quaternion.identity) as GameObject;
+		treeStructure = Instantiate(Resources.Load("TreePlant/TreeStructure"), transform.position + new Vector3(0, -0.03f, zOffset), Quaternion.identity) as GameObject;
 		treeStructure.transform.parent = gameObject.transform;
 		treeStructure.GetComponent<TreeStructure>().loadTreeSettings(treeSettings);
 
