@@ -75,7 +75,7 @@ Roots
 
 
 :: 1-1 tutorial dash [Amelia]
-This gap is too wide to jump over without falling into that bramble. I could dash across, however. (Right bumper: Dash.)
+This gap is too wide to jump over without falling into that bramble. I could dash across, however.[[1-1 tutorial dash b]]
 
 
 :: 1-1 mushroom examination a
@@ -118,8 +118,8 @@ The woods remain eerily silent, but even the sound of rushing water in the dista
 A deer lies dead here. Wrapped around it are thick vines, covered in inch-long barbs that have torn the skin and muscle from the bones of the creature. A milk-white film covers the creature's eyes, a sharp contrast to the black ichor still pulsing from its wounds.[[3-5 strangled deer b]]
 
 
-:: 4-1 Ashes a [action]
-<Ignatius appears.>[[4-1 Ashes b]]
+:: 4-1 Ashes zero [action]
+<Ignatius appears.>
 
 
 :: 4-2 Return to the Heart a
@@ -134,8 +134,8 @@ From further within the cave, there's a sound like wet leaves rustling.
 The woods may recover from this fire in time, but...[[5-1 taking the throne b]]
 
 
-:: 1-1 tutorial acorn [Amelia]
-That cliff is too steep to climb... But if I planted an acorn, I could climb the tree that it would grow instead. (Plant active seed: X Button.)
+:: 1-1 tutorial dash b
+(Dash with the Right Bumper.)
 
 
 :: 1-1 mushroom examination b [Amelia]
@@ -151,7 +151,7 @@ Greetings, lord. I am Amélia, an Archdruid come to aid in healing the sickness 
 
 
 :: 2-1 oh deer [Amelia]
-If that deer becomes dangerous, I could restrain it with one of the vine seeds in my seed bag. (Select seed: Right Thumbstick)[[2-1 oh deer b]]
+If that deer becomes dangerous, I could restrain it with one of the vine seeds in my seed bag.[[2-1 oh deer b]]
 
 
 :: 2-1 Forest Guardian b [Amelia]
@@ -178,7 +178,7 @@ There is an unnatural quiet here, as even the occasional sound of birdsong has g
 This... is an old form of botanomancy, meant to sow only sorrow and death.
 
 
-:: 4-1 Ashes b [Amelia]
+:: 4-1 Ashes a [Amelia]
 Ignatius, stop this! Think about the consequences of what you're about to do![[4-1 Ashes c]]
 
 
@@ -213,8 +213,8 @@ C: Won't you,
 ...these woods were planted by the first druids because of the intersection of leylines that occurs here. The magical energies that course through these woods will accumulate over time without the oversight of a Heart to diffuse them, attracting all manner of dark entities.[[5-1 taking the throne c]]
 
 
-:: 1-1 tutorial water [Amelia]
-There's an acorn in the soil here... I could conjure some water to wet the soil and then shine sunlight upon it once it sprouts. (Conjure Water: B Button. Conjure Sunlight: Y Button.)[[1-1 tutorial water b]]
+:: 1-1 tutorial acorn [Amelia]
+That cliff is too steep to climb... But if I planted an acorn, I could climb the tree that it would grow instead.[[1-1 tutorial acorn b]]
 
 
 :: 1-1 examination a
@@ -229,8 +229,8 @@ Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ign
 The old man gives no sign that he heard, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
 
 
-:: 2-1 oh deer b [Amelia]
-Then, my sunlight magic should be able to cleanse the infection from the animal. (Sunlight / Conversion: Y Button)
+:: 2-1 oh deer b
+(Select seeds with the Right Thumbstick)[[2-1 oh deer c]]
 
 
 :: 2-1 Forest Guardian c
@@ -261,8 +261,8 @@ The Heart of the Woods jerks his arm from a phantom pain, but it is restrained b
 If I take this chair I could take up that burden myself, but in so doing I will be utterly bound to these woods... for good or ill.[[5-1 taking the throne d]]
 
 
-:: 1-1 tutorial water b [Amelia]
-Once it grows tall enough, I should be able to climb its limbs.
+:: 1-1 tutorial acorn b
+(Plant a seed with the X Button.)
 
 
 :: 1-1 examination b [Amelia]
@@ -275,6 +275,10 @@ The same thing that surely brings you here, Archdruid. A dark presence lurks ove
 
 :: 1-2 Audience d [Ignatius]
 The roots sing his pain. I do not know if he is even capable of hearing us.[[1-2 Audience e]]
+
+
+:: 2-1 oh deer c [Amelia]
+Then, my sunlight magic should be able to cleanse the infection from the animal.[[2-1 oh deer d]]
 
 
 :: 2-1 Forest Guardian d [Amelia]
@@ -301,12 +305,20 @@ Amélia... no. It is the end of my season, and you would not survive the heat an
 But what of Ignatius? He should be brought to answer for his actions today and... if not me, then who?
 
 
+:: 1-1 tutorial water [Amelia]
+There's an acorn in the soil here... I could conjure some water to wet the soil and then shine sunlight upon it once it sprouts.[[1-1 tutorial water b]]
+
+
 :: 1-1 Meeting Ignatius e [Amelia]
 There is a great sickness here, yes, and it is only growing. I seek now to make an audience with The Heart of the Woods.[[1-1 Meeting Ignatius f]]
 
 
 :: 1-2 Audience e
 The Heart of the Woods lets out a long wheeze, though it's not clear whether it's an attempt at speech.[[1-2 Audience f]]
+
+
+:: 2-1 oh deer d
+(Restore animals with the Y Button.)
 
 
 :: 2-1 Forest Guardian e
@@ -327,6 +339,10 @@ It is only in the ashes of the malevolence lurking here that the woods will have
 
 :: 4-2 Return to the Heart e [Amelia]
 I will not stand and watch as these woods are destroyed.[[4-2 Return to the Heart f]]
+
+
+:: 1-1 tutorial water b
+(Conjure water with the B Button, and conjure sunlight with the Y Button.)[[1-1 tutorial water c]]
 
 
 :: 1-1 Meeting Ignatius f [Ignatius]
@@ -353,6 +369,10 @@ It is only necessary if there are no other choices![[4-1 Ashes g]]
 Go! Not far from here is a cave. Go, and do not tarry here wasting sentiment on an old druid.
 
 
+:: 1-1 tutorial water c [Amelia]
+Once it grows tall enough, I should be able to climb its limbs.
+
+
 :: 1-1 Meeting Ignatius g [Amelia]
 My thanks, Ignatius.
 
@@ -370,7 +390,7 @@ And what of the River Guardian?[[3-3 guardian murdered h]]
 
 
 :: 4-1 Ashes g [Ignatius]
-...Though I may bloody my hands with my actions today, I would not see you killed as well. Please, flee the woods while there's still time.[[4-1 Ashes h]]
+...Though I may bloody my hands with my actions today, I would not see you killed as well. Please, flee the woods while there's still time.
 
 
 :: 1-2 Audience h
