@@ -75,7 +75,7 @@ Roots
 
 
 :: 1-1 tutorial dash [Amelia]
-This gap is too wide to jump over without falling into that bramble patch. I can dash (right bumper) on the ground or midair to get across, though.
+This gap is too wide to jump over without falling into that bramble. I could dash across, however. (Right bumper: Dash.)
 
 
 :: 1-1 mushroom examination a
@@ -90,8 +90,8 @@ Another druid approaches, bearing a stern countenance and a staff of charred oak
 A single massive oak stands at the center of what would otherwise be a clearing. Here presides The Heart of the Woods, bound to the throne of vines he sits on. He holds a birchstaff in his ghastly white hand.[[1-2 Audience b]]
 
 
-:: 2-1 getting vines
-A large buck stands ahead of you, staring blankly into the distance. It seems to be covered in fruiting bodies, a living colony for some kind of fungus.
+:: 2-1 first deer
+A large buck stands ahead, staring blankly into the distance and occasionally letting off an aggravated sort of snort. It seems to be covered in fruiting bodies, a living colony for some kind of fungus.[[2-1 oh deer]]
 
 
 :: 2-1 Forest Guardian a
@@ -126,12 +126,16 @@ A deer lies dead here. Wrapped around it are thick vines, covered in inch-long b
 The flames dance all around at the edge of the Heartsgrove, slowly eating through the barriers and wards Ignatius lay himself.[[4-2 Return to the Heart b]]
 
 
-:: 5-1 Fungus a [Creature]
-Insert evil monologue [[5-1 Fungus b]]
+:: 5-1 Fungus preview
+From further within the cave, there's a sound like wet leaves rustling.
+
+
+:: 5-1 taking the throne a [Amelia]
+The woods may recover from this fire in time, but...[[5-1 taking the throne b]]
 
 
 :: 1-1 tutorial acorn [Amelia]
-That cliff is too steep to climb... But if I planted an acorn (Select with Right Stick, plant with X button), I could climb the tree that it would grow instead.
+That cliff is too steep to climb... But if I planted an acorn, I could climb the tree that it would grow instead. (Plant active seed: X Button.)
 
 
 :: 1-1 mushroom examination b [Amelia]
@@ -144,6 +148,10 @@ The trees foretold your arrival, Archdruid. It is good to see your face in this 
 
 :: 1-2 Audience b [Amelia]
 Greetings, lord. I am Amélia, an Archdruid come to aid in healing the sickness in your woods.[[1-2 Audience c]]
+
+
+:: 2-1 oh deer [Amelia]
+If that deer becomes dangerous, I could restrain it with one of the vine seeds in my seed bag. (Select seed: Right Thumbstick)[[2-1 oh deer b]]
 
 
 :: 2-1 Forest Guardian b [Amelia]
@@ -178,12 +186,35 @@ Ignatius, stop this! Think about the consequences of what you're about to do![[4
 My lord, I will renew the wards and protect you until these fires pass.[[4-2 Return to the Heart c]]
 
 
-:: 5-1 Fungus b [Amelia]
-Cool story bro. Is it time for me to kill you yet? [[5-1 Fungus c]]
+:: 5-1 Humungus Fungus Amungus a
+A: What is this... growth, lurking with the roots and shadows?
+
+A mass of slick, shiny fibers is barely visible beyond, adding a reek of something like oil and decay to the ouerve of chthonic odors.
+
+The fibers begin to shift, softly oozing a syrupy red-black fluid as they do so. The fibers connect to a pale white body dotted with bony extrusions and numerous pustules.
+
+/% This speech affectation might be a little over-the-top, I dunno. %/
+C: We are... mORRRrrre than a... grrrowth, arRRCHdruid.
+
+A: Then what are you? A vulture, come to pick at the remains of the blessed woods?
+
+C: We are... the rrrrrrrrrRRRightful ownnnersss of these... woodsss.
+
+C: With the ailinnng Hearrrt now... rrremoved, we will have an essstate worthy of... us. Devoid of grrRRREEN, a palace of rrrot forrr us and... only us.
+
+A: I won't let that happen.
+
+C: Won't you, 
+
+<dialogue continues>
 
 
-:: 1-1 tutorial vine convert [Amelia]
-If it becomes necessary, I can restrain that deer with vines (Right Thumbstick). I might then be able to cleanse the animal of its infection (Y button).
+:: 5-1 taking the throne b [Amelia]
+...these woods were planted by the first druids because of the intersection of leylines that occurs here. The magical energies that course through these woods will accumulate over time without the oversight of a Heart to diffuse them, attracting all manner of dark entities.[[5-1 taking the throne c]]
+
+
+:: 1-1 tutorial water [Amelia]
+There's an acorn in the soil here... I could conjure some water to wet the soil and then shine sunlight upon it once it sprouts. (Conjure Water: B Button. Conjure Sunlight: Y Button.)[[1-1 tutorial water b]]
 
 
 :: 1-1 examination a
@@ -196,6 +227,10 @@ Greetings, friend. What brings you so far from the Burnt Grove?[[1-1 Meeting Ign
 
 :: 1-2 Audience c
 The old man gives no sign that he heard, continuing to stare blankly at the ground and breathing raggedly.[[1-2 Audience d]]
+
+
+:: 2-1 oh deer b [Amelia]
+Then, my sunlight magic should be able to cleanse the infection from the animal. (Sunlight / Conversion: Y Button)
 
 
 :: 2-1 Forest Guardian c
@@ -222,12 +257,12 @@ I have, Amélia. The illness lurks in every stem, every root... The Heart of the
 The Heart of the Woods jerks his arm from a phantom pain, but it is restrained by the very roots which connect him with every living thing in the forest.[[4-2 Return to the Heart d]]
 
 
-:: 5-1 Fungus c [Creature]
-If you must. But know that my kind will always return, it is inevitable. Your kind will eventually tire, and fall to our will. You always do. [[5-1 Fungus d]]
+:: 5-1 taking the throne c [Amelia]
+If I take this chair I could take up that burden myself, but in so doing I will be utterly bound to these woods... for good or ill.[[5-1 taking the throne d]]
 
 
-:: 1-1 tutorial water [Amelia]
-There's an acorn in the soil here... I could conjure some water (B Button) to wet the soil and then shine sunlight upon it (Y Button) once it sprouts. Once it grows tall enough, I should be able to climb its limbs.
+:: 1-1 tutorial water b [Amelia]
+Once it grows tall enough, I should be able to climb its limbs.
 
 
 :: 1-1 examination b [Amelia]
@@ -235,7 +270,7 @@ Odd... These conditions don't favor mold.
 
 
 :: 1-1 Meeting Ignatius d [Ignatius]
-The same thing that surely brings you here, Archdruid. A dark presence lurks over this forest... the winds blowing through are heavy with death and rot.[[1-1 Meeting Ignatius e]]
+The same thing that surely brings you here, Archdruid. A dark presence lurks over this forest... the winds blowing through are heavy with death.[[1-1 Meeting Ignatius e]]
 
 
 :: 1-2 Audience d [Ignatius]
@@ -255,15 +290,15 @@ Only what's necessary, Archdruid. This corruption spreads every minute these cre
 
 
 :: 4-1 Ashes d [Amelia]
-With... without a Heart, the leyline would be uncontrolled. Everything in this place will die![[4-1 Ashes e]]
+With... without a Heart, the leyline would be uncontrolled. The forest will fall to evil![[4-1 Ashes e]]
 
 
 :: 4-2 Return to the Heart d [Heart]
 Amélia... no. It is the end of my season, and you would not survive the heat any more than the sun would walk backwards across the sky.[[4-2 Return to the Heart e]]
 
 
-:: 5-1 Fungus d [Amelia]
-IT'S CLOBBERIN' TIME
+:: 5-1 taking the throne d [Amelia]
+But what of Ignatius? He should be brought to answer for his actions today and... if not me, then who?
 
 
 :: 1-1 Meeting Ignatius e [Amelia]
@@ -319,7 +354,7 @@ Go! Not far from here is a cave. Go, and do not tarry here wasting sentiment on 
 
 
 :: 1-1 Meeting Ignatius g [Amelia]
-My thanks, Ignatius.[[1-1 Meeting Ignatius h]]
+My thanks, Ignatius.
 
 
 :: 1-2 Audience g [Ignatius]
@@ -336,10 +371,6 @@ And what of the River Guardian?[[3-3 guardian murdered h]]
 
 :: 4-1 Ashes g [Ignatius]
 ...Though I may bloody my hands with my actions today, I would not see you killed as well. Please, flee the woods while there's still time.[[4-1 Ashes h]]
-
-
-:: 1-1 Meeting Ignatius h [action]
-Ignatius runs ahead with surprising speed, disappearing out of sight in moments.
 
 
 :: 1-2 Audience h
