@@ -173,13 +173,13 @@ public class Fluff_spawner : MonoBehaviour {
 			Renderer[] childRenderers = item.GetComponentsInChildren<Renderer>();
 			foreach(Renderer render in childRenderers)
 			{
-				if(! (render.gameObject.name == "fluff_vine" || render.gameObject.name == "fluff_vine_leaf"))
-				{
+				//if(! (render.gameObject.name == "fluff_vine" || render.gameObject.name == "fluff_vine_leaf"))
+				//{
 					foreach(Material mat in render.materials)
 					{
 						mat.color = newColor;
 					}
-				}
+				//}
 			}
 		}
 		//specifically for grass fluff because it's being a jerk
