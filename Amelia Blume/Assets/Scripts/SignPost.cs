@@ -31,7 +31,7 @@ public class SignPost : MonoBehaviour {
 
 	bool personSpeaking = false;
 
-	public Sprite[] portraits = new Sprite[3];
+	public Sprite[] portraits = new Sprite[4];
 
 	char[] charsToTrim = { '[' ,']'};
 	char[] titleSplit = { '[', ']' , ':'};
@@ -69,9 +69,32 @@ public class SignPost : MonoBehaviour {
 	public float lowPitchRange = 0.85F;
     public float highPitchRange = 1.0F;
 
+
+	//private float resHeight;
+	//private float resWidth;
+	private float screenWidth = 1065;
+	private float screenHeight = 599;
+
+	public float offsetX = 0;
+	public float offsetY = 0;
+
+	//private float currresHeight;
+	//private float currresWidth;
+	public float currscreenWidth;
+	public float currscreenHeight;
 	int newLineIndex = 75;
 	// Use this for initialization
 	void Start () {
+		//resWidth = Screen.currentResolution.width;
+		//resHeight = Screen.currentResolution.height;
+		currscreenHeight = Screen.height;
+		currscreenWidth = Screen.width;
+		if (currscreenWidth != screenWidth) {
+			offsetX = screenWidth - currscreenWidth;
+		//	offsetY = screenHeight - currscreenHeight;
+		}
+		//Debug.Log (Screen.currentResolution.height);
+		//Debug.Log (Screen.currentResolution.width);
 		inCutscene = false;
 		cutSceneStart = false;
 		nextPassage = startingPassage;
@@ -87,6 +110,7 @@ public class SignPost : MonoBehaviour {
 		uiText.enabled = false;
 
 		textBoxObj = GameObject.Find ("TextBox");
+		//textBoxObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-311-offsetX/5);
 		uiTextBoxSprite = textBoxObj.GetComponent<Image>();
 		uiTextBoxSprite.enabled = false;
 
@@ -156,6 +180,27 @@ public class SignPost : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (currscreenWidth != screenWidth) {
+			offsetX = screenWidth - currscreenWidth;
+			//	offsetY = screenHeight - currscreenHeight;
+		}
+//		currresWidth = Screen.currentResolution.width;
+//		currresHeight = Screen.currentResolution.height;
+//		currscreenHeight = Screen.height;
+//		currscreenWidth = Screen.width;
+		/*
+		if (currscreenWidth != screenWidth) {
+			resWidth = Screen.currentResolution.width;
+			resHeight = Screen.currentResolution.height;
+			screenHeight = Screen.height;
+			screenWidth = Screen.width;
+			Debug.Log ("CHANGE");
+			Debug.Log ("Res Height: " + Screen.currentResolution.height);
+			Debug.Log ("Res Width: " + Screen.currentResolution.width);
+			Debug.Log ("Screen Height: " + Screen.height);
+			Debug.Log ("Screen Width: " + Screen.width);
+		}*/
+
 		if (uiCanvas == null || uiButtonSprite == null || uiText == null) {
 			Debug.Log ("Null stuff");
 			ReloadResources();
@@ -168,6 +213,10 @@ public class SignPost : MonoBehaviour {
 
 		uiButtonSprite.enabled = uiText.enabled;
 		uiTextBoxSprite.enabled = uiText.enabled;
+
+		//textBoxObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-311-offsetX/5);
+		//uiTextObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-315-offsetX/5);
+		//buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(374.63f,-351-offsetX/5);
 		if (!inCutscene) {
 			//Debug.Log("Not Cutscene");
 			nameText.enabled = uiText.enabled;
@@ -194,18 +243,34 @@ public class SignPost : MonoBehaviour {
 			uiPortraitSprite.sprite = portraits [0];
 			nameRect.position = GameObject.Find ("Left Name Anchor").GetComponent<RectTransform>().position;
 			portraitRect.position = GameObject.Find ("Left Portrait Anchor").GetComponent<RectTransform>().position;
+			//portraitRect.anchoredPosition = new Vector2(-1*currscreenWidth+currscreenWidth/3,-1*currscreenHeight + 2*currscreenHeight/3);
+			//nameRect.anchoredPosition = new Vector2(-299, -226);
+			//portraitRect.position = GameObject.Find ("Left Portrait Anchor").GetComponent<RectTransform>().position;
 		} else if (nameText.text == "Ignatius") {
 			//Debug.Log ("Ig Speaking");
 			uiPortraitSprite.sprite = portraits [1];
 			personSpeaking = true;
+			//portraitRect.anchoredPosition = new Vector2(525,-134);
+			//portraitRect.anchoredPosition = new Vector2(currscreenWidth-currscreenWidth/3,-1*currscreenHeight + 2*currscreenHeight/3);
+			//nameRect.anchoredPosition = new Vector2(283, -226);
 			portraitRect.position = GameObject.Find ("Right Portrait Anchor").GetComponent<RectTransform>().position;
 			nameRect.position = GameObject.Find ("Right Name Anchor").GetComponent<RectTransform>().position;
 		} else if (nameText.text == "Heart") {
 			uiPortraitSprite.sprite = portraits [2];
 			personSpeaking = true;
+			//portraitRect.anchoredPosition = new Vector2(-527,-119);
+			//nameRect.anchoredPosition = new Vector2(283, -226);
 			portraitRect.position = GameObject.Find ("Right Portrait Anchor").GetComponent<RectTransform>().position;
 			nameRect.position = GameObject.Find ("Right Name Anchor").GetComponent<RectTransform>().position;
-		}else {
+		} else if (nameText.text == "Creature") {
+			portraitRect.position = GameObject.Find ("Right Portrait Anchor").GetComponent<RectTransform>().position;
+			nameRect.position = GameObject.Find ("Right Name Anchor").GetComponent<RectTransform>().position;
+			//portraitRect.anchoredPosition = new Vector2(513,-119);
+			//nameRect.anchoredPosition = new Vector2(283, -226);
+			//portraitRect.Width 
+			uiPortraitSprite.sprite = portraits [3];
+			personSpeaking = true;
+		}else{
 			//Debug.Log ("ELSE");
 			//uiPortraitSprite.enabled = false;
 			//nameText.enabled = false;

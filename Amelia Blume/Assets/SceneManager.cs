@@ -97,18 +97,18 @@ public class SceneManager : MonoBehaviour {
 		{
 			if (Camera.main.transform.position == CameraController.panTo)
 			{
-				Debug.Log("Camera has reached its location, start next event.");
+				//Debug.Log("Camera has reached its location, start next event.");
 				waitingOnCamera = false;
 				NextEvent();
 			}
 			else
 			{
-				Debug.Log("Camera still in motion, don't start next event yet.");
+				//Debug.Log("Camera still in motion, don't start next event yet.");
 			}
 		}
 		else
 		{
-			Debug.Log("Why check on the camera if it's not being waitied on?");
+			//Debug.Log("Why check on the camera if it's not being waitied on?");
 		}
 	}
 
