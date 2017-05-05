@@ -5,7 +5,7 @@ public class WaterParticles : MonoBehaviour {
 	public InputHandler playerInput;
 
 	bool rightTrigger;
-	int coolDown;
+	int coolDown = 0;
 	public ParticleSystem water;
 	GameObject amelia;
 	Player player;
@@ -36,6 +36,7 @@ public class WaterParticles : MonoBehaviour {
 
 	void StartWater()
 	{
+		water.startSpeed = 5 + Mathf.Abs (player.velocity.x);
 		water.Emit (1);
 	}
 

@@ -97,28 +97,28 @@ public class SceneManager : MonoBehaviour {
 		{
 			if (Camera.main.transform.position == CameraController.panTo)
 			{
-				Debug.Log("Camera has reached its location, start next event.");
+				//Debug.Log("Camera has reached its location, start next event.");
 				waitingOnCamera = false;
 				NextEvent();
 			}
-			else
+			/*else
 			{
-				Debug.Log("Camera still in motion, don't start next event yet.");
-			}
+				//Debug.Log("Camera still in motion, don't start next event yet.");
+			}*/
 		}
-		else
+		/*else
 		{
 			Debug.Log("Why check on the camera if it's not being waitied on?");
-		}
+		}*/
 	}
 
 	void NextEvent(){
 		index++;
-		Debug.Log (index);
+		//Debug.Log (index);
 		if (index < events.Count) {
 			switch (events [index].tag) {
 			case "Amelia":
-				Debug.Log ("Amelia Move");
+				//Debug.Log ("Amelia Move");
 				MoveEvent ameliaMoveEventScript = events[index].GetComponent<MoveEvent>();
 				currChar = amelia;
 				moving = true;
@@ -140,7 +140,7 @@ public class SceneManager : MonoBehaviour {
 				break;
 		
 			case "Ig":
-				Debug.Log ("Ig Move");
+				//Debug.Log ("Ig Move");
 				MoveEvent igMoveEventScript = events[index].GetComponent<MoveEvent>();
 				currChar = ig;
 				moving = true;
@@ -174,13 +174,13 @@ public class SceneManager : MonoBehaviour {
 				break;
 
 			case "Camera":
-				Debug.Log("Camera Event");
+				//Debug.Log("Camera Event");
 				CameraEvent eventScript = events[index].GetComponent<CameraEvent>();
 				CameraController.MoveToPosition(events[index].transform.position, eventScript.speed, eventScript.cameraSize);
 				waitingOnCamera = eventScript.waitForDestination;
 				if (!waitingOnCamera)
 				{
-					Debug.Log("Starting next event while Camera is still in motion");
+					//Debug.Log("Starting next event while Camera is still in motion");
 					NextEvent();
 				}
 				break;

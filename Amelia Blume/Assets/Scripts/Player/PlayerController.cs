@@ -11,7 +11,7 @@ public class PlayerController : BaseBehavior {
     
     public float lockedAxisValue;
 		
-	public bool running = false;
+	//public bool running = false;
 	public bool alwaysRun = false;
 	public bool isRunning = false;
 
@@ -70,7 +70,8 @@ public class PlayerController : BaseBehavior {
 			playerInput = playerInputObj.GetComponent<InputHandler> ();
 		}
     	// initialize Amelia's health blossoms
-		blossoms = GameObject.FindGameObjectsWithTag("Blossom");
+		//blossoms = GameObject.FindGameObjectsWithTag("Blossom");
+
 		blossomPositions = new Vector3[10];
 		blossomRotations = new Quaternion[10];
 		for(int i = 0; i < blossoms.Length; i++)
@@ -79,6 +80,7 @@ public class PlayerController : BaseBehavior {
 			if(tempBlossom != null)
 			{
 				blossoms[i].name = blossoms[i].name + " " + i;
+				Debug.Log(blossoms.Length + " " + i + " " + blossomPositions.Length);
 				blossomPositions[i] = blossoms[i].transform.localPosition;
 				blossomRotations[i] = blossoms[i].transform.localRotation;
 				i++;
@@ -206,7 +208,7 @@ public class PlayerController : BaseBehavior {
 		//float vertical = 0f;
 		float horizontal = 0f;
 		
-		bool wasRunning = running;
+		bool wasRunning = isRunning;
 		Vector3 lastInput = pendingMovementInput;
 
         //Debug.Log("Horizontal input is: " + horizontal);
@@ -215,6 +217,7 @@ public class PlayerController : BaseBehavior {
         if (Mathf.Abs(horizontal) < inputDeadZone || player.CUTSCENE)
         {
             horizontal = 0f;
+			isRunning = false;
 		}
 		else{
 			isRunning = true;
@@ -255,10 +258,10 @@ public class PlayerController : BaseBehavior {
 			pendingMovementInput = Vector3.zero;
 		}
 		
-		if (pendingMovementInput.magnitude == 0) {
-			running = false;
+		if (pendingMovementInput.magnitude < inputDeadZone) {
+			//running = false;
 			isRunning = false;
-			if (wasRunning) {
+			/*if (wasRunning) {
 				player.Broadcast("OnStopRunning");	
 			}
 			if (lastInput.magnitude > 0) {
@@ -273,7 +276,7 @@ public class PlayerController : BaseBehavior {
 			}
 			if (lastInput.magnitude == 0) {
 				player.Broadcast("OnStartMoving");	
-			}
+			}*/
 		}
 
 	}
@@ -303,7 +306,7 @@ public class PlayerController : BaseBehavior {
 			}
 		}
 
-		if (!canControl) {
+		/*if (!canControl) {
 			//Debug.Log (canControl);
 			if (player.GetDead ()) {
 				if (playerInput.jumpDown) {
@@ -360,52 +363,106 @@ public class PlayerController : BaseBehavior {
 		} 
 		if (playerInput.waterUp){
 			watering = false;
+		}*/
+		if (!canControl) {
+			//Debug.Log (canControl);
+			if (player.GetDead ()) {
+				if (playerInput.jumpDown) {
+					player.SetSpawn (true);
+				}
+			} else if (player.GetReadSign ()) {
+				//the player can still read signs even though they can't move
+				if (playerInput.jumpDown) {
+					ReadSign ();
+				}
+				
+			} else {
+				return;
+			}
+		} else {
+			if (!player.isSunning () && !player.isConverting () && !player.GetDead ()) {
+				if (player.isGrounded) {
+					if (playerInput.jumpDown) {
+						if (player.GetReadSign ())
+							ReadSign ();
+						else {
+							if (!player.CUTSCENE)
+								Jump ();
+						}
+					}
+					if (playerInput.throwSeedDown && !player.CUTSCENE) {
+						ThrowSeed ();
+					}
+				}
+				if (playerInput.dashDown && !player.CUTSCENE) {
+					Dash ();
+				}
+			}
+			//sunning, cannot sun and water at the same time
+			if (playerInput.sunDown && !player.CUTSCENE && canControl && !watering) {
+				isSunLighting = true;
+				if (canConvert) {
+					AnimalConvert ();
+					player.SetConverting (true);
+				} else {
+					Sun ();
+					player.SetSunning (true);
+				}
+			}
+			if (playerInput.sunUp) {
+				isSunLighting = false;
+			}
+			//watering, player cannot water and sun at the same time
+			if (playerInput.waterDown && canControl && !player.isSunning () && !player.isConverting ()) {
+				watering = true;
+			} 
+			if (playerInput.waterUp) {
+				watering = false;
+			}
 		}
-
-	
 	}
 	
 	protected void Jump() {
-		player.Broadcast("OnJumpRequest");
+		//player.Broadcast("OnJumpRequest");
 		player.motor.Jump();
 		isJumping = true;
 		isRunning = false;
 	}
 
 	protected void StopJump() {
-		player.Broadcast("OnStopJumpRequest");
+		//player.Broadcast("OnStopJumpRequest");
 		player.motor.StopJump();
 		isJumping = false;
 	}
 
 	protected void ThrowSeed() {
-		player.Broadcast("OnThrowSeedRequest");
+		//player.Broadcast("OnThrowSeedRequest");
 		player.motor.ThrowSeed();
 		isPlanting = true;
 		
 	}
 
 	protected void Dash() {
-		player.Broadcast("OnDashRequest");
+		//player.Broadcast("OnDashRequest");
 		player.motor.Dash();
 		isDashing = true;
 		isRunning = false;
 	}
 
 	protected void Sun() {
-		player.Broadcast("OnSunRequest");
+		//player.Broadcast("OnSunRequest");
 		player.motor.Sun();
 		isSunLighting = true;
 	}
 
 	protected void AnimalConvert() {
-		player.Broadcast("OnConvertRequest");
+		//player.Broadcast("OnConvertRequest");
 		player.motor.Convert();
 	}
 
 	public void ReadSign(){
 		player.motor.ReadSign();
-		player.Broadcast ("OnReadSignRequest");
+		//player.Broadcast ("OnReadSignRequest");
 		}
 
 	public void HandleStun()

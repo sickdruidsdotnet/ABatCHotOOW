@@ -612,7 +612,7 @@ public class SideScrollerCameraController : MonoBehaviour {
 		startTime = Time.time;
 		if (speed == 0)
 		{
-			Debug.Log("Speed of camera can not be zero. Defaulted to 1.0");
+			//Debug.Log("Speed of camera can not be zero. Defaulted to 1.0");
 			speed = 1;
 		}
 		panTime = Vector3.Distance(startPos, panTo) / speed;

@@ -126,7 +126,7 @@ public class ABGameController : MonoBehaviour {
 	
 	void OnLevelWasLoaded(int level)
 	{
-		Debug.Log ("Level " + level + " loaded.");
+		//Debug.Log ("Level " + level + " loaded.");
 		//set properties that need to be reset
 		if (activePC == null) {
 			return;

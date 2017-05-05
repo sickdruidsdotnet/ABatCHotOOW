@@ -130,12 +130,12 @@ public class PlayerMotor : BaseBehavior {
 		
 		environment.grounded = player.characterController.isGrounded;
 		
-		if (environment.grounded && !environment.wasGrounded) {
+		/*if (environment.grounded && !environment.wasGrounded) {
 			player.Broadcast("OnPlayerHitGround", environment.ground);
 		}
 		if (!environment.grounded && environment.wasGrounded) {
 			player.Broadcast("OnPlayerLeftGround", environment.ground);
-		}
+		}*/
 		
 		lastInput = movementInput;
 	}
@@ -147,7 +147,7 @@ public class PlayerMotor : BaseBehavior {
 		float acceleration = 1f;
 		
 		if (player.isGrounded) {
-			if (player.controller.running || player.controller.alwaysRun) {
+			if (player.controller.isRunning || player.controller.alwaysRun) {
 				targetSpeed = movement.runSpeed;
 				acceleration = movement.acceleration;
 			} else if (pendingInput.x != 0 || pendingInput.z != 0) {
@@ -232,9 +232,9 @@ public class PlayerMotor : BaseBehavior {
 		}
 
 		if (environment.grounded) {
-			if (!environment.wasGrounded) {
+			/*if (!environment.wasGrounded) {
 				player.Broadcast("OnGroundImpact", new ImpactArgs(environment.ground, movement.fallSpeed));
-			}
+			}*/
 			movement.fallSpeed = 0;
 			workVector.y = movement.baseFallSpeed;	
 		} else {
@@ -278,27 +278,27 @@ public class PlayerMotor : BaseBehavior {
 		
 		if (slide.groundSlope >= slide.uncontrolledSlideAt) {
 			if (!player.controller.slidingFast) {
-				player.Broadcast("OnBeginUncontrolledSlide");
+				//player.Broadcast("OnBeginUncontrolledSlide");
 				player.controller.slidingFast = true;
 			}
 			if (!player.controller.sliding) {
-				player.Broadcast("OnBeginSlide");
+				//player.Broadcast("OnBeginSlide");
 				player.controller.sliding = true;
 			}
 			workVector = slide.direction * slide.speed;
 		} else if (slide.groundSlope >= slide.slideAt) {
 			if (!player.controller.sliding) {
-				player.Broadcast("OnBeginSlide");	
+				//player.Broadcast("OnBeginSlide");	
 				player.controller.sliding = true;
 			}
 			workVector += slide.direction * slide.speed;
 		} else {
 			if (player.controller.sliding) {
-				player.Broadcast("OnEndSlide");
+				//player.Broadcast("OnEndSlide");
 				player.controller.sliding = false;
 			}
 			if (player.controller.slidingFast) {
-				player.Broadcast("OnEndUncontrolledSlide");	
+				//player.Broadcast("OnEndUncontrolledSlide");	
 				player.controller.slidingFast = false;
 			}
 		}			
@@ -323,9 +323,9 @@ public class PlayerMotor : BaseBehavior {
 		if (Physics.Raycast(player.transform.position + rayOffset * Vector3.up, -Vector3.up, out hit, environment.maxCalculatedAltitude, groundTestMask)) {
 			newGround = hit.collider.gameObject;
 			if (newGround != environment.ground) {
-				if (environment.ground == null) {
+				/*if (environment.ground == null) {
 					player.Broadcast("OnLeaveMaxAltitude");	
-				}
+				}*/
 				environment.ground = newGround;				
 				environment.lastGroundPosition = environment.ground.transform.position;
 				environment.currentGroundPosition = environment.lastGroundPosition;
@@ -357,9 +357,9 @@ public class PlayerMotor : BaseBehavior {
 				environment.altitude = 0;	
 			}
 		} else {
-			if (environment.ground != null) {
+			/*if (environment.ground != null) {
 				player.Broadcast("OnReachMaxAltitude");	
-			}
+			}*/
 			environment.ground = null;
 			environment.currentGroundPosition = Vector3.zero;
 			environment.lastGroundPosition = Vector3.zero;
@@ -369,46 +369,46 @@ public class PlayerMotor : BaseBehavior {
 	
 	public void Jump() {
 		if (player.canJump) {
-			player.Broadcast("OnJump");
+			//player.Broadcast("OnJump");
 			movement.jumpForceRemaining = movement.jumpForce;
 			movement.stopJump = false;
 		} else {
-			player.Broadcast("OnJumpDenied");
+			//player.Broadcast("OnJumpDenied");
 		}
 	}
 
 	public void StopJump() {
 		if (!player.canJump) {
-			player.Broadcast("OnStopJump");
+			//player.Broadcast("OnStopJump");
 			movement.jumpForceRemaining = movement.jumpForceRemaining/2 + 1;
 			movement.stopJump = true;
 		} 
 		else {
-			player.Broadcast("OnStopJumpDenied");
+			//player.Broadcast("OnStopJumpDenied");
 		}
 	}	
 
 	public void Dash() {
 		if (player.canDash) {
-			playDashSound();
+			playDashSound ();
 			player.dashStartX = player.transform.position.x;
 			player.dashedAtTime = Time.time;
 			player.isDashing = true;
 
-			player.Broadcast("OnDash");
+			//player.Broadcast("OnDash");
 
-			if(player.isFacingRight)
+			if (player.isFacingRight)
 				movement.dashForceRemaining = movement.dashForce;
 			else
 				movement.dashForceRemaining = movement.dashForce * -1;
-		} 
-		else 
-			player.Broadcast("OnDashDenied");
+		} /*else {
+			//player.Broadcast("OnDashDenied");
+		}*/
 	}
 
 	public void ThrowSeed() {
 		if(player.canThrowSeed) {
-			player.Broadcast("OnThrowSeed");
+			//player.Broadcast("OnThrowSeed");
 			// spawn a seed
 			//GameObject newSeed = Instantiate(Resources.Load("VineSeed")) as GameObject;
 			Player.SeedType currSeed = player.getCurrentSeedType();
@@ -435,14 +435,14 @@ public class PlayerMotor : BaseBehavior {
 			}
 				              
 		}
-		else{
-			player.Broadcast("OnThrowSeedDenied");
-		}
+		/*else{
+			//player.Broadcast("OnThrowSeedDenied");
+		}*/
 	}
 
 	public void Sun() {
 		if (player.canSun) {
-			player.Broadcast("OnSun");
+			//player.Broadcast("OnSun");
 			//SunStuff
 			GameObject sun = (GameObject) Resources.Load("Sun");
 			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
@@ -458,7 +458,7 @@ public class PlayerMotor : BaseBehavior {
 
 	public void Convert(){
 		if (player.canConvert) {
-			player.Broadcast("OnConvert");
+			//player.Broadcast("OnConvert");
 
 			GameObject converter = (GameObject) Resources.Load ("Converter");
 			converter.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);

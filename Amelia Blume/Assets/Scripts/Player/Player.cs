@@ -157,7 +157,7 @@ public class Player : BaseBehavior {
 	
 	public bool isRunning {
 		get {
-			return controller.running || controller.alwaysRun;	
+			return controller.isRunning || controller.alwaysRun;	
 		}
 	}
 	
@@ -253,7 +253,7 @@ public class Player : BaseBehavior {
 #region Internal methods
 	
 	protected void Start() {
-		Broadcast("OnSpawn");
+		//Broadcast("OnSpawn");
 		health = 100;
 	}
 
@@ -274,12 +274,12 @@ public class Player : BaseBehavior {
 	 * receivers.
 	 */
 	
-	public void Broadcast(string eventName) {
+	/*public void Broadcast(string eventName) {
 		BroadcastMessage(eventName, SendMessageOptions.DontRequireReceiver);	
 	}
 	public void Broadcast(string eventName, object args) {
 		BroadcastMessage(eventName, args, SendMessageOptions.DontRequireReceiver);	
-	}
+	}*/
 
 	void Update()
 	{

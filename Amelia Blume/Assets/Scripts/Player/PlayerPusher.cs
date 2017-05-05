@@ -40,7 +40,7 @@ public class PlayerPusher : BaseBehavior {
 
 	protected void DoPush(Player p, bool overlapped) {
 		Vector3 force = rigidbody.velocity * pushForceMultiplier * Time.fixedDeltaTime;
-		player.Broadcast("OnPlayerPush", new PushEventArgs(force, this, overlapped));
+		//player.Broadcast("OnPlayerPush", new PushEventArgs(force, this, overlapped));
 		p.Push(force);
 		
 	}
