@@ -89,7 +89,9 @@ public class PlayerMotor : BaseBehavior {
 	public MovementSettings movement = new MovementSettings();
 	public EnvironmentSettings environment = new EnvironmentSettings();
 	public SlideSettings slide = new SlideSettings();
-	
+
+	public GameObject StaffEnd;
+
 	public Vector3 lastInput;
 	public Vector3 lastAttemptedMovement;
 
@@ -157,6 +159,8 @@ public class PlayerMotor : BaseBehavior {
 				targetSpeed = 0;
 				acceleration = movement.stoppingPower;
 			}
+
+
 		}
 				
 		movement.speed = Mathf.Lerp(movement.speed, targetSpeed, acceleration * Time.deltaTime);
@@ -445,8 +449,11 @@ public class PlayerMotor : BaseBehavior {
 			//player.Broadcast("OnSun");
 			//SunStuff
 			GameObject sun = (GameObject) Resources.Load("Sun");
-			sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
-			Instantiate(sun);
+			//sun.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+
+			GameObject sunRef = (GameObject) Instantiate(sun);
+			sunRef.GetComponent<Sun>().parent = StaffEnd;
+			sunRef = null;
 		}
 	}
 
@@ -461,9 +468,12 @@ public class PlayerMotor : BaseBehavior {
 			//player.Broadcast("OnConvert");
 
 			GameObject converter = (GameObject) Resources.Load ("Converter");
-			converter.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			//converter.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+2, this.transform.position.z);
+			//converter.transform.parent = StaffEnd.transform;
 			converter.GetComponent<Converter>().target = transform.GetComponent<PlayerController>().conversionTarget;
-			Instantiate(converter);
+			GameObject converterRef = (GameObject) Instantiate(converter);
+			converterRef.GetComponent<Converter>().parent = StaffEnd;
+			converterRef = null;
 		}
 	}
 	

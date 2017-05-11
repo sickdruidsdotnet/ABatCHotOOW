@@ -13,6 +13,7 @@ public class Converter : MonoBehaviour {
 	public bool conversionSuccess = false;
 	bool exited = false;
 	public GameObject target;
+	public GameObject parent;
 	void Start()
 	{
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
@@ -30,9 +31,16 @@ public class Converter : MonoBehaviour {
 
 		if (player.GetComponent<Player> ().isConverting () || conversionSuccess) {
 			if (Time.time - startTime  > 3f && Time.time - startTime < 3.15f) {
-				transform.localScale = new Vector3 (transform.localScale.x - scaleValue,
-			                        transform.localScale.y + 8f,
-			                        transform.localScale.z);
+				//if (parent == null) {
+					Debug.Log ("Null");
+					transform.localScale = new Vector3 (transform.localScale.x - scaleValue,
+					                                    transform.localScale.y + 8f,
+					                                    transform.localScale.z);
+				/*} else {
+					Debug.Log ("Not Null");
+					transform.position = parent.transform.position;
+				}*/
+
 			}
 			else if(Time.time - startTime > 2.95f && !conversionSuccess && !exited)
 			{

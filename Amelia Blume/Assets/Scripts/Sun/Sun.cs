@@ -7,6 +7,8 @@ public class Sun : MonoBehaviour {
 	private GameObject player;
 	public InputHandler playerInput;
 	public List<GameObject> targets;
+
+	public GameObject parent;
 	// Use this for initialization
 	void Start () {
 		playerInput = GameObject.Find ("Input Handler").GetComponent<InputHandler> ();
@@ -42,8 +44,13 @@ public class Sun : MonoBehaviour {
 	void FixedUpdate()
 	{
 		//if (transform.position.x != player.transform.position.x || transform.position.y != player.transform.position.y + 2f) {
-		transform.position = new Vector3((player.transform.position.x +(0.5f* player.GetComponent<PlayerController>().faceDirection)),
+
+		if (parent == null) {
+			transform.position = new Vector3 ((player.transform.position.x + (0.5f * player.GetComponent<PlayerController> ().faceDirection)),
 			                                 player.transform.position.y + 2f, transform.position.z);
+		} else {
+			transform.position = parent.transform.position;
+		}
 		//}
 	}
 

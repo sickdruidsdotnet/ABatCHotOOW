@@ -765,7 +765,7 @@ public class Vine : MonoBehaviour
 		int prevIndex = 0;
 		foreach (int splitIndex in splitIndices)
 		{
-			Debug.Log("prevIndex: " + prevIndex + ", splitIndex: " + splitIndex);
+			//Debug.Log("prevIndex: " + prevIndex + ", splitIndex: " + splitIndex);
 			// instantiate the VineShred GameObject in the correct position.
 			Vector3 shredPos = transform.position + vineSkeleton[prevIndex].startPoint;
 			GameObject vineShred = Instantiate(Resources.Load("VinePlant/VineShredPrefab"), shredPos, Quaternion.identity) as GameObject;

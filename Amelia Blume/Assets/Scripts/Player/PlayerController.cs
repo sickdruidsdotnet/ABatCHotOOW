@@ -80,7 +80,7 @@ public class PlayerController : BaseBehavior {
 			if(tempBlossom != null)
 			{
 				blossoms[i].name = blossoms[i].name + " " + i;
-				Debug.Log(blossoms.Length + " " + i + " " + blossomPositions.Length);
+				//Debug.Log(blossoms.Length + " " + i + " " + blossomPositions.Length);
 				blossomPositions[i] = blossoms[i].transform.localPosition;
 				blossomRotations[i] = blossoms[i].transform.localRotation;
 				i++;
@@ -150,9 +150,14 @@ public class PlayerController : BaseBehavior {
 			isFacingRight = false;
 		}
 
-		if (player.isGrounded && player.airDashed)
-			player.airDashed = false;
-		if (!player.isGrounded && player.isDashing)
+		if (player.isGrounded) {
+			if (isJumping){
+				StopJump();
+			} 
+			if (player.isGrounded && player.airDashed)
+				player.airDashed = false;
+		}
+		else if (player.isDashing)
 			isAirDashing = true;
 
 		if (player.isDashing && (Math.Abs (Convert.ToDouble (player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides)) {
@@ -383,11 +388,13 @@ public class PlayerController : BaseBehavior {
 			if (!player.isSunning () && !player.isConverting () && !player.GetDead ()) {
 				if (player.isGrounded) {
 					if (playerInput.jumpDown) {
+						Debug.Log ("jump");
 						if (player.GetReadSign ())
 							ReadSign ();
 						else {
-							if (!player.CUTSCENE)
+							if (player.canJump && !player.CUTSCENE){
 								Jump ();
+							}
 						}
 					}
 					if (playerInput.throwSeedDown && !player.CUTSCENE) {
@@ -395,6 +402,7 @@ public class PlayerController : BaseBehavior {
 					}
 				}
 				if (playerInput.dashDown && !player.CUTSCENE) {
+
 					Dash ();
 				}
 			}
