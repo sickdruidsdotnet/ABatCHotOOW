@@ -151,14 +151,15 @@ public class PlayerController : BaseBehavior {
 		}
 
 		if (player.isGrounded) {
-			if (isJumping){
-				StopJump();
+			if (isJumping) {
+				StopJump ();
 			} 
 			if (player.isGrounded && player.airDashed)
 				player.airDashed = false;
-		}
-		else if (player.isDashing)
+		} else if (player.isDashing) {
+			player.airDashed = true;
 			isAirDashing = true;
+		}
 
 		if (player.isDashing && (Math.Abs (Convert.ToDouble (player.dashStartX - player.transform.position.x)) >= 6.0 || player.isCollidingSides)) {
 			isDashing = false;
@@ -388,7 +389,7 @@ public class PlayerController : BaseBehavior {
 			if (!player.isSunning () && !player.isConverting () && !player.GetDead ()) {
 				if (player.isGrounded) {
 					if (playerInput.jumpDown) {
-						Debug.Log ("jump");
+						//Debug.Log ("jump");
 						if (player.GetReadSign ())
 							ReadSign ();
 						else {
@@ -401,7 +402,7 @@ public class PlayerController : BaseBehavior {
 						ThrowSeed ();
 					}
 				}
-				if (playerInput.dashDown && !player.CUTSCENE) {
+				if (player.canDash && playerInput.dashDown && !player.CUTSCENE) {
 
 					Dash ();
 				}

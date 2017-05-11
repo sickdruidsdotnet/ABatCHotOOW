@@ -231,7 +231,7 @@ public class Player : BaseBehavior {
 	public bool canDash {
 		get {
 			if (!isGrounded && !airDashed){
-				airDashed = true;
+				//airDashed = true;
 				return true;
 			}
 			else if(!isGrounded && airDashed)
